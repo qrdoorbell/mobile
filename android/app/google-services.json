@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "596595019913",
+    "project_id": "qrdoorbell-v1",
+    "storage_bucket": "qrdoorbell-v1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:596595019913:android:b9fb80d17fe257b82ef658",
+        "android_client_info": {
+          "package_name": "com.example.qrdoorbell_mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "596595019913-8ocqv7j7mu59jl1hvkrn8ehie5a942bv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCuGjOjsX3sAfpQsqK8hH3o1JxrA3dXq7M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "596595019913-8ocqv7j7mu59jl1hvkrn8ehie5a942bv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
