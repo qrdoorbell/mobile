@@ -1,0 +1,18 @@
+{
+  "database": {
+    "rules": "database.rules.json"
+  },
+  "emulators": {
+    "auth": {
+      "port": 9042
+    },
+    "database": {
+      "port": 9041
+    },
+    "ui": {
+      "enabled": true,
+      "port": 9040
+    },
+    "singleProjectMode": true
+  }
+}

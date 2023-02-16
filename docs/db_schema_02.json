@@ -1,0 +1,137 @@
+{
+  "users": {
+    "ay": {
+      "doorbells": {
+        "bell-a": true,
+        "bell-c": true,
+        "bell-e": true
+      },
+      "auth": { 
+        "provider_id_eg_google_or_apple": {
+          "uid": "ssddfghjjkll"
+        },
+        "provider_id_eg_facebook": {
+          "uid": "h1223hggabcc"
+        }
+      },
+      "profile": {
+        "email": "ay@ay.ay",
+        "displayName": "ME AY"
+      },
+      "settings": {
+        "default": {
+          "enableVideoCalls": true,
+          "enableAudioCalls": true,
+          "enableVideoPreview": true,
+          "enableVoiceMail": false,
+          "enableTextMail": false,
+          "enablePushNotifications": true
+        },
+        "bell-a": {
+          "enableAudioCalls": false,
+          "enableVideoPreview": false,
+          "enableVoiceMail": true
+        } 
+      }
+    },
+    "jj": {
+      "doorbells": { 
+        "doorbells": {
+          "bell-a": true,
+          "bell-b": true
+        }
+      }
+    },
+    "ya": {
+      "doorbells": { 
+        "doorbells": {
+          "bell-b": true
+        }
+      }
+    }
+  },
+
+  "events": {
+    "bell-a": [
+      {
+        "timestamp": "aa337890bb",
+        "eventType": "video-call"
+      }
+    ],
+    "bell-b": [
+      {
+        "timestamp": "aa337890ee",
+        "eventType": "user-assign"
+      }
+    ]
+  },
+
+  "invitations": {
+    "inv-code-xxxxxxxxxxx": {
+      "doorbell": "bell-b",
+      "role": "owner",
+      "owner": "ya",
+      "status": "created|accepted|rejected|expired|deleted",
+      "created": 1122334567,
+      "expires": 1122336789
+    },
+    "inv-code-wwwwwwwwwww": {
+      "doorbell": "bell-c",
+      "role": "reader",
+      "owner": "jj",
+      "status": "accepted",
+      "created": 1122334567,
+      "expires": 1122336789
+    }
+  },
+
+  "doorbells": {
+    "bell-a": {
+      "users": {
+        "ay": "owner",
+        "jj": "reader"
+      }
+    },
+    "bell-b": {
+      "users": {
+        "ya": "owner",
+        "jj": "reader"
+      }
+    },
+    "bell-c": {
+      "users": {
+        "ay": "owner"
+      }
+    },
+    "bell-e": {
+      "users": {
+        "ay": "owner"
+      }
+    }
+  },
+
+  "sticker-templates": {
+    "stick-hrzntl-tpl": {
+      "handler": "[hrzntlHandlerClassName]",
+      "params": {
+        "imageUrl": "",
+        "accentColor": "yellow",
+        "titleText": {
+          "en": "Please scan QR code to ring the doorbell", 
+          "ua": "Проскануйте QR код щоб подзвонити в дверний дзвоник" 
+        }
+      }
+    },
+    "stick-vrtcl-tpl": {
+      "handler": "[vrtclHandlerClassName]",
+      "params": {
+        "imageUrl": "",
+        "iconUrl": "ac_unit_outlined",
+        "titleText": {
+          "en": "Please scan QR code to ring the doorbell", 
+          "ua": "Проскануйте QR код щоб подзвонити в дверний дзвоник" 
+        }
+      }
+    }
+  }
+}
