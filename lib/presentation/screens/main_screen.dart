@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:livekit_client/livekit_client.dart';
 import 'package:qrdoorbell_mobile/presentation/controls/event_list.dart';
 
@@ -41,6 +42,8 @@ class _MainScreenState extends State<MainScreen> {
     return CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
           leading: Text("Doorbells", style: TextStyle(fontSize: 32)),
+          padding: EdgeInsetsDirectional.only(start: 20),
+          backgroundColor: Colors.white,
         ),
         child: CupertinoTabScaffold(
           tabBar: CupertinoTabBar(

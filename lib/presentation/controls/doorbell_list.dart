@@ -24,6 +24,7 @@ class DoorbellList extends StatelessWidget {
         child: ListView.builder(
             itemCount: doorbells.length,
             itemBuilder: (context, index) => DoorbellListItem(
+                  id: doorbells[index].doorbell.id,
                   name: doorbells[index].doorbell.name,
                   announce: doorbells[index].announce ?? 'No new messages',
                 )));

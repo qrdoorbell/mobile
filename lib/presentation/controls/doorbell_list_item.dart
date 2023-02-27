@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -11,10 +12,12 @@ final Widget qrcodeSvg = Padding(
     ));
 
 class DoorbellListItem extends StatelessWidget {
+  final String id;
   final String name;
   final String announce;
 
   DoorbellListItem({
+    required this.id,
     required this.name,
     required this.announce,
   });
@@ -39,10 +42,10 @@ class DoorbellListItem extends StatelessWidget {
                 children: [
                   qrcodeSvg,
                   Padding(
-                      padding: EdgeInsets.symmetric(vertical: 2, horizontal: 12),
+                      padding: EdgeInsets.symmetric(vertical: 2, horizontal: 18),
                       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                         Text(name, style: TextStyle(fontSize: 24)),
-                        Padding(padding: EdgeInsets.only(top: 10)),
+                        Padding(padding: EdgeInsets.only(top: 24)),
                         Text(announce, style: TextStyle(color: Colors.grey))
                       ]))
                 ],
