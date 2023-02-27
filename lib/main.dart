@@ -1,26 +1,28 @@
-import 'dart:async';
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
+import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
-import 'firebase_options.dart';
 import 'app_options.dart';
+import 'app_routes.dart';
 
-import 'pages/home_screen.dart';
-import 'pages/login_screen.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 
-// final DatabaseReference dbRef = FirebaseDatabase.instance.ref('users/ay');
+import 'presentation/screens/login_screen.dart';
+import 'presentation/screens/main_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp();
+
+  FirebaseUIAuth.configureProviders([
+    EmailAuthProvider(),
+    AppleProvider(),
+    GoogleProvider(clientId: GOOGLE_CLIENT_ID),
+  ]);
 
   if (USE_AUTH_EMULATOR) {
     FirebaseAuth.instance.useAuthEmulator("localhost", 9042);
@@ -29,54 +31,32 @@ Future<void> main() async {
   runApp(const QRDoorbellApp());
 }
 
-class QRDoorbellApp extends StatelessWidget {
+class QRDoorbellApp extends StatefulWidget {
   const QRDoorbellApp({super.key});
 
-  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
+  @override
+  State<StatefulWidget> createState() => _QRDoorbellAppState();
+}
 
-  // @override
-  // State<StatefulWidget> createState() {
-  //   return _QRDoorbellAppState();
-  //   // FirebaseDatabase.instance.setPersistenceEnabled(true);
-
-  //   // if (USE_AUTH_EMULATOR) {
-  //   //   FirebaseAuth.instance.useAuthEmulator("localhost", 9042);
-  //   // }
-
-  //   // if (USE_DATABASE_EMULATOR) {
-  //   //   FirebaseDatabase.instance.useDatabaseEmulator("localhost", 9041);
-  //   // }
-
-  //   // FirebaseAuth.instance.authStateChanges().listen((User? user) {
-  //   //   if (user == null) {
-  //   //     print('User is currently signed out!');
-  //   //   } else {
-  //   //     print('User is signed in!');
-  //   //   }
-  //   // });
-
-  //   // final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: "a@qx.zone", password: "1234Qwer-");
-  //   // final user = userCredential.user;
-  //   // print(user?.uid);
-  // }
+class _QRDoorbellAppState extends State<QRDoorbellApp> {
+  static final _navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'QR Doorbell',
-        theme: ThemeData(
-          primarySwatch: Colors.blueGrey,
-        ),
-        home: LoginScreen(),
-        builder: (context, child) {
-          return CupertinoTheme(
-            // Instead of letting Cupertino widgets auto-adapt to the Material
-            // theme (which is green), this app will use a different theme
-            // for Cupertino (which is blue by default).
-            data: const CupertinoThemeData(),
-            child: Material(child: child),
-          );
-        });
+    return CupertinoApp(
+      title: 'QR Doorbell',
+      navigatorKey: _navigatorKey,
+      builder: (context, child) {
+        return CupertinoTheme(
+          data: CupertinoThemeData(brightness: Brightness.light),
+          child: Material(child: child),
+        );
+      },
+      initialRoute: Routes.login,
+      routes: {
+        Routes.login: (context) => LoginScreen(),
+        Routes.home: (context) => MainScreen(),
+      },
+    );
   }
 }
