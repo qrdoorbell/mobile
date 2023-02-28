@@ -8,9 +8,7 @@ final Widget qrcodeSvg = Padding(
     padding: EdgeInsets.only(top: 7, left: 4, right: 4),
     child: SvgPicture.asset(
       'assets/qrcode-blue.svg',
-      width: 64,
-      height: 64,
-      fit: BoxFit.contain,
+      fit: BoxFit.scaleDown,
     ));
 
 class DoorbellCard extends StatelessWidget {
@@ -41,16 +39,16 @@ class DoorbellCard extends StatelessWidget {
                         settings: RouteSettings(name: "/doorbells/${doorbell.id}"),
                         pageBuilder: (context, animation, secondaryAnimation) => DoorbellScreen(doorbell: doorbell))),
                 child: Padding(
-                  padding: EdgeInsets.only(top: 32, left: 24, right: 24, bottom: 48),
+                  padding: EdgeInsets.only(top: 24, left: 10, right: 12, bottom: 32),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      qrcodeSvg,
+                      SizedBox(height: 55, child: qrcodeSvg),
                       Padding(
-                          padding: EdgeInsets.symmetric(vertical: 3, horizontal: 18),
+                          padding: EdgeInsets.symmetric(vertical: 2, horizontal: 8),
                           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                             Text(doorbell.name, style: TextStyle(fontSize: 24)),
-                            Padding(padding: EdgeInsets.only(top: 24)),
+                            Padding(padding: EdgeInsets.only(top: 10)),
                             Text(announce, style: TextStyle(color: Colors.grey))
                           ]))
                     ],
