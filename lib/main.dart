@@ -52,10 +52,10 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
             brightness: Brightness.light,
             scaffoldBackgroundColor: Colors.white,
             barBackgroundColor: Colors.white,
+            // textTheme: CupertinoTextThemeData(navLargeTitleTextStyle: TextStyle(fontFamily: 'SF Pro Display', fontFamilyFallback: )),
           ),
           child: Material(
             child: child,
-            color: Colors.white,
           ),
         );
       },
