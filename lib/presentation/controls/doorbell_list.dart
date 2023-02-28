@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../model/doorbell.dart';
-import 'doorbell_list_item.dart';
+import 'doorbell_card.dart';
 
 class DoorbellCardViewModel {
   final Doorbell doorbell;
@@ -22,10 +22,8 @@ class DoorbellList extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverList(
         delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) => DoorbellListItem(
-                id: doorbells[index].doorbell.id,
-                name: doorbells[index].doorbell.name,
-                announce: doorbells[index].announce ?? 'No new messages'),
+            (BuildContext context, int index) =>
+                DoorbellCard(doorbell: doorbells[index].doorbell, announce: doorbells[index].announce ?? 'No new messages'),
             childCount: doorbells.length));
   }
 
