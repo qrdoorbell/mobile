@@ -83,6 +83,7 @@ class _MainScreenState extends State<MainScreen> {
                     CupertinoSliverNavigationBar(
                       backgroundColor: Colors.white,
                       largeTitle: Text(title),
+                      border: Border.all(width: 0, color: Colors.white),
                     ),
                     tabWidget,
                   ],
