@@ -81,6 +81,7 @@ class _MainScreenState extends State<MainScreen> {
                 child: CustomScrollView(
                   slivers: <Widget>[
                     CupertinoSliverNavigationBar(
+                      transitionBetweenRoutes: true,
                       backgroundColor: Colors.white,
                       largeTitle: Text(title),
                       border: Border.all(width: 0, color: Colors.white),
