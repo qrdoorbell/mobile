@@ -39,7 +39,7 @@ class DoorbellCard extends StatelessWidget {
                         settings: RouteSettings(name: "/doorbells/${doorbell.id}"),
                         pageBuilder: (context, animation, secondaryAnimation) => DoorbellScreen(doorbell: doorbell))),
                 child: Padding(
-                  padding: EdgeInsets.only(top: 24, left: 10, right: 12, bottom: 32),
+                  padding: EdgeInsets.only(top: 24, left: 20, right: 12, bottom: 32),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -48,7 +48,7 @@ class DoorbellCard extends StatelessWidget {
                           padding: EdgeInsets.symmetric(vertical: 2, horizontal: 8),
                           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                             Text(doorbell.name, style: TextStyle(fontSize: 24)),
-                            Padding(padding: EdgeInsets.only(top: 10)),
+                            Padding(padding: EdgeInsets.only(top: 9)),
                             Text(announce, style: TextStyle(color: Colors.grey))
                           ]))
                     ],
