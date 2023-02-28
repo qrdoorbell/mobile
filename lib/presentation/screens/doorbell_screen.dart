@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:qrdoorbell_mobile/presentation/controls/event_card.dart';
 import 'package:qrdoorbell_mobile/presentation/controls/sticker_card.dart';
 
 import '../../model/doorbell.dart';
@@ -83,16 +84,8 @@ class DoorbellScreen extends StatelessWidget {
               SliverList(
                   delegate: SliverChildBuilderDelegate(
                       (BuildContext context, int index) => Padding(
-                            padding: EdgeInsets.only(left: 18, top: 10, right: 10),
-                            child: Card(
-                              shadowColor: Colors.transparent,
-                              color: CupertinoColors.extraLightBackgroundGray.withAlpha(128),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(24),
-                              ),
-                              child: Padding(padding: EdgeInsets.all(24), child: Text('Doorbell event')),
-                            ),
-                          ),
+                          padding: EdgeInsets.only(left: 18, top: 10, right: 10),
+                          child: EventCard(eventName: 'Doorbell event', eventTime: '42m ago')),
                       childCount: 1)),
             ])));
   }

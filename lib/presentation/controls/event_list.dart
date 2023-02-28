@@ -14,9 +14,5 @@ class EventList extends StatelessWidget {
         Text('Events list'),
       ])
     ]));
-    // return Column(children: [
-    //   Padding(padding: EdgeInsets.only(top: 150)),
-    //   Text('Events list'),
-    // ]);
   }
 }
