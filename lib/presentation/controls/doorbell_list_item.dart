@@ -42,7 +42,7 @@ class DoorbellListItem extends StatelessWidget {
                 children: [
                   qrcodeSvg,
                   Padding(
-                      padding: EdgeInsets.symmetric(vertical: 2, horizontal: 18),
+                      padding: EdgeInsets.symmetric(vertical: 3, horizontal: 18),
                       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                         Text(name, style: TextStyle(fontSize: 24)),
                         Padding(padding: EdgeInsets.only(top: 24)),

@@ -48,8 +48,15 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
       navigatorKey: _navigatorKey,
       builder: (context, child) {
         return CupertinoTheme(
-          data: CupertinoThemeData(brightness: Brightness.light),
-          child: Material(child: child),
+          data: CupertinoThemeData(
+            brightness: Brightness.light,
+            scaffoldBackgroundColor: Colors.white,
+            barBackgroundColor: Colors.white,
+          ),
+          child: Material(
+            child: child,
+            color: Colors.white,
+          ),
         );
       },
       initialRoute: Routes.login,

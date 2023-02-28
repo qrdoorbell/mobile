@@ -26,7 +26,6 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int page = TabPages.doorbells;
   final User user = FirebaseAuth.instance.currentUser!;
 
   final List<DoorbellCardViewModel> doorbells = [
@@ -39,48 +38,56 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-        navigationBar: CupertinoNavigationBar(
-          leading: Text("Doorbells", style: TextStyle(fontSize: 32)),
-          padding: EdgeInsetsDirectional.only(start: 20),
-          backgroundColor: Colors.white,
-        ),
-        child: CupertinoTabScaffold(
-          tabBar: CupertinoTabBar(
-              items: const [
-                BottomNavigationBarItem(
-                  label: 'Doorbells',
-                  icon: Icon(CupertinoIcons.qrcode),
-                ),
-                BottomNavigationBarItem(
-                  label: 'Events',
-                  icon: Icon(CupertinoIcons.bell),
-                ),
-                BottomNavigationBarItem(
-                  label: 'Profile',
-                  icon: Icon(CupertinoIcons.person),
-                ),
-              ],
-              onTap: (value) {
-                setState(() {
-                  page = value;
-                });
-              }),
-          tabBuilder: (context, index) {
-            return CupertinoTabView(
-              builder: (context) {
-                if (index == TabPages.doorbells) {
-                  return DoorbellList(doorbells: doorbells);
-                } else if (index == TabPages.events) {
-                  return EventList();
-                } else if (index == TabPages.profile) {
-                  return Profile();
-                } else {
-                  throw UnexpectedStateException('Invalid tab index');
-                }
-              },
-            );
-          },
-        ));
+    return CupertinoTabScaffold(
+      backgroundColor: Colors.white,
+      tabBar: CupertinoTabBar(
+        items: const [
+          BottomNavigationBarItem(
+            label: 'Doorbells',
+            icon: Icon(CupertinoIcons.qrcode),
+          ),
+          BottomNavigationBarItem(
+            label: 'Events',
+            icon: Icon(CupertinoIcons.bell),
+          ),
+          BottomNavigationBarItem(
+            label: 'Profile',
+            icon: Icon(CupertinoIcons.person),
+          ),
+        ],
+      ),
+      tabBuilder: (context, index) {
+        late final Widget tabWidget;
+        late final String title;
+
+        if (index == TabPages.doorbells) {
+          tabWidget = DoorbellList(doorbells: doorbells);
+          title = 'Doorbells';
+        } else if (index == TabPages.events) {
+          tabWidget = EventList();
+          title = 'Events';
+        } else if (index == TabPages.profile) {
+          tabWidget = Profile();
+          title = 'Profile';
+        } else {
+          throw UnexpectedStateException('Invalid tab index');
+        }
+
+        return CupertinoTabView(
+            builder: (context) => Container(
+                color: Colors.white,
+                width: double.maxFinite,
+                height: double.maxFinite,
+                child: CustomScrollView(
+                  slivers: <Widget>[
+                    CupertinoSliverNavigationBar(
+                      backgroundColor: Colors.white,
+                      largeTitle: Text(title),
+                    ),
+                    tabWidget,
+                  ],
+                )));
+      },
+    );
   }
 }
