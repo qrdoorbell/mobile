@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:livekit_client/livekit_client.dart';
+import 'package:qrdoorbell_mobile/presentation/controls/event_card.dart';
 import 'package:qrdoorbell_mobile/presentation/controls/sticker_card.dart';
 
 import '../../model/doorbell.dart';
@@ -81,19 +83,21 @@ class DoorbellScreen extends StatelessWidget {
               ])),
 
               SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) => Padding(
-                            padding: EdgeInsets.only(left: 18, top: 10, right: 10),
-                            child: Card(
-                              shadowColor: Colors.transparent,
-                              color: CupertinoColors.extraLightBackgroundGray.withAlpha(128),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(24),
-                              ),
-                              child: Padding(padding: EdgeInsets.all(24), child: Text('Doorbell event')),
-                            ),
-                          ),
-                      childCount: 1)),
+                  delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+                switch (index % 5) {
+                  case 0:
+                    return EventCard.fromDoorbellEvent('42m ago');
+                  case 1:
+                    return EventCard.fromAnsweredCallEvent('14:42');
+                  case 2:
+                    return EventCard.fromMissedCallEvent('17 Feb 2023');
+                  case 3:
+                    return EventCard.fromTextMessageEvent('10:02');
+                  case 4:
+                    return EventCard.fromVoiceMessageEvent('5m ago');
+                }
+                throw StateError('Invalid event type');
+              }, childCount: 10)),
             ])));
   }
 }
