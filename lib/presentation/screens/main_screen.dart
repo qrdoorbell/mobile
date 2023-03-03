@@ -9,27 +9,27 @@ import '../../routing/route_state.dart';
 import '../controls/doorbell_list.dart';
 import '../controls/profile.dart';
 
-class MainScreenTabPages {
-  static const int doorbells = 0;
-  static const int events = 1;
-  static const int profile = 2;
-}
-
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
   MainScreen({
     super.key,
-  }) {
+  });
+
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  final User user = FirebaseAuth.instance.currentUser!;
+  late final CupertinoTabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
     _tabController = CupertinoTabController(initialIndex: 0)..addListener(_handleTabIndexChanged);
   }
 
-  final User user = FirebaseAuth.instance.currentUser!;
-  late final CupertinoTabController _tabController;
-  late final RouteState _routeState;
-
   @override
   Widget build(BuildContext context) {
-    _routeState = RouteStateScope.of(context);
-
     return CupertinoTabScaffold(
       controller: _tabController,
       backgroundColor: Colors.white,
@@ -53,19 +53,19 @@ class MainScreen extends StatelessWidget {
         late final Widget tabWidget;
         late final String title;
 
-        if (index == MainScreenTabPages.doorbells) {
+        if (index == 0) {
           tabWidget = DoorbellList(
             doorbells: DataStore()
                 .allDoorbells
                 .map((e) => DoorbellCardViewModel(doorbell: e, announce: e.id == '1' ? 'First one' : 'No new messages'))
                 .toList(),
-            onTapHandler: _onDoorbellSelected,
+            onTapHandler: (Doorbell doorbell) async => await RouteStateScope.of(context).go('/doorbells/${doorbell.id}'),
           );
           title = 'Doorbells';
-        } else if (index == MainScreenTabPages.events) {
+        } else if (index == 1) {
           tabWidget = EventList();
           title = 'Events';
-        } else if (index == MainScreenTabPages.profile) {
+        } else if (index == 2) {
           tabWidget = Profile();
           title = 'Profile';
         } else {
@@ -92,21 +92,17 @@ class MainScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _onDoorbellSelected(Doorbell doorbell) async {
-    await _routeState.go('/doorbells/${doorbell.id}');
-  }
-
   void _handleTabIndexChanged() {
     switch (_tabController.index) {
       case 1:
-        _routeState.go('/events');
+        RouteStateScope.of(context).go('/events');
         break;
       case 2:
-        _routeState.go('/profile');
+        RouteStateScope.of(context).go('/profile');
         break;
       case 0:
       default:
-        _routeState.go('/doorbells');
+        RouteStateScope.of(context).go('/doorbells');
         break;
     }
   }
