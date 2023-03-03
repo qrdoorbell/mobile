@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:qrdoorbell_mobile/presentation/screens/doorbell_screen.dart';
 import 'package:qrdoorbell_mobile/presentation/screens/login_screen.dart';
 import 'package:qrdoorbell_mobile/presentation/screens/main_screen.dart';
 
@@ -72,6 +73,11 @@ class _AppNavigatorState extends State<AppNavigator> {
             key: _scaffoldKey,
             child: MainScreen(),
           ),
+          if (selectedDoorbell != null)
+            MaterialPage(
+              key: _doorbellDetailsKey,
+              child: DoorbellScreen(doorbell: selectedDoorbell),
+            ),
           // Add an additional page to the stack if the user is viewing a book
           // or an author
           // if (selectedDoorbell != null)
