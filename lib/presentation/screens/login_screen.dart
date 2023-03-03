@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
-import 'package:qrdoorbell_mobile/app_routes.dart';
+
+import '../../routing/route_state.dart';
 
 class LoginScreen extends StatelessWidget {
   @override
@@ -30,8 +31,8 @@ class LoginScreen extends StatelessWidget {
                   user.updateDisplayName(defaultDisplayName);
                 }
               }
-              Navigator.pushReplacementNamed(context, Routes.home);
-              // Navigator.of(context).pushNamedAndRemoveUntil('/', ((route) => false));
+
+              RouteStateScope.of(context).go('/doorbells');
             }
           }),
         ),

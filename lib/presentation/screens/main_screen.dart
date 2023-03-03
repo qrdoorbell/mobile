@@ -4,29 +4,27 @@ import 'package:flutter/material.dart';
 import 'package:livekit_client/livekit_client.dart';
 import 'package:qrdoorbell_mobile/presentation/controls/event_list.dart';
 
+import '../../routing/route_state.dart';
 import '../controls/doorbell_list.dart';
 import '../../model/doorbell.dart';
 import '../controls/profile.dart';
 
-class TabPages {
+class MainScreenTabPages {
   static const int doorbells = 0;
   static const int events = 1;
   static const int profile = 2;
 }
 
-class MainScreen extends StatefulWidget {
+class MainScreen extends StatelessWidget {
   MainScreen({
     super.key,
-  });
+  }) {
+    _tabController = CupertinoTabController(initialIndex: 0)..addListener(_handleTabIndexChanged);
+  }
 
-  final String title = 'QR Doorbell / Home';
-
-  @override
-  State<MainScreen> createState() => _MainScreenState();
-}
-
-class _MainScreenState extends State<MainScreen> {
   final User user = FirebaseAuth.instance.currentUser!;
+  late final CupertinoTabController _tabController;
+  late final RouteState _routeState;
 
   final List<DoorbellCardViewModel> doorbells = [
     DoorbellCardViewModel(doorbell: Doorbell(id: '1', name: 'Doorbell 1'), announce: '2 missed calls'),
@@ -38,7 +36,10 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _routeState = RouteStateScope.of(context);
+
     return CupertinoTabScaffold(
+      controller: _tabController,
       backgroundColor: Colors.white,
       tabBar: CupertinoTabBar(
         items: const [
@@ -60,13 +61,13 @@ class _MainScreenState extends State<MainScreen> {
         late final Widget tabWidget;
         late final String title;
 
-        if (index == TabPages.doorbells) {
+        if (index == MainScreenTabPages.doorbells) {
           tabWidget = DoorbellList(doorbells: doorbells);
           title = 'Doorbells';
-        } else if (index == TabPages.events) {
+        } else if (index == MainScreenTabPages.events) {
           tabWidget = EventList();
           title = 'Events';
-        } else if (index == TabPages.profile) {
+        } else if (index == MainScreenTabPages.profile) {
           tabWidget = Profile();
           title = 'Profile';
         } else {
@@ -91,5 +92,20 @@ class _MainScreenState extends State<MainScreen> {
                 )));
       },
     );
+  }
+
+  void _handleTabIndexChanged() {
+    switch (_tabController.index) {
+      case 1:
+        _routeState.go('/books/new');
+        break;
+      case 2:
+        _routeState.go('/books/all');
+        break;
+      case 0:
+      default:
+        _routeState.go('/books/popular');
+        break;
+    }
   }
 }

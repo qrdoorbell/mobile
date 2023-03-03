@@ -3,15 +3,15 @@ import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 
 import 'app_options.dart';
-import 'app_routes.dart';
+import 'auth.dart';
+import 'routing.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 
-import 'presentation/screens/login_screen.dart';
-import 'presentation/screens/main_screen.dart';
+import 'screens/navigator.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,32 +39,92 @@ class QRDoorbellApp extends StatefulWidget {
 }
 
 class _QRDoorbellAppState extends State<QRDoorbellApp> {
-  static final _navigatorKey = GlobalKey<NavigatorState>();
+  final _auth = AppAuth();
+  final _navigatorKey = GlobalKey<NavigatorState>();
+  late final RouteState _routeState;
+  late final SimpleRouterDelegate _routerDelegate;
+  late final TemplateRouteParser _routeParser;
+
+  @override
+  void initState() {
+    _routeParser = TemplateRouteParser(
+      allowedPaths: [
+        '/login',
+        '/doorbells',
+        '/events',
+        '/doorbells/new',
+        '/doorbells/:doorbellId',
+        '/sticker-templates/popular',
+        '/sticker-templates/all',
+        '/doorbells/:doorbellId/stickers',
+        '/doorbells/:doorbellId/stickers/:stickerId',
+        '/profile',
+      ],
+      guard: _guard,
+      initialRoute: '/doorbells',
+    );
+
+    _routeState = RouteState(_routeParser);
+
+    _routerDelegate = SimpleRouterDelegate(
+      routeState: _routeState,
+      navigatorKey: _navigatorKey,
+      builder: (context) => AppNavigator(
+        navigatorKey: _navigatorKey,
+      ),
+    );
+
+    // Listen for when the user logs out and display the signin screen.
+    _auth.addListener(_handleAuthStateChanged);
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoApp(
-      title: 'QR Doorbell',
-      navigatorKey: _navigatorKey,
-      builder: (context, child) {
-        return CupertinoTheme(
-          data: CupertinoThemeData(
-            brightness: Brightness.light,
-            scaffoldBackgroundColor: Colors.white,
-            barBackgroundColor: Colors.white,
-            textTheme:
-                CupertinoTextThemeData(navLargeTitleTextStyle: TextStyle(fontWeight: FontWeight.w500, color: Colors.black, fontSize: 34)),
-          ),
-          child: Material(
-            child: child,
-          ),
-        );
-      },
-      initialRoute: Routes.login,
-      routes: {
-        Routes.login: (context) => LoginScreen(),
-        Routes.home: (context) => MainScreen(),
-      },
-    );
+    return RouteStateScope(
+        notifier: _routeState,
+        child: AppAuthScope(
+            notifier: _auth,
+            child: CupertinoApp.router(
+              routerDelegate: _routerDelegate,
+              routeInformationParser: _routeParser,
+              theme: CupertinoThemeData(
+                brightness: Brightness.light,
+                scaffoldBackgroundColor: Colors.white,
+                barBackgroundColor: Colors.white,
+                textTheme: CupertinoTextThemeData(
+                    navLargeTitleTextStyle: TextStyle(fontWeight: FontWeight.w500, color: Colors.black, fontSize: 34)),
+              ),
+            )));
+  }
+
+  @override
+  void dispose() {
+    _auth.removeListener(_handleAuthStateChanged);
+    _routeState.dispose();
+    _routerDelegate.dispose();
+    super.dispose();
+  }
+
+  Future<ParsedRoute> _guard(ParsedRoute from) async {
+    final signedIn = _auth.signedIn;
+    final signInRoute = ParsedRoute('/login', '/login', {}, {});
+
+    // Go to /signin if the user is not signed in
+    if (!signedIn && from != signInRoute) {
+      return signInRoute;
+    }
+    // Go to /books if the user is signed in and tries to go to /signin.
+    else if (signedIn && from == signInRoute) {
+      return ParsedRoute('/doorbells', '/doorbells', {}, {});
+    }
+    return from;
+  }
+
+  void _handleAuthStateChanged() {
+    if (!_auth.signedIn) {
+      _routeState.go('/login');
+    }
   }
 }
