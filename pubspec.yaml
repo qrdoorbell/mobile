@@ -22,6 +22,10 @@ dependencies:
   firebase_ui_oauth_apple: ^1.0.21
   firebase_ui_oauth_google: ^1.0.21
   flutter_svg: ^1.1.6
+  path_to_regexp: ^0.4.0
+  adaptive_navigation: ^0.0.3
+  collection: ^1.17.0
+  quiver: ^3.2.1
 
 dev_dependencies:
   flutter_test:
