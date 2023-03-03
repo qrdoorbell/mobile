@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
@@ -16,7 +18,11 @@ import 'screens/navigator.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp();
+  if (Platform.isIOS) {
+    await Firebase.initializeApp();
+  } else {
+    await Firebase.initializeApp(options: WebFirebaseOptions);
+  }
 
   FirebaseUIAuth.configureProviders([
     EmailAuthProvider(),
