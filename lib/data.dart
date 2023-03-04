@@ -42,11 +42,12 @@ class MockedDataStore extends DataStore {
         DoorbellEvent.doorbell('1', DateTime.parse("2023-01-11 09:09:00")),
         DoorbellEvent.doorbell('1', DateTime.parse("2023-01-11 09:09:15")),
         DoorbellEvent.doorbell('3', DateTime.parse("2023-03-04 16:23:03")),
-        DoorbellEvent.textMessage('3', DateTime.parse("2022-09-22 23:10:03")),
+        DoorbellEvent.textMessage('3', DateTime.parse("2022-09-22 23:10:03"), 'This is delivery, please call me back at +380991234567'),
         DoorbellEvent.doorbell('1', DateTime.parse("2023-01-11 09:09:30")),
-        DoorbellEvent.textMessage('1', DateTime.parse("2023-01-11 09:10:00")),
+        DoorbellEvent.textMessage('1', DateTime.parse("2023-01-11 09:10:00"), 'Hi there, is anybody home?'),
         DoorbellEvent.missedCall('3', DateTime.parse("2023-03-02 10:11:33")),
         DoorbellEvent.voiceMessage('3', DateTime.parse("2023-03-02 10:13:03")),
+        DoorbellEvent.voiceMessage('3', DateTime.parse("2023-03-04 18:51:03")),
         DoorbellEvent.voiceMessage('9', DateTime.parse("2023-03-04 10:13:03")),
       ]..sortBy((element) => element.dateTime))
           .reversed

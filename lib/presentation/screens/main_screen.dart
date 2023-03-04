@@ -58,12 +58,12 @@ class _MainScreenState extends State<MainScreen> {
         if (index == 0) {
           tabWidget = Consumer<DataStore>(
               builder: (context, dataStore, child) => DoorbellList(
-                    doorbells: dataStore.allDoorbells
-                        .map((e) => DoorbellCardViewModel(
-                            doorbell: e,
-                            announce: dataStore.allEvents.firstWhereOrNull((x) => e.doorbellId == x.doorbellId)?.eventType.toString() ??
-                                'No new messages'))
-                        .toList(),
+                    doorbells: dataStore.allDoorbells.map((e) {
+                      var event = dataStore.allEvents.firstWhereOrNull((x) => e.doorbellId == x.doorbellId);
+                      return DoorbellCardViewModel(
+                          doorbell: e,
+                          announce: event != null ? "${event.eventType.toString()} on ${event.formattedDateTime}" : 'No new messages');
+                    }).toList(),
                     onTapHandler: (Doorbell doorbell) async => await RouteStateScope.of(context).go('/doorbells/${doorbell.doorbellId}'),
                   ));
           title = 'Doorbells';

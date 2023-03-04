@@ -3,17 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qrdoorbell_mobile/data.dart';
 
+import '../../routing/route_state.dart';
+
 class EventCard extends StatelessWidget {
   final DoorbellEvent event;
+  final bool showDoorbellLink;
 
   EventCard({
     super.key,
     required this.event,
+    this.showDoorbellLink = true,
   });
 
   @override
   Widget build(BuildContext context) {
     var dataStore = Provider.of<DataStore>(context);
+    var doorbell = dataStore.getDoorbellById(event.doorbellId);
+
     return Padding(
         padding: EdgeInsets.only(left: 15, top: 5, right: 10),
         child: Card(
@@ -24,15 +30,19 @@ class EventCard extends StatelessWidget {
           ),
           child: Padding(
             padding: EdgeInsets.all(10),
-            child: Row(children: [
+            child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
               Container(
-                  decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white70,
+                      border: Border.fromBorderSide(BorderSide(width: 1, color: Colors.grey.shade200))),
                   width: 48,
                   height: 48,
                   child: Icon(
                     _getEventIcon(),
                     size: 24,
-                    color: Colors.grey,
+                    color: CupertinoColors.systemGrey,
                   )),
               Padding(padding: EdgeInsets.all(5)),
               Column(
@@ -42,13 +52,23 @@ class EventCard extends StatelessWidget {
                     event.eventType.toString(),
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 4),
-                  ),
-                  Text(
-                    dataStore.getDoorbellById(event.doorbellId)?.name ?? '-',
-                    style: TextStyle(color: CupertinoColors.inactiveGray),
-                  ),
+                  if (showDoorbellLink && doorbell != null)
+                    Padding(
+                        padding: EdgeInsets.only(top: 5),
+                        child: CupertinoButton(
+                          borderRadius: BorderRadius.zero,
+                          minSize: 0,
+                          padding: EdgeInsets.zero,
+                          child: Text(
+                            doorbell.name,
+                            style: TextStyle(fontSize: 14, color: CupertinoColors.activeBlue),
+                          ),
+                          onPressed: () async => await RouteStateScope.of(context).go('/doorbells/${event.doorbellId}'),
+                        )),
+                  if (showDoorbellLink && doorbell == null)
+                    Padding(
+                        padding: EdgeInsets.only(top: 5),
+                        child: Text('--', style: TextStyle(fontSize: 14, color: CupertinoColors.inactiveGray)))
                 ],
               ),
               Spacer(),
