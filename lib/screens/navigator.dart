@@ -40,7 +40,8 @@ class _AppNavigatorState extends State<AppNavigator> {
 
     Doorbell? selectedDoorbell;
     if (pathTemplate == '/doorbells/:doorbellId') {
-      selectedDoorbell = storeInstance.allDoorbells.where((b) => b.id.toString() == routeState.route.parameters['doorbellId']).first;
+      selectedDoorbell =
+          storeInstance.allDoorbells.where((b) => b.doorbellId.toString() == routeState.route.parameters['doorbellId']).first;
     }
 
     // Author? selectedAuthor;

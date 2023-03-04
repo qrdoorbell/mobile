@@ -1,7 +1,9 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:livekit_client/livekit_client.dart';
+import 'package:provider/provider.dart';
 import 'package:qrdoorbell_mobile/presentation/controls/event_list.dart';
 
 import '../../data.dart';
@@ -54,13 +56,16 @@ class _MainScreenState extends State<MainScreen> {
         late final String title;
 
         if (index == 0) {
-          tabWidget = DoorbellList(
-            doorbells: DataStore()
-                .allDoorbells
-                .map((e) => DoorbellCardViewModel(doorbell: e, announce: e.id == '1' ? 'First one' : 'No new messages'))
-                .toList(),
-            onTapHandler: (Doorbell doorbell) async => await RouteStateScope.of(context).go('/doorbells/${doorbell.id}'),
-          );
+          tabWidget = Consumer<DataStore>(
+              builder: (context, dataStore, child) => DoorbellList(
+                    doorbells: dataStore.allDoorbells
+                        .map((e) => DoorbellCardViewModel(
+                            doorbell: e,
+                            announce: dataStore.allEvents.firstWhereOrNull((x) => e.doorbellId == x.doorbellId)?.eventType.toString() ??
+                                'No new messages'))
+                        .toList(),
+                    onTapHandler: (Doorbell doorbell) async => await RouteStateScope.of(context).go('/doorbells/${doorbell.doorbellId}'),
+                  ));
           title = 'Doorbells';
         } else if (index == 1) {
           tabWidget = EventList();

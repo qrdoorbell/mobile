@@ -1,32 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:qrdoorbell_mobile/data.dart';
 
 class EventCard extends StatelessWidget {
-  final String eventName;
-  final String eventTime;
-  final IconData iconData;
+  final DoorbellEvent event;
 
   EventCard({
     super.key,
-    required this.eventName,
-    required this.eventTime,
-    required this.iconData,
+    required this.event,
   });
-
-  factory EventCard.fromDoorbellEvent(String eventTime) =>
-      EventCard(eventName: 'Doorbell', eventTime: eventTime, iconData: CupertinoIcons.bell);
-
-  factory EventCard.fromMissedCallEvent(String eventTime) =>
-      EventCard(eventName: 'Missed call', eventTime: eventTime, iconData: CupertinoIcons.phone);
-
-  factory EventCard.fromAnsweredCallEvent(String eventTime) =>
-      EventCard(eventName: 'Answered call', eventTime: eventTime, iconData: CupertinoIcons.phone);
-
-  factory EventCard.fromVoiceMessageEvent(String eventTime) =>
-      EventCard(eventName: 'Voice message', eventTime: eventTime, iconData: CupertinoIcons.recordingtape);
-
-  factory EventCard.fromTextMessageEvent(String eventTime) =>
-      EventCard(eventName: 'Text message', eventTime: eventTime, iconData: CupertinoIcons.chat_bubble_text);
 
   @override
   Widget build(BuildContext context) {
@@ -46,22 +28,53 @@ class EventCard extends StatelessWidget {
                   width: 48,
                   height: 48,
                   child: Icon(
-                    iconData,
+                    _getEventIcon(),
                     size: 24,
                     color: Colors.grey,
                   )),
               Padding(padding: EdgeInsets.all(5)),
-              Text(
-                eventName,
-                style: TextStyle(fontWeight: FontWeight.bold),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    event.eventType.toString(),
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 4),
+                  ),
+                  Text(
+                    "Doorbell #${event.doorbellId}",
+                    style: TextStyle(color: CupertinoColors.inactiveGray),
+                  ),
+                ],
               ),
               Spacer(),
               Text(
-                eventTime,
+                event.formattedDateTime,
                 style: TextStyle(color: CupertinoColors.inactiveGray),
+                textAlign: TextAlign.right,
               ),
             ]),
           ),
         ));
+  }
+
+  IconData _getEventIcon() {
+    switch (event.eventType.typeCode) {
+      case 1:
+        return CupertinoIcons.bell;
+      case 2:
+        return CupertinoIcons.phone;
+      case 3:
+        return CupertinoIcons.phone;
+      case 4:
+        return CupertinoIcons.chat_bubble_text;
+      case 5:
+        return CupertinoIcons.recordingtape;
+      case 0:
+      default:
+        return CupertinoIcons.question;
+    }
   }
 }
