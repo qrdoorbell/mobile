@@ -1,4 +1,5 @@
-import 'package:flutter/cupertino.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class Profile extends StatelessWidget {
   Profile({
@@ -12,6 +13,12 @@ class Profile extends StatelessWidget {
       Column(children: [
         Padding(padding: EdgeInsets.only(top: 150)),
         Text('Profile settings'),
+        Padding(padding: EdgeInsets.only(top: 20)),
+        TextButton(
+            onPressed: () {
+              FirebaseAuth.instance.signOut();
+            },
+            child: Text('Sign out')),
       ])
     ]));
   }
