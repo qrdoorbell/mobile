@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../model/doorbell.dart';
-import '../screens/doorbell_screen.dart';
+
+typedef DoorbellCallback = void Function(Doorbell doorbell);
 
 final Widget qrcodeSvg = Padding(
     padding: EdgeInsets.only(top: 7, left: 4, right: 4),
@@ -14,10 +15,12 @@ final Widget qrcodeSvg = Padding(
 class DoorbellCard extends StatelessWidget {
   final Doorbell doorbell;
   final String announce;
+  final DoorbellCallback onTapHandler;
 
   DoorbellCard({
     required this.doorbell,
     required this.announce,
+    required this.onTapHandler,
   });
 
   @override
@@ -33,11 +36,7 @@ class DoorbellCard extends StatelessWidget {
                 )),
             shadowColor: Colors.grey.shade100,
             child: InkWell(
-                onTap: () => Navigator.push(
-                    context,
-                    PageRouteBuilder(
-                        settings: RouteSettings(name: "/doorbells/${doorbell.id}"),
-                        pageBuilder: (context, animation, secondaryAnimation) => DoorbellScreen(doorbell: doorbell))),
+                onTap: () => onTapHandler(doorbell),
                 child: Padding(
                   padding: EdgeInsets.only(top: 24, left: 22, right: 12, bottom: 32),
                   child: Row(

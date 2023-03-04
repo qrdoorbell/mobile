@@ -4,22 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:livekit_client/livekit_client.dart';
 import 'package:qrdoorbell_mobile/presentation/controls/event_list.dart';
 
+import '../../data.dart';
+import '../../routing/route_state.dart';
 import '../controls/doorbell_list.dart';
-import '../../model/doorbell.dart';
 import '../controls/profile.dart';
-
-class TabPages {
-  static const int doorbells = 0;
-  static const int events = 1;
-  static const int profile = 2;
-}
 
 class MainScreen extends StatefulWidget {
   MainScreen({
     super.key,
   });
-
-  final String title = 'QR Doorbell / Home';
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -27,18 +20,18 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   final User user = FirebaseAuth.instance.currentUser!;
+  late final CupertinoTabController _tabController;
 
-  final List<DoorbellCardViewModel> doorbells = [
-    DoorbellCardViewModel(doorbell: Doorbell(id: '1', name: 'Doorbell 1'), announce: '2 missed calls'),
-    DoorbellCardViewModel(doorbell: Doorbell(id: '2', name: 'Doorbell 2')),
-    DoorbellCardViewModel(doorbell: Doorbell(id: '3', name: 'Doorbell My'), announce: 'Just created'),
-    DoorbellCardViewModel(doorbell: Doorbell(id: '4', name: 'Doorbell Yours')),
-    DoorbellCardViewModel(doorbell: Doorbell(id: '5', name: 'Doorbell Shared')),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _tabController = CupertinoTabController(initialIndex: 0)..addListener(_handleTabIndexChanged);
+  }
 
   @override
   Widget build(BuildContext context) {
     return CupertinoTabScaffold(
+      controller: _tabController,
       backgroundColor: Colors.white,
       tabBar: CupertinoTabBar(
         items: const [
@@ -60,13 +53,19 @@ class _MainScreenState extends State<MainScreen> {
         late final Widget tabWidget;
         late final String title;
 
-        if (index == TabPages.doorbells) {
-          tabWidget = DoorbellList(doorbells: doorbells);
+        if (index == 0) {
+          tabWidget = DoorbellList(
+            doorbells: DataStore()
+                .allDoorbells
+                .map((e) => DoorbellCardViewModel(doorbell: e, announce: e.id == '1' ? 'First one' : 'No new messages'))
+                .toList(),
+            onTapHandler: (Doorbell doorbell) async => await RouteStateScope.of(context).go('/doorbells/${doorbell.id}'),
+          );
           title = 'Doorbells';
-        } else if (index == TabPages.events) {
+        } else if (index == 1) {
           tabWidget = EventList();
           title = 'Events';
-        } else if (index == TabPages.profile) {
+        } else if (index == 2) {
           tabWidget = Profile();
           title = 'Profile';
         } else {
@@ -91,5 +90,20 @@ class _MainScreenState extends State<MainScreen> {
                 )));
       },
     );
+  }
+
+  void _handleTabIndexChanged() {
+    switch (_tabController.index) {
+      case 1:
+        RouteStateScope.of(context).go('/events');
+        break;
+      case 2:
+        RouteStateScope.of(context).go('/profile');
+        break;
+      case 0:
+      default:
+        RouteStateScope.of(context).go('/doorbells');
+        break;
+    }
   }
 }
