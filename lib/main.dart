@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
+import 'package:qrdoorbell_mobile/data.dart';
 
 import 'app_options.dart';
 import 'auth.dart';
@@ -12,6 +13,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
+import 'package:provider/provider.dart';
 
 import 'screens/navigator.dart';
 
@@ -34,7 +36,10 @@ Future<void> main() async {
     FirebaseAuth.instance.useAuthEmulator("localhost", 9042);
   }
 
-  runApp(const QRDoorbellApp());
+  runApp(MultiProvider(
+    providers: [Provider(create: (context) => DataStore.createMock())],
+    child: const QRDoorbellApp(),
+  ));
 }
 
 class QRDoorbellApp extends StatefulWidget {

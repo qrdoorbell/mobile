@@ -1,17 +1,18 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:uuid/uuid.dart';
 
 class Doorbell {
-  String id;
+  final String doorbellId;
   String name;
   DoorbellSettings settings;
 
   Doorbell({
-    required this.id,
+    required this.doorbellId,
     required this.name,
   }) : settings = DoorbellSettings();
 
   Doorbell._({
-    required this.id,
+    required this.doorbellId,
     required this.name,
     required this.settings,
   });
@@ -19,7 +20,7 @@ class Doorbell {
   factory Doorbell.fromSnapshot(DataSnapshot snapshot) {
     final s = snapshot.value as Map<String, dynamic>;
 
-    return Doorbell._(id: s['id'], name: s['name'], settings: DoorbellSettings.fromSnapshot(snapshot.child('settings')));
+    return Doorbell._(doorbellId: s['doorbellId'], name: s['name'], settings: DoorbellSettings.fromSnapshot(snapshot.child('settings')));
   }
 }
 
@@ -30,6 +31,8 @@ class DoorbellSettings {
   bool enableVoiceMail = false;
   bool enableTextMail = false;
   bool enablePushNotifications = true;
+  bool automaticStateSettingsEnabled = false;
+  TimeRangeForStateSettings? automaticStateSettings;
 
   DoorbellSettings();
 
@@ -40,6 +43,8 @@ class DoorbellSettings {
     this.enableVoiceMail = false,
     this.enableTextMail = false,
     this.enablePushNotifications = true,
+    this.automaticStateSettingsEnabled = false,
+    this.automaticStateSettings,
   });
 
   factory DoorbellSettings.fromSnapshot(DataSnapshot snapshot) {
@@ -52,6 +57,31 @@ class DoorbellSettings {
       enableVoiceMail: s['enableVoiceMail'],
       enableTextMail: s['enableTextMail'],
       enablePushNotifications: s['enablePushNotifications'],
+      automaticStateSettingsEnabled: s['automaticStateSettingsEnabled'],
+      automaticStateSettings:
+          s['automaticStateSettings'] != null ? TimeRangeForStateSettings.fromSnapshot(snapshot.child('automaticStateSettings')) : null,
+    );
+  }
+}
+
+class TimeRangeForStateSettings {
+  DateTime startTime;
+  DateTime endTime;
+  bool targetState;
+
+  TimeRangeForStateSettings({
+    required this.startTime,
+    required this.endTime,
+    required this.targetState,
+  });
+
+  factory TimeRangeForStateSettings.fromSnapshot(DataSnapshot snapshot) {
+    final s = snapshot.value as Map<String, dynamic>;
+
+    return TimeRangeForStateSettings(
+      startTime: s['startTime'],
+      endTime: s['endTime'],
+      targetState: s['targetState'],
     );
   }
 }

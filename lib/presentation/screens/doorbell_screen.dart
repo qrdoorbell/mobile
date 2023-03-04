@@ -2,14 +2,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:livekit_client/livekit_client.dart';
+import 'package:provider/provider.dart';
+import 'package:qrdoorbell_mobile/data.dart';
 import 'package:qrdoorbell_mobile/presentation/controls/event_card.dart';
 import 'package:qrdoorbell_mobile/presentation/controls/sticker_card.dart';
-
-import '../../model/doorbell.dart';
 
 class DoorbellScreen extends StatelessWidget {
   final User user = FirebaseAuth.instance.currentUser!;
   final Doorbell doorbell;
+  late final List<DoorbellEvent> _events;
 
   DoorbellScreen({
     super.key,
@@ -18,6 +19,8 @@ class DoorbellScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    _events = Provider.of<DataStore>(context).getDoorbellEvents(doorbell.doorbellId);
+
     return CupertinoPageScaffold(
         child: Padding(
             padding: EdgeInsets.only(left: 0, top: 10, right: 5),
@@ -84,20 +87,8 @@ class DoorbellScreen extends StatelessWidget {
 
               SliverList(
                   delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-                switch (index % 5) {
-                  case 0:
-                    return EventCard.fromDoorbellEvent('42m ago');
-                  case 1:
-                    return EventCard.fromAnsweredCallEvent('14:42');
-                  case 2:
-                    return EventCard.fromMissedCallEvent('17 Feb 2023');
-                  case 3:
-                    return EventCard.fromTextMessageEvent('10:02');
-                  case 4:
-                    return EventCard.fromVoiceMessageEvent('5m ago');
-                }
-                throw StateError('Invalid event type');
-              }, childCount: 10)),
+                return EventCard(event: _events[index]);
+              }, childCount: _events.length)),
             ])));
   }
 }
