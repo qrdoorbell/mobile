@@ -19,14 +19,16 @@ class DoorbellEvent {
     return DoorbellEvent._(eventId: s['eventId'], doorbellId: s['doorbellId'], eventType: s['eventType'], dateTime: s['dateTime']);
   }
 
-  factory DoorbellEvent.doorbell(String doorbellId, DateTime? dateTime) => DoorbellEventType.doorbell.createEvent(doorbellId, dateTime);
-  factory DoorbellEvent.missedCall(String doorbellId, DateTime? dateTime) => DoorbellEventType.missedCall.createEvent(doorbellId, dateTime);
-  factory DoorbellEvent.answeredCall(String doorbellId, DateTime? dateTime) =>
-      DoorbellEventType.answeredCall.createEvent(doorbellId, dateTime);
-  factory DoorbellEvent.textMessage(String doorbellId, DateTime? dateTime) =>
-      DoorbellEventType.textMessage.createEvent(doorbellId, dateTime);
-  factory DoorbellEvent.voiceMessage(String doorbellId, DateTime? dateTime) =>
-      DoorbellEventType.voiceMessage.createEvent(doorbellId, dateTime);
+  factory DoorbellEvent.doorbell(String doorbellId, DateTime? dateTime) => DoorbellEvent._(
+      eventId: Uuid().toString(), doorbellId: doorbellId, eventType: DoorbellEventType.doorbell, dateTime: dateTime ?? DateTime.now());
+  factory DoorbellEvent.missedCall(String doorbellId, DateTime? dateTime) => DoorbellEvent._(
+      eventId: Uuid().toString(), doorbellId: doorbellId, eventType: DoorbellEventType.missedCall, dateTime: dateTime ?? DateTime.now());
+  factory DoorbellEvent.answeredCall(String doorbellId, DateTime? dateTime) => DoorbellEvent._(
+      eventId: Uuid().toString(), doorbellId: doorbellId, eventType: DoorbellEventType.answeredCall, dateTime: dateTime ?? DateTime.now());
+  factory DoorbellEvent.textMessage(String doorbellId, DateTime? dateTime, String textMessage) => TextMessageDoorbellEvent._(
+      eventId: Uuid().toString(), doorbellId: doorbellId, dateTime: dateTime ?? DateTime.now(), textMessage: textMessage);
+  factory DoorbellEvent.voiceMessage(String doorbellId, DateTime? dateTime) => DoorbellEvent._(
+      eventId: Uuid().toString(), doorbellId: doorbellId, eventType: DoorbellEventType.voiceMessage, dateTime: dateTime ?? DateTime.now());
 
   String get formattedDateTime {
     var now = DateTime.now();
@@ -39,7 +41,7 @@ class DoorbellEvent {
     if (diff.inDays == 0) return hourMin;
     if (diff.inDays < weekday) return "${_convertWeekDay(dateTime.weekday)}, $hourMin";
     if (dateTime.year < now.year) {
-      return "${dateTime.day} ${_convertMonth(dateTime.month)} ${dateTime.year}\n$hourMin:${dateTime.second < 10 ? '0' : ''}${dateTime.second}";
+      return "${dateTime.day} ${_convertMonth(dateTime.month)} ${dateTime.year}\n$hourMin";
     }
     return "${dateTime.day} ${_convertMonth(dateTime.month)}, $hourMin";
   }
@@ -95,6 +97,17 @@ class DoorbellEvent {
   }
 }
 
+class TextMessageDoorbellEvent extends DoorbellEvent {
+  final String textMessage;
+
+  TextMessageDoorbellEvent._({
+    required super.eventId,
+    required super.doorbellId,
+    required super.dateTime,
+    required this.textMessage,
+  }) : super._(eventType: DoorbellEventType.textMessage);
+}
+
 enum DoorbellEventType {
   unknown(0),
   doorbell(1),
@@ -124,9 +137,5 @@ enum DoorbellEventType {
       default:
         return "Unknown";
     }
-  }
-
-  DoorbellEvent createEvent(String doorbellId, DateTime? dateTime) {
-    return DoorbellEvent._(eventId: Uuid().toString(), doorbellId: doorbellId, eventType: this, dateTime: dateTime ?? DateTime.now());
   }
 }

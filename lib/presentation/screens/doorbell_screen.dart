@@ -87,7 +87,10 @@ class DoorbellScreen extends StatelessWidget {
 
               SliverList(
                   delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-                return EventCard(event: _events[index]);
+                return EventCard(
+                  event: _events[index],
+                  showDoorbellLink: false,
+                );
               }, childCount: _events.length)),
             ])));
   }
