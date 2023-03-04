@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:qrdoorbell_mobile/data.dart';
 
 class EventCard extends StatelessWidget {
@@ -12,6 +13,7 @@ class EventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var dataStore = Provider.of<DataStore>(context);
     return Padding(
         padding: EdgeInsets.only(left: 15, top: 5, right: 10),
         child: Card(
@@ -44,7 +46,7 @@ class EventCard extends StatelessWidget {
                     padding: EdgeInsets.only(top: 4),
                   ),
                   Text(
-                    "Doorbell #${event.doorbellId}",
+                    dataStore.getDoorbellById(event.doorbellId)?.name ?? '-',
                     style: TextStyle(color: CupertinoColors.inactiveGray),
                   ),
                 ],

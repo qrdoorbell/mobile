@@ -19,6 +19,7 @@ abstract class DataStore {
   factory DataStore.createMock() => MockedDataStore._();
 
   List<DoorbellEvent> getDoorbellEvents(String doorbellId) => allEvents.where((element) => element.doorbellId == doorbellId).toList();
+  Doorbell? getDoorbellById(String doorbellId) => allDoorbells.firstWhereOrNull((element) => element.doorbellId == doorbellId);
 }
 
 class MockedDataStore extends DataStore {
@@ -46,6 +47,7 @@ class MockedDataStore extends DataStore {
         DoorbellEvent.textMessage('1', DateTime.parse("2023-01-11 09:10:00")),
         DoorbellEvent.missedCall('3', DateTime.parse("2023-03-02 10:11:33")),
         DoorbellEvent.voiceMessage('3', DateTime.parse("2023-03-02 10:13:03")),
+        DoorbellEvent.voiceMessage('9', DateTime.parse("2023-03-04 10:13:03")),
       ]..sortBy((element) => element.dateTime))
           .reversed
           .toList();
