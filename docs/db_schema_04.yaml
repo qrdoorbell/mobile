@@ -90,8 +90,8 @@ users:
     email: js@a.com
     created: 2321237834
     doorbells:
-      - doorbell1_id
-      - doorbell2_id
+      doorbell1_id: true
+      doorbell2_id: true
 
 invites:
   invite1_id:

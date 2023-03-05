@@ -7,22 +7,18 @@ import 'model/doorbell_event.dart';
 export 'model/doorbell.dart';
 export 'model/doorbell_event.dart';
 
-final storeInstance = DataStore.createMock();
-
 abstract class DataStore extends IdProvider {
   List<Doorbell> get allDoorbells;
   List<DoorbellEvent> get allEvents;
 
   DataStore._();
 
-  factory DataStore.createMock() => MockedDataStore._();
-
   List<DoorbellEvent> getDoorbellEvents(String doorbellId) => allEvents.where((element) => element.doorbellId == doorbellId).toList();
   Doorbell? getDoorbellById(String doorbellId) => allDoorbells.firstWhereOrNull((element) => element.doorbellId == doorbellId);
 }
 
 class MockedDataStore extends DataStore {
-  MockedDataStore._() : super._();
+  MockedDataStore() : super._();
 
   @override
   List<Doorbell> get allDoorbells => [
@@ -58,11 +54,12 @@ class MockedDataStore extends DataStore {
 }
 
 class FirebaseDataStore extends DataStore {
-  final FirebaseDatabase db;
+  late final FirebaseDatabase db;
   late final List<Doorbell> doorbells = List.empty();
   late final List<DoorbellEvent> events = List.empty();
 
-  FirebaseDataStore._({required this.db}) : super._() {
+  FirebaseDataStore() : super._() {
+    db = FirebaseDatabase.instance;
     db.ref('doorbells').onChildAdded.listen((e) {
       doorbells.addAll(e.snapshot.children.map<Doorbell>((x) => Doorbell.fromSnapshot(x)));
     });
