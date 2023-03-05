@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:qrdoorbell_mobile/presentation/screens/doorbell_screen.dart';
 import 'package:qrdoorbell_mobile/presentation/screens/login_screen.dart';
 import 'package:qrdoorbell_mobile/presentation/screens/main_screen.dart';
@@ -39,9 +40,9 @@ class _AppNavigatorState extends State<AppNavigator> {
     final pathTemplate = routeState.route.pathTemplate;
 
     Doorbell? selectedDoorbell;
-    if (pathTemplate == '/doorbells/:doorbellId') {
-      selectedDoorbell =
-          storeInstance.allDoorbells.where((b) => b.doorbellId.toString() == routeState.route.parameters['doorbellId']).first;
+    var doorbellId = routeState.route.parameters['doorbellId'];
+    if (pathTemplate == '/doorbells/:doorbellId' && doorbellId != null) {
+      selectedDoorbell = Provider.of<DataStore>(context).getDoorbellById(doorbellId);
     }
 
     // Author? selectedAuthor;

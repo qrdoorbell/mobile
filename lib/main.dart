@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
@@ -32,12 +33,10 @@ Future<void> main() async {
     GoogleProvider(clientId: GOOGLE_CLIENT_ID),
   ]);
 
-  if (USE_AUTH_EMULATOR) {
-    FirebaseAuth.instance.useAuthEmulator("localhost", 9042);
-  }
+  if (USE_AUTH_EMULATOR) FirebaseAuth.instance.useAuthEmulator("localhost", 9042);
 
   runApp(MultiProvider(
-    providers: [Provider(create: (context) => DataStore.createMock())],
+    providers: [Provider(create: (context) => USE_DATABASE_EMULATOR ? MockedDataStore() : FirebaseDataStore())],
     child: const QRDoorbellApp(),
   ));
 }
