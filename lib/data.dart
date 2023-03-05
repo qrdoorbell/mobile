@@ -1,16 +1,15 @@
 import 'package:collection/collection.dart';
-import 'package:uuid/uuid.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:qrdoorbell_mobile/model/helpers/id_provider.dart';
 import 'model/doorbell.dart';
 import 'model/doorbell_event.dart';
 
-export 'package:uuid/uuid.dart';
 export 'model/doorbell.dart';
 export 'model/doorbell_event.dart';
 
 final storeInstance = DataStore.createMock();
 
-abstract class DataStore {
+abstract class DataStore extends IdProvider {
   List<Doorbell> get allDoorbells;
   List<DoorbellEvent> get allEvents;
 
