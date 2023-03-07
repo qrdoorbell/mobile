@@ -1,0 +1,142 @@
+doorbells:
+  doorbell1_id:
+    name: Doorbell 1
+    enabled: true
+    lastEvent:
+      id: event2_id
+      t: 4
+      ts: 2321237834
+      txt: Hey man! This is Alex, are you around?
+      s: sticker1_id
+    settings:
+      enableVideoCalls: true
+      enableAudioCalls: true
+      enableVideoPreview: true
+      enableVoiceMail: false
+      enableTextMail: false
+      enablePushNotifications: true
+      automaticStateSettings:
+        start: 2321237834
+        end: 2321237834
+        targetEnabledState: true
+        enabled: false
+    stickers:
+      sicker1_id:
+        id: sticker1_id
+        template: sticker-template1_id
+        created: 2321237834
+        params:
+          accentColor: blue
+          titleText: Please scan QR code to ring the doorbell
+  doorbell2_id:
+    name: Doorbell 2
+    enabled: true
+    lastEvent:
+      id: event3_id
+      t: 2
+      ts: 2321237834
+      s: sticker3_id
+    settings:
+      enableVideoCalls: true
+      enableAudioCalls: true
+      enableVideoPreview: true
+      enableVoiceMail: false
+      enableTextMail: false
+      enablePushNotifications: true
+      automaticStateSettings:
+        start: 2321237834
+        end: 2321237834
+        targetEnabledState: true
+        enabled: true
+    stickers:
+      sicker2_id:
+        id: sticker2_id
+        template: sticker-template1_id
+        created: 2321237834
+        params:
+          accentColor: blue
+          titleText: Please scan QR code to ring the doorbell
+
+doorbell-users:
+  doorbell1_id:
+    user1_id:
+      role: owner
+      created: 2321237834
+    user2_id:
+      role: participant
+      created: 2321237834
+  doorbell2_id:
+    user2_id:
+      role: owner
+      created: 2321237834
+
+doorbell-events:
+  doorbell1_id:
+    event1_id:
+      t: 3
+      ts: 2321237834
+      s: sticker1_id
+    event2_id:
+      t: 4
+      ts: 2321237834
+      txt: Hey man! This is Alex, are you around?
+      s: sticker1_id
+  doorbell2_id:
+    event3_id:
+      t: 3
+      ts: 2321237834
+      s: sticker2_id
+    event4_id:
+      t: 5
+      ts: 2321237834
+      rec: https://link.to/voice/message.file
+      s: sticker3_id
+
+sticker-templates:
+  sticker-template1_id:
+    name: Horizontal Sticker
+    enabled: true
+    created: 2321237834
+    handler: hrzntlHandlerClassName
+    imageUrl: https://link.to/sticker/template/image.file
+    params:
+      accentColor: yellow
+      titleText: Please scan QR code to ring the doorbell
+
+users:
+  user1_id:
+    idps:
+      apple:
+        id: "#.apple.idp-userid"
+      google:
+        id: "#.google.idp-userid"
+      invite:
+        id: "#.invite.idp-userid"
+      email:
+        id: "e@ma.il"
+    firstName: John
+    lastName: Smith
+    displayName: John Smith
+    email: js@a.com
+    created: 2321237834
+    doorbells:
+      doorbell1_id: true
+      doorbell2_id: true
+  user2_id:
+    idps:
+    firstName: Bob
+    lastName: Marley
+    displayName: Bob Marley
+    email: b@a.com
+    created: 2321237834
+    doorbells:
+      doorbell2_id: true
+
+invites:
+  invite1_id:
+    doorbell: doorbell1_id
+    role: participant
+    status: created|accepted|rejected|expired|deleted
+    expires: 2321237834
+    created: 2321237834
+    owner: user1_id

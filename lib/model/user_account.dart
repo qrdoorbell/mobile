@@ -25,8 +25,14 @@ class UserAccount {
     displayName = s['displayName'];
     email = s['email'];
     created = DateTime.fromMillisecondsSinceEpoch(s['created']);
-    idps = List.from(s['idps'].entries).map((x) => UserAccountIdp(provider: x.key, providerUserId: x.value['id'])).toList();
-    doorbells = List.from(s['doorbells'].entries).map((x) => x.key.toString()).toList();
+
+    if (s['idps']?.entries != null) {
+      idps = List.from(s['idps'].entries).map((x) => UserAccountIdp(provider: x.key, providerUserId: x.value['id'])).toList();
+    }
+
+    if (s['doorbells']?.entries != null) {
+      doorbells = List.from(s['doorbells'].entries).map((x) => x.key.toString()).toList();
+    }
   }
 
   static UserAccount fromSnapshot(DataSnapshot snapshot) => UserAccount._(snapshot);
