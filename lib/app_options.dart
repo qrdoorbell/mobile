@@ -3,6 +3,7 @@
 import 'package:firebase_core/firebase_core.dart';
 
 const bool USE_AUTH_EMULATOR = true;
+const bool USE_DATABASE_MOCK = false;
 const bool USE_DATABASE_EMULATOR = true;
 const String GOOGLE_CLIENT_ID = '';
 

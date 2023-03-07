@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
 import 'package:qrdoorbell_mobile/data.dart';
 
 import 'event_card.dart';
@@ -14,9 +13,7 @@ class EventList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var events = doorbell != null
-        ? Provider.of<DataStore>(context).getDoorbellEvents(doorbell!.doorbellId)
-        : Provider.of<DataStore>(context).allEvents;
+    var events = doorbell != null ? DataStore.of(context).getDoorbellEvents(doorbell!.doorbellId) : DataStore.of(context).allEvents;
 
     return SliverList(
         delegate: SliverChildBuilderDelegate((BuildContext context, int index) {

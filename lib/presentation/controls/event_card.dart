@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:qrdoorbell_mobile/data.dart';
 
 import '../../routing/route_state.dart';
@@ -17,9 +16,7 @@ class EventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var dataStore = Provider.of<DataStore>(context);
-    var doorbell = dataStore.getDoorbellById(event.doorbellId);
-
+    var doorbell = DataStore.of(context).getDoorbellById(event.doorbellId);
     return Padding(
         padding: EdgeInsets.only(left: 15, top: 5, right: 10),
         child: Card(
@@ -49,7 +46,7 @@ class EventCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    event.eventType.toString(),
+                    event.formattedName,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   if (showDoorbellLink && doorbell != null)
@@ -83,7 +80,7 @@ class EventCard extends StatelessWidget {
   }
 
   IconData _getEventIcon() {
-    switch (event.eventType.typeCode) {
+    switch (event.eventType) {
       case 1:
         return CupertinoIcons.bell;
       case 2:

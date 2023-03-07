@@ -1,34 +1,71 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:uuid/uuid.dart';
+import 'package:nanoid/nanoid.dart';
 
 class DoorbellEvent {
   final String eventId;
+  final String stickerId;
   final String doorbellId;
-  final DoorbellEventType eventType;
+  final int eventType;
   final DateTime dateTime;
 
   DoorbellEvent._({
     required this.eventId,
+    required this.stickerId,
     required this.doorbellId,
     required this.eventType,
     required this.dateTime,
   });
 
-  factory DoorbellEvent.fromSnapshot(DataSnapshot snapshot) {
-    final s = snapshot.value as Map<String, dynamic>;
-    return DoorbellEvent._(eventId: s['eventId'], doorbellId: s['doorbellId'], eventType: s['eventType'], dateTime: s['dateTime']);
+  static DoorbellEvent fromMap(String doorbellId, Map s) => DoorbellEvent.fromMapAndId(doorbellId, s['id'], s);
+
+  static DoorbellEvent fromMapAndId(String doorbellId, String eventId, Map s) => DoorbellEvent._(
+      eventId: eventId,
+      doorbellId: doorbellId,
+      stickerId: s['s'],
+      eventType: s['t'],
+      dateTime: DateTime.fromMillisecondsSinceEpoch(s['ts']));
+
+  static DoorbellEvent fromSnapshot(String doorbellId, DataSnapshot snapshot) {
+    final s = Map.of(snapshot.value as dynamic);
+    return DoorbellEvent._(
+        eventId: s['id'],
+        doorbellId: doorbellId,
+        stickerId: s['s'],
+        eventType: s['t'],
+        dateTime: DateTime.fromMillisecondsSinceEpoch(s['ts']));
   }
 
-  factory DoorbellEvent.doorbell(String doorbellId, DateTime? dateTime) => DoorbellEvent._(
-      eventId: Uuid().toString(), doorbellId: doorbellId, eventType: DoorbellEventType.doorbell, dateTime: dateTime ?? DateTime.now());
-  factory DoorbellEvent.missedCall(String doorbellId, DateTime? dateTime) => DoorbellEvent._(
-      eventId: Uuid().toString(), doorbellId: doorbellId, eventType: DoorbellEventType.missedCall, dateTime: dateTime ?? DateTime.now());
-  factory DoorbellEvent.answeredCall(String doorbellId, DateTime? dateTime) => DoorbellEvent._(
-      eventId: Uuid().toString(), doorbellId: doorbellId, eventType: DoorbellEventType.answeredCall, dateTime: dateTime ?? DateTime.now());
-  factory DoorbellEvent.textMessage(String doorbellId, DateTime? dateTime, String textMessage) => TextMessageDoorbellEvent._(
-      eventId: Uuid().toString(), doorbellId: doorbellId, dateTime: dateTime ?? DateTime.now(), textMessage: textMessage);
-  factory DoorbellEvent.voiceMessage(String doorbellId, DateTime? dateTime) => DoorbellEvent._(
-      eventId: Uuid().toString(), doorbellId: doorbellId, eventType: DoorbellEventType.voiceMessage, dateTime: dateTime ?? DateTime.now());
+  factory DoorbellEvent.doorbell(String doorbellId, String stickerId, DateTime? dateTime) => DoorbellEvent._(
+      eventId: nanoid(10).toString(),
+      doorbellId: doorbellId,
+      stickerId: stickerId,
+      eventType: DoorbellEventType.doorbell.typeCode,
+      dateTime: dateTime ?? DateTime.now());
+  factory DoorbellEvent.missedCall(String doorbellId, String stickerId, DateTime? dateTime) => DoorbellEvent._(
+      eventId: nanoid(10).toString(),
+      doorbellId: doorbellId,
+      stickerId: stickerId,
+      eventType: DoorbellEventType.missedCall.typeCode,
+      dateTime: dateTime ?? DateTime.now());
+  factory DoorbellEvent.answeredCall(String doorbellId, String stickerId, DateTime? dateTime) => DoorbellEvent._(
+      eventId: nanoid(10).toString(),
+      doorbellId: doorbellId,
+      stickerId: stickerId,
+      eventType: DoorbellEventType.answeredCall.typeCode,
+      dateTime: dateTime ?? DateTime.now());
+  factory DoorbellEvent.textMessage(String doorbellId, String stickerId, DateTime? dateTime, String textMessage) =>
+      TextMessageDoorbellEvent._(
+          eventId: nanoid(10).toString(),
+          doorbellId: doorbellId,
+          stickerId: stickerId,
+          dateTime: dateTime ?? DateTime.now(),
+          textMessage: textMessage);
+  factory DoorbellEvent.voiceMessage(String doorbellId, String stickerId, DateTime? dateTime) => DoorbellEvent._(
+      eventId: nanoid(10).toString(),
+      doorbellId: doorbellId,
+      stickerId: stickerId,
+      eventType: DoorbellEventType.voiceMessage.typeCode,
+      dateTime: dateTime ?? DateTime.now());
 
   String get formattedDateTime {
     var now = DateTime.now();
@@ -45,6 +82,8 @@ class DoorbellEvent {
     }
     return "${dateTime.day} ${_convertMonth(dateTime.month)}, $hourMin";
   }
+
+  String get formattedName => DoorbellEventType.getString(eventType) ?? "Unknown event";
 
   String _convertWeekDay(int weekday) {
     switch (weekday) {
@@ -103,9 +142,10 @@ class TextMessageDoorbellEvent extends DoorbellEvent {
   TextMessageDoorbellEvent._({
     required super.eventId,
     required super.doorbellId,
+    required super.stickerId,
     required super.dateTime,
     required this.textMessage,
-  }) : super._(eventType: DoorbellEventType.textMessage);
+  }) : super._(eventType: DoorbellEventType.textMessage.typeCode);
 }
 
 enum DoorbellEventType {
@@ -121,7 +161,9 @@ enum DoorbellEventType {
   final int typeCode;
 
   @override
-  String toString() {
+  String toString() => DoorbellEventType.getString(typeCode) ?? 'Unknown event';
+
+  static String? getString(int? typeCode) {
     switch (typeCode) {
       case 1:
         return "Doorbell rings";
@@ -135,7 +177,7 @@ enum DoorbellEventType {
         return "Voice message";
       case 0:
       default:
-        return "Unknown";
+        return null;
     }
   }
 }

@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:livekit_client/livekit_client.dart';
-import 'package:provider/provider.dart';
 import 'package:qrdoorbell_mobile/data.dart';
 import 'package:qrdoorbell_mobile/presentation/controls/event_card.dart';
 import 'package:qrdoorbell_mobile/presentation/controls/sticker_card.dart';
@@ -10,7 +9,6 @@ import 'package:qrdoorbell_mobile/presentation/controls/sticker_card.dart';
 class DoorbellScreen extends StatelessWidget {
   final User user = FirebaseAuth.instance.currentUser!;
   final Doorbell doorbell;
-  late final List<DoorbellEvent> _events;
 
   DoorbellScreen({
     super.key,
@@ -19,8 +17,7 @@ class DoorbellScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _events = Provider.of<DataStore>(context).getDoorbellEvents(doorbell.doorbellId);
-
+    final events = DataStore.of(context).getDoorbellEvents(doorbell.doorbellId);
     return CupertinoPageScaffold(
         child: Padding(
             padding: EdgeInsets.only(left: 0, top: 10, right: 5),
@@ -88,10 +85,10 @@ class DoorbellScreen extends StatelessWidget {
               SliverList(
                   delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
                 return EventCard(
-                  event: _events[index],
+                  event: events[index],
                   showDoorbellLink: false,
                 );
-              }, childCount: _events.length)),
+              }, childCount: events.length)),
             ])));
   }
 }
