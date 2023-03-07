@@ -25,41 +25,37 @@ class Doorbell {
 }
 
 class DoorbellSettings {
+  String doorbellId;
   bool enableVideoCalls = true;
   bool enableAudioCalls = true;
   bool enableVideoPreview = true;
   bool enableVoiceMail = false;
   bool enableTextMail = false;
   bool enablePushNotifications = true;
-  bool automaticStateSettingsEnabled = false;
   TimeRangeForStateSettings? automaticStateSettings;
 
-  DoorbellSettings();
-
   DoorbellSettings._({
+    required this.doorbellId,
     this.enableVideoCalls = true,
     this.enableAudioCalls = true,
     this.enableVideoPreview = true,
     this.enableVoiceMail = false,
     this.enableTextMail = false,
     this.enablePushNotifications = true,
-    this.automaticStateSettingsEnabled = false,
     this.automaticStateSettings,
   });
 
-  factory DoorbellSettings.fromSnapshot(DataSnapshot snapshot) {
-    final s = snapshot.value as Map<String, dynamic>;
-
+  factory DoorbellSettings.fromMapAndId(String doorbellId, Map s) {
     return DoorbellSettings._(
+      doorbellId: doorbellId,
       enableVideoCalls: s['enableVideoCalls'],
       enableAudioCalls: s['enableAudioCalls'],
       enableVideoPreview: s['enableVideoPreview'],
       enableVoiceMail: s['enableVoiceMail'],
       enableTextMail: s['enableTextMail'],
       enablePushNotifications: s['enablePushNotifications'],
-      automaticStateSettingsEnabled: s['automaticStateSettingsEnabled'],
-      automaticStateSettings:
-          s['automaticStateSettings'] != null ? TimeRangeForStateSettings.fromSnapshot(snapshot.child('automaticStateSettings')) : null,
+      // automaticStateSettings:
+      //     s['automaticStateSettings'] != null ? TimeRangeForStateSettings.fromSnapshot(snapshot.child('automaticStateSettings')) : null,
     );
   }
 }

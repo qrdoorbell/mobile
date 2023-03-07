@@ -6,6 +6,9 @@ class MockedDataStore extends DataStore {
   MockedDataStore();
 
   @override
+  List<DoorbellSettings> get allDoorbellSettings => [];
+
+  @override
   List<Doorbell> get allDoorbells => [
         Doorbell(doorbellId: '1', name: 'Doorbell 1'),
         Doorbell(doorbellId: '2', name: 'Doorbell 2'),
@@ -40,6 +43,11 @@ class MockedDataStore extends DataStore {
 
   @override
   Future<void> setUid(String? uid) {
+    return Future.value(null);
+  }
+
+  @override
+  Future<void> reloadData() {
     return Future.value(null);
   }
 }

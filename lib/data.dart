@@ -11,11 +11,13 @@ export 'model/doorbell_event.dart';
 abstract class DataStore extends IdProvider {
   List<Doorbell> get allDoorbells;
   List<DoorbellEvent> get allEvents;
+  List<DoorbellSettings> get allDoorbellSettings;
 
   List<DoorbellEvent> getDoorbellEvents(String doorbellId) => allEvents.where((element) => element.doorbellId == doorbellId).toList();
   Doorbell? getDoorbellById(String doorbellId) => allDoorbells.firstWhereOrNull((element) => element.doorbellId == doorbellId);
 
   Future<void> setUid(String? uid);
+  Future<void> reloadData();
 
   static DataStore of(BuildContext context) => context.dependOnInheritedWidgetOfExactType<DataStoreStateScope>()!.notifier!.dataStore;
 }
@@ -39,6 +41,10 @@ class DataStoreState extends ChangeNotifier {
     } else if (_uid != user?.uid) {
       _uid = user?.uid;
       await dataStore.setUid(_uid);
+      notifyListeners();
+    } else {
+      await dataStore.setUid(_uid);
+      // await dataStore.reloadData();
       notifyListeners();
     }
   }
