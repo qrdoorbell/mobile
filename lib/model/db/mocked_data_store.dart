@@ -1,9 +1,14 @@
 import 'package:collection/collection.dart';
+import 'package:qrdoorbell_mobile/model/user_account.dart';
 
 import '../../data.dart';
 
 class MockedDataStore extends DataStore {
   MockedDataStore();
+
+  @override
+  UserAccount? get currentUser =>
+      UserAccount(userId: 'user1_id', displayName: 'Test User', firstName: 'Test', lastName: 'User', email: 't@us.er');
 
   @override
   List<DoorbellSettings> get allDoorbellSettings => [];

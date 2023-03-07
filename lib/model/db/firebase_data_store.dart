@@ -1,5 +1,4 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:qrdoorbell_mobile/model/user_account.dart';
 
 import '../../data.dart';
 
@@ -7,6 +6,7 @@ class FirebaseDataStore extends DataStore {
   String? _uid;
   bool _isCacheClean = true;
   bool _isDataLoaded = false;
+  UserAccount? _currentUser;
   List<Doorbell> _doorbells = <Doorbell>[];
   List<DoorbellEvent> _events = <DoorbellEvent>[];
   List<DoorbellSettings> _doorbellSettings = <DoorbellSettings>[];
@@ -21,6 +21,8 @@ class FirebaseDataStore extends DataStore {
     if (!_isCacheClean) cacheClean();
 
     _uid = uid;
+    if (_uid == null) _currentUser = null;
+
     await cacheReload();
   }
 
@@ -48,17 +50,12 @@ class FirebaseDataStore extends DataStore {
             _events.add(DoorbellEvent.fromMapAndId(doorbellId, s.key!, Map.of(s.value as dynamic)));
           }
         });
-
-        print("Retrieving doorbell settings: path='doorbell-settings/$doorbellId/settings'");
-        db.ref('doorbell-settings/$doorbellId/settings').onValue.listen((x) {
-          var settings = DoorbellSettings.fromMapAndId(doorbellId, Map.of(x.snapshot.value as dynamic));
-          _doorbellSettings.add(settings);
-        });
       } catch (e) {
         print(e);
       }
     }
 
+    _currentUser = user;
     _isDataLoaded = true;
   }
 
@@ -78,4 +75,7 @@ class FirebaseDataStore extends DataStore {
 
   @override
   List<DoorbellSettings> get allDoorbellSettings => _doorbellSettings;
+
+  @override
+  UserAccount? get currentUser => _currentUser;
 }
