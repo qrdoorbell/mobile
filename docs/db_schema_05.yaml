@@ -65,14 +65,14 @@ doorbells:
 
 doorbell-users:
   doorbell1_id:
-    user1_id:
+    GqxBjRWgIX3leKXavrcEKlDnJ6Bj:
       role: owner
       created: 2321237834
-    user2_id:
+    1odRFCNLjUQ718GlI3FBhasizxWD:
       role: participant
       created: 2321237834
   doorbell2_id:
-    user2_id:
+    1odRFCNLjUQ718GlI3FBhasizxWD:
       role: owner
       created: 2321237834
 
@@ -111,10 +111,10 @@ sticker-templates:
         titleText: Please scan QR code to ring the doorbell
     enabled: true
     created: 2321237834
-    owner: user1_id
+    owner: GqxBjRWgIX3leKXavrcEKlDnJ6Bj
 
 users:
-  user1_id:
+  GqxBjRWgIX3leKXavrcEKlDnJ6Bj:
     idps:
       apple:
         id: "#.apple.idp-userid"
@@ -132,7 +132,7 @@ users:
     doorbells:
       doorbell1_id: true
       doorbell2_id: true
-  user2_id:
+  1odRFCNLjUQ718GlI3FBhasizxWD:
     idps:
     firstName: Bob
     lastName: Marley
@@ -149,4 +149,4 @@ invites:
     status: created|accepted|rejected|expired|deleted
     expires: 2321237834
     created: 2321237834
-    owner: user1_id
+    owner: GqxBjRWgIX3leKXavrcEKlDnJ6Bj
