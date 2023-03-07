@@ -22,11 +22,14 @@ doorbells:
         enabled: false
     stickers:
       sicker1_id:
-        id: sticker1_id
-        template: sticker-template1_id
         created: 2321237834
+        template:
+          id: sticker-template1_id
+          handler: hrzntlHandlerClassName
+          data:
+            imageUrl: https://link.to/sticker/template/image.file
         params:
-          accentColor: blue
+          accentColor: orrange
           titleText: Please scan QR code to ring the doorbell
   doorbell2_id:
     name: Doorbell 2
@@ -50,9 +53,12 @@ doorbells:
         enabled: true
     stickers:
       sicker2_id:
-        id: sticker2_id
-        template: sticker-template1_id
         created: 2321237834
+        template:
+          id: sticker-template1_id
+          handler: hrzntlHandlerClassName
+          data:
+            imageUrl: https://link.to/sticker/template/image.file
         params:
           accentColor: blue
           titleText: Please scan QR code to ring the doorbell
@@ -94,14 +100,18 @@ doorbell-events:
 
 sticker-templates:
   sticker-template1_id:
+    id: sticker-template1_id
     name: Horizontal Sticker
+    template:
+      handler: hrzntlHandlerClassName
+      data:
+        imageUrl: https://link.to/sticker/template/image.file
+      params:
+        accentColor: yellow
+        titleText: Please scan QR code to ring the doorbell
     enabled: true
     created: 2321237834
-    handler: hrzntlHandlerClassName
-    imageUrl: https://link.to/sticker/template/image.file
-    params:
-      accentColor: yellow
-      titleText: Please scan QR code to ring the doorbell
+    owner: user1_id
 
 users:
   user1_id:
