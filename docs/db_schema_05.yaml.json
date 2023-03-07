@@ -26,11 +26,16 @@
       },
       "stickers": {
         "sicker1_id": {
-          "id": "sticker1_id",
-          "template": "sticker-template1_id",
           "created": 2321237834,
+          "template": {
+            "id": "sticker-template1_id",
+            "handler": "hrzntlHandlerClassName",
+            "data": {
+              "imageUrl": "https://link.to/sticker/template/image.file"
+            }
+          },
           "params": {
-            "accentColor": "blue",
+            "accentColor": "orrange",
             "titleText": "Please scan QR code to ring the doorbell"
           }
         }
@@ -61,9 +66,14 @@
       },
       "stickers": {
         "sicker2_id": {
-          "id": "sticker2_id",
-          "template": "sticker-template1_id",
           "created": 2321237834,
+          "template": {
+            "id": "sticker-template1_id",
+            "handler": "hrzntlHandlerClassName",
+            "data": {
+              "imageUrl": "https://link.to/sticker/template/image.file"
+            }
+          },
           "params": {
             "accentColor": "blue",
             "titleText": "Please scan QR code to ring the doorbell"
@@ -74,17 +84,17 @@
   },
   "doorbell-users": {
     "doorbell1_id": {
-      "GqxBjRWgIX3leKXavrcEKlDnJ6Bj": {
+      "user1_id": {
         "role": "owner",
         "created": 2321237834
       },
-      "1odRFCNLjUQ718GlI3FBhasizxWD": {
+      "user2_id": {
         "role": "participant",
         "created": 2321237834
       }
     },
     "doorbell2_id": {
-      "1odRFCNLjUQ718GlI3FBhasizxWD": {
+      "user2_id": {
         "role": "owner",
         "created": 2321237834
       }
@@ -120,19 +130,25 @@
   },
   "sticker-templates": {
     "sticker-template1_id": {
+      "id": "sticker-template1_id",
       "name": "Horizontal Sticker",
+      "template": {
+        "handler": "hrzntlHandlerClassName",
+        "data": {
+          "imageUrl": "https://link.to/sticker/template/image.file"
+        },
+        "params": {
+          "accentColor": "yellow",
+          "titleText": "Please scan QR code to ring the doorbell"
+        }
+      },
       "enabled": true,
       "created": 2321237834,
-      "handler": "hrzntlHandlerClassName",
-      "imageUrl": "https://link.to/sticker/template/image.file",
-      "params": {
-        "accentColor": "yellow",
-        "titleText": "Please scan QR code to ring the doorbell"
-      }
+      "owner": "user1_id"
     }
   },
   "users": {
-    "GqxBjRWgIX3leKXavrcEKlDnJ6Bj": {
+    "user1_id": {
       "idps": {
         "apple": {
           "id": "#.apple.idp-userid"
@@ -157,7 +173,7 @@
         "doorbell2_id": true
       }
     },
-    "1odRFCNLjUQ718GlI3FBhasizxWD": {
+    "user2_id": {
       "idps": null,
       "firstName": "Bob",
       "lastName": "Marley",
@@ -176,7 +192,7 @@
       "status": "created|accepted|rejected|expired|deleted",
       "expires": 2321237834,
       "created": 2321237834,
-      "owner": "GqxBjRWgIX3leKXavrcEKlDnJ6Bj"
+      "owner": "user1_id"
     }
   }
 }
