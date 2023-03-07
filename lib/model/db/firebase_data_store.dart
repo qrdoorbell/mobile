@@ -1,45 +1,38 @@
+import 'package:collection/collection.dart';
 import 'package:firebase_database/firebase_database.dart';
-
 import '../../data.dart';
 
 class FirebaseDataStore extends DataStore {
   String? _uid;
-  bool _isCacheClean = true;
-  bool _isDataLoaded = false;
   UserAccount? _currentUser;
   List<Doorbell> _doorbells = <Doorbell>[];
   List<DoorbellEvent> _events = <DoorbellEvent>[];
-  List<DoorbellSettings> _doorbellSettings = <DoorbellSettings>[];
   final FirebaseDatabase db;
-
-  String? get uid => _uid;
 
   FirebaseDataStore({required this.db}) : super();
 
   @override
   Future<void> setUid(String? uid) async {
-    if (!_isCacheClean) cacheClean();
-
     _uid = uid;
-    if (_uid == null) _currentUser = null;
-
-    await cacheReload();
+    await reloadData();
   }
 
   @override
   Future<void> reloadData() async {
-    if (!_isDataLoaded) {
-      await cacheReload();
+    _doorbells.clear();
+    _events.clear();
+    _currentUser = null;
+
+    if (_uid == null) return;
+
+    try {
+      print("Reloading data for user: userId='$_uid'");
+      _currentUser = UserAccount.fromSnapshot(await db.ref('users/$_uid').get());
+    } catch (e) {
+      print(e);
     }
-  }
 
-  Future<void> cacheReload() async {
-    if (uid == null) return;
-    _isCacheClean = false;
-
-    print("Reloading data for user: userId='$uid'");
-    var user = UserAccount.fromSnapshot(await db.ref('users/$uid').get());
-    for (var doorbellId in user.doorbells) {
+    for (var doorbellId in _currentUser!.doorbells) {
       try {
         print("Retrieving doorbell info: path='doorbells/$doorbellId'");
         _doorbells.add(Doorbell.fromSnapshot(await db.ref('doorbells/$doorbellId').get()));
@@ -55,16 +48,8 @@ class FirebaseDataStore extends DataStore {
       }
     }
 
-    _currentUser = user;
-    _isDataLoaded = true;
-  }
-
-  void cacheClean() {
-    if (_isCacheClean) return;
-
-    _doorbellSettings.clear();
-    _doorbells.clear();
-    _events.clear();
+    _doorbells.sortBy((_) => _.name);
+    _events.sortBy((_) => _.dateTime);
   }
 
   @override
@@ -72,9 +57,6 @@ class FirebaseDataStore extends DataStore {
 
   @override
   List<DoorbellEvent> get allEvents => _events;
-
-  @override
-  List<DoorbellSettings> get allDoorbellSettings => _doorbellSettings;
 
   @override
   UserAccount? get currentUser => _currentUser;

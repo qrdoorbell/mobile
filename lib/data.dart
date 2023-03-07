@@ -14,7 +14,6 @@ abstract class DataStore extends IdProvider {
   UserAccount? get currentUser;
   List<Doorbell> get allDoorbells;
   List<DoorbellEvent> get allEvents;
-  List<DoorbellSettings> get allDoorbellSettings;
 
   List<DoorbellEvent> getDoorbellEvents(String doorbellId) => allEvents.where((element) => element.doorbellId == doorbellId).toList();
   Doorbell? getDoorbellById(String doorbellId) => allDoorbells.firstWhereOrNull((element) => element.doorbellId == doorbellId);
