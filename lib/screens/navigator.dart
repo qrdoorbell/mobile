@@ -42,7 +42,7 @@ class _AppNavigatorState extends State<AppNavigator> {
     Doorbell? selectedDoorbell;
     var doorbellId = routeState.route.parameters['doorbellId'];
     if (pathTemplate == '/doorbells/:doorbellId' && doorbellId != null) {
-      selectedDoorbell = Provider.of<DataStore>(context).getDoorbellById(doorbellId);
+      selectedDoorbell = DataStore.of(context).getDoorbellById(doorbellId);
     }
 
     // Author? selectedAuthor;

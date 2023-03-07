@@ -1,27 +1,27 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:uuid/uuid.dart';
+import 'package:qrdoorbell_mobile/data.dart';
 
 class Doorbell {
-  final String doorbellId;
-  String name;
-  DoorbellSettings settings;
+  late final String doorbellId;
+  late String name;
+  bool enabled = true;
+  DoorbellEvent? lastEvent;
 
   Doorbell({
     required this.doorbellId,
     required this.name,
-  }) : settings = DoorbellSettings();
-
-  Doorbell._({
-    required this.doorbellId,
-    required this.name,
-    required this.settings,
   });
 
-  factory Doorbell.fromSnapshot(DataSnapshot snapshot) {
-    final s = snapshot.value as Map<String, dynamic>;
+  Doorbell._(DataSnapshot snapshot) {
+    final s = Map.of(snapshot.value as dynamic);
 
-    return Doorbell._(doorbellId: s['doorbellId'], name: s['name'], settings: DoorbellSettings.fromSnapshot(snapshot.child('settings')));
+    doorbellId = snapshot.key!;
+    name = s['name'];
+    enabled = s['enabled'];
+    lastEvent = DoorbellEvent.fromMap(doorbellId, s['lastEvent']);
   }
+
+  static Doorbell fromSnapshot(DataSnapshot snapshot) => Doorbell._(snapshot);
 }
 
 class DoorbellSettings {

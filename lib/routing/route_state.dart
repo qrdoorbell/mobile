@@ -11,7 +11,7 @@ import 'parser.dart';
 /// using `RouteStateScope.of(context)` and call `go()`:
 ///
 /// ```
-/// RouteStateScope.of(context).go('/book/2');
+/// RouteStateScope.of(context).go('/doorbells/2');
 /// ```
 class RouteState extends ChangeNotifier {
   final TemplateRouteParser _parser;
@@ -30,8 +30,7 @@ class RouteState extends ChangeNotifier {
   }
 
   Future<void> go(String route) async {
-    this.route =
-        await _parser.parseRouteInformation(RouteInformation(location: route));
+    this.route = await _parser.parseRouteInformation(RouteInformation(location: route));
   }
 }
 
@@ -43,6 +42,5 @@ class RouteStateScope extends InheritedNotifier<RouteState> {
     super.key,
   });
 
-  static RouteState of(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<RouteStateScope>()!.notifier!;
+  static RouteState of(BuildContext context) => context.dependOnInheritedWidgetOfExactType<RouteStateScope>()!.notifier!;
 }

@@ -8,13 +8,14 @@ import 'package:qrdoorbell_mobile/data.dart';
 
 import 'app_options.dart';
 import 'auth.dart';
+import 'model/db/firebase_data_store.dart';
+import 'model/db/mocked_data_store.dart';
 import 'routing.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
-import 'package:provider/provider.dart';
 
 import 'screens/navigator.dart';
 
@@ -33,12 +34,10 @@ Future<void> main() async {
     GoogleProvider(clientId: GOOGLE_CLIENT_ID),
   ]);
 
-  if (USE_AUTH_EMULATOR) FirebaseAuth.instance.useAuthEmulator("localhost", 9042);
+  if (USE_DATABASE_EMULATOR) FirebaseDatabase.instance.useDatabaseEmulator("127.0.0.1", 9041);
+  if (USE_AUTH_EMULATOR) await FirebaseAuth.instance.useAuthEmulator("127.0.0.1", 9042);
 
-  runApp(MultiProvider(
-    providers: [Provider(create: (context) => USE_DATABASE_EMULATOR ? MockedDataStore() : FirebaseDataStore())],
-    child: const QRDoorbellApp(),
-  ));
+  runApp(const QRDoorbellApp());
 }
 
 class QRDoorbellApp extends StatefulWidget {
@@ -96,17 +95,20 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
         notifier: _routeState,
         child: AppAuthScope(
             notifier: _auth,
-            child: CupertinoApp.router(
-              routerDelegate: _routerDelegate,
-              routeInformationParser: _routeParser,
-              theme: CupertinoThemeData(
-                brightness: Brightness.light,
-                scaffoldBackgroundColor: Colors.white,
-                barBackgroundColor: Colors.white,
-                textTheme: CupertinoTextThemeData(
-                    navLargeTitleTextStyle: TextStyle(fontWeight: FontWeight.w500, color: Colors.black, fontSize: 34)),
-              ),
-            )));
+            child: DataStoreStateScope(
+                notifier:
+                    DataStoreState(dataStore: USE_DATABASE_MOCK ? MockedDataStore() : FirebaseDataStore(db: FirebaseDatabase.instance)),
+                child: CupertinoApp.router(
+                  routerDelegate: _routerDelegate,
+                  routeInformationParser: _routeParser,
+                  theme: CupertinoThemeData(
+                    brightness: Brightness.light,
+                    scaffoldBackgroundColor: Colors.white,
+                    barBackgroundColor: Colors.white,
+                    textTheme: CupertinoTextThemeData(
+                        navLargeTitleTextStyle: TextStyle(fontWeight: FontWeight.w500, color: Colors.black, fontSize: 34)),
+                  ),
+                ))));
   }
 
   @override
@@ -125,7 +127,7 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
     if (!signedIn && from != signInRoute) {
       return signInRoute;
     }
-    // Go to /books if the user is signed in and tries to go to /signin.
+    // Go to /doorbells if the user is signed in and tries to go to /signin.
     else if (signedIn && from == signInRoute) {
       return ParsedRoute('/doorbells', '/doorbells', {}, {});
     }

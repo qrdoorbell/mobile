@@ -29,12 +29,8 @@
         }
       },
       "users": {
-        "user1_id": {
+        "QLHPeNq2DiUd4CHg6u4EswpVkNbn": {
           "role": "owner",
-          "created": 2321237834
-        },
-        "user2_id": {
-          "role": "participant",
           "created": 2321237834
         }
       }
@@ -94,7 +90,7 @@
     }
   },
   "users": {
-    "user1_id": {
+    "QLHPeNq2DiUd4CHg6u4EswpVkNbn": {
       "idps": {
         "apple": {
           "id": "#.apple.idp-userid"
@@ -118,6 +114,30 @@
         "doorbell1_id": true,
         "doorbell2_id": true
       }
+    },
+    "user2_id": {
+      "idps": {
+        "apple": {
+          "id": "#.apple.idp-userid"
+        },
+        "google": {
+          "id": "#.google.idp-userid"
+        },
+        "invite": {
+          "id": "#.invite.idp-userid"
+        },
+        "email": {
+          "id": "e@ma.il"
+        }
+      },
+      "firstName": "Bob",
+      "lastName": "Smith",
+      "displayName": "Bob Smith",
+      "email": "ccc@a.com",
+      "created": 2321237834,
+      "doorbells": {
+        "doorbell2_id": true
+      }
     }
   },
   "invites": {
@@ -127,7 +147,7 @@
       "status": "created|accepted|rejected|expired|deleted",
       "expires": 2321237834,
       "created": 2321237834,
-      "owner": "user1_id"
+      "owner": "QLHPeNq2DiUd4CHg6u4EswpVkNbn"
     }
   }
 }
