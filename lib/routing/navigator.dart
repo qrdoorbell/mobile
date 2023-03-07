@@ -1,20 +1,11 @@
-// Copyright 2021, the Flutter project authors. Please see the AUTHORS file
-// for details. All rights reserved. Use of this source code is governed by a
-// BSD-style license that can be found in the LICENSE file.
-
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:qrdoorbell_mobile/presentation/screens/doorbell_screen.dart';
 import 'package:qrdoorbell_mobile/presentation/screens/login_screen.dart';
 import 'package:qrdoorbell_mobile/presentation/screens/main_screen.dart';
 
-import '../auth.dart';
-import '../data.dart';
 import '../routing.dart';
 import '../widgets/fade_transition_page.dart';
 
-/// Builds the top-level navigator for the app. The pages to display are based
-/// on the `routeState` that was parsed by the TemplateRouteParser.
 class AppNavigator extends StatefulWidget {
   final GlobalKey<NavigatorState> navigatorKey;
 
@@ -36,15 +27,9 @@ class _AppNavigatorState extends State<AppNavigator> {
   @override
   Widget build(BuildContext context) {
     final routeState = RouteStateScope.of(context);
-    final authState = AppAuthScope.of(context);
     final pathTemplate = routeState.route.pathTemplate;
 
-    Doorbell? selectedDoorbell;
     var doorbellId = routeState.route.parameters['doorbellId'];
-    if (pathTemplate == '/doorbells/:doorbellId' && doorbellId != null) {
-      selectedDoorbell = DataStore.of(context).getDoorbellById(doorbellId);
-    }
-
     // Author? selectedAuthor;
     // if (pathTemplate == '/author/:authorId') {
     //   selectedAuthor = libraryInstance.allAuthors.firstWhereOrNull((b) => b.id.toString() == routeState.route.parameters['authorId']);
@@ -67,18 +52,16 @@ class _AppNavigatorState extends State<AppNavigator> {
       },
       pages: [
         if (routeState.route.pathTemplate == '/login')
-          // Display the sign in screen.
           FadeTransitionPage<void>(key: _signInKey, child: LoginScreen())
         else ...[
-          // Display the app
           FadeTransitionPage<void>(
             key: _scaffoldKey,
             child: MainScreen(),
           ),
-          if (selectedDoorbell != null)
+          if (pathTemplate == '/doorbells/:doorbellId' && doorbellId != null)
             MaterialPage(
               key: _doorbellDetailsKey,
-              child: DoorbellScreen(doorbell: selectedDoorbell),
+              child: DoorbellScreen(doorbellId: doorbellId),
             ),
           // Add an additional page to the stack if the user is viewing a book
           // or an author

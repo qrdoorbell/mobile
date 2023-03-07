@@ -1,7 +1,3 @@
-// Copyright 2021, the Flutter project authors. Please see the AUTHORS file
-// for details. All rights reserved. Use of this source code is governed by a
-// BSD-style license that can be found in the LICENSE file.
-
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
@@ -10,8 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'parsed_route.dart';
 import 'route_state.dart';
 
-class SimpleRouterDelegate extends RouterDelegate<ParsedRoute>
-    with ChangeNotifier, PopNavigatorRouterDelegateMixin<ParsedRoute> {
+class SimpleRouterDelegate extends RouterDelegate<ParsedRoute> with ChangeNotifier, PopNavigatorRouterDelegateMixin<ParsedRoute> {
   final RouteState routeState;
   final WidgetBuilder builder;
 

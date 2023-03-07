@@ -11,6 +11,8 @@ export 'model/doorbell_event.dart';
 export 'model/user_account.dart';
 
 abstract class DataStore extends IdProvider {
+  // Stream<UserAccount?> get currentUser;
+
   UserAccount? get currentUser;
   List<Doorbell> get allDoorbells;
   List<DoorbellEvent> get allEvents;
@@ -46,13 +48,11 @@ class DataStoreState extends ChangeNotifier {
       notifyListeners();
     } else {
       await dataStore.setUid(_uid);
-      // await dataStore.reloadData();
       notifyListeners();
     }
   }
 }
 
-/// Provides the current [DataStoreState] to descendant widgets in the tree.
 class DataStoreStateScope extends InheritedNotifier<DataStoreState> {
   const DataStoreStateScope({
     required super.notifier,

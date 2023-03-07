@@ -7,7 +7,6 @@ import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:qrdoorbell_mobile/data.dart';
 
 import 'app_options.dart';
-import 'auth.dart';
 import 'model/db/firebase_data_store.dart';
 import 'model/db/mocked_data_store.dart';
 import 'routing.dart';
@@ -17,7 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 
-import 'screens/navigator.dart';
+import 'routing/navigator.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,6 +36,9 @@ Future<void> main() async {
   if (USE_DATABASE_EMULATOR) FirebaseDatabase.instance.useDatabaseEmulator("127.0.0.1", 9041);
   if (USE_AUTH_EMULATOR) await FirebaseAuth.instance.useAuthEmulator("127.0.0.1", 9042);
 
+  FirebaseDatabase.instance.setPersistenceEnabled(true);
+  FirebaseDatabase.instance.setLoggingEnabled(true);
+
   runApp(const QRDoorbellApp());
 }
 
@@ -48,7 +50,6 @@ class QRDoorbellApp extends StatefulWidget {
 }
 
 class _QRDoorbellAppState extends State<QRDoorbellApp> {
-  final _auth = AppAuth();
   final _navigatorKey = GlobalKey<NavigatorState>();
   late final RouteState _routeState;
   late final SimpleRouterDelegate _routerDelegate;
@@ -83,44 +84,39 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
       ),
     );
 
-    // Listen for when the user logs out and display the signin screen.
-    _auth.addListener(_handleAuthStateChanged);
+    FirebaseAuth.instance.authStateChanges().listen(_handleAuthStateChanged);
 
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return RouteStateScope(
-        notifier: _routeState,
-        child: AppAuthScope(
-            notifier: _auth,
-            child: DataStoreStateScope(
-                notifier:
-                    DataStoreState(dataStore: USE_DATABASE_MOCK ? MockedDataStore() : FirebaseDataStore(db: FirebaseDatabase.instance)),
-                child: CupertinoApp.router(
-                  routerDelegate: _routerDelegate,
-                  routeInformationParser: _routeParser,
-                  theme: CupertinoThemeData(
-                    brightness: Brightness.light,
-                    scaffoldBackgroundColor: Colors.white,
-                    barBackgroundColor: Colors.white,
-                    textTheme: CupertinoTextThemeData(
-                        navLargeTitleTextStyle: TextStyle(fontWeight: FontWeight.w500, color: Colors.black, fontSize: 34)),
-                  ),
-                ))));
+    return DataStoreStateScope(
+        notifier: DataStoreState(dataStore: USE_DATABASE_MOCK ? MockedDataStore() : FirebaseDataStore(db: FirebaseDatabase.instance)),
+        child: RouteStateScope(
+            notifier: _routeState,
+            child: CupertinoApp.router(
+              routerDelegate: _routerDelegate,
+              routeInformationParser: _routeParser,
+              theme: CupertinoThemeData(
+                brightness: Brightness.light,
+                scaffoldBackgroundColor: Colors.white,
+                barBackgroundColor: Colors.white,
+                textTheme: CupertinoTextThemeData(
+                    navLargeTitleTextStyle: TextStyle(fontWeight: FontWeight.w500, color: Colors.black, fontSize: 34)),
+              ),
+            )));
   }
 
   @override
   void dispose() {
-    _auth.removeListener(_handleAuthStateChanged);
     _routeState.dispose();
     _routerDelegate.dispose();
     super.dispose();
   }
 
   Future<ParsedRoute> _guard(ParsedRoute from) async {
-    final signedIn = _auth.signedIn;
+    final signedIn = FirebaseAuth.instance.currentUser?.uid != null;
     final signInRoute = ParsedRoute('/login', '/login', {}, {});
 
     // Go to /signin if the user is not signed in
@@ -134,8 +130,8 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
     return from;
   }
 
-  void _handleAuthStateChanged() {
-    if (!_auth.signedIn) {
+  void _handleAuthStateChanged(User? user) {
+    if (user == null) {
       _routeState.go('/login');
     }
   }
