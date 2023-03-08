@@ -41,13 +41,32 @@ class DataStoreState extends ChangeNotifier {
     if (user?.uid == null) {
       _uid = null;
       await dataStore.setUid(null);
+
       notifyListeners();
     } else if (_uid != user?.uid) {
       _uid = user?.uid;
-      await dataStore.setUid(_uid);
+      try {
+        await dataStore.setUid(_uid);
+      } catch (e) {
+        print(e);
+      }
+
+      if (dataStore.currentUser == null) {
+        FirebaseAuth.instance.signOut();
+      }
+
       notifyListeners();
     } else {
-      await dataStore.setUid(_uid);
+      try {
+        await dataStore.setUid(_uid);
+      } catch (e) {
+        print(e);
+      }
+
+      if (dataStore.currentUser == null) {
+        FirebaseAuth.instance.signOut();
+      }
+
       notifyListeners();
     }
   }
