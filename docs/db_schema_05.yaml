@@ -1,9 +1,11 @@
 doorbells:
   doorbell1_id:
+    id: doorbell1_id
     name: Doorbell 1
     enabled: true
     lastEvent:
-      id: event2_id
+      i: event2_id
+      d: doorbell1_id
       t: 4
       ts: 2321237834
       txt: Hey man! This is Alex, are you around?
@@ -32,10 +34,12 @@ doorbells:
           accentColor: orrange
           titleText: Please scan QR code to ring the doorbell
   doorbell2_id:
+    id: doorbell2_id
     name: Doorbell 2
     enabled: true
     lastEvent:
-      id: event3_id
+      i: event3_id
+      d: doorbell2_id
       t: 2
       ts: 2321237834
       s: sticker3_id
@@ -79,20 +83,28 @@ doorbell-users:
 doorbell-events:
   doorbell1_id:
     event1_id:
+      i: event1_id
+      d: doorbell1_id
       t: 3
       ts: 2321237834
       s: sticker1_id
     event2_id:
+      i: event2_id
+      d: doorbell1_id
       t: 4
       ts: 2321237834
       txt: Hey man! This is Alex, are you around?
       s: sticker1_id
   doorbell2_id:
     event3_id:
+      i: event3_id
+      d: doorbell2_id
       t: 3
       ts: 2321237834
       s: sticker2_id
     event4_id:
+      i: event4_id
+      d: doorbell2_id
       t: 5
       ts: 2321237834
       rec: https://link.to/voice/message.file

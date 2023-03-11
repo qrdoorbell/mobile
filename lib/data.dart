@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,16 +16,23 @@ abstract class DataStore extends IdProvider {
   // Stream<UserAccount?> get currentUser;
 
   UserAccount? get currentUser;
-  List<Doorbell> get allDoorbells;
-  List<DoorbellEvent> get allEvents;
+  List<Doorbell> get doorbells;
+  Stream<List<Doorbell>> get doorbellsStream;
 
-  List<DoorbellEvent> getDoorbellEvents(String doorbellId) => allEvents.where((element) => element.doorbellId == doorbellId).toList();
-  Doorbell? getDoorbellById(String doorbellId) => allDoorbells.firstWhereOrNull((element) => element.doorbellId == doorbellId);
+  List<DoorbellEvent> get doorbellEvents;
+  Stream<List<DoorbellEvent>> get doorbellEventsStream;
+
+  List<DoorbellEvent> getDoorbellEvents(String doorbellId) => doorbellEvents.where((element) => element.doorbellId == doorbellId).toList();
+  Doorbell? getDoorbellById(String doorbellId) => doorbells.firstWhereOrNull((element) => element.doorbellId == doorbellId);
 
   Future<void> setUid(String? uid);
   Future<void> reloadData();
 
+  void addDoorbellEvent(int eventType, String doorbellId, String stickerId);
+
   static DataStore of(BuildContext context) => context.dependOnInheritedWidgetOfExactType<DataStoreStateScope>()!.notifier!.dataStore;
+
+  Future<void> dispose();
 }
 
 class DataStoreState extends ChangeNotifier {

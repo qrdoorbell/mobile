@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:livekit_client/livekit_client.dart';
 import 'package:qrdoorbell_mobile/presentation/controls/event_list.dart';
@@ -10,7 +9,7 @@ import '../controls/doorbell_list.dart';
 import '../controls/profile.dart';
 
 class MainScreen extends StatefulWidget {
-  MainScreen({
+  const MainScreen({
     super.key,
   });
 
@@ -58,7 +57,7 @@ class _MainScreenState extends State<MainScreen> {
           );
           title = 'Doorbells';
         } else if (index == 1) {
-          tabWidget = EventList();
+          tabWidget = const EventList();
           title = 'Events';
         } else if (index == 2) {
           tabWidget = Profile();

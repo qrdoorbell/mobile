@@ -8,11 +8,7 @@ import '../widgets/fade_transition_page.dart';
 
 class AppNavigator extends StatefulWidget {
   final GlobalKey<NavigatorState> navigatorKey;
-
-  const AppNavigator({
-    required this.navigatorKey,
-    super.key,
-  });
+  const AppNavigator({super.key, required this.navigatorKey});
 
   @override
   State<AppNavigator> createState() => _AppNavigatorState();
@@ -56,7 +52,7 @@ class _AppNavigatorState extends State<AppNavigator> {
         else ...[
           FadeTransitionPage<void>(
             key: _scaffoldKey,
-            child: MainScreen(),
+            child: const MainScreen(),
           ),
           if (pathTemplate == '/doorbells/:doorbellId' && doorbellId != null)
             MaterialPage(

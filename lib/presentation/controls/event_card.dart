@@ -8,7 +8,7 @@ class EventCard extends StatelessWidget {
   final DoorbellEvent event;
   final bool showDoorbellLink;
 
-  EventCard({
+  const EventCard({
     super.key,
     required this.event,
     this.showDoorbellLink = true,
@@ -18,7 +18,7 @@ class EventCard extends StatelessWidget {
   Widget build(BuildContext context) {
     var doorbell = DataStore.of(context).getDoorbellById(event.doorbellId);
     return Padding(
-        padding: EdgeInsets.only(left: 15, top: 5, right: 10),
+        padding: const EdgeInsets.only(left: 15, top: 5, right: 10),
         child: Card(
           shadowColor: Colors.transparent,
           color: CupertinoColors.extraLightBackgroundGray.withAlpha(128),
@@ -26,7 +26,7 @@ class EventCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
           ),
           child: Padding(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
               Container(
                   alignment: Alignment.center,
@@ -41,37 +41,37 @@ class EventCard extends StatelessWidget {
                     size: 24,
                     color: CupertinoColors.systemGrey,
                   )),
-              Padding(padding: EdgeInsets.all(5)),
+              const Padding(padding: EdgeInsets.all(5)),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     event.formattedName,
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   if (showDoorbellLink && doorbell != null)
                     Padding(
-                        padding: EdgeInsets.only(top: 5),
+                        padding: const EdgeInsets.only(top: 5),
                         child: CupertinoButton(
                           borderRadius: BorderRadius.zero,
                           minSize: 0,
                           padding: EdgeInsets.zero,
                           child: Text(
                             doorbell.name,
-                            style: TextStyle(fontSize: 14, color: CupertinoColors.activeBlue),
+                            style: const TextStyle(fontSize: 14, color: CupertinoColors.activeBlue),
                           ),
                           onPressed: () async => await RouteStateScope.of(context).go('/doorbells/${event.doorbellId}'),
                         )),
                   if (showDoorbellLink && doorbell == null)
-                    Padding(
+                    const Padding(
                         padding: EdgeInsets.only(top: 5),
                         child: Text('--', style: TextStyle(fontSize: 14, color: CupertinoColors.inactiveGray)))
                 ],
               ),
-              Spacer(),
+              const Spacer(),
               Text(
                 event.formattedDateTime,
-                style: TextStyle(color: CupertinoColors.inactiveGray),
+                style: const TextStyle(color: CupertinoColors.inactiveGray),
                 textAlign: TextAlign.right,
               ),
             ]),

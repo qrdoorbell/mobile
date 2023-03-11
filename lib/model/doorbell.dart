@@ -1,13 +1,8 @@
-import 'dart:convert';
-
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/foundation.dart';
-
 import 'package:qrdoorbell_mobile/data.dart';
-
 import 'doorbell_sticker.dart';
 
-class Doorbell {
+class Doorbell implements Comparable<Doorbell> {
   late final String doorbellId;
   late String name;
   bool enabled = true;
@@ -19,15 +14,13 @@ class Doorbell {
     this.settings = settings ?? DoorbellSettings();
   }
 
-  Doorbell._(DataSnapshot snapshot) {
-    final s = Map.of(snapshot.value as dynamic);
-
-    doorbellId = snapshot.key!;
+  Doorbell._(Map s) {
+    doorbellId = s['id'];
     name = s['name'];
     enabled = s['enabled'];
 
     if (s['lastEvent'] != null) {
-      lastEvent = DoorbellEvent.fromMap(doorbellId, s['lastEvent']);
+      lastEvent = DoorbellEvent.fromMapAndDoorbellId(doorbellId, s['lastEvent']);
     }
 
     if (s['settings'] != null) {
@@ -43,7 +36,13 @@ class Doorbell {
     }
   }
 
-  static Doorbell fromSnapshot(DataSnapshot snapshot) => Doorbell._(snapshot);
+  static Doorbell fromMap(Map s) => Doorbell._(s);
+  static Doorbell fromSnapshot(DataSnapshot snapshot) => Doorbell._(Map.of(snapshot.value as dynamic));
+
+  @override
+  int compareTo(Doorbell other) {
+    return other.name.compareTo(name);
+  }
 }
 
 class DoorbellSettings {
