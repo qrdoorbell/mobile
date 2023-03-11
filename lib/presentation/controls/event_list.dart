@@ -4,20 +4,29 @@ import 'package:qrdoorbell_mobile/data.dart';
 import 'event_card.dart';
 
 class EventList extends StatelessWidget {
-  final Doorbell? doorbell;
+  final String? doorbellId;
 
-  EventList({
+  const EventList({
     super.key,
-    this.doorbell,
+    this.doorbellId,
   });
 
   @override
   Widget build(BuildContext context) {
-    var events = doorbell != null ? DataStore.of(context).getDoorbellEvents(doorbell!.doorbellId) : DataStore.of(context).allEvents;
+    return StreamBuilder<List<DoorbellEvent>>(
+        stream: DataStore.of(context).doorbellEventsStream,
+        initialData: DataStore.of(context).doorbellEvents,
+        builder: (BuildContext context, AsyncSnapshot<List<DoorbellEvent>> snapshot) {
+          var data = !snapshot.hasData ? <DoorbellEvent>[] : snapshot.data!;
+          if (doorbellId != null) data = data.where((x) => x.doorbellId == doorbellId).toList();
 
-    return SliverList(
-        delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-      return EventCard(event: events[index]);
-    }, childCount: events.length));
+          return SliverList(
+              delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) => EventCard(
+                        event: data[index],
+                        showDoorbellLink: doorbellId == null,
+                      ),
+                  childCount: data.length));
+        });
   }
 }

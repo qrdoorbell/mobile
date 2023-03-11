@@ -17,14 +17,14 @@
     "doorbell-users": {
       "$doorbellId": {
         "$uid": {
-          ".read": "auth.uid !== $uid",
-          ".write": "auth.uid !== $uid && data.child('role').val() === 'owner'"  
+          ".read": "auth.uid === $uid",
+          ".write": "auth.uid === $uid && data.child('role').val() === 'owner'"  
         }
       }
     },
     "doorbell-events": {
       "$doorbellId": {
-        ".read": "auth.uid !== null",
+        ".read": "auth.uid !== null && root.child('doorbell-users/$doorbellId').child(auth.uid).exists()",
         ".write": "auth.uid !== null && root.child('doorbell-users/$doorbellId').child(auth.uid).child('role').val() === 'owner'"
       }
     },

@@ -1,7 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:nanoid/nanoid.dart';
 
-class DoorbellEvent {
+class DoorbellEvent implements Comparable<DoorbellEvent> {
   final String eventId;
   final String stickerId;
   final String doorbellId;
@@ -16,7 +16,16 @@ class DoorbellEvent {
     required this.dateTime,
   });
 
-  static DoorbellEvent fromMap(String doorbellId, Map s) => DoorbellEvent.fromMapAndId(doorbellId, s['id'], s);
+  static DoorbellEvent create(int eventType, String doorbellId, String stickerId) {
+    return DoorbellEvent._(
+        eventId: nanoid(10), stickerId: stickerId, doorbellId: doorbellId, eventType: eventType, dateTime: DateTime.now());
+  }
+
+  static DoorbellEvent fromMap(Map s) {
+    return DoorbellEvent.fromMapAndId(s['d'], s['i'], s);
+  }
+
+  static DoorbellEvent fromMapAndDoorbellId(String doorbellId, Map s) => DoorbellEvent.fromMapAndId(doorbellId, s['i'], s);
 
   static DoorbellEvent fromMapAndId(String doorbellId, String eventId, Map s) => DoorbellEvent._(
       eventId: eventId,
@@ -25,14 +34,20 @@ class DoorbellEvent {
       eventType: s['t'],
       dateTime: DateTime.fromMillisecondsSinceEpoch(s['ts']));
 
-  static DoorbellEvent fromSnapshot(String doorbellId, DataSnapshot snapshot) {
+  static DoorbellEvent fromSnapshotAndDoorbellId(String doorbellId, DataSnapshot snapshot) {
     final s = Map.of(snapshot.value as dynamic);
     return DoorbellEvent._(
-        eventId: s['id'],
+        eventId: s['i'],
         doorbellId: doorbellId,
         stickerId: s['s'],
         eventType: s['t'],
         dateTime: DateTime.fromMillisecondsSinceEpoch(s['ts']));
+  }
+
+  static DoorbellEvent fromSnapshot(DataSnapshot snapshot) {
+    final s = Map.of(snapshot.value as dynamic);
+    return DoorbellEvent._(
+        eventId: s['i'], doorbellId: s['d'], stickerId: s['s'], eventType: s['t'], dateTime: DateTime.fromMillisecondsSinceEpoch(s['ts']));
   }
 
   factory DoorbellEvent.doorbell(String doorbellId, String stickerId, DateTime? dateTime) => DoorbellEvent._(
@@ -133,6 +148,30 @@ class DoorbellEvent {
       default:
         return 'Jan';
     }
+  }
+
+  @override
+  String toString() =>
+      'DoorbellEvent(eventId: $eventId, eventType: $eventType, doorbellId: $doorbellId, stickerId: $stickerId, dateTime: $dateTime)';
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is DoorbellEvent &&
+        other.eventId == eventId &&
+        other.eventType == eventType &&
+        other.doorbellId == doorbellId &&
+        other.stickerId == stickerId &&
+        other.dateTime == dateTime;
+  }
+
+  @override
+  int get hashCode => eventId.hashCode ^ eventType.hashCode ^ doorbellId.hashCode ^ stickerId.hashCode ^ dateTime.hashCode;
+
+  @override
+  int compareTo(DoorbellEvent other) {
+    return other.dateTime.isBefore(dateTime) ? -1 : 1;
   }
 }
 

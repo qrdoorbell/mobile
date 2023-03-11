@@ -5,21 +5,26 @@ import 'doorbell_card.dart';
 class DoorbellList extends StatelessWidget {
   final DoorbellCallback onTapHandler;
 
-  DoorbellList({
+  const DoorbellList({
     super.key,
     required this.onTapHandler,
   });
 
   @override
   Widget build(BuildContext context) {
-    final doorbells = DataStore.of(context).allDoorbells;
-    return SliverList(
-        delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) => DoorbellCard(
-                  doorbell: doorbells[index],
-                  announce: DoorbellEventType.getString(doorbells[index].lastEvent?.eventType) ?? 'No new events',
-                  onTapHandler: onTapHandler,
-                ),
-            childCount: doorbells.length));
+    return StreamBuilder<List<Doorbell>>(
+        stream: DataStore.of(context).doorbellsStream,
+        initialData: DataStore.of(context).doorbells,
+        builder: (BuildContext context, AsyncSnapshot<List<Doorbell>> snapshot) {
+          var data = !snapshot.hasData ? <Doorbell>[] : snapshot.data!;
+          return SliverList(
+              delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) => DoorbellCard(
+                        doorbell: data[index],
+                        announce: DoorbellEventType.getString(data[index].lastEvent?.eventType) ?? 'No new events',
+                        onTapHandler: onTapHandler,
+                      ),
+                  childCount: data.length));
+        });
   }
 }

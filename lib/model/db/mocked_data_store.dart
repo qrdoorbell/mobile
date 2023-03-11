@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:qrdoorbell_mobile/model/user_account.dart';
 
 import '../../data.dart';
 
@@ -11,10 +10,7 @@ class MockedDataStore extends DataStore {
       UserAccount(userId: 'user1_id', displayName: 'Test User', firstName: 'Test', lastName: 'User', email: 't@us.er');
 
   @override
-  List<DoorbellSettings> get allDoorbellSettings => [];
-
-  @override
-  List<Doorbell> get allDoorbells => [
+  List<Doorbell> get doorbells => [
         Doorbell(doorbellId: '1', name: 'Doorbell 1'),
         Doorbell(doorbellId: '2', name: 'Doorbell 2'),
         Doorbell(doorbellId: '3', name: 'Doorbell My'),
@@ -23,7 +19,7 @@ class MockedDataStore extends DataStore {
       ];
 
   @override
-  List<DoorbellEvent> get allEvents => ([
+  List<DoorbellEvent> get doorbellEvents => ([
         DoorbellEvent.doorbell('3', '1', DateTime.parse("2023-02-27 13:27:00")),
         DoorbellEvent.answeredCall('3', '1', DateTime.parse("2023-02-27 13:28:00")),
         DoorbellEvent.doorbell('1', '2', DateTime.parse("2023-02-13 23:55:00")),
@@ -43,7 +39,7 @@ class MockedDataStore extends DataStore {
           .toList();
 
   void addDoorbell(Doorbell doorbell) {
-    allDoorbells.add(doorbell);
+    doorbells.add(doorbell);
   }
 
   @override
@@ -55,4 +51,18 @@ class MockedDataStore extends DataStore {
   Future<void> reloadData() {
     return Future.value(null);
   }
+
+  @override
+  Stream<List<DoorbellEvent>> get doorbellEventsStream => Stream.value(doorbellEvents);
+
+  @override
+  void addDoorbellEvent(int eventType, String doorbellId, String stickerId) {}
+
+  @override
+  Future<void> dispose() {
+    return Future.value(null);
+  }
+
+  @override
+  Stream<List<Doorbell>> get doorbellsStream => Stream.value(doorbells);
 }

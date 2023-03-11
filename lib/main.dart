@@ -92,13 +92,13 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
   @override
   Widget build(BuildContext context) {
     return DataStoreStateScope(
-        notifier: DataStoreState(dataStore: USE_DATABASE_MOCK ? MockedDataStore() : FirebaseDataStore(db: FirebaseDatabase.instance)),
+        notifier: DataStoreState(dataStore: USE_DATABASE_MOCK ? MockedDataStore() : FirebaseDataStore(FirebaseDatabase.instance)),
         child: RouteStateScope(
             notifier: _routeState,
             child: CupertinoApp.router(
               routerDelegate: _routerDelegate,
               routeInformationParser: _routeParser,
-              theme: CupertinoThemeData(
+              theme: const CupertinoThemeData(
                 brightness: Brightness.light,
                 scaffoldBackgroundColor: Colors.white,
                 barBackgroundColor: Colors.white,
