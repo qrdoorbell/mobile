@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_database/firebase_database.dart';
@@ -5,6 +6,7 @@ import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:qrdoorbell_mobile/data.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 import 'app_options.dart';
 import 'model/db/firebase_data_store.dart';
@@ -54,6 +56,7 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
   late final RouteState _routeState;
   late final SimpleRouterDelegate _routerDelegate;
   late final TemplateRouteParser _routeParser;
+  late final StreamSubscription<ConnectivityResult> _connectivitySubscription;
 
   @override
   void initState() {
@@ -85,6 +88,7 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
     );
 
     FirebaseAuth.instance.authStateChanges().listen(_handleAuthStateChanged);
+    Connectivity().onConnectivityChanged.listen(_handleConnectionStateChanged);
 
     super.initState();
   }
@@ -136,6 +140,10 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
       return ParsedRoute('/doorbells', '/doorbells', {}, {});
     }
     return from;
+  }
+
+  void _handleConnectionStateChanged(ConnectivityResult state) {
+    print("Connection state changed: state=$state");
   }
 
   void _handleAuthStateChanged(User? user) {
