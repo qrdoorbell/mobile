@@ -11,14 +11,14 @@
     "doorbells": {
       "$doorbellId": {
         ".read": "auth.uid !== null",
-        ".write": "auth.uid !== null && root.child('doorbell-users/$doorbellId').child(auth.uid).child('role').val() === 'owner'"
+        ".write": "auth.uid !== null && (root.child('doorbell-users/$doorbellId').child(auth.uid).child('role').val() === 'owner' || !root.child('doorbell-users/$doorbellId').child(auth.uid).exists())"
       }
     },
     "doorbell-users": {
       "$doorbellId": {
         "$uid": {
           ".read": "auth.uid === $uid",
-          ".write": "auth.uid === $uid && data.child('role').val() === 'owner'"  
+          ".write": "auth.uid === $uid && (data.child('role').val() === 'owner' || !data.exists())"
         }
       }
     },

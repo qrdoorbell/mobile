@@ -4,15 +4,13 @@ import 'doorbell_sticker.dart';
 
 class Doorbell implements Comparable<Doorbell> {
   late final String doorbellId;
-  late String name;
+  String name = '';
   bool enabled = true;
   DoorbellEvent? lastEvent;
   late DoorbellSettings settings;
   List<DoorbellSticker> stickers = <DoorbellSticker>[];
 
-  Doorbell({required this.doorbellId, required this.name, DoorbellSettings? settings}) {
-    this.settings = settings ?? DoorbellSettings();
-  }
+  Doorbell(this.doorbellId, [this.name = '', DoorbellSettings? settings]) : settings = settings ?? DoorbellSettings();
 
   Doorbell._(Map s) {
     doorbellId = s['id'];
@@ -29,7 +27,7 @@ class Doorbell implements Comparable<Doorbell> {
       settings = DoorbellSettings();
     }
 
-    if (s['stickers'].entries != null) {
+    if (s['stickers']?.entries != null) {
       stickers.addAll(List.from(s['stickers'].entries).map((v) {
         return DoorbellSticker.fromMapAndId(v.key, v.value);
       }).toList());
@@ -38,6 +36,28 @@ class Doorbell implements Comparable<Doorbell> {
 
   static Doorbell fromMap(Map s) => Doorbell._(s);
   static Doorbell fromSnapshot(DataSnapshot snapshot) => Doorbell._(Map.of(snapshot.value as dynamic));
+
+  Map toMap() => {
+        'id': doorbellId,
+        'enabled': enabled,
+        'name': name,
+        'lastEvent': lastEvent?.toMap(),
+        'settings': settings.toMap(),
+        'stickers': stickers.map((e) => e.toMap()).toList(growable: false),
+      };
+
+  @override
+  String toString() => 'Doorbell(doorbellId: $doorbellId, name: $name, enaabled: $enabled, lastEvent: $lastEvent)';
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is Doorbell && other.doorbellId == doorbellId && other.name == name;
+  }
+
+  @override
+  int get hashCode => doorbellId.hashCode ^ name.hashCode;
 
   @override
   int compareTo(Doorbell other) {
@@ -75,6 +95,16 @@ class DoorbellSettings {
       automaticStateSettings: s['automaticStateSettings'] != null ? TimeRangeForStateSettings.fromMap(s['automaticStateSettings']) : null,
     );
   }
+
+  Map toMap() => {
+        'enableVideoCalls': enableVideoCalls,
+        'enableAudioCalls': enableAudioCalls,
+        'enableVideoPreview': enableVideoPreview,
+        'enableVoiceMail': enableVoiceMail,
+        'enableTextMail': enableTextMail,
+        'enablePushNotifications': enablePushNotifications,
+        'automaticStateSettings': automaticStateSettings?.toMap(),
+      };
 }
 
 class TimeRangeForStateSettings {
@@ -98,4 +128,11 @@ class TimeRangeForStateSettings {
       enabled: s['enabled'],
     );
   }
+
+  Map toMap() => {
+        'start': startTime.millisecondsSinceEpoch,
+        'end': endTime.millisecondsSinceEpoch,
+        'targetEnabledState': targetState,
+        'enabled': enabled,
+      };
 }

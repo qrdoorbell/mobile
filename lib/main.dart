@@ -96,6 +96,14 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
         child: RouteStateScope(
             notifier: _routeState,
             child: CupertinoApp.router(
+              localizationsDelegates: const [
+                DefaultCupertinoLocalizations.delegate,
+                DefaultMaterialLocalizations.delegate,
+                DefaultWidgetsLocalizations.delegate,
+              ],
+              supportedLocales: const [
+                Locale('en', 'US'),
+              ],
               routerDelegate: _routerDelegate,
               routeInformationParser: _routeParser,
               theme: const CupertinoThemeData(
