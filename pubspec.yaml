@@ -1,7 +1,7 @@
 name: qrdoorbell_mobile
 description: QR Doorbell mobile application.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 0.1.1+1
+version: 0.1.2
 homepage: https://www.qrdoorbell.io/
 
 environment:
@@ -28,12 +28,16 @@ dependencies:
   collection: ^1.17.0
   quiver: ^3.2.1
   nanoid: ^1.0.0
+  connectivity_plus: ^3.0.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
-  flutter_launcher_icons: ^0.12.0
+  flutter_launcher_icons:
+    git:
+      url: https://github.com/fluttercommunity/flutter_launcher_icons.git
+      ref: 26fedcee4b0e6f7a85f65f1fb48834a21f57e970
 
 flutter:
   uses-material-design: true
@@ -45,12 +49,15 @@ flutter:
   - assets/logo-embed-01.png
   - assets/qrcode-blue.svg
 
-  fonts:
-    - family: vg5000
-      fonts:
-        - asset: fonts/vg5000-regular.ttf
+  # fonts:
+  #   - family: vg5000
+  #     fonts:
+  #       - asset: fonts/vg5000-regular.ttf
 
 flutter_icons:
   image_path: "assets/logo-app-01_1024.png" 
-  android: true
+  # image_path_ios: "assets/logo-app-01_1024.png" 
+  # android: true
+  # min_sdk_android: 21 # android min sdk min:16, default 21
   ios: true
+  remove_alpha_ios: true
