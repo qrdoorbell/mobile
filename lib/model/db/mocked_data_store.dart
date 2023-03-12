@@ -11,11 +11,11 @@ class MockedDataStore extends DataStore {
 
   @override
   List<Doorbell> get doorbells => [
-        Doorbell(doorbellId: '1', name: 'Doorbell 1'),
-        Doorbell(doorbellId: '2', name: 'Doorbell 2'),
-        Doorbell(doorbellId: '3', name: 'Doorbell My'),
-        Doorbell(doorbellId: '4', name: 'Doorbell Yours'),
-        Doorbell(doorbellId: '5', name: 'Doorbell Shared'),
+        Doorbell('1', 'Doorbell 1'),
+        Doorbell('2', 'Doorbell 2'),
+        Doorbell('3', 'Doorbell My'),
+        Doorbell('4', 'Doorbell Yours'),
+        Doorbell('5', 'Doorbell Shared'),
       ];
 
   @override
@@ -65,4 +65,16 @@ class MockedDataStore extends DataStore {
 
   @override
   Stream<List<Doorbell>> get doorbellsStream => Stream.value(doorbells);
+
+  @override
+  Future<Doorbell> createDoorbell() {
+    // TODO: implement createDoorbell
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> updateDoorbell(Doorbell doorbell) {
+    // TODO: implement updateDoorbell
+    throw UnimplementedError();
+  }
 }

@@ -28,6 +28,7 @@
       },
       "stickers": {
         "sicker1_id": {
+          "id": "sicker1_id",
           "created": 2321237834,
           "template": {
             "id": "sticker-template1_id",
@@ -70,6 +71,7 @@
       },
       "stickers": {
         "sicker2_id": {
+          "id": "sicker2_id",
           "created": 2321237834,
           "template": {
             "id": "sticker-template1_id",

@@ -50,6 +50,14 @@ class DoorbellEvent implements Comparable<DoorbellEvent> {
         eventId: s['i'], doorbellId: s['d'], stickerId: s['s'], eventType: s['t'], dateTime: DateTime.fromMillisecondsSinceEpoch(s['ts']));
   }
 
+  Map toMap() => {
+        'i': eventId,
+        'd': doorbellId,
+        's': stickerId,
+        't': eventType,
+        'ts': dateTime.millisecondsSinceEpoch,
+      };
+
   factory DoorbellEvent.doorbell(String doorbellId, String stickerId, DateTime? dateTime) => DoorbellEvent._(
       eventId: nanoid(10).toString(),
       doorbellId: doorbellId,

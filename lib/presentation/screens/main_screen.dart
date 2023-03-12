@@ -50,12 +50,26 @@ class _MainScreenState extends State<MainScreen> {
       tabBuilder: (context, index) {
         late final Widget tabWidget;
         late final String title;
+        FloatingActionButton? floatButton;
 
         if (index == 0) {
           tabWidget = DoorbellList(
             onTapHandler: (Doorbell doorbell) async => await RouteStateScope.of(context).go('/doorbells/${doorbell.doorbellId}'),
           );
           title = 'Doorbells';
+          floatButton = FloatingActionButton(
+              child: const Icon(CupertinoIcons.add),
+              onPressed: () async {
+                final dataStore = DataStore.of(context);
+                if (dataStore.doorbells.length >= 5) {
+                  _showAlert(context);
+                  return;
+                }
+
+                final routeState = RouteStateScope.of(context);
+                final doorbell = await dataStore.createDoorbell();
+                await routeState.go('/doorbells/${doorbell.doorbellId}');
+              });
         } else if (index == 1) {
           tabWidget = const EventList();
           title = 'Events';
@@ -71,17 +85,21 @@ class _MainScreenState extends State<MainScreen> {
                 color: Colors.white,
                 width: double.maxFinite,
                 height: double.maxFinite,
-                child: CustomScrollView(
-                  slivers: <Widget>[
-                    CupertinoSliverNavigationBar(
-                      transitionBetweenRoutes: true,
-                      backgroundColor: Colors.white,
-                      largeTitle: Text(title),
-                      border: Border.all(width: 0, color: Colors.white),
-                    ),
-                    tabWidget,
-                  ],
-                )));
+                child: Scaffold(
+                    floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+                    floatingActionButton: floatButton,
+                    backgroundColor: Colors.white,
+                    body: CustomScrollView(
+                      slivers: <Widget>[
+                        CupertinoSliverNavigationBar(
+                          transitionBetweenRoutes: true,
+                          backgroundColor: Colors.white,
+                          largeTitle: Text(title),
+                          border: Border.all(width: 0, color: Colors.white),
+                        ),
+                        tabWidget,
+                      ],
+                    ))));
       },
     );
   }
@@ -99,5 +117,26 @@ class _MainScreenState extends State<MainScreen> {
         RouteStateScope.of(context).go('/doorbells');
         break;
     }
+  }
+
+  void _showAlert(BuildContext context) {
+    var alert = CupertinoAlertDialog(
+        title: const Text("Maximum Doorbells limit"),
+        content: const Text("\nUsers are allowed to have up to\n5 Doorbells today.\n\nPlease reach out support team for more details."),
+        actions: <Widget>[
+          CupertinoDialogAction(
+            isDefaultAction: true,
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text("OK"),
+          ),
+        ]);
+
+    showDialog(
+        useRootNavigator: true,
+        routeSettings: const RouteSettings(name: '/doorbells'),
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        });
   }
 }
