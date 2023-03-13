@@ -4,7 +4,7 @@ class StickerCard extends StatelessWidget {
   final Color color;
   final Widget child;
 
-  StickerCard({
+  const StickerCard({
     super.key,
     required this.color,
     required this.child,
@@ -31,7 +31,7 @@ class StickerCard extends StatelessWidget {
         alignment: AlignmentDirectional.center,
         width: 96,
         height: 96,
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         child: child,
       ),
     );

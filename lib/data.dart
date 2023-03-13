@@ -6,10 +6,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:qrdoorbell_mobile/model/helpers/id_provider.dart';
 import 'model/doorbell.dart';
 import 'model/doorbell_event.dart';
+import 'model/sticker.dart';
 import 'model/user_account.dart';
 
 export 'model/doorbell.dart';
 export 'model/doorbell_event.dart';
+export 'model/sticker.dart';
 export 'model/user_account.dart';
 
 abstract class DataStore extends IdProvider {

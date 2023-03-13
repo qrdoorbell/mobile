@@ -1,6 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:qrdoorbell_mobile/data.dart';
-import 'doorbell_sticker.dart';
+import 'sticker.dart';
 
 class Doorbell implements Comparable<Doorbell> {
   late final String doorbellId;
