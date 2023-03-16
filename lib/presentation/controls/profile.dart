@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:qrdoorbell_mobile/data.dart';
 
 class Profile extends StatelessWidget {
   Profile({
@@ -11,10 +12,10 @@ class Profile extends StatelessWidget {
     return SliverList(
         delegate: SliverChildListDelegate.fixed(<Widget>[
       Column(children: [
-        Padding(padding: EdgeInsets.only(top: 150)),
-        Text('Profile settings'),
-        Padding(padding: EdgeInsets.only(top: 20)),
-        TextButton(
+        Padding(padding: EdgeInsets.only(top: 160)),
+        Text(DataStore.of(context).currentUser?.displayName ?? "unknown user", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32)),
+        Padding(padding: EdgeInsets.only(top: 40)),
+        CupertinoButton.filled(
             onPressed: () {
               FirebaseAuth.instance.signOut();
             },

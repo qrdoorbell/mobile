@@ -1,34 +1,30 @@
 import 'package:flutter/material.dart';
-
-import '../../model/doorbell.dart';
+import 'package:qrdoorbell_mobile/data.dart';
 import 'doorbell_card.dart';
 
-class DoorbellCardViewModel {
-  final Doorbell doorbell;
-  String? announce;
-
-  DoorbellCardViewModel({required this.doorbell, this.announce});
-}
-
 class DoorbellList extends StatelessWidget {
-  final List<DoorbellCardViewModel> doorbells;
   final DoorbellCallback onTapHandler;
 
-  DoorbellList({
+  const DoorbellList({
     super.key,
-    required this.doorbells,
     required this.onTapHandler,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SliverList(
-        delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) => DoorbellCard(
-                  doorbell: doorbells[index].doorbell,
-                  announce: doorbells[index].announce ?? 'No new messages',
-                  onTapHandler: onTapHandler,
-                ),
-            childCount: doorbells.length));
+    return StreamBuilder<List<Doorbell>>(
+        stream: DataStore.of(context).doorbellsStream,
+        initialData: DataStore.of(context).doorbells,
+        builder: (BuildContext context, AsyncSnapshot<List<Doorbell>> snapshot) {
+          var data = !snapshot.hasData ? <Doorbell>[] : snapshot.data!;
+          return SliverList(
+              delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) => DoorbellCard(
+                        doorbell: data[index],
+                        announce: DoorbellEventType.getString(data[index].lastEvent?.eventType) ?? 'No new events',
+                        onTapHandler: onTapHandler,
+                      ),
+                  childCount: data.length));
+        });
   }
 }

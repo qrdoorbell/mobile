@@ -1,24 +1,10 @@
-// Copyright 2021, the Flutter project authors. Please see the AUTHORS file
-// for details. All rights reserved. Use of this source code is governed by a
-// BSD-style license that can be found in the LICENSE file.
-
 import 'package:collection/collection.dart';
 import 'package:quiver/core.dart';
 
-import 'parser.dart';
-
-/// A route path that has been parsed by [TemplateRouteParser].
 class ParsedRoute {
-  /// The current path location without query parameters. (/book/123)
   final String path;
-
-  /// The path template (/book/:id)
   final String pathTemplate;
-
-  /// The path parameters ({id: 123})
   final Map<String, String> parameters;
-
-  /// The query parameters ({search: abc})
   final Map<String, String> queryParameters;
 
   static const _mapEquality = MapEquality<String, String>();

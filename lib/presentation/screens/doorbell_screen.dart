@@ -1,29 +1,30 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:livekit_client/livekit_client.dart';
-import 'package:qrdoorbell_mobile/presentation/controls/event_card.dart';
+import 'package:qrdoorbell_mobile/data.dart';
+import 'package:qrdoorbell_mobile/presentation/controls/event_list.dart';
 import 'package:qrdoorbell_mobile/presentation/controls/sticker_card.dart';
-
-import '../../model/doorbell.dart';
 
 class DoorbellScreen extends StatelessWidget {
   final User user = FirebaseAuth.instance.currentUser!;
-  final Doorbell doorbell;
+  final String doorbellId;
 
   DoorbellScreen({
     super.key,
-    required this.doorbell,
+    required this.doorbellId,
   });
 
   @override
   Widget build(BuildContext context) {
+    final dataStore = DataStore.of(context);
+    final doorbell = dataStore.getDoorbellById(doorbellId)!;
+
     return CupertinoPageScaffold(
         child: Padding(
-            padding: EdgeInsets.only(left: 0, top: 10, right: 5),
+            padding: const EdgeInsets.only(left: 0, top: 10, right: 5),
             child: CustomScrollView(slivers: <Widget>[
               CupertinoSliverNavigationBar(
-                padding: EdgeInsetsDirectional.only(start: 5, end: 10),
+                padding: const EdgeInsetsDirectional.only(start: 5, end: 10),
                 backgroundColor: Colors.white,
                 leading: CupertinoNavigationBarBackButton(
                   onPressed: () => Navigator.pop(context),
@@ -31,14 +32,16 @@ class DoorbellScreen extends StatelessWidget {
                 ),
                 trailing: CupertinoButton(
                   padding: EdgeInsets.zero,
-                  child: Text(
+                  child: const Text(
                     "Edit",
                     style: TextStyle(color: CupertinoColors.activeBlue),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    DataStore.of(context).addDoorbellEvent(2, doorbellId, 'sticker2_id');
+                  },
                 ),
                 middle: Text(doorbell.name),
-                largeTitle: Padding(padding: EdgeInsets.only(left: 0), child: Text(doorbell.name)),
+                largeTitle: Padding(padding: const EdgeInsets.only(left: 0), child: Text(doorbell.name)),
                 previousPageTitle: "Back",
                 border: Border.all(width: 0, color: Colors.white),
                 alwaysShowMiddle: false,
@@ -48,56 +51,41 @@ class DoorbellScreen extends StatelessWidget {
               SliverList(
                   delegate: SliverChildListDelegate.fixed(<Widget>[
                 Row(children: [
-                  Padding(padding: EdgeInsets.only(left: 18, top: 10)),
-                  Text('Stickers for print', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400)),
-                  Spacer(),
-                  CupertinoButton(child: Text('See all'), onPressed: () => {})
+                  const Padding(padding: EdgeInsets.only(left: 18, top: 10)),
+                  const Text('Stickers for print', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400)),
+                  const Spacer(),
+                  CupertinoButton(child: const Text('See all'), onPressed: () => {})
                 ]),
                 Padding(
-                    padding: EdgeInsets.only(left: 18),
+                    padding: const EdgeInsets.only(left: 18),
                     child: SizedBox(
                         height: 105,
                         child: ListView(
                           scrollDirection: Axis.horizontal,
                           children: <Widget>[
                             StickerCard.fromIcon(CupertinoIcons.qrcode, Colors.lightBlueAccent),
-                            Padding(padding: EdgeInsets.all(5)),
+                            const Padding(padding: EdgeInsets.all(5)),
                             StickerCard.fromIcon(CupertinoIcons.hexagon, Colors.cyan),
-                            Padding(padding: EdgeInsets.all(5)),
+                            const Padding(padding: EdgeInsets.all(5)),
                             StickerCard.fromIcon(CupertinoIcons.rectangle, Colors.green),
-                            Padding(padding: EdgeInsets.all(5)),
+                            const Padding(padding: EdgeInsets.all(5)),
                             StickerCard.fromIcon(CupertinoIcons.rectangle_expand_vertical, Colors.yellow),
-                            Padding(padding: EdgeInsets.all(5)),
+                            const Padding(padding: EdgeInsets.all(5)),
                             StickerCard.fromIcon(CupertinoIcons.doc_append, Colors.orange),
-                            Padding(padding: EdgeInsets.all(5)),
+                            const Padding(padding: EdgeInsets.all(5)),
                           ],
                         ))),
               ])),
 
               // EVENTS
-              SliverList(
+              const SliverList(
                   delegate: SliverChildListDelegate.fixed(<Widget>[
                 Padding(
                     padding: EdgeInsets.only(left: 20, top: 30, right: 5),
                     child: Text('Events', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400))),
               ])),
 
-              SliverList(
-                  delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-                switch (index % 5) {
-                  case 0:
-                    return EventCard.fromDoorbellEvent('42m ago');
-                  case 1:
-                    return EventCard.fromAnsweredCallEvent('14:42');
-                  case 2:
-                    return EventCard.fromMissedCallEvent('17 Feb 2023');
-                  case 3:
-                    return EventCard.fromTextMessageEvent('10:02');
-                  case 4:
-                    return EventCard.fromVoiceMessageEvent('5m ago');
-                }
-                throw StateError('Invalid event type');
-              }, childCount: 10)),
+              EventList(doorbellId: doorbellId),
             ])));
   }
 }

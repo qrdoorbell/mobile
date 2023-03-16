@@ -1,11 +1,16 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
+import 'package:qrdoorbell_mobile/data.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 import 'app_options.dart';
-import 'auth.dart';
+import 'model/db/firebase_data_store.dart';
+import 'model/db/mocked_data_store.dart';
 import 'routing.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -13,7 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 
-import 'screens/navigator.dart';
+import 'routing/navigator.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,9 +35,11 @@ Future<void> main() async {
     GoogleProvider(clientId: GOOGLE_CLIENT_ID),
   ]);
 
-  if (USE_AUTH_EMULATOR) {
-    FirebaseAuth.instance.useAuthEmulator("localhost", 9042);
-  }
+  if (USE_DATABASE_EMULATOR) FirebaseDatabase.instance.useDatabaseEmulator("127.0.0.1", 9041);
+  if (USE_AUTH_EMULATOR) await FirebaseAuth.instance.useAuthEmulator("127.0.0.1", 9042);
+
+  FirebaseDatabase.instance.setPersistenceEnabled(true);
+  FirebaseDatabase.instance.setLoggingEnabled(true);
 
   runApp(const QRDoorbellApp());
 }
@@ -45,11 +52,11 @@ class QRDoorbellApp extends StatefulWidget {
 }
 
 class _QRDoorbellAppState extends State<QRDoorbellApp> {
-  final _auth = AppAuth();
   final _navigatorKey = GlobalKey<NavigatorState>();
   late final RouteState _routeState;
   late final SimpleRouterDelegate _routerDelegate;
   late final TemplateRouteParser _routeParser;
+  late final StreamSubscription<ConnectivityResult> _connectivitySubscription;
 
   @override
   void initState() {
@@ -80,22 +87,30 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
       ),
     );
 
-    // Listen for when the user logs out and display the signin screen.
-    _auth.addListener(_handleAuthStateChanged);
+    FirebaseAuth.instance.authStateChanges().listen(_handleAuthStateChanged);
+    Connectivity().onConnectivityChanged.listen(_handleConnectionStateChanged);
 
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return RouteStateScope(
-        notifier: _routeState,
-        child: AppAuthScope(
-            notifier: _auth,
+    return DataStoreStateScope(
+        notifier: DataStoreState(dataStore: USE_DATABASE_MOCK ? MockedDataStore() : FirebaseDataStore(FirebaseDatabase.instance)),
+        child: RouteStateScope(
+            notifier: _routeState,
             child: CupertinoApp.router(
+              localizationsDelegates: const [
+                DefaultCupertinoLocalizations.delegate,
+                DefaultMaterialLocalizations.delegate,
+                DefaultWidgetsLocalizations.delegate,
+              ],
+              supportedLocales: const [
+                Locale('en', 'US'),
+              ],
               routerDelegate: _routerDelegate,
               routeInformationParser: _routeParser,
-              theme: CupertinoThemeData(
+              theme: const CupertinoThemeData(
                 brightness: Brightness.light,
                 scaffoldBackgroundColor: Colors.white,
                 barBackgroundColor: Colors.white,
@@ -107,29 +122,32 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
 
   @override
   void dispose() {
-    _auth.removeListener(_handleAuthStateChanged);
     _routeState.dispose();
     _routerDelegate.dispose();
     super.dispose();
   }
 
   Future<ParsedRoute> _guard(ParsedRoute from) async {
-    final signedIn = _auth.signedIn;
+    final signedIn = FirebaseAuth.instance.currentUser?.uid != null;
     final signInRoute = ParsedRoute('/login', '/login', {}, {});
 
     // Go to /signin if the user is not signed in
     if (!signedIn && from != signInRoute) {
       return signInRoute;
     }
-    // Go to /books if the user is signed in and tries to go to /signin.
+    // Go to /doorbells if the user is signed in and tries to go to /signin.
     else if (signedIn && from == signInRoute) {
       return ParsedRoute('/doorbells', '/doorbells', {}, {});
     }
     return from;
   }
 
-  void _handleAuthStateChanged() {
-    if (!_auth.signedIn) {
+  void _handleConnectionStateChanged(ConnectivityResult state) {
+    print("Connection state changed: state=$state");
+  }
+
+  void _handleAuthStateChanged(User? user) {
+    if (user == null) {
       _routeState.go('/login');
     }
   }
