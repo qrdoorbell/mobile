@@ -1,25 +1,67 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:qrdoorbell_mobile/data.dart';
+import 'sticker.dart';
 
-class Doorbell {
-  String id;
-  String name;
-  DoorbellSettings settings;
+class Doorbell implements Comparable<Doorbell> {
+  late final String doorbellId;
+  String name = '';
+  bool enabled = true;
+  DoorbellEvent? lastEvent;
+  late DoorbellSettings settings;
+  List<DoorbellSticker> stickers = <DoorbellSticker>[];
 
-  Doorbell({
-    required this.id,
-    required this.name,
-  }) : settings = DoorbellSettings();
+  Doorbell(this.doorbellId, [this.name = '', DoorbellSettings? settings]) : settings = settings ?? DoorbellSettings();
 
-  Doorbell._({
-    required this.id,
-    required this.name,
-    required this.settings,
-  });
+  Doorbell._(Map s) {
+    doorbellId = s['id'];
+    name = s['name'];
+    enabled = s['enabled'];
 
-  factory Doorbell.fromSnapshot(DataSnapshot snapshot) {
-    final s = snapshot.value as Map<String, dynamic>;
+    if (s['lastEvent'] != null) {
+      lastEvent = DoorbellEvent.fromMapAndDoorbellId(doorbellId, s['lastEvent']);
+    }
 
-    return Doorbell._(id: s['id'], name: s['name'], settings: DoorbellSettings.fromSnapshot(snapshot.child('settings')));
+    if (s['settings'] != null) {
+      settings = DoorbellSettings.fromMap(s['settings'] as Map);
+    } else {
+      settings = DoorbellSettings();
+    }
+
+    if (s['stickers']?.entries != null) {
+      stickers.addAll(List.from(s['stickers'].entries).map((v) {
+        return DoorbellSticker.fromMapAndId(v.key, v.value);
+      }).toList());
+    }
+  }
+
+  static Doorbell fromMap(Map s) => Doorbell._(s);
+  static Doorbell fromSnapshot(DataSnapshot snapshot) => Doorbell._(Map.of(snapshot.value as dynamic));
+
+  Map toMap() => {
+        'id': doorbellId,
+        'enabled': enabled,
+        'name': name,
+        'lastEvent': lastEvent?.toMap(),
+        'settings': settings.toMap(),
+        'stickers': stickers.map((e) => e.toMap()).toList(growable: false),
+      };
+
+  @override
+  String toString() => 'Doorbell(doorbellId: $doorbellId, name: $name, enaabled: $enabled, lastEvent: $lastEvent)';
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is Doorbell && other.doorbellId == doorbellId && other.name == name;
+  }
+
+  @override
+  int get hashCode => doorbellId.hashCode ^ name.hashCode;
+
+  @override
+  int compareTo(Doorbell other) {
+    return other.name.compareTo(name);
   }
 }
 
@@ -30,28 +72,67 @@ class DoorbellSettings {
   bool enableVoiceMail = false;
   bool enableTextMail = false;
   bool enablePushNotifications = true;
+  TimeRangeForStateSettings? automaticStateSettings;
 
-  DoorbellSettings();
-
-  DoorbellSettings._({
+  DoorbellSettings({
     this.enableVideoCalls = true,
     this.enableAudioCalls = true,
     this.enableVideoPreview = true,
     this.enableVoiceMail = false,
     this.enableTextMail = false,
     this.enablePushNotifications = true,
+    this.automaticStateSettings,
   });
 
-  factory DoorbellSettings.fromSnapshot(DataSnapshot snapshot) {
-    final s = snapshot.value as Map<String, dynamic>;
-
-    return DoorbellSettings._(
+  factory DoorbellSettings.fromMap(Map s) {
+    return DoorbellSettings(
       enableVideoCalls: s['enableVideoCalls'],
       enableAudioCalls: s['enableAudioCalls'],
       enableVideoPreview: s['enableVideoPreview'],
       enableVoiceMail: s['enableVoiceMail'],
       enableTextMail: s['enableTextMail'],
       enablePushNotifications: s['enablePushNotifications'],
+      automaticStateSettings: s['automaticStateSettings'] != null ? TimeRangeForStateSettings.fromMap(s['automaticStateSettings']) : null,
     );
   }
+
+  Map toMap() => {
+        'enableVideoCalls': enableVideoCalls,
+        'enableAudioCalls': enableAudioCalls,
+        'enableVideoPreview': enableVideoPreview,
+        'enableVoiceMail': enableVoiceMail,
+        'enableTextMail': enableTextMail,
+        'enablePushNotifications': enablePushNotifications,
+        'automaticStateSettings': automaticStateSettings?.toMap(),
+      };
+}
+
+class TimeRangeForStateSettings {
+  DateTime startTime;
+  DateTime endTime;
+  bool targetState;
+  bool enabled = true;
+
+  TimeRangeForStateSettings({
+    required this.startTime,
+    required this.endTime,
+    required this.targetState,
+    this.enabled = true,
+  });
+
+  factory TimeRangeForStateSettings.fromMap(Map s) {
+    return TimeRangeForStateSettings(
+      startTime: DateTime.fromMillisecondsSinceEpoch(s['start']),
+      endTime: DateTime.fromMillisecondsSinceEpoch(s['end']),
+      targetState: s['targetEnabledState'],
+      enabled: s['enabled'],
+    );
+  }
+
+  Map toMap() => {
+        'start': startTime.millisecondsSinceEpoch,
+        'end': endTime.millisecondsSinceEpoch,
+        'targetEnabledState': targetState,
+        'enabled': enabled,
+      };
 }

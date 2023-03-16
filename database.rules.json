@@ -1,7 +1,37 @@
 {
-  /* Visit https://firebase.google.com/docs/database/security to learn more about security rules. */
   "rules": {
-    ".read": false,
-    ".write": false
+    ".read": "null !== auth.uid",
+    
+    "users":{
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": "$uid === auth.uid"
+      }
+    },
+    "doorbells": {
+      "$doorbellId": {
+        ".read": "auth.uid !== null",
+        ".write": "auth.uid !== null && (root.child('doorbell-users/$doorbellId').child(auth.uid).child('role').val() === 'owner' || !root.child('doorbell-users/$doorbellId').child(auth.uid).exists())"
+      }
+    },
+    "doorbell-users": {
+      "$doorbellId": {
+        "$uid": {
+          ".read": "auth.uid === $uid",
+          ".write": "auth.uid === $uid && (data.child('role').val() === 'owner' || !data.exists())"
+        }
+      }
+    },
+    "doorbell-events": {
+      "$doorbellId": {
+        ".read": "auth.uid !== null && root.child('doorbell-users/$doorbellId').child(auth.uid).exists()",
+        ".write": "auth.uid !== null && root.child('doorbell-users/$doorbellId').child(auth.uid).child('role').val() === 'owner'"
+      }
+    },
+
+    "sticker-templates": {
+      ".read": "auth.uid !== null",
+      ".write": "auth.token.stickers_admin === true"
+    }
   }
 }
