@@ -17,6 +17,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'routing/navigator.dart';
 
@@ -44,6 +45,14 @@ Future<void> main() async {
   runApp(const QRDoorbellApp());
 }
 
+@pragma('vm:entry-point')
+Future<void> _handleBackgroundMessage(RemoteMessage message) async {
+  await Firebase.initializeApp();
+
+  print("ON BACKGROUND MESSAGE");
+  print(message);
+}
+
 class QRDoorbellApp extends StatefulWidget {
   const QRDoorbellApp({super.key});
 
@@ -56,7 +65,6 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
   late final RouteState _routeState;
   late final SimpleRouterDelegate _routerDelegate;
   late final TemplateRouteParser _routeParser;
-  late final StreamSubscription<ConnectivityResult> _connectivitySubscription;
 
   @override
   void initState() {
@@ -87,6 +95,45 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
       ),
     );
 
+    if (Platform.isIOS) {
+      FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) async {
+        if (FirebaseAuth.instance.currentUser?.uid != null) await _handleFcmTokenChanged(FirebaseAuth.instance.currentUser!.uid, fcmToken);
+      }).onError((err) {
+        print(err);
+      });
+    }
+
+    FirebaseMessaging.instance
+        .requestPermission(
+      alert: true,
+      announcement: true,
+      badge: true,
+      carPlay: false,
+      criticalAlert: true,
+      provisional: false,
+      sound: true,
+    )
+        .then((settings) async {
+      print('User granted permission: ${settings.authorizationStatus}');
+      await FirebaseMessaging.instance.setAutoInitEnabled(true);
+    });
+
+    FirebaseMessaging.onMessage.listen((message) async {
+      print("FirebaseMessaging.onMessage");
+      await _handleRemoteMessage(message);
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
+      print("FirebaseMessaging.onMessageOpenedApp");
+      await _handleRemoteMessage(message);
+    });
+
+    FirebaseMessaging.instance.getInitialMessage().then((message) async {
+      print('Initial message received!');
+      await _handleRemoteMessage(message);
+    });
+
+    FirebaseMessaging.onBackgroundMessage(_handleBackgroundMessage);
     FirebaseAuth.instance.authStateChanges().listen(_handleAuthStateChanged);
     Connectivity().onConnectivityChanged.listen(_handleConnectionStateChanged);
 
@@ -146,9 +193,32 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
     print("Connection state changed: state=$state");
   }
 
-  void _handleAuthStateChanged(User? user) {
+  Future<void> _handleFcmTokenChanged(String uid, String? token) async {
+    token ??= await FirebaseMessaging.instance.getToken();
+    await FirebaseDatabase.instance.ref("/user-fcms/$uid/$token").set(true);
+  }
+
+  Future<void> _handleAuthStateChanged(User? user) async {
     if (user == null) {
       _routeState.go('/login');
+      return;
+    }
+
+    var token = await FirebaseMessaging.instance.getToken();
+    await _handleFcmTokenChanged(user.uid, token);
+  }
+
+  Future<void> _handleRemoteMessage(RemoteMessage? message) async {
+    if (message == null) {
+      print("Received empty RemoteMessage!");
+      return;
+    }
+
+    print("Start handling RemoteMessage:");
+    print(message);
+
+    if (message.data['doorbellId'] != null) {
+      await _routeState.go('/doorbells/${message.data['doorbellId']}');
     }
   }
 }

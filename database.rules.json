@@ -32,6 +32,13 @@
     "sticker-templates": {
       ".read": "auth.uid !== null",
       ".write": "auth.token.stickers_admin === true"
+    },
+
+    "user-fcms": {
+      "$uid": {
+        ".read": "auth.uid === $uid",
+        ".write": "auth.uid === $uid"
+      }
     }
   }
 }

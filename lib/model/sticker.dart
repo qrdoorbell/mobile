@@ -5,7 +5,7 @@ class StickerTemplateInfo {
   final String name;
   final StickerTemplate template;
   final bool enabled;
-  final int created;
+  final DateTime created;
   final String owner;
   StickerTemplateInfo({
     required this.id,
@@ -21,7 +21,7 @@ class StickerTemplateInfo {
     String? name,
     StickerTemplate? template,
     bool? enabled,
-    int? created,
+    DateTime? created,
     String? owner,
   }) {
     return StickerTemplateInfo(
@@ -40,7 +40,7 @@ class StickerTemplateInfo {
       'name': name,
       'template': template.toMap(),
       'enabled': enabled,
-      'created': created,
+      'created': created.millisecondsSinceEpoch,
       'owner': owner,
     };
   }
@@ -49,9 +49,9 @@ class StickerTemplateInfo {
     return StickerTemplateInfo(
       id: map['id'] ?? '',
       name: map['name'] ?? '',
-      template: StickerTemplate.fromMap(map['template']),
+      template: StickerTemplate.fromMap(Map.from(map['template'])),
       enabled: map['enabled'] ?? false,
-      created: map['created']?.toInt() ?? 0,
+      created: DateTime.fromMillisecondsSinceEpoch(map['created']?.toInt() ?? DateTime.now().millisecondsSinceEpoch),
       owner: map['owner'] ?? '',
     );
   }
@@ -117,8 +117,8 @@ class StickerTemplate {
   factory StickerTemplate.fromMap(Map<String, dynamic> map) {
     return StickerTemplate(
       handler: map['handler'] ?? '',
-      data: map['data'],
-      params: map['params'],
+      data: map['data'] != null ? Map.from(map['data']) : {},
+      params: map['params'] != null ? Map.from(map['params']) : {},
     );
   }
 
@@ -179,8 +179,8 @@ class DoorbellSticker {
     return DoorbellSticker(
       stickerId: stickerId,
       created: DateTime.fromMillisecondsSinceEpoch(map['created']),
-      template: StickerTemplate.fromMap(map['template']),
-      params: map['params'],
+      template: StickerTemplate.fromMap(Map.from(map['template'])),
+      params: map['params'] != null ? Map.from(map['params']) : {},
     );
   }
 
@@ -188,8 +188,8 @@ class DoorbellSticker {
     return DoorbellSticker(
       stickerId: map['id'],
       created: DateTime.fromMillisecondsSinceEpoch(map['created']),
-      template: StickerTemplate.fromMap(map['template']),
-      params: map['params'],
+      template: StickerTemplate.fromMap(Map.from(map['template'])),
+      params: map['params'] != null ? Map.from(map['params']) : {},
     );
   }
 
