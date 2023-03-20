@@ -91,6 +91,12 @@ class FirebaseDataStore extends DataStore {
   Future<void> updateDoorbell(Doorbell doorbell) async {
     await _doorbellsRepository.update(doorbell);
   }
+
+  @override
+  Future<UserAccount> createUser(UserAccount user) async {
+    await db.ref('users/${user.userId}').set(user.toMap());
+    return user;
+  }
 }
 
 String? _digitName(int n) {

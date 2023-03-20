@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:qrdoorbell_mobile/model/helpers/id_provider.dart';
 import 'model/doorbell.dart';
 import 'model/doorbell_event.dart';
-import 'model/sticker.dart';
 import 'model/user_account.dart';
 
 export 'model/doorbell.dart';
@@ -35,6 +34,8 @@ abstract class DataStore extends IdProvider {
   void addDoorbellEvent(int eventType, String doorbellId, String stickerId);
 
   static DataStore of(BuildContext context) => context.dependOnInheritedWidgetOfExactType<DataStoreStateScope>()!.notifier!.dataStore;
+
+  Future<UserAccount> createUser(UserAccount user);
 }
 
 class DataStoreState extends ChangeNotifier {
@@ -45,10 +46,15 @@ class DataStoreState extends ChangeNotifier {
     required this.dataStore,
   }) {
     _uid = FirebaseAuth.instance.currentUser?.uid;
-    FirebaseAuth.instance.userChanges().listen(_onAuthStateChanged);
+    FirebaseAuth.instance.authStateChanges().listen(_onAuthStateChanged);
+    FirebaseAuth.instance.userChanges().listen(_onUserChanges);
   }
 
   Future<void> _onAuthStateChanged(User? user) async {
+    await _onUserChanges(user);
+  }
+
+  Future<void> _onUserChanges(User? user) async {
     if (user?.uid == null) {
       _uid = null;
       await dataStore.setUid(null);
@@ -59,11 +65,13 @@ class DataStoreState extends ChangeNotifier {
       try {
         await dataStore.setUid(_uid);
       } catch (e) {
+        _uid = null;
         print(e);
       }
 
       if (dataStore.currentUser == null) {
-        FirebaseAuth.instance.signOut();
+        await dataStore.createUser(UserAccount.fromUser(user!));
+        await dataStore.setUid(user.uid);
       }
 
       notifyListeners();

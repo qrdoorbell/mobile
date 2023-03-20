@@ -6,7 +6,7 @@ import 'package:firebase_database/firebase_database.dart';
 import '../../data.dart';
 
 abstract class FirebaseRepository<T> {
-  final _controller = StreamController<List<T>>.broadcast();
+  var _controller = StreamController<List<T>>.broadcast();
   final _subs = <StreamSubscription<DatabaseEvent>>[];
   final _cache = <T>[];
 
@@ -37,7 +37,10 @@ abstract class FirebaseRepository<T> {
 
   Future<void> dispose() async {
     for (var sub in _subs) await sub.cancel();
+    _controller.close();
     _cache.clear();
+
+    _controller = StreamController<List<T>>.broadcast();
   }
 
   T convertFromMap(Map m);
@@ -66,15 +69,17 @@ class DoorbellsRepository extends FirebaseRepository<Doorbell> {
 
   void subscribeTo(String doorbellId) {
     _refSubscribe(db.ref('doorbells/$doorbellId').onValue.listen(_refOnSingleValue, onError: _refOnError, cancelOnError: false));
-    _refSubscribe(db.ref('doorbells').onChildAdded.listen(_refOnSingleValue, onError: _refOnError, cancelOnError: false));
+    // _refSubscribe(db.ref('doorbells').onChildAdded.listen(_refOnSingleValue, onError: _refOnError, cancelOnError: false));
   }
 
-  Future<void> create(Doorbell doorbell) async {
+  Future<Doorbell> create(Doorbell doorbell) async {
     final uid = FirebaseAuth.instance.currentUser?.uid;
 
     await db.ref('users/$uid/doorbells/${doorbell.doorbellId}').set(true);
     await db.ref('doorbell-users/${doorbell.doorbellId}/$uid').set({'role': 'owner', 'created': DateTime.now().millisecondsSinceEpoch});
     await db.ref('doorbells/${doorbell.doorbellId}').set(doorbell.toMap());
+
+    return Doorbell.fromSnapshot(await db.ref('doorbells/${doorbell.doorbellId}').get());
   }
 
   Future<void> update(Doorbell doorbell) async {

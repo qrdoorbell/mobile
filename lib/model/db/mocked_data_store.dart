@@ -77,4 +77,10 @@ class MockedDataStore extends DataStore {
     // TODO: implement updateDoorbell
     throw UnimplementedError();
   }
+
+  @override
+  Future<UserAccount> createUser(UserAccount user) {
+    // TODO: implement createUser
+    throw UnimplementedError();
+  }
 }
