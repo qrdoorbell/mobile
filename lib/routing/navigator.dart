@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:qrdoorbell_mobile/presentation/screens/doorbell_screen.dart';
 import 'package:qrdoorbell_mobile/presentation/screens/login_screen.dart';
 import 'package:qrdoorbell_mobile/presentation/screens/main_screen.dart';
+import 'package:qrdoorbell_mobile/presentation/screens/qrcode_screen.dart';
 
 import '../routing.dart';
 import '../widgets/fade_transition_page.dart';
@@ -54,6 +55,11 @@ class _AppNavigatorState extends State<AppNavigator> {
             key: _scaffoldKey,
             child: const MainScreen(),
           ),
+          if (pathTemplate == '/doorbells/:doorbellId/qr' && doorbellId != null)
+            MaterialPage(
+              key: _doorbellDetailsKey,
+              child: QRCodeScreen(doorbellId),
+            ),
           if (pathTemplate == '/doorbells/:doorbellId' && doorbellId != null)
             MaterialPage(
               key: _doorbellDetailsKey,

@@ -74,11 +74,12 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
         '/doorbells',
         '/events',
         '/doorbells/new',
-        '/doorbells/:doorbellId',
         '/sticker-templates/popular',
         '/sticker-templates/all',
+        '/doorbells/:doorbellId/qr',
         '/doorbells/:doorbellId/stickers',
         '/doorbells/:doorbellId/stickers/:stickerId',
+        '/doorbells/:doorbellId',
         '/profile',
       ],
       guard: _guard,
@@ -195,7 +196,7 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
 
   Future<void> _handleFcmTokenChanged(String uid, String? token) async {
     token ??= await FirebaseMessaging.instance.getToken();
-    await FirebaseDatabase.instance.ref("/user-fcms/$uid/$token").set(true);
+    await FirebaseDatabase.instance.ref("user-fcms/$uid/$token").set(true);
   }
 
   Future<void> _handleAuthStateChanged(User? user) async {
