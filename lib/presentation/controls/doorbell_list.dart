@@ -12,9 +12,10 @@ class DoorbellList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dataStore = DataStore.of(context);
     return StreamBuilder<List<Doorbell>>(
-        stream: DataStore.of(context).doorbellsStream,
-        initialData: DataStore.of(context).doorbells,
+        stream: dataStore.doorbellsStream,
+        initialData: dataStore.doorbells,
         builder: (BuildContext context, AsyncSnapshot<List<Doorbell>> snapshot) {
           var data = !snapshot.hasData ? <Doorbell>[] : snapshot.data!;
           return SliverList(

@@ -48,7 +48,7 @@ class MockedDataStore extends DataStore {
   }
 
   @override
-  Future<void> reloadData() {
+  Future<void> reloadData({bool force = false}) {
     return Future.value(null);
   }
 
@@ -81,6 +81,12 @@ class MockedDataStore extends DataStore {
   @override
   Future<UserAccount> createUser(UserAccount user) {
     // TODO: implement createUser
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> removeDoorbell(String doorbellId) {
+    // TODO: implement removeDoorbell
     throw UnimplementedError();
   }
 }
