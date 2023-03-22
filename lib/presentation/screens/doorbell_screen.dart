@@ -5,6 +5,8 @@ import 'package:qrdoorbell_mobile/data.dart';
 import 'package:qrdoorbell_mobile/presentation/controls/event_list.dart';
 import 'package:qrdoorbell_mobile/presentation/controls/sticker_card.dart';
 
+import '../../routing.dart';
+
 class DoorbellScreen extends StatelessWidget {
   final User user = FirebaseAuth.instance.currentUser!;
   final String doorbellId;
@@ -36,8 +38,11 @@ class DoorbellScreen extends StatelessWidget {
                     "Edit",
                     style: TextStyle(color: CupertinoColors.activeBlue),
                   ),
-                  onPressed: () {
-                    DataStore.of(context).addDoorbellEvent(2, doorbellId, 'sticker2_id');
+                  onPressed: () async {
+                    // DataStore.of(context).addDoorbellEvent(2, doorbellId, 'sticker2_id');
+                    final nav = Navigator.of(context);
+                    await DataStore.of(context).removeDoorbell(doorbellId);
+                    nav.pop();
                   },
                 ),
                 middle: Text(doorbell.name),
@@ -63,15 +68,16 @@ class DoorbellScreen extends StatelessWidget {
                         child: ListView(
                           scrollDirection: Axis.horizontal,
                           children: <Widget>[
-                            StickerCard.fromIcon(CupertinoIcons.qrcode, Colors.lightBlueAccent),
+                            StickerCard.fromIcon(CupertinoIcons.qrcode, Colors.lightBlueAccent,
+                                () => RouteStateScope.of(context).go('/doorbells/$doorbellId/qr')),
                             const Padding(padding: EdgeInsets.all(5)),
-                            StickerCard.fromIcon(CupertinoIcons.hexagon, Colors.cyan),
+                            StickerCard.fromIcon(CupertinoIcons.hexagon, Colors.cyan, () => {}),
                             const Padding(padding: EdgeInsets.all(5)),
-                            StickerCard.fromIcon(CupertinoIcons.rectangle, Colors.green),
+                            StickerCard.fromIcon(CupertinoIcons.rectangle, Colors.green, () => {}),
                             const Padding(padding: EdgeInsets.all(5)),
-                            StickerCard.fromIcon(CupertinoIcons.rectangle_expand_vertical, Colors.yellow),
+                            StickerCard.fromIcon(CupertinoIcons.rectangle_expand_vertical, Colors.yellow, () => {}),
                             const Padding(padding: EdgeInsets.all(5)),
-                            StickerCard.fromIcon(CupertinoIcons.doc_append, Colors.orange),
+                            StickerCard.fromIcon(CupertinoIcons.doc_append, Colors.orange, () => {}),
                             const Padding(padding: EdgeInsets.all(5)),
                           ],
                         ))),

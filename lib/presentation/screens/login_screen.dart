@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 
+import '../../data.dart';
 import '../../routing/route_state.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -18,12 +19,14 @@ class LoginScreen extends StatelessWidget {
           }),
         ),
         AuthStateChangeAction(
-          ((context, state) {
+          ((context, state) async {
             if (state is UserCreated || state is SignedIn) {
               var user = (state is SignedIn) ? state.user : (state as UserCreated).credential.user;
               if (user == null) {
                 return;
               }
+
+              var routeState = RouteStateScope.of(context);
               if (!user.emailVerified && (state is UserCreated)) {
                 user.sendEmailVerification();
               }
@@ -32,9 +35,11 @@ class LoginScreen extends StatelessWidget {
                   var defaultDisplayName = user.email!.split('@')[0];
                   user.updateDisplayName(defaultDisplayName);
                 }
+
+                await DataStore.of(context).createUser(UserAccount.fromUser(user));
               }
 
-              RouteStateScope.of(context).go('/doorbells');
+              await routeState.go('/doorbells');
             }
           }),
         ),
