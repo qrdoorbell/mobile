@@ -20,6 +20,7 @@ class FirebaseDataStore extends DataStore {
 
   @override
   Future<void> setUid(String? uid) async {
+    print("FirebaseDataStore.setUid: uid=$uid");
     if (_uid != uid) await dispose();
 
     _uid = uid;
@@ -27,26 +28,18 @@ class FirebaseDataStore extends DataStore {
   }
 
   @override
-  Future<void> reloadData() async {
+  Future<void> reloadData({bool force = false}) async {
+    print("FirebaseDataStore.reloadData: force=$force, _uid=$_uid");
     if (_uid == null) {
       return;
     }
 
-    // try {
     print("Reloading data for user: userId='$_uid'");
     _currentUser = UserAccount.fromSnapshot(await db.ref('users/$_uid').get());
-    // } catch (e) {
-    // print(e);
-    // }
 
     for (var doorbellId in _currentUser!.doorbells) {
-      // try {
-      print("Subscribe to doorbell: path='doorbells/$doorbellId'");
       _doorbellsRepository.subscribeTo(doorbellId);
       _eventsRepository.subscribeTo(doorbellId);
-      // } catch (e) {
-      // print(e);
-      // }
     }
   }
 
@@ -72,6 +65,7 @@ class FirebaseDataStore extends DataStore {
 
   @override
   Future<void> dispose() async {
+    print("Firebase DataStore dispose");
     _currentUser = null;
     await _doorbellsRepository.dispose();
     await _eventsRepository.dispose();
@@ -90,6 +84,17 @@ class FirebaseDataStore extends DataStore {
   @override
   Future<void> updateDoorbell(Doorbell doorbell) async {
     await _doorbellsRepository.update(doorbell);
+  }
+
+  @override
+  Future<UserAccount> createUser(UserAccount user) async {
+    await db.ref('users/${user.userId}').set(user.toMap());
+    return user;
+  }
+
+  @override
+  Future<void> removeDoorbell(String doorbellId) async {
+    await _doorbellsRepository.remove(doorbellId);
   }
 }
 

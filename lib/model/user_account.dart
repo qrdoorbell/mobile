@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class UserAccount {
@@ -25,7 +26,7 @@ class UserAccount {
   UserAccount._(DataSnapshot snapshot) {
     final s = Map.of(snapshot.value as dynamic);
 
-    userId = snapshot.key!;
+    userId = snapshot.key ?? s['id'];
     firstName = s['firstName'];
     lastName = s['lastName'];
     displayName = s['displayName'];
@@ -42,11 +43,13 @@ class UserAccount {
       idps = List.from(s['idps'].entries)
           .map((x) => UserAccountIdp(provider: x.value['provider'] ?? x.key, providerUserId: x.value['id']))
           .toList();
-    }
+    } else
+      idps = [];
 
     if (s['doorbells']?.entries != null) {
       doorbells = List.from(s['doorbells'].entries).map((x) => x.key.toString()).toList();
-    }
+    } else
+      doorbells = [];
   }
 
   Map toMap() => {
@@ -67,6 +70,12 @@ class UserAccount {
       };
 
   static UserAccount fromSnapshot(DataSnapshot snapshot) => UserAccount._(snapshot);
+
+  static UserAccount fromUser(User user) => UserAccount(userId: user.uid)
+    ..email = user.email
+    ..displayName = user.displayName
+    ..firstName = user.displayName
+    ..lastName = '';
 }
 
 class UserAccountIdp {

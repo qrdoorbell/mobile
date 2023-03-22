@@ -10,28 +10,37 @@
     },
     "doorbells": {
       "$doorbellId": {
-        ".read": "auth.uid !== null",
-        ".write": "auth.uid !== null && (root.child('doorbell-users/$doorbellId').child(auth.uid).child('role').val() === 'owner' || !root.child('doorbell-users/$doorbellId').child(auth.uid).exists())"
+        ".read": "auth.uid !== null && root.child('doorbell-users/$doorbellId').child(auth.uid).exists()",
+        ".write": "auth.uid === 'service-account' || (auth.uid !== null && (root.child('doorbell-users/$doorbellId').child(auth.uid).child('role').val() === 'owner' || !root.child('doorbell-users/$doorbellId').child(auth.uid).exists()))"
       }
     },
     "doorbell-users": {
       "$doorbellId": {
+        ".write": "auth.uid !== null && (!data.exists() || data.child(auth.uid).child('role').val() === 'owner' || !root.child('doorbells/$doorbellId').exists())",
+
         "$uid": {
           ".read": "auth.uid === $uid",
-          ".write": "auth.uid === $uid && (data.child('role').val() === 'owner' || !data.exists())"
+          ".write": "auth.uid === $uid && (!data.exists() || data.child('role').val() === 'owner' || !root.child('doorbells/$doorbellId').exists())"
         }
       }
     },
     "doorbell-events": {
       "$doorbellId": {
         ".read": "auth.uid !== null && root.child('doorbell-users/$doorbellId').child(auth.uid).exists()",
-        ".write": "auth.uid !== null && root.child('doorbell-users/$doorbellId').child(auth.uid).child('role').val() === 'owner'"
+        ".write": "auth.uid === 'service-account' || (auth.uid !== null && root.child('doorbell-users/$doorbellId').child(auth.uid).child('role').val() === 'owner')"
       }
     },
 
     "sticker-templates": {
       ".read": "auth.uid !== null",
       ".write": "auth.token.stickers_admin === true"
+    },
+
+    "user-fcms": {
+      "$uid": {
+        ".read": "auth.uid === $uid",
+        ".write": "auth.uid === $uid"
+      }
     }
   }
 }

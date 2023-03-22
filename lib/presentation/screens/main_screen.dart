@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:livekit_client/livekit_client.dart';
-import 'package:qrdoorbell_mobile/presentation/controls/event_list.dart';
 
 import '../../data.dart';
 import '../../routing/route_state.dart';
 import '../controls/doorbell_list.dart';
+import '../controls/event_list.dart';
 import '../controls/profile.dart';
 
 class MainScreen extends StatefulWidget {
@@ -67,8 +67,8 @@ class _MainScreenState extends State<MainScreen> {
                 }
 
                 final routeState = RouteStateScope.of(context);
-                final doorbell = await dataStore.createDoorbell();
-                await routeState.go('/doorbells/${doorbell.doorbellId}');
+                final newDoorbell = await dataStore.createDoorbell();
+                await routeState.go('/doorbells/${newDoorbell.doorbellId}');
               });
         } else if (index == 1) {
           tabWidget = const EventList();
