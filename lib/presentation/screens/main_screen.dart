@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:livekit_client/livekit_client.dart';
+import 'package:qrdoorbell_mobile/data.dart';
+import 'package:qrdoorbell_mobile/presentation/controls/event_list.dart';
 
-import '../../data.dart';
 import '../../routing/route_state.dart';
 import '../controls/doorbell_list.dart';
-import '../controls/event_list.dart';
 import '../controls/profile.dart';
 
 class MainScreen extends StatefulWidget {
@@ -96,6 +96,16 @@ class _MainScreenState extends State<MainScreen> {
                           backgroundColor: Colors.white,
                           largeTitle: Text(title),
                           border: Border.all(width: 0, color: Colors.white),
+                        ),
+                        CupertinoSliverRefreshControl(
+                          onRefresh: () async {
+                            await Future<void>.delayed(
+                              const Duration(milliseconds: 1000),
+                            );
+                            setState(() {
+                              DataStore.of(context).reloadData(force: true);
+                            });
+                          },
                         ),
                         tabWidget,
                       ],
