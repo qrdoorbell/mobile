@@ -19,13 +19,14 @@ class DoorbellList extends StatelessWidget {
         builder: (BuildContext context, AsyncSnapshot<List<Doorbell>> snapshot) {
           var data = !snapshot.hasData ? <Doorbell>[] : snapshot.data!;
           return SliverList(
-              delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) => DoorbellCard(
-                        doorbell: data[index],
-                        announce: DoorbellEventType.getString(data[index].lastEvent?.eventType) ?? 'No new events',
-                        onTapHandler: onTapHandler,
-                      ),
-                  childCount: data.length));
+              delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+            final ann = "${data[index].lastEvent?.formattedName ?? ''} ${data[index].lastEvent?.formattedDateTime ?? ''}";
+            return DoorbellCard(
+              doorbell: data[index],
+              announce: ann == ' ' ? 'No events' : ann,
+              onTapHandler: onTapHandler,
+            );
+          }, childCount: data.length));
         });
   }
 }
