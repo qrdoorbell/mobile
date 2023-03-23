@@ -77,6 +77,7 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
         '/sticker-templates/popular',
         '/sticker-templates/all',
         '/doorbells/:doorbellId/qr',
+        '/doorbells/:doorbellId/edit',
         '/doorbells/:doorbellId/stickers',
         '/doorbells/:doorbellId/stickers/:stickerId',
         '/doorbells/:doorbellId',

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qrdoorbell_mobile/presentation/screens/doorbell_edit_screen.dart';
 import 'package:qrdoorbell_mobile/presentation/screens/doorbell_screen.dart';
 import 'package:qrdoorbell_mobile/presentation/screens/login_screen.dart';
 import 'package:qrdoorbell_mobile/presentation/screens/main_screen.dart';
@@ -19,6 +20,7 @@ class _AppNavigatorState extends State<AppNavigator> {
   final _signInKey = const ValueKey('Sign in');
   final _scaffoldKey = const ValueKey('App scaffold');
   final _doorbellDetailsKey = const ValueKey('Doorbell details screen');
+  final _doorbellEditKey = const ValueKey('Doorbell edit screen');
   final _stickerTemplateDetailsKey = const ValueKey('Sticker details screen');
 
   @override
@@ -57,8 +59,15 @@ class _AppNavigatorState extends State<AppNavigator> {
           ),
           if (pathTemplate == '/doorbells/:doorbellId/qr' && doorbellId != null)
             MaterialPage(
-              key: _doorbellDetailsKey,
+              key: _doorbellEditKey,
+              fullscreenDialog: true,
               child: QRCodeScreen(doorbellId),
+            ),
+          if (pathTemplate == '/doorbells/:doorbellId/edit' && doorbellId != null)
+            MaterialPage(
+              key: _doorbellEditKey,
+              fullscreenDialog: true,
+              child: DoorbellEditScreen(doorbellId: doorbellId),
             ),
           if (pathTemplate == '/doorbells/:doorbellId' && doorbellId != null)
             MaterialPage(

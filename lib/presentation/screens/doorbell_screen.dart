@@ -47,12 +47,7 @@ class DoorbellScreen extends StatelessWidget {
                   "Edit",
                   style: TextStyle(color: CupertinoColors.activeBlue),
                 ),
-                onPressed: () async {
-                  // DataStore.of(context).addDoorbellEvent(2, doorbellId, 'sticker2_id');
-                  final nav = Navigator.of(context);
-                  await DataStore.of(context).removeDoorbell(doorbellId);
-                  nav.pop();
-                },
+                onPressed: () => RouteStateScope.of(context).go('/doorbells/$doorbellId/edit'),
               ),
               middle: Text(doorbell.name),
               largeTitle: Padding(padding: const EdgeInsets.only(left: 0), child: Text(doorbell.name)),
