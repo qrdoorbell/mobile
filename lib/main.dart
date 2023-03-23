@@ -32,20 +32,28 @@ Future<void> main() async {
   }
 
   FlutterError.onError = (errorDetails) {
-    // If you wish to record a "non-fatal" exception, please use `FirebaseCrashlytics.instance.recordFlutterError` instead
+    print("FlutterError.onError:");
+    print(errorDetails);
+
     FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
   };
-  PlatformDispatcher.instance.onError = (error, stack) {
-    // If you wish to record a "non-fatal" exception, please remove the "fatal" parameter
-    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-    return true;
-  };
 
-  FirebaseUIAuth.configureProviders([
-    EmailAuthProvider(),
-    AppleProvider(),
-    GoogleProvider(clientId: GOOGLE_CLIENT_ID),
-  ]);
+  if (USE_CRASHALYTICS) {
+    PlatformDispatcher.instance.onError = (error, stack) {
+      print("PlatformDispatcher.instance.onError:");
+      print(error);
+      print(stack);
+
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
+
+    FirebaseUIAuth.configureProviders([
+      EmailAuthProvider(),
+      AppleProvider(),
+      GoogleProvider(clientId: GOOGLE_CLIENT_ID),
+    ]);
+  }
 
   if (USE_DATABASE_EMULATOR) FirebaseDatabase.instance.useDatabaseEmulator("127.0.0.1", 9041);
   if (USE_AUTH_EMULATOR) await FirebaseAuth.instance.useAuthEmulator("127.0.0.1", 9042);

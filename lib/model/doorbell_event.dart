@@ -140,7 +140,7 @@ class DoorbellEvent implements Comparable<DoorbellEvent> {
     if (dateTime.year < now.year) {
       if (diff.inDays > 365) {
         if (diff.inDays < 730) return "more than a year ago";
-        return "more than {(diff.inDays / 365).round()} years ago";
+        return "more than ${(diff.inDays / 365).round()} years ago";
       }
       return "at ${dateTime.day} ${_convertMonth(dateTime.month)}, ${dateTime.year} $hourMin";
     }
