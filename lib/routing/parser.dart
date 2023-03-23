@@ -13,10 +13,7 @@ class TemplateRouteParser extends RouteInformationParser<ParsedRoute> {
   final ParsedRoute initialRoute;
 
   TemplateRouteParser({
-    /// The list of allowed path templates (['/', '/users/:id'])
     required List<String> allowedPaths,
-
-    /// The initial route
     String initialRoute = '/doorbells',
 
     ///  [RouteGuard] used to redirect.
@@ -46,7 +43,6 @@ class TemplateRouteParser extends RouteInformationParser<ParsedRoute> {
       }
     }
 
-    // Redirect if a guard is present
     var guard = this.guard;
     if (guard != null) {
       return guard(parsedRoute);

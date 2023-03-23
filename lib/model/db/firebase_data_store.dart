@@ -30,12 +30,25 @@ class FirebaseDataStore extends DataStore {
   @override
   Future<void> reloadData({bool force = false}) async {
     print("FirebaseDataStore.reloadData: force=$force, _uid=$_uid");
+
+    print("Reloading data for user: userId='$_uid'");
+    if (_currentUser == null || force) _currentUser = UserAccount.fromSnapshot(await db.ref('users/$_uid').get());
+
+    // if (force) {
+    //   for (var doorbellId in _currentUser!.doorbells) {
+    //     await _doorbellsRepository.getById(doorbellId);
+    //     await _eventsRepository.getByDoorbellId(doorbellId);
+    //   }
+    // }
+
+    _subscribe();
+  }
+
+  void _subscribe() {
+    print("FirebaseDataStore._subscribe: _uid=$_uid");
     if (_uid == null) {
       return;
     }
-
-    print("Reloading data for user: userId='$_uid'");
-    _currentUser = UserAccount.fromSnapshot(await db.ref('users/$_uid').get());
 
     for (var doorbellId in _currentUser!.doorbells) {
       _doorbellsRepository.subscribeTo(doorbellId);
@@ -95,6 +108,18 @@ class FirebaseDataStore extends DataStore {
   @override
   Future<void> removeDoorbell(String doorbellId) async {
     await _doorbellsRepository.remove(doorbellId);
+  }
+
+  @override
+  Future<Doorbell> updateDoorbellSettings(Doorbell doorbell) async {
+    await db.ref('doorbells/${doorbell.doorbellId}').update({'settings': doorbell.settings.toMap()});
+    return doorbell;
+  }
+
+  @override
+  Future<Doorbell> updateDoorbellName(Doorbell doorbell) async {
+    await db.ref('doorbells/${doorbell.doorbellId}').update({'name': doorbell.name});
+    return doorbell;
   }
 }
 

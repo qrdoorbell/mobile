@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../model/doorbell.dart';
+import '../../data.dart';
 
 typedef DoorbellCallback = void Function(Doorbell doorbell);
 
@@ -91,7 +91,10 @@ class DoorbellCard extends StatelessWidget {
                             ),
                           const Spacer(),
                           CupertinoSwitch(
-                            onChanged: (value) => doorbell.settings.enablePushNotifications = value,
+                            onChanged: (bool value) async {
+                              doorbell.settings.enablePushNotifications = value;
+                              await DataStore.of(context).updateDoorbellSettings(doorbell);
+                            },
                             value: doorbell.settings.enablePushNotifications,
                           ),
                           Padding(
