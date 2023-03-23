@@ -95,7 +95,7 @@ class DoorbellSettings {
     );
   }
 
-  Map toMap() => {
+  Map<String, dynamic> toMap() => {
         'enableVideoCalls': enableVideoCalls,
         'enableAudioCalls': enableAudioCalls,
         'enableVideoPreview': enableVideoPreview,

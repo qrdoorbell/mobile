@@ -1,9 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:qrdoorbell_mobile/presentation/screens/doorbell_edit_screen.dart';
 import 'package:qrdoorbell_mobile/presentation/screens/doorbell_screen.dart';
 import 'package:qrdoorbell_mobile/presentation/screens/login_screen.dart';
 import 'package:qrdoorbell_mobile/presentation/screens/main_screen.dart';
 import 'package:qrdoorbell_mobile/presentation/screens/qrcode_screen.dart';
+import 'package:qrdoorbell_mobile/presentation/screens/single_control_screen.dart';
 
 import '../routing.dart';
 import '../widgets/fade_transition_page.dart';
@@ -57,6 +59,11 @@ class _AppNavigatorState extends State<AppNavigator> {
             key: _scaffoldKey,
             child: const MainScreen(),
           ),
+          if (pathTemplate == '/doorbells/:doorbellId' && doorbellId != null)
+            MaterialPage(
+              key: _doorbellDetailsKey,
+              child: DoorbellScreen(doorbellId: doorbellId),
+            ),
           if (pathTemplate == '/doorbells/:doorbellId/qr' && doorbellId != null)
             MaterialPage(
               key: _doorbellEditKey,
@@ -69,10 +76,13 @@ class _AppNavigatorState extends State<AppNavigator> {
               fullscreenDialog: true,
               child: DoorbellEditScreen(doorbellId: doorbellId),
             ),
-          if (pathTemplate == '/doorbells/:doorbellId' && doorbellId != null)
+          if (pathTemplate == '/doorbells/:doorbellId/edit/name' && doorbellId != null)
             MaterialPage(
-              key: _doorbellDetailsKey,
-              child: DoorbellScreen(doorbellId: doorbellId),
+              key: _doorbellEditKey,
+              fullscreenDialog: true,
+              child: SingleControlScreen(
+                child: CupertinoTextField(placeholder: 'sss'),
+              ),
             ),
           // Add an additional page to the stack if the user is viewing a book
           // or an author

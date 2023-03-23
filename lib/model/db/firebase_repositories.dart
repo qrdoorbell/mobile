@@ -29,14 +29,22 @@ abstract class FirebaseRepository<T> {
 
   void _refOnSingleValue(DatabaseEvent event) {
     print("FirebaseRepository<$T>._refOnSingleValue: event=${event.snapshot.value.toString()}");
-
-    if (event.snapshot.value != null) {
-      _addValues([convertFromMap(event.snapshot.value as Map)]);
-    }
+    convertFromSnapshot(event.snapshot);
   }
 
   void _refOnError(obj, stackTrace) {
     print('Error occured: $obj\n---\nAt: $stackTrace');
+  }
+
+  T? convertFromSnapshot(DataSnapshot snapshot) {
+    if (snapshot.value != null) {
+      final val = convertFromMap(snapshot.value as Map);
+      _addValues([val]);
+
+      return val;
+    }
+
+    return null;
   }
 
   void _addValues(Iterable<T> data) {
@@ -47,13 +55,8 @@ abstract class FirebaseRepository<T> {
 
   List<T> get snapshot => _cache;
 
-  Stream<List<T>> get stream => _controller.stream.transform(StreamTransformer.fromHandlers(handleData: (data, sink) {
-        // _cache
-        //   ..addAll(data.where((x) => !_cache.contains(x)))
-        //   ..sort();
-
-        sink.add(_cache..sort());
-      }));
+  Stream<List<T>> get stream =>
+      _controller.stream.transform(StreamTransformer.fromHandlers(handleData: (data, sink) => sink.add(_cache..sort())));
 
   Future<void> dispose() async {
     print("FirebaseRepository<$T>.dispose");
@@ -72,6 +75,10 @@ class DoorbellEventsRepository extends FirebaseRepository<DoorbellEvent> {
 
   DoorbellEventsRepository(this.db);
 
+  // Future<List<DoorbellEvent>> getByDoorbellId(String doorbellId) async {
+  //   return convertFromSnapshot(await db.ref('doorbells/$doorbellId').get());
+  // }
+
   void subscribeTo(String doorbellId) {
     print("DoorbellEventsRepository.subscribeTo: doorbellId=$doorbellId");
     // _refSubscribe(db.ref('doorbell-events/$doorbellId').onValue.listen(_refOnMultipleValues, onError: _refOnError, cancelOnError: false));
@@ -88,6 +95,10 @@ class DoorbellsRepository extends FirebaseRepository<Doorbell> {
   final FirebaseDatabase db;
 
   DoorbellsRepository(this.db);
+
+  Future<Doorbell?> getById(String doorbellId) async {
+    return convertFromSnapshot(await db.ref('doorbells/$doorbellId').get());
+  }
 
   void subscribeTo(String doorbellId) {
     print("DoorbellsRepository.subscribeTo: doorbellId=$doorbellId");
@@ -106,8 +117,6 @@ class DoorbellsRepository extends FirebaseRepository<Doorbell> {
       _onDoorbellAdded,
       onError: _refOnError,
       cancelOnError: false,
-      // onDone: () =>
-      // print('DoorbellsRepository._subscription.onDone: subscription=users/${FirebaseAuth.instance.currentUser!.uid}/doorbells'))
     ));
     // _refSubscribe(db.ref('doorbells').onChildAdded.listen(_refOnSingleValue, onError: _refOnError, cancelOnError: false));
   }
@@ -125,11 +134,13 @@ class DoorbellsRepository extends FirebaseRepository<Doorbell> {
   void _onDoorbellUpdated(DatabaseEvent event) {
     print("DoorbellsRepository._onDoorbellUpdated: event=${event.snapshot.value.toString()}");
 
-    var newValue = convertFromMap(event.snapshot.value as Map);
-    _cache.removeWhere((x) => x.doorbellId == newValue.doorbellId);
-    _cache.add(newValue);
+    if (event.snapshot.key?.length == 10) {
+      var newValue = convertFromMap(event.snapshot.value as Map);
+      _cache.removeWhere((x) => x.doorbellId == newValue.doorbellId);
+      _cache.add(newValue);
 
-    _controller.sink.add(_cache);
+      _controller.sink.add(_cache);
+    }
   }
 
   void _onDoorbellRemoved(DatabaseEvent event) {

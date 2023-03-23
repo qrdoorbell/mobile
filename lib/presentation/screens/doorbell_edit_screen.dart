@@ -19,6 +19,7 @@ class _DoorbellEditScreenState extends State<DoorbellEditScreen> {
   @override
   Widget build(BuildContext context) {
     doorbell = DataStore.of(context).getDoorbellById(widget.doorbellId)!;
+    var doorbellNameController = TextEditingController(text: doorbell.name);
     return CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
           backgroundColor: CupertinoColors.white,
@@ -42,24 +43,33 @@ class _DoorbellEditScreenState extends State<DoorbellEditScreen> {
                 ),
                 children: <CupertinoListTile>[
                   CupertinoListTile(
-                    title: const Text('Name'),
-                    additionalInfo: Text(doorbell.name),
-                    trailing: const CupertinoListTileChevron(),
+                    title: CupertinoTextField(
+                      controller: doorbellNameController,
+                      onTapOutside: (event) async {
+                        if (doorbell.name != doorbellNameController.text.trim() && doorbellNameController.text.isNotEmpty) {
+                          doorbell.name = doorbellNameController.text;
+                          await DataStore.of(context).updateDoorbellName(doorbell);
+                        }
+                      },
+                      prefix: const Text('Name'),
+                      decoration: const BoxDecoration(),
+                      textAlign: TextAlign.right,
+                    ),
                   ),
                   CupertinoListTile(
-                    title: const Text('Silent mode'),
+                    title: const Text('Silent mode time'),
                     additionalInfo: Text(doorbell.settings.automaticStateSettings != null
                         ? "${doorbell.settings.automaticStateSettings?.startTime} to ${doorbell.settings.automaticStateSettings?.endTime}"
                         : "Configure"),
                     trailing: const CupertinoListTileChevron(),
                   ),
                   CupertinoListTile(
-                    title: const Text('Mute notifications'),
+                    title: const Text('Allow notifications'),
                     trailing: CupertinoSwitch(
-                        onChanged: (bool value) {
-                          setState(() {
-                            doorbell.settings.enablePushNotifications = value;
-                          });
+                        onChanged: (bool value) async {
+                          doorbell.settings.enablePushNotifications = value;
+                          await DataStore.of(context).updateDoorbellSettings(doorbell);
+                          setState(() => doorbell);
                         },
                         value: doorbell.settings.enablePushNotifications),
                   ),
@@ -77,10 +87,10 @@ class _DoorbellEditScreenState extends State<DoorbellEditScreen> {
                   CupertinoListTile(
                     title: const Text('Allow voice calls'),
                     trailing: CupertinoSwitch(
-                        onChanged: (bool value) {
-                          setState(() {
-                            doorbell.settings.enableAudioCalls = value;
-                          });
+                        onChanged: (bool value) async {
+                          doorbell.settings.enableAudioCalls = value;
+                          await DataStore.of(context).updateDoorbellSettings(doorbell);
+                          setState(() => doorbell);
                         },
                         value: doorbell.settings.enableAudioCalls),
                   ),
@@ -103,20 +113,20 @@ class _DoorbellEditScreenState extends State<DoorbellEditScreen> {
                   CupertinoListTile(
                     title: const Text('Allow video calls'),
                     trailing: CupertinoSwitch(
-                        onChanged: (bool value) {
-                          setState(() {
-                            doorbell.settings.enableVideoCalls = value;
-                          });
+                        onChanged: (bool value) async {
+                          doorbell.settings.enableVideoCalls = value;
+                          await DataStore.of(context).updateDoorbellSettings(doorbell);
+                          setState(() => doorbell);
                         },
                         value: doorbell.settings.enableVideoCalls),
                   ),
                   CupertinoListTile(
                     title: const Text('Video preview'),
                     trailing: CupertinoSwitch(
-                        onChanged: (bool value) {
-                          setState(() {
-                            doorbell.settings.enableVideoPreview = value;
-                          });
+                        onChanged: (bool value) async {
+                          doorbell.settings.enableVideoPreview = value;
+                          await DataStore.of(context).updateDoorbellSettings(doorbell);
+                          setState(() => doorbell);
                         },
                         value: doorbell.settings.enableVideoPreview),
                   ),
@@ -139,20 +149,20 @@ class _DoorbellEditScreenState extends State<DoorbellEditScreen> {
                   CupertinoListTile(
                     title: const Text('Allow text messages'),
                     trailing: CupertinoSwitch(
-                        onChanged: (bool value) {
-                          setState(() {
-                            doorbell.settings.enableTextMail = value;
-                          });
+                        onChanged: (bool value) async {
+                          doorbell.settings.enableTextMail = value;
+                          await DataStore.of(context).updateDoorbellSettings(doorbell);
+                          setState(() => doorbell);
                         },
                         value: doorbell.settings.enableTextMail),
                   ),
                   CupertinoListTile(
                     title: const Text('Allow voice messages'),
                     trailing: CupertinoSwitch(
-                        onChanged: (bool value) {
-                          setState(() {
-                            doorbell.settings.enableVoiceMail = value;
-                          });
+                        onChanged: (bool value) async {
+                          doorbell.settings.enableVoiceMail = value;
+                          await DataStore.of(context).updateDoorbellSettings(doorbell);
+                          setState(() => doorbell);
                         },
                         value: doorbell.settings.enableVoiceMail),
                   ),

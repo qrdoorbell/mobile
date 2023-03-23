@@ -12,7 +12,6 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 
 import 'app_options.dart';
 import 'model/db/firebase_data_store.dart';
-import 'model/db/mocked_data_store.dart';
 import 'routing.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -157,7 +156,7 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
   @override
   Widget build(BuildContext context) {
     return DataStoreStateScope(
-        notifier: DataStoreState(dataStore: USE_DATABASE_MOCK ? MockedDataStore() : FirebaseDataStore(FirebaseDatabase.instance)),
+        notifier: DataStoreState(dataStore: /*USE_DATABASE_MOCK ? MockedDataStore() :*/ FirebaseDataStore(FirebaseDatabase.instance)),
         child: RouteStateScope(
             notifier: _routeState,
             child: CupertinoApp.router(
@@ -192,14 +191,10 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
     final signedIn = FirebaseAuth.instance.currentUser?.uid != null;
     final signInRoute = ParsedRoute('/login', '/login', {}, {});
 
-    // Go to /signin if the user is not signed in
-    if (!signedIn && from != signInRoute) {
+    if (!signedIn && from != signInRoute)
       return signInRoute;
-    }
-    // Go to /doorbells if the user is signed in and tries to go to /signin.
-    else if (signedIn && from == signInRoute) {
-      return ParsedRoute('/doorbells', '/doorbells', {}, {});
-    }
+    else if (signedIn && from == signInRoute) return ParsedRoute('/doorbells', '/doorbells', {}, {});
+
     return from;
   }
 
