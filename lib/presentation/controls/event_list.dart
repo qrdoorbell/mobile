@@ -7,11 +7,13 @@ import 'event_card.dart';
 class EventList extends StatelessWidget {
   final String? doorbellId;
   final VoidCallback? onShareCallback;
+  final VoidCallback? onStickerCallback;
 
   const EventList({
     super.key,
     this.doorbellId,
     this.onShareCallback,
+    this.onStickerCallback,
   });
 
   @override
@@ -41,12 +43,11 @@ class EventList extends StatelessWidget {
                     const Padding(padding: EdgeInsets.all(5)),
                     if (doorbellId != null)
                       Column(children: [
-                        const Text("Share doorbell!"),
                         const Padding(padding: EdgeInsets.all(20)),
                         CupertinoButton.filled(
-                            onPressed: onShareCallback,
+                            onPressed: onStickerCallback,
                             child: const Text(
-                              "Share doorbell link",
+                              "Print Sticker",
                               style: TextStyle(fontWeight: FontWeight.bold),
                             )),
                       ]),

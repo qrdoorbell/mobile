@@ -105,12 +105,18 @@ class DoorbellScreen extends StatelessWidget {
             EventList(
               doorbellId: doorbellId,
               onShareCallback: _onShareDoorbell,
+              onStickerCallback: () => _onStickerDoorbell(context),
             ),
           ])),
     ));
   }
 
   Future<void> _onShareDoorbell() async {
-    print("SHARE DOORBELL $doorbellId");
+    print("SHARE DOORBELL: $doorbellId");
+  }
+
+  Future<void> _onStickerDoorbell(context) async {
+    print("ON STICKER DOORBELL: $doorbellId");
+    await RouteStateScope.of(context).go('/doorbells/$doorbellId/qr');
   }
 }
