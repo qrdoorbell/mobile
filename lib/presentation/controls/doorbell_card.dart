@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -38,18 +39,70 @@ class DoorbellCard extends StatelessWidget {
             child: InkWell(
                 onTap: () => onTapHandler(doorbell),
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 24, left: 22, right: 12, bottom: 32),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  padding: const EdgeInsets.only(top: 24, left: 22, right: 16, bottom: 20),
+                  child: Column(
                     children: [
-                      SizedBox(height: 55, child: qrcodeSvg),
-                      Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 14),
-                          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                            Text(doorbell.name, style: const TextStyle(fontSize: 24)),
-                            const Padding(padding: EdgeInsets.only(top: 9)),
-                            Text(announce, style: const TextStyle(color: Colors.grey))
-                          ]))
+                      SizedBox(
+                          height: 90,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 55, child: qrcodeSvg),
+                              Expanded(
+                                  child: Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 14),
+                                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                        Text(doorbell.name, style: const TextStyle(fontSize: 24)),
+                                        const Padding(padding: EdgeInsets.only(top: 9)),
+                                        Text(
+                                          announce,
+                                          style: const TextStyle(color: Colors.grey),
+                                          softWrap: true,
+                                          overflow: TextOverflow.clip,
+                                        ),
+                                      ])))
+                            ],
+                          )),
+                      const Padding(padding: EdgeInsets.only(top: 30)),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          if (doorbell.settings.automaticStateSettings == null)
+                            CupertinoButton(
+                              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+                              color: CupertinoColors.systemBlue.withAlpha(25),
+                              borderRadius: BorderRadius.circular(10),
+                              child: const Text(
+                                'Set silent mode time',
+                                style: TextStyle(color: CupertinoColors.activeBlue, fontSize: 16),
+                              ),
+                              onPressed: () => {},
+                            ),
+                          if (doorbell.settings.automaticStateSettings != null)
+                            CupertinoButton(
+                              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+                              color: CupertinoColors.systemBlue.withAlpha(25),
+                              borderRadius: BorderRadius.circular(10),
+                              child: const Text(
+                                'Set silent mode time',
+                                style: TextStyle(color: CupertinoColors.activeBlue, fontSize: 16),
+                              ),
+                              onPressed: () => {},
+                            ),
+                          const Spacer(),
+                          CupertinoSwitch(
+                            onChanged: (value) => doorbell.settings.enablePushNotifications = value,
+                            value: doorbell.settings.enablePushNotifications,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 2),
+                            child: Icon(
+                              doorbell.settings.enablePushNotifications ? CupertinoIcons.bell : CupertinoIcons.bell_slash,
+                              color: doorbell.settings.enablePushNotifications ? CupertinoColors.activeBlue : CupertinoColors.inactiveGray,
+                            ),
+                          )
+                        ],
+                      )
                     ],
                   ),
                 ))));
