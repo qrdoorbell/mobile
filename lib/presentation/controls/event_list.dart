@@ -41,7 +41,7 @@ class EventList extends StatelessWidget {
                     const Padding(padding: EdgeInsets.all(5)),
                     if (doorbellId != null)
                       Column(children: [
-                        const Text("Share your doorbell link with friends!"),
+                        const Text("Share doorbell!"),
                         const Padding(padding: EdgeInsets.all(20)),
                         CupertinoButton.filled(
                             onPressed: onShareCallback,

@@ -127,6 +127,26 @@ class DoorbellEvent implements Comparable<DoorbellEvent> {
     return "${dateTime.day} ${_convertMonth(dateTime.month)}, $hourMin";
   }
 
+  String get formattedDateTimeSingleLine {
+    var now = DateTime.now();
+    var weekday = now.weekday;
+    var diff = now.difference(dateTime);
+    if (diff.inSeconds < 60) return "${diff.inSeconds} seconds ago";
+    if (diff.inMinutes < 60) return "${diff.inMinutes} minutes ago";
+
+    var hourMin = "${dateTime.hour < 10 ? '0' : ''}${dateTime.hour}:${dateTime.minute < 10 ? '0' : ''}${dateTime.minute}";
+    if (diff.inDays == 0) return "today at $hourMin";
+    if (diff.inDays < weekday) return "on ${_convertWeekDayLong(dateTime.weekday)} at $hourMin";
+    if (dateTime.year < now.year) {
+      if (diff.inDays > 365) {
+        if (diff.inDays < 730) return "more than a year ago";
+        return "more than {(diff.inDays / 365).round()} years ago";
+      }
+      return "at ${dateTime.day} ${_convertMonth(dateTime.month)}, ${dateTime.year} $hourMin";
+    }
+    return "at ${dateTime.day} ${_convertMonth(dateTime.month)} $hourMin";
+  }
+
   String get formattedName => DoorbellEventType.getString(eventType) ?? "Unknown event";
 
   String _convertWeekDay(int weekday) {
@@ -146,6 +166,26 @@ class DoorbellEvent implements Comparable<DoorbellEvent> {
       case 1:
       default:
         return 'Mon';
+    }
+  }
+
+  String _convertWeekDayLong(int weekday) {
+    switch (weekday) {
+      case 2:
+        return 'Tuesday';
+      case 3:
+        return 'Wednesday';
+      case 4:
+        return 'Thursday';
+      case 5:
+        return 'Friday';
+      case 6:
+        return 'Saturday';
+      case 7:
+        return 'Sunday';
+      case 1:
+      default:
+        return 'Monday';
     }
   }
 
