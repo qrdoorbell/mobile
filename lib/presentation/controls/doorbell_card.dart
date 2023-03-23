@@ -95,10 +95,11 @@ class DoorbellCard extends StatelessWidget {
                             value: doorbell.settings.enablePushNotifications,
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(left: 2),
+                            padding: const EdgeInsets.only(left: 3),
                             child: Icon(
                               doorbell.settings.enablePushNotifications ? CupertinoIcons.bell : CupertinoIcons.bell_slash,
-                              color: doorbell.settings.enablePushNotifications ? CupertinoColors.activeBlue : CupertinoColors.inactiveGray,
+                              color: doorbell.settings.enablePushNotifications ? Colors.blue.shade700 : CupertinoColors.inactiveGray,
+                              size: 28,
                             ),
                           )
                         ],
