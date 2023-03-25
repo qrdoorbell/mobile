@@ -66,7 +66,7 @@ class _AppNavigatorState extends State<AppNavigator> {
             MaterialPage(
               key: _doorbellEditKey,
               fullscreenDialog: true,
-              child: QRCodeScreen(doorbellId),
+              child: QRCodeScreen(doorbellId: doorbellId),
             ),
           if (pathTemplate == '/doorbells/:doorbellId/edit' && doorbellId != null)
             MaterialPage(

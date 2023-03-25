@@ -1,6 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' show get;
+import 'package:share_plus/share_plus.dart';
+
 import 'package:qrdoorbell_mobile/data.dart';
 import 'package:qrdoorbell_mobile/presentation/controls/event_list.dart';
 import 'package:qrdoorbell_mobile/presentation/controls/sticker_card.dart';
@@ -104,8 +107,8 @@ class DoorbellScreen extends StatelessWidget {
             ),
             EventList(
               doorbellId: doorbellId,
-              onShareCallback: _onShareDoorbell,
-              onStickerCallback: () => _onStickerDoorbell(context),
+              onShareDoorbellCallback: _onShareDoorbell,
+              onPrintStickerCallback: () => _printSticker(doorbell),
             ),
           ])),
     ));
@@ -115,8 +118,16 @@ class DoorbellScreen extends StatelessWidget {
     print("SHARE DOORBELL: $doorbellId");
   }
 
-  Future<void> _onStickerDoorbell(context) async {
-    print("ON STICKER DOORBELL: $doorbellId");
-    await RouteStateScope.of(context).go('/doorbells/$doorbellId/qr');
+  Future<void> _printSticker(Doorbell doorbell) async {
+    print("PRINT DOORBELL STICKER: $doorbellId");
+
+    final uri = Uri.https('api.qrdoorbell.io', '/api/v1/qr/$doorbellId');
+    final imgResp = await get(uri);
+    if (imgResp.statusCode != 200) {
+      print('ERROR: unable to download image: uri=$uri, responseCode=${imgResp.statusCode}');
+      return;
+    }
+
+    Share.shareXFiles([XFile.fromData(imgResp.bodyBytes, mimeType: 'image/png')], subject: doorbell.name);
   }
 }
