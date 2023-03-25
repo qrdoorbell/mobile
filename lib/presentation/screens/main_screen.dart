@@ -108,6 +108,7 @@ class _MainScreenState extends State<MainScreen> {
                           },
                         ),
                         tabWidget,
+                        const SliverPadding(padding: EdgeInsets.only(top: 70)),
                       ],
                     ))));
       },
