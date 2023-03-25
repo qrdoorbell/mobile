@@ -128,6 +128,10 @@ class TimeRangeForStateSettings {
     );
   }
 
+  factory TimeRangeForStateSettings.createDefault() {
+    return TimeRangeForStateSettings(startTime: DateTime(2023, 1, 1, 23, 0), endTime: DateTime(2023, 1, 2, 6, 0), targetState: false);
+  }
+
   Map toMap() => {
         'start': startTime.millisecondsSinceEpoch,
         'end': endTime.millisecondsSinceEpoch,
