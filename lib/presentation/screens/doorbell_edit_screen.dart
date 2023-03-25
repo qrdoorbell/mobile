@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:qrdoorbell_mobile/routing.dart';
@@ -15,6 +16,10 @@ class DoorbellEditScreen extends StatefulWidget {
 
 class _DoorbellEditScreenState extends State<DoorbellEditScreen> {
   late Doorbell doorbell;
+
+  bool silentModeControl = false;
+  bool startTimeControl = false;
+  bool endTimeControl = false;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +46,7 @@ class _DoorbellEditScreenState extends State<DoorbellEditScreen> {
                   'GENERAL',
                   style: TextStyle(fontSize: 13.0, color: CupertinoColors.inactiveGray, fontWeight: FontWeight.normal),
                 ),
-                children: <CupertinoListTile>[
+                children: [
                   CupertinoListTile(
                     title: CupertinoTextField(
                       controller: doorbellNameController,
@@ -51,6 +56,7 @@ class _DoorbellEditScreenState extends State<DoorbellEditScreen> {
                           await DataStore.of(context).updateDoorbellName(doorbell);
                         }
                       },
+                      onTap: () async => await _hideSilentModeControls(context),
                       prefix: const Text('Name'),
                       decoration: const BoxDecoration(),
                       textAlign: TextAlign.right,
@@ -59,10 +65,58 @@ class _DoorbellEditScreenState extends State<DoorbellEditScreen> {
                   CupertinoListTile(
                     title: const Text('Silent mode time'),
                     additionalInfo: Text(doorbell.settings.automaticStateSettings != null
-                        ? "${doorbell.settings.automaticStateSettings?.startTime} to ${doorbell.settings.automaticStateSettings?.endTime}"
+                        ? "${DateFormat.Hm().format(doorbell.settings.automaticStateSettings!.startTime)} to ${DateFormat.Hm().format(doorbell.settings.automaticStateSettings!.endTime)}"
                         : "Configure"),
                     trailing: const CupertinoListTileChevron(),
+                    onTap: () => setState(() => silentModeControl = !silentModeControl),
                   ),
+                  if (silentModeControl)
+                    CupertinoListTile(
+                      title: const Padding(padding: EdgeInsets.only(left: 15), child: Text('Start time')),
+                      additionalInfo: Text(doorbell.settings.automaticStateSettings != null
+                          ? DateFormat.Hm().format(doorbell.settings.automaticStateSettings!.startTime)
+                          : "Configure"),
+                      trailing: const CupertinoListTileChevron(),
+                      onTap: () => setState(() => startTimeControl = !startTimeControl),
+                    ),
+                  if (silentModeControl && startTimeControl)
+                    SizedBox(
+                      height: 200,
+                      child: CupertinoDatePicker(
+                        mode: CupertinoDatePickerMode.time,
+                        use24hFormat: true,
+                        initialDateTime: doorbell.settings.automaticStateSettings?.startTime,
+                        onDateTimeChanged: (newDateTime) {
+                          setState(() {
+                            (doorbell.settings.automaticStateSettings ??= TimeRangeForStateSettings.createDefault()).startTime =
+                                newDateTime;
+                          });
+                        },
+                      ),
+                    ),
+                  if (silentModeControl)
+                    CupertinoListTile(
+                      title: const Padding(padding: EdgeInsets.only(left: 15), child: Text('End time')),
+                      additionalInfo: Text(doorbell.settings.automaticStateSettings != null
+                          ? DateFormat.Hm().format(doorbell.settings.automaticStateSettings!.endTime)
+                          : "Configure"),
+                      trailing: const CupertinoListTileChevron(),
+                      onTap: () => setState(() => endTimeControl = !endTimeControl),
+                    ),
+                  if (silentModeControl && endTimeControl)
+                    SizedBox(
+                      height: 200,
+                      child: CupertinoDatePicker(
+                        mode: CupertinoDatePickerMode.time,
+                        use24hFormat: true,
+                        initialDateTime: doorbell.settings.automaticStateSettings?.startTime,
+                        onDateTimeChanged: (newDateTime) {
+                          setState(() {
+                            (doorbell.settings.automaticStateSettings ??= TimeRangeForStateSettings.createDefault()).endTime = newDateTime;
+                          });
+                        },
+                      ),
+                    ),
                   CupertinoListTile(
                     title: const Text('Allow notifications'),
                     trailing: CupertinoSwitch(
@@ -229,5 +283,30 @@ class _DoorbellEditScreenState extends State<DoorbellEditScreen> {
         );
       },
     );
+  }
+
+  Widget _buildDateAndTimePicker(BuildContext context) {
+    return SizedBox(
+      height: 200,
+      child: CupertinoDatePicker(
+        mode: CupertinoDatePickerMode.time,
+        use24hFormat: true,
+        initialDateTime: doorbell.settings.automaticStateSettings?.startTime,
+        onDateTimeChanged: (newDateTime) {
+          setState(() {
+            (doorbell.settings.automaticStateSettings ??= TimeRangeForStateSettings.createDefault()).startTime = newDateTime;
+          });
+        },
+      ),
+    );
+  }
+
+  Future<void> _hideSilentModeControls(BuildContext context) async {
+    if (silentModeControl) {
+      setState(() {
+        silentModeControl = startTimeControl = endTimeControl = false;
+      });
+      await DataStore.of(context).updateDoorbellSettings(doorbell);
+    }
   }
 }
