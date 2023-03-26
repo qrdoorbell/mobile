@@ -33,6 +33,8 @@ dependencies:
   firebase_dynamic_links: ^5.0.17
   share_plus: ^6.3.1
   http: ^0.13.5
+  logging: ^1.1.1
+  intl: ^0.17.0
   
 dev_dependencies:
   flutter_test:

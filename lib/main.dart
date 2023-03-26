@@ -2,27 +2,34 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:logging/logging.dart';
+
 import 'package:qrdoorbell_mobile/data.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 
 import 'app_options.dart';
 import 'model/db/firebase_data_store.dart';
 import 'routing.dart';
-
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
-import 'package:firebase_messaging/firebase_messaging.dart';
-
 import 'routing/navigator.dart';
 
 Future<void> main() async {
+  final format = DateFormat('HH:mm:ss');
+  Logger.root.level = Level.FINE;
+  Logger.root.onRecord.listen((record) {
+    print('${format.format(record.time)}: ${record.message}');
+  });
+
   WidgetsFlutterBinding.ensureInitialized();
 
   if (Platform.isIOS) {
