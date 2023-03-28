@@ -66,7 +66,11 @@ class DoorbellScreen extends StatelessWidget {
                 const Padding(padding: EdgeInsets.only(left: 18, top: 10)),
                 const Text('Stickers for print', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400)),
                 const Spacer(),
-                CupertinoButton(child: const Text('See all'), onPressed: () => {})
+                CupertinoButton(
+                    child: const Text('See all'),
+                    onPressed: () async => {
+                          // TODO: #12 implement me
+                        })
               ]),
               Padding(
                   padding: const EdgeInsets.only(left: 18),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../data.dart';
+import '../../routing.dart';
 
 typedef DoorbellCallback = void Function(Doorbell doorbell);
 
@@ -76,7 +77,8 @@ class DoorbellCard extends StatelessWidget {
                                 'Set silent mode time',
                                 style: TextStyle(color: CupertinoColors.activeBlue, fontSize: 16),
                               ),
-                              onPressed: () => {},
+                              onPressed: () => RouteStateScope.of(context).go(
+                                  '/call/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODAxNjIzNTAsImlzcyI6ImRldmtleSIsIm5hbWUiOiJQYXJ0eTAxIiwibmJmIjoxNjc5OTg5NTUwLCJzdWIiOiJwQGEwMS5jb20iLCJ2aWRlbyI6eyJyb29tIjoiUk1fa1JxUHF1OHhFSkZYIiwicm9vbUpvaW4iOnRydWV9fQ.RAyzc_c7rx2ITTrywG81iGXxhzrpNFGb0-PbNIWMH-Q'),
                             ),
                           if (doorbell.settings.automaticStateSettings != null)
                             CupertinoButton(

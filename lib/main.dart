@@ -14,6 +14,7 @@ import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:livekit_client/livekit_client.dart';
 import 'package:logging/logging.dart';
 
 import 'package:qrdoorbell_mobile/data.dart';
@@ -107,6 +108,7 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
         '/doorbells/:doorbellId/stickers',
         '/doorbells/:doorbellId/stickers/:stickerId',
         '/doorbells/:doorbellId',
+        '/call/:accessToken',
         '/profile',
       ],
       guard: _guard,
@@ -208,7 +210,9 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
 
     if (!signedIn && from != signInRoute)
       return signInRoute;
-    else if (signedIn && from == signInRoute) return ParsedRoute('/doorbells', '/doorbells', {}, {});
+    else if (signedIn && from == signInRoute) {
+      return ParsedRoute('/doorbells', '/doorbells', {}, {});
+    }
 
     return from;
   }
@@ -234,14 +238,16 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
 
   Future<void> _handleRemoteMessage(RemoteMessage? message) async {
     if (message == null) {
-      print("Received empty RemoteMessage!");
+      print("Main._handleRemoteMessage: Received empty RemoteMessage!");
       return;
     }
 
-    print("Start handling RemoteMessage:");
+    print("Main._handleRemoteMessage: start handling RemoteMessage");
     print(message);
 
-    if (message.data['doorbellId'] != null) {
+    if (message.data['event_type'] == 'call' && message.data['call_type'] == 'incoming' && message.data['call_token'] != null) {
+      await _routeState.go("/call/incoming/${message.data['call_token']}");
+    } else if (message.data['doorbellId'] != null) {
       await _routeState.go('/doorbells/${message.data['doorbellId']}');
     }
   }
