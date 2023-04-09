@@ -14,7 +14,6 @@ import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:livekit_client/livekit_client.dart';
 import 'package:logging/logging.dart';
 
 import 'package:qrdoorbell_mobile/data.dart';
@@ -245,8 +244,8 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
     print("Main._handleRemoteMessage: start handling RemoteMessage");
     print(message);
 
-    if (message.data['event_type'] == 'call' && message.data['call_type'] == 'incoming' && message.data['call_token'] != null) {
-      await _routeState.go("/call/incoming/${message.data['call_token']}");
+    if (message.data['eventType'] == 'call' && message.data['callType'] == 'incoming' && message.data['callToken'] != null) {
+      await _routeState.go("/call/${message.data['callToken']}");
     } else if (message.data['doorbellId'] != null) {
       await _routeState.go('/doorbells/${message.data['doorbellId']}');
     }

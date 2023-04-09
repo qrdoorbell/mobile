@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:livekit_client/livekit_client.dart';
 import 'package:qrdoorbell_mobile/presentation/screens/doorbell_edit_screen.dart';
 import 'package:qrdoorbell_mobile/presentation/screens/doorbell_screen.dart';
 import 'package:qrdoorbell_mobile/presentation/screens/login_screen.dart';
