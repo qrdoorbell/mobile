@@ -28,7 +28,7 @@ class _CallScreenState extends State<CallScreen> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: room.connect('http://10.9.9.126:7880', widget.accessToken,
+        future: room.connect('https://live.qrdoorbell.io/', widget.accessToken,
             roomOptions: const RoomOptions(
               adaptiveStream: true,
               dynacast: true,
