@@ -106,8 +106,8 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
         '/doorbells/:doorbellId/edit',
         '/doorbells/:doorbellId/stickers',
         '/doorbells/:doorbellId/stickers/:stickerId',
+        '/doorbells/:doorbellId/ring/:accessToken',
         '/doorbells/:doorbellId',
-        '/call/:accessToken',
         '/profile',
       ],
       guard: _guard,
@@ -244,8 +244,11 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
     print("Main._handleRemoteMessage: start handling RemoteMessage");
     print(message);
 
-    if (message.data['eventType'] == 'call' && message.data['callType'] == 'incoming' && message.data['callToken'] != null) {
-      await _routeState.go("/call/${message.data['callToken']}");
+    if (message.data['eventType'] == 'call' &&
+        message.data['callType'] == 'incoming' &&
+        message.data['callToken'] != null &&
+        message.data['doorbellId'] != null) {
+      await _routeState.go("/doorbells/${message.data['doorbellId']}/ring/${message.data['callToken']}");
     } else if (message.data['doorbellId'] != null) {
       await _routeState.go('/doorbells/${message.data['doorbellId']}');
     }
