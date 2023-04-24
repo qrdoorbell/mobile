@@ -248,7 +248,7 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
         message.data['callType'] == 'incoming' &&
         message.data['callToken'] != null &&
         message.data['doorbellId'] != null) {
-      await _routeState.go("/doorbells/${message.data['doorbellId']}/ring/${message.data['callToken']}");
+      await _routeState.go("/doorbells/${message.data['doorbellId']}/ring/${message.data['callToken']}", data: message.data);
     } else if (message.data['doorbellId'] != null) {
       await _routeState.go('/doorbells/${message.data['doorbellId']}');
     }

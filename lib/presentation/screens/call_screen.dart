@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:livekit_client/livekit_client.dart';
+import 'package:qrdoorbell_mobile/routing.dart';
 
 import '../controls/video/video_call.dart';
 
@@ -28,8 +29,9 @@ class _CallScreenState extends State<CallScreen> {
 
   @override
   Widget build(BuildContext context) {
+    dynamic routeData = RouteStateScope.of(context).data;
     return FutureBuilder(
-        future: room.connect('https://live.qrdoorbell.io/', widget.accessToken,
+        future: room.connect('https://${routeData['livekitServer'] ?? 'live.qrdoorbell.io'}/', widget.accessToken,
             roomOptions: const RoomOptions(
               adaptiveStream: true,
               dynacast: true,

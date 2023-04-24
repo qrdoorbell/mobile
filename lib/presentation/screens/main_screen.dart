@@ -74,7 +74,7 @@ class _MainScreenState extends State<MainScreen> {
           tabWidget = const EventList();
           title = 'Events';
         } else if (index == 2) {
-          tabWidget = Profile();
+          tabWidget = const Profile();
           title = 'Profile';
         } else {
           throw UnexpectedStateException('Invalid tab index');
