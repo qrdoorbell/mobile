@@ -1,10 +1,11 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:livekit_client/livekit_client.dart';
 import 'package:qrdoorbell_mobile/routing.dart';
+
+import '../../screens/call_screen.dart';
 
 class ParticipantTrack {
   ParticipantTrack({required this.participant, required this.videoTrack});
@@ -123,52 +124,61 @@ abstract class _ParticipantWidgetState<T extends ParticipantWidget> extends Stat
                       CupertinoButton(
                           color: CupertinoColors.white.withOpacity(0.3),
                           borderRadius: const BorderRadius.all(Radius.circular(55)),
-                          padding: const EdgeInsets.all(25),
-                          child: const Icon(
-                            CupertinoIcons.mic_solid,
+                          padding: const EdgeInsets.all(20),
+                          child: Icon(
+                            widget.participant.isMuted ? CupertinoIcons.mic_solid : CupertinoIcons.mic_slash_fill,
                             color: CupertinoColors.white,
-                            size: 40,
+                            size: 36,
                           ),
-                          onPressed: () => {}),
+                          onPressed: () => setState(() {
+                                var room = context.findAncestorStateOfType<CallScreenState>()?.room;
+                                if (room != null && room.localParticipant != null)
+                                  room.localParticipant!.setMicrophoneEnabled(room.localParticipant!.isMuted);
+                              })),
                       const Spacer(),
                       CupertinoButton(
                           color: CupertinoColors.white.withOpacity(0.3),
                           borderRadius: const BorderRadius.all(Radius.circular(55)),
-                          padding: const EdgeInsets.all(25),
-                          child: const Icon(
-                            CupertinoIcons.video_camera_solid,
+                          padding: const EdgeInsets.all(20),
+                          child: Icon(
+                            widget.participant.hasVideo ? CupertinoIcons.video_camera_solid : CupertinoIcons.video_camera,
                             color: CupertinoColors.white,
-                            size: 40,
+                            size: 36,
                           ),
-                          onPressed: () => {}),
+                          onPressed: () => setState(() {
+                                (widget.participant as LocalParticipant).setCameraEnabled(!widget.participant.hasVideo);
+                              })),
                       const Spacer(),
                       CupertinoButton(
                           color: CupertinoColors.white.withOpacity(0.6),
                           borderRadius: const BorderRadius.all(Radius.circular(55)),
-                          padding: const EdgeInsets.all(25),
+                          padding: const EdgeInsets.all(20),
                           child: const Icon(
                             CupertinoIcons.speaker_3_fill,
                             color: CupertinoColors.white,
-                            size: 40,
+                            size: 36,
                           ),
-                          onPressed: () => {}),
+                          onPressed: () => setState(() {
+                                var room = context.findAncestorStateOfType<CallScreenState>()?.room;
+                                if (room != null) room.setSpeakerOn(!(room.speakerOn ?? false));
+                              })),
                       const Spacer(),
                     ],
                   ),
-                  const Padding(padding: EdgeInsets.only(top: 80)),
+                  const Padding(padding: EdgeInsets.only(top: 60)),
                   CupertinoButton(
                       color: CupertinoColors.destructiveRed,
                       borderRadius: const BorderRadius.all(Radius.circular(55)),
-                      padding: const EdgeInsets.all(25),
+                      padding: const EdgeInsets.all(20),
                       child: const Icon(
                         CupertinoIcons.phone_down_fill,
                         color: CupertinoColors.white,
-                        size: 40,
+                        size: 36,
                       ),
-                      onPressed: () async {
-                        await widget.participant.unpublishAllTracks();
-                        await widget.participant.dispose();
-                        await RouteStateScope.of(context).go('/doorbells');
+                      onPressed: () {
+                        widget.participant
+                            .unpublishAllTracks()
+                            .then((value) => widget.participant.dispose().then((value) => RouteStateScope.of(context).go('/doorbells')));
                       }),
                   const Padding(padding: EdgeInsets.only(top: 100)),
                 ],

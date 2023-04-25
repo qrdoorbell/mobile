@@ -13,10 +13,10 @@ class CallScreen extends StatefulWidget {
   const CallScreen({super.key, required this.accessToken, required this.doorbellId});
 
   @override
-  State<CallScreen> createState() => _CallScreenState();
+  State<CallScreen> createState() => CallScreenState();
 }
 
-class _CallScreenState extends State<CallScreen> {
+class CallScreenState extends State<CallScreen> {
   late final Room room;
   late final EventsListener<RoomEvent> listener;
 
@@ -38,7 +38,6 @@ class _CallScreenState extends State<CallScreen> {
               defaultVideoPublishOptions: VideoPublishOptions(
                 simulcast: false,
               ),
-              defaultScreenShareCaptureOptions: ScreenShareCaptureOptions(),
             ),
             fastConnectOptions: FastConnectOptions(
               microphone: const TrackOption(enabled: true),

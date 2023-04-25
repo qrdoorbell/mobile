@@ -27,7 +27,6 @@ class VideoCall extends StatefulWidget {
 }
 
 class _VideoCallState extends State<VideoCall> {
-  List<ParticipantTrack> participantTracks = [];
   EventsListener<RoomEvent> get _listener => widget.listener;
 
   @override
@@ -53,6 +52,9 @@ class _VideoCallState extends State<VideoCall> {
       WidgetsBindingCompatible.instance
           ?.addPostFrameCallback((timeStamp) => RouteStateScope.of(context).go('/doorbells/${widget.doorbellId}'));
     })
+    ..on<TrackPublishedEvent>((event) async {
+      setState(() {});
+    })
     ..on<LocalTrackPublishedEvent>((_) => {/* TODO: PUT THE LOGIC FOR ANSWERED CALL HERE */})
     ..on<DataReceivedEvent>((event) {
       String decoded = 'Failed to decode';
@@ -66,10 +68,8 @@ class _VideoCallState extends State<VideoCall> {
 
   @override
   Widget build(BuildContext context) {
-    final participantTrack = participantTracks.firstWhereOrNull((e) => e.participant is RemoteParticipant);
-
-    if (participantTrack != null)
-      return RemoteParticipantWidget(participantTrack.participant as RemoteParticipant, participantTrack.videoTrack);
+    RemoteParticipant? participantTrack = widget.room.participants.values.firstOrNull;
+    if (participantTrack != null) return RemoteParticipantWidget(participantTrack, participantTrack.videoTracks.firstOrNull?.track);
 
     return Scaffold(
         backgroundColor: CupertinoColors.darkBackgroundGray,
