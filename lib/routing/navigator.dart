@@ -82,6 +82,12 @@ class _AppNavigatorState extends State<AppNavigator> {
               fullscreenDialog: true,
               child: CallScreen(accessToken: callAccessToken, doorbellId: doorbellId),
             ),
+          if (pathTemplate == '/doorbells/:doorbellId/join/:accessToken' && callAccessToken != null && doorbellId != null)
+            MaterialPage(
+              key: _doorbellEditKey,
+              fullscreenDialog: true,
+              child: CallScreen(accessToken: callAccessToken, doorbellId: doorbellId),
+            ),
           // Add an additional page to the stack if the user is viewing a book
           // or an author
           // if (selectedDoorbell != null)

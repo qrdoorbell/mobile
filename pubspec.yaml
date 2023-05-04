@@ -1,7 +1,7 @@
 name: qrdoorbell_mobile
 description: QR Doorbell mobile application.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 0.2.7
+version: 0.2.8
 homepage: https://www.qrdoorbell.io/
 
 environment:
@@ -36,7 +36,9 @@ dependencies:
   http: ^0.13.5
   logging: ^1.1.1
   intl: ^0.17.0
-  
+  flutter_callkit_incoming: ^1.0.3+3
+  uuid: ^3.0.6
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

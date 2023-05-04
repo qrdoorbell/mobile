@@ -22,6 +22,7 @@ import 'app_options.dart';
 import 'model/db/firebase_data_store.dart';
 import 'routing.dart';
 import 'routing/navigator.dart';
+import 'services/callkit_service.dart';
 
 Future<void> main() async {
   final format = DateFormat('HH:mm:ss');
@@ -107,6 +108,7 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
         '/doorbells/:doorbellId/stickers',
         '/doorbells/:doorbellId/stickers/:stickerId',
         '/doorbells/:doorbellId/ring/:accessToken',
+        '/doorbells/:doorbellId/join/:accessToken',
         '/doorbells/:doorbellId',
         '/profile',
       ],
@@ -165,6 +167,8 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
     FirebaseMessaging.onBackgroundMessage(_handleBackgroundMessage);
     FirebaseAuth.instance.authStateChanges().listen(_handleAuthStateChanged);
     Connectivity().onConnectivityChanged.listen(_handleConnectionStateChanged);
+
+    CallKitService.setRouter(_routeState);
 
     super.initState();
   }
@@ -248,7 +252,7 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
         message.data['callType'] == 'incoming' &&
         message.data['callToken'] != null &&
         message.data['doorbellId'] != null) {
-      await _routeState.go("/doorbells/${message.data['doorbellId']}/ring/${message.data['callToken']}", data: message.data);
+      await CallKitService.handleCallMessage(message);
     } else if (message.data['doorbellId'] != null) {
       await _routeState.go('/doorbells/${message.data['doorbellId']}');
     }

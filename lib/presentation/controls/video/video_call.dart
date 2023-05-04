@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:livekit_client/livekit_client.dart';
 import 'package:logging/logging.dart';
@@ -49,6 +50,7 @@ class _VideoCallState extends State<VideoCall> {
       if (event.reason != null) {
         print('Room disconnected: reason => ${event.reason}');
       }
+      FlutterCallkitIncoming.endAllCalls();
       WidgetsBindingCompatible.instance
           ?.addPostFrameCallback((timeStamp) => RouteStateScope.of(context).go('/doorbells/${widget.doorbellId}'));
     })
