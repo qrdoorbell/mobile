@@ -76,10 +76,10 @@ class CallKitService {
 
   static Future<void> handleCallMessage(RemoteMessage message) async {
     logger.log(Level.INFO, message);
-    if (!message.data['doorbellEnabled']) {
-      logger.log(Level.INFO, 'Doorbell DISABLED - skipping this message.');
-      return;
-    }
+    // if ((message.data['doorbellEnabled'] ?? 1) > 0) {
+    //   logger.log(Level.INFO, 'Doorbell DISABLED - skipping this message.');
+    //   return;
+    // }
 
     message.data['uuid'] = const Uuid().v5(Uuid.NAMESPACE_DNS, 'qrdoorbell.io');
     await FlutterCallkitIncoming.showCallkitIncoming(CallKitParams(
