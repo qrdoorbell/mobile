@@ -22,7 +22,7 @@ class _AppNavigatorState extends State<AppNavigator> {
   final _scaffoldKey = const ValueKey('App scaffold');
   final _doorbellDetailsKey = const ValueKey('Doorbell details screen');
   final _doorbellEditKey = const ValueKey('Doorbell edit screen');
-  final _stickerTemplateDetailsKey = const ValueKey('Sticker details screen');
+  // final _stickerTemplateDetailsKey = const ValueKey('Sticker details screen');
 
   @override
   Widget build(BuildContext context) {

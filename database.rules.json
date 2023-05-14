@@ -41,6 +41,13 @@
         ".read": "auth.uid === $uid",
         ".write": "auth.uid === $uid"
       }
+    },
+
+    "user-voip-tokens": {
+      "$uid": {
+        ".read": "auth.uid === $uid",
+        ".write": "auth.uid === $uid"
+      }
     }
   }
 }

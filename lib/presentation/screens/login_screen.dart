@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart' as FA;
+import 'package:firebase_auth/firebase_auth.dart' as fa;
 import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +17,7 @@ class LoginScreen extends StatelessWidget {
         AppleProvider(),
         GoogleProvider(clientId: GOOGLE_CLIENT_ID),
       ],
-      auth: FA.FirebaseAuth.instance,
+      auth: fa.FirebaseAuth.instance,
       headerBuilder: (context, constr, _) =>
           Padding(padding: const EdgeInsets.only(top: 20), child: Image.asset('assets/logo-app-01_512.png')),
       actions: [

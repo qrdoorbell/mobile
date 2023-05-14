@@ -1,0 +1,222 @@
+{
+  "doorbells": {
+    "doorbell1_id": {
+      "id": "doorbell1_id",
+      "name": "Doorbell 1",
+      "enabled": true,
+      "lastEvent": {
+        "i": "event2_id",
+        "d": "doorbell1_id",
+        "t": 4,
+        "ts": 2321237834,
+        "txt": "Hey man! This is Alex, are you around?",
+        "s": "sticker1_id"
+      },
+      "settings": {
+        "enableVideoCalls": true,
+        "enableAudioCalls": true,
+        "enableVideoPreview": true,
+        "enableVoiceMail": false,
+        "enableTextMail": false,
+        "enablePushNotifications": true,
+        "automaticStateSettings": {
+          "start": 2321237834,
+          "end": 2321237834,
+          "targetEnabledState": true,
+          "enabled": false
+        }
+      },
+      "stickers": {
+        "sicker1_id": {
+          "id": "sicker1_id",
+          "created": 2321237834,
+          "template": {
+            "id": "sticker-template1_id",
+            "handler": "hrzntlHandlerClassName",
+            "data": {
+              "imageUrl": "https://link.to/sticker/template/image.file"
+            }
+          },
+          "params": {
+            "accentColor": "orrange",
+            "titleText": "Please scan QR code to ring the doorbell"
+          }
+        }
+      }
+    },
+    "doorbell2_id": {
+      "id": "doorbell2_id",
+      "name": "Doorbell 2",
+      "enabled": true,
+      "lastEvent": {
+        "i": "event3_id",
+        "d": "doorbell2_id",
+        "t": 2,
+        "ts": 2321237834,
+        "s": "sticker3_id"
+      },
+      "settings": {
+        "enableVideoCalls": true,
+        "enableAudioCalls": true,
+        "enableVideoPreview": true,
+        "enableVoiceMail": false,
+        "enableTextMail": false,
+        "enablePushNotifications": true,
+        "automaticStateSettings": {
+          "start": 2321237834,
+          "end": 2321237834,
+          "targetEnabledState": true,
+          "enabled": true
+        }
+      },
+      "stickers": {
+        "sicker2_id": {
+          "id": "sicker2_id",
+          "created": 2321237834,
+          "template": {
+            "id": "sticker-template1_id",
+            "handler": "hrzntlHandlerClassName",
+            "data": {
+              "imageUrl": "https://link.to/sticker/template/image.file"
+            }
+          },
+          "params": {
+            "accentColor": "blue",
+            "titleText": "Please scan QR code to ring the doorbell"
+          }
+        }
+      }
+    }
+  },
+  "doorbell-users": {
+    "doorbell1_id": {
+      "GqxBjRWgIX3leKXavrcEKlDnJ6Bj": {
+        "role": "owner",
+        "created": 2321237834
+      },
+      "1odRFCNLjUQ718GlI3FBhasizxWD": {
+        "role": "participant",
+        "created": 2321237834
+      }
+    },
+    "doorbell2_id": {
+      "1odRFCNLjUQ718GlI3FBhasizxWD": {
+        "role": "owner",
+        "created": 2321237834
+      }
+    }
+  },
+  "doorbell-events": {
+    "doorbell1_id": {
+      "event1_id": {
+        "i": "event1_id",
+        "d": "doorbell1_id",
+        "t": 3,
+        "ts": 2321237834,
+        "s": "sticker1_id"
+      },
+      "event2_id": {
+        "i": "event2_id",
+        "d": "doorbell1_id",
+        "t": 4,
+        "ts": 2321237834,
+        "txt": "Hey man! This is Alex, are you around?",
+        "s": "sticker1_id"
+      }
+    },
+    "doorbell2_id": {
+      "event3_id": {
+        "i": "event3_id",
+        "d": "doorbell2_id",
+        "t": 3,
+        "ts": 2321237834,
+        "s": "sticker2_id"
+      },
+      "event4_id": {
+        "i": "event4_id",
+        "d": "doorbell2_id",
+        "t": 5,
+        "ts": 2321237834,
+        "rec": "https://link.to/voice/message.file",
+        "s": "sticker3_id"
+      }
+    }
+  },
+  "sticker-templates": {
+    "sticker-template1_id": {
+      "id": "sticker-template1_id",
+      "name": "Horizontal Sticker",
+      "template": {
+        "handler": "hrzntlHandlerClassName",
+        "data": {
+          "imageUrl": "https://link.to/sticker/template/image.file"
+        },
+        "params": {
+          "accentColor": "yellow",
+          "titleText": "Please scan QR code to ring the doorbell"
+        }
+      },
+      "enabled": true,
+      "created": 2321237834,
+      "owner": "GqxBjRWgIX3leKXavrcEKlDnJ6Bj"
+    }
+  },
+  "users": {
+    "GqxBjRWgIX3leKXavrcEKlDnJ6Bj": {
+      "idps": {
+        "apple": {
+          "id": "#.apple.idp-userid"
+        },
+        "google": {
+          "id": "#.google.idp-userid"
+        },
+        "invite": {
+          "id": "#.invite.idp-userid"
+        },
+        "email": {
+          "id": "e@ma.il"
+        }
+      },
+      "firstName": "John",
+      "lastName": "Smith",
+      "displayName": "John Smith",
+      "email": "js@a.com",
+      "created": 2321237834,
+      "doorbells": {
+        "doorbell1_id": true,
+        "doorbell2_id": true
+      }
+    },
+    "1odRFCNLjUQ718GlI3FBhasizxWD": {
+      "idps": null,
+      "firstName": "Bob",
+      "lastName": "Marley",
+      "displayName": "Bob Marley",
+      "email": "b@a.com",
+      "created": 2321237834,
+      "doorbells": {
+        "doorbell2_id": true
+      }
+    }
+  },
+  "user-fcms": {
+    "GqxBjRWgIX3leKXavrcEKlDnJ6Bj": {
+      "d-JH2rKtKU3WrqjhCZC3Qb:APA91bHnallMHMJvfn5OSiXkwSeG9hY_A8Veu5BGxFXm8rd-i4oY_whUyqamQkXulFfyRbI1habAAC6OQ5W-TcQbD3nMCsw9o5RXgkEvGenXyL3a7I335ODxEfK2slQC2yxorbHHqoXa": true
+    }
+  },
+  "user-voip-tokens": {
+    "GqxBjRWgIX3leKXavrcEKlDnJ6Bj": {
+      "d-JH2rKtKU3WrqjhCZC3Qb:APA91bHnallMHMJvfn5OSiXkwSeG9hY_A8Veu5BGxFXm8rd-i4oY_whUyqamQkXulFfyRbI1habAAC6OQ5W-TcQbD3nMCsw9o5RXgkEvGenXyL3a7I335ODxEfK2slQC2yxorbHHqoXa": true
+    }
+  },
+  "invites": {
+    "invite1_id": {
+      "doorbell": "doorbell1_id",
+      "role": "participant",
+      "status": "created|accepted|rejected|expired|deleted",
+      "expires": 2321237834,
+      "created": 2321237834,
+      "owner": "GqxBjRWgIX3leKXavrcEKlDnJ6Bj"
+    }
+  }
+}

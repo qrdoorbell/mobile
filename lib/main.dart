@@ -92,6 +92,7 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
   late final RouteState _routeState;
   late final SimpleRouterDelegate _routerDelegate;
   late final TemplateRouteParser _routeParser;
+  late final CallKitService _callKitService;
 
   @override
   void initState() {
@@ -125,6 +126,8 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
         navigatorKey: _navigatorKey,
       ),
     );
+
+    _callKitService = CallKitService(routeState: _routeState);
 
     if (Platform.isIOS) {
       FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) async {
@@ -168,8 +171,6 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
     FirebaseAuth.instance.authStateChanges().listen(_handleAuthStateChanged);
     Connectivity().onConnectivityChanged.listen(_handleConnectionStateChanged);
 
-    CallKitService.setRouter(_routeState);
-
     super.initState();
   }
 
@@ -179,25 +180,27 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
         notifier: DataStoreState(dataStore: /*USE_DATABASE_MOCK ? MockedDataStore() :*/ FirebaseDataStore(FirebaseDatabase.instance)),
         child: RouteStateScope(
             notifier: _routeState,
-            child: CupertinoApp.router(
-              localizationsDelegates: const [
-                DefaultCupertinoLocalizations.delegate,
-                DefaultMaterialLocalizations.delegate,
-                DefaultWidgetsLocalizations.delegate,
-              ],
-              supportedLocales: const [
-                Locale('en', 'US'),
-              ],
-              routerDelegate: _routerDelegate,
-              routeInformationParser: _routeParser,
-              theme: const CupertinoThemeData(
-                brightness: Brightness.light,
-                scaffoldBackgroundColor: Colors.white,
-                barBackgroundColor: Colors.white,
-                textTheme: CupertinoTextThemeData(
-                    navLargeTitleTextStyle: TextStyle(fontWeight: FontWeight.w500, color: Colors.black, fontSize: 34)),
-              ),
-            )));
+            child: CallKitServiceScope(
+                notifier: _callKitService,
+                child: CupertinoApp.router(
+                  localizationsDelegates: const [
+                    DefaultCupertinoLocalizations.delegate,
+                    DefaultMaterialLocalizations.delegate,
+                    DefaultWidgetsLocalizations.delegate,
+                  ],
+                  supportedLocales: const [
+                    Locale('en', 'US'),
+                  ],
+                  routerDelegate: _routerDelegate,
+                  routeInformationParser: _routeParser,
+                  theme: const CupertinoThemeData(
+                    brightness: Brightness.light,
+                    scaffoldBackgroundColor: Colors.white,
+                    barBackgroundColor: Colors.white,
+                    textTheme: CupertinoTextThemeData(
+                        navLargeTitleTextStyle: TextStyle(fontWeight: FontWeight.w500, color: Colors.black, fontSize: 34)),
+                  ),
+                ))));
   }
 
   @override
@@ -252,7 +255,7 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
         message.data['callType'] == 'incoming' &&
         message.data['callToken'] != null &&
         message.data['doorbellId'] != null) {
-      await CallKitService.handleCallMessage(message);
+      await _callKitService.handleCallMessage(message);
     } else if (message.data['doorbellId'] != null) {
       await _routeState.go('/doorbells/${message.data['doorbellId']}');
     }
