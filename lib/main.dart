@@ -24,6 +24,8 @@ import 'routing.dart';
 import 'routing/navigator.dart';
 import 'services/callkit_service.dart';
 
+final logger = Logger('main');
+
 Future<void> main() async {
   final format = DateFormat('HH:mm:ss');
   Logger.root.level = Level.FINE;
@@ -40,18 +42,13 @@ Future<void> main() async {
   }
 
   FlutterError.onError = (errorDetails) {
-    print("FlutterError.onError:");
-    print(errorDetails);
-
+    logger.shout("FlutterError.onError:", errorDetails);
     FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
   };
 
   if (USE_CRASHALYTICS) {
     PlatformDispatcher.instance.onError = (error, stack) {
-      print("PlatformDispatcher.instance.onError:");
-      print(error);
-      print(stack);
-
+      logger.shout("PlatformDispatcher.instance.onError:", error, stack);
       FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
       return true;
     };
@@ -76,8 +73,8 @@ Future<void> main() async {
 Future<void> _handleBackgroundMessage(RemoteMessage message) async {
   await Firebase.initializeApp();
 
-  print("ON BACKGROUND MESSAGE");
-  print(message);
+  logger.info("ON BACKGROUND MESSAGE");
+  logger.fine(message);
 }
 
 class QRDoorbellApp extends StatefulWidget {
@@ -129,13 +126,14 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
 
     _callKitService = CallKitService(routeState: _routeState);
 
-    if (Platform.isIOS) {
-      FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) async {
-        if (FirebaseAuth.instance.currentUser?.uid != null) await _handleFcmTokenChanged(FirebaseAuth.instance.currentUser!.uid, fcmToken);
-      }).onError((err) {
-        print(err);
-      });
-    }
+    FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) async {
+      if (FirebaseAuth.instance.currentUser?.uid != null) {
+        await _handleFcmTokenChanged(FirebaseAuth.instance.currentUser!.uid, fcmToken);
+        await _handleVoipTokenChanged(FirebaseAuth.instance.currentUser!.uid, null);
+      }
+    }).onError((err) {
+      logger.warning("Failed to handle FCM token refresh event", err);
+    });
 
     FirebaseMessaging.instance
         .requestPermission(
@@ -148,22 +146,22 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
       sound: true,
     )
         .then((settings) async {
-      print('User granted permission: ${settings.authorizationStatus}');
+      logger.info('User granted permission: ${settings.authorizationStatus}');
       await FirebaseMessaging.instance.setAutoInitEnabled(true);
     });
 
     FirebaseMessaging.onMessage.listen((message) async {
-      print("FirebaseMessaging.onMessage");
+      logger.info("FirebaseMessaging.onMessage");
       await _handleRemoteMessage(message);
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
-      print("FirebaseMessaging.onMessageOpenedApp");
+      logger.info("FirebaseMessaging.onMessageOpenedApp");
       await _handleRemoteMessage(message);
     });
 
     FirebaseMessaging.instance.getInitialMessage().then((message) async {
-      print('Initial message received!');
+      logger.info('Initial message received!');
       await _handleRemoteMessage(message);
     });
 
@@ -224,12 +222,18 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
   }
 
   void _handleConnectionStateChanged(ConnectivityResult state) {
-    print("Connection state changed: state=$state");
+    logger.info("Connection state changed: state=$state");
   }
 
   Future<void> _handleFcmTokenChanged(String uid, String? token) async {
     token ??= await FirebaseMessaging.instance.getToken();
     await FirebaseDatabase.instance.ref("user-fcms/$uid/$token").set(true);
+  }
+
+  Future<void> _handleVoipTokenChanged(String uid, String? token) async {
+    token ??= await _callKitService.getVoipPushToken();
+    logger.fine('Device VoIP access token: $token');
+    await FirebaseDatabase.instance.ref("user-voip-tokens/$uid/$token").set(true);
   }
 
   Future<void> _handleAuthStateChanged(User? user) async {
@@ -240,16 +244,17 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
 
     var token = await FirebaseMessaging.instance.getToken();
     await _handleFcmTokenChanged(user.uid, token);
+    await _handleVoipTokenChanged(user.uid, null);
   }
 
   Future<void> _handleRemoteMessage(RemoteMessage? message) async {
     if (message == null) {
-      print("Main._handleRemoteMessage: Received empty RemoteMessage!");
+      logger.info("Main._handleRemoteMessage: Received empty RemoteMessage!");
       return;
     }
 
-    print("Main._handleRemoteMessage: start handling RemoteMessage");
-    print(message);
+    logger.info("Main._handleRemoteMessage: start handling RemoteMessage");
+    logger.fine(message);
 
     if (message.data['eventType'] == 'call' &&
         message.data['callType'] == 'incoming' &&

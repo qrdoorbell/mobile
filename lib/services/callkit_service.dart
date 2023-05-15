@@ -1,5 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_callkeep/flutter_callkeep.dart';
@@ -14,15 +12,7 @@ class CallKitService extends ChangeNotifier {
   final Map<String, String> _doorbellCalls = {}; // CallToken -> CallKit UUID
 
   CallKitService({required this.routeState}) {
-    // FlutterCallkitIncoming.onEvent.listen(_onCallKitEvent);
     CallKeep.instance.onEvent.listen(_onCallKitEvent);
-    CallKeep.instance.getDevicePushTokenVoIP().then((value) async {
-      logger.log(Level.INFO, 'Device VoIP access token: $value');
-      var uid = FirebaseAuth.instance.currentUser?.uid;
-      if (uid != null) {
-        await FirebaseDatabase.instance.ref("user-voip-tokens/$uid/$value").set(true);
-      }
-    });
   }
 
   Future<String> getVoipPushToken() async {
@@ -99,75 +89,79 @@ class CallKitService extends ChangeNotifier {
     //   return;
     // }
 
-    var callUuid = const Uuid().v5(Uuid.NAMESPACE_DNS, 'qrdoorbell.io');
-    message.data['uuid'] = callUuid;
-    _doorbellCalls[message.data['doorbellId']] = callUuid;
+    try {
+      var callId = UuidValue(message.data['id']).toString();
+      message.data['uuid'] = callId;
+      _doorbellCalls[message.data['doorbellId']] = callId;
 
-    await CallKeep.instance.displayIncomingCall(CallKeepIncomingConfig(
-        uuid: callUuid,
-        appName: 'QR Doorbell',
-        avatar: 'https://qrdoorbell.io/logo-100.jpg',
-        callerName: message.data['doorbellName'],
-        hasVideo: true,
-        extra: message.data,
-        handle: message.data['doorbellName'],
-        acceptText: 'Accept',
-        declineText: 'Decline',
-        missedCallText: 'Missed call',
-        callBackText: 'Call back',
-        duration: 60000,
-        androidConfig: CallKeepAndroidConfig(),
-        iosConfig: CallKeepIosConfig(
-            audioSessionActive: true,
-            audioSessionMode: AvAudioSessionMode.videoChat,
-            audioSessionPreferredIOBufferDuration: 0.05,
-            audioSessionPreferredSampleRate: 44100,
-            iconName: 'CallKitLogo',
-            handleType: CallKitHandleType.generic,
-            isVideoSupported: true,
-            ringtoneFileName: 'system_ringtone_default')));
+      await CallKeep.instance.displayIncomingCall(CallKeepIncomingConfig(
+          uuid: callId,
+          appName: 'QR Doorbell',
+          avatar: 'https://qrdoorbell.io/logo-100.jpg',
+          callerName: message.data['doorbellName'],
+          hasVideo: true,
+          extra: message.data,
+          handle: message.data['handle'],
+          acceptText: 'Accept',
+          declineText: 'Decline',
+          missedCallText: 'Missed call',
+          callBackText: 'Call back',
+          duration: 60000,
+          androidConfig: CallKeepAndroidConfig(),
+          iosConfig: CallKeepIosConfig(
+              audioSessionActive: true,
+              audioSessionMode: AvAudioSessionMode.videoChat,
+              audioSessionPreferredIOBufferDuration: 0.05,
+              audioSessionPreferredSampleRate: 44100,
+              iconName: 'CallKitLogo',
+              handleType: CallKitHandleType.generic,
+              isVideoSupported: true,
+              ringtoneFileName: 'system_ringtone_default')));
 
-    // await FlutterCallkitIncoming.showCallkitIncoming(CallKitParams(
-    //   id: callUuid,
-    //   nameCaller: message.data['doorbellName'],
-    //   avatar: 'https://qrdoorbell.io/logo-100.jpg',
-    //   appName: 'QR Doorbell',
-    //   handle: message.data['doorbellName'],
-    //   type: 1,
-    //   duration: 60000,
-    //   textAccept: 'Accept',
-    //   textDecline: 'Decline',
-    //   textMissedCall: 'Missed call',
-    //   textCallback: 'Call back',
-    //   extra: message.data,
-    //   headers: message.data,
-    //   ios: IOSParams(
-    //     iconName: 'CallKitLogo',
-    //     handleType: 'generic',
-    //     supportsVideo: true,
-    //     maximumCallGroups: 2,
-    //     maximumCallsPerCallGroup: 2,
-    //     audioSessionMode: 'default',
-    //     audioSessionActive: true,
-    //     audioSessionPreferredSampleRate: 44100.0,
-    //     audioSessionPreferredIOBufferDuration: 0.005,
-    //     supportsDTMF: false,
-    //     supportsHolding: false,
-    //     supportsGrouping: false,
-    //     supportsUngrouping: false,
-    //     ringtonePath: 'system_ringtone_default',
-    //   ),
-    //   android: const AndroidParams(
-    //     isCustomNotification: true,
-    //     isShowLogo: true,
-    //     isShowCallback: true,
-    //     isShowMissedCallNotification: true,
-    //     ringtonePath: 'system_ringtone_default',
-    //     backgroundColor: '#0955fa',
-    //     backgroundUrl: 'assets/test.png',
-    //     actionColor: '#4CAF50',
-    //   ),
-    // ));
+      // await FlutterCallkitIncoming.showCallkitIncoming(CallKitParams(
+      //   id: callUuid,
+      //   nameCaller: message.data['doorbellName'],
+      //   avatar: 'https://qrdoorbell.io/logo-100.jpg',
+      //   appName: 'QR Doorbell',
+      //   handle: message.data['doorbellName'],
+      //   type: 1,
+      //   duration: 60000,
+      //   textAccept: 'Accept',
+      //   textDecline: 'Decline',
+      //   textMissedCall: 'Missed call',
+      //   textCallback: 'Call back',
+      //   extra: message.data,
+      //   headers: message.data,
+      //   ios: IOSParams(
+      //     iconName: 'CallKitLogo',
+      //     handleType: 'generic',
+      //     supportsVideo: true,
+      //     maximumCallGroups: 2,
+      //     maximumCallsPerCallGroup: 2,
+      //     audioSessionMode: 'default',
+      //     audioSessionActive: true,
+      //     audioSessionPreferredSampleRate: 44100.0,
+      //     audioSessionPreferredIOBufferDuration: 0.005,
+      //     supportsDTMF: false,
+      //     supportsHolding: false,
+      //     supportsGrouping: false,
+      //     supportsUngrouping: false,
+      //     ringtonePath: 'system_ringtone_default',
+      //   ),
+      //   android: const AndroidParams(
+      //     isCustomNotification: true,
+      //     isShowLogo: true,
+      //     isShowCallback: true,
+      //     isShowMissedCallNotification: true,
+      //     ringtonePath: 'system_ringtone_default',
+      //     backgroundColor: '#0955fa',
+      //     backgroundUrl: 'assets/test.png',
+      //     actionColor: '#4CAF50',
+      //   ),
+      // ));
+    } catch (error) {
+      logger.shout("Failed to handle RemoteMessage", error);
+    }
   }
 }
 
