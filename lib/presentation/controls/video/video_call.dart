@@ -58,7 +58,7 @@ class _VideoCallState extends State<VideoCall> {
     ..on<TrackPublishedEvent>((event) async {
       setState(() {});
     })
-    ..on<LocalTrackPublishedEvent>((_) async => {await CallKitServiceScope.of(context).endCall(widget.doorbellId)})
+    ..on<LocalTrackPublishedEvent>((_) async => await CallKitServiceScope.of(context).endCall(widget.doorbellId))
     ..on<DataReceivedEvent>((event) {
       String decoded = 'Failed to decode';
       try {
