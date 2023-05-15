@@ -39,14 +39,14 @@
     "user-fcms": {
       "$uid": {
         ".read": "auth.uid === $uid",
-        ".write": "auth.uid === $uid"
+        ".write": "auth.uid === $uid || auth.uid === 'service-account'"
       }
     },
 
     "user-voip-tokens": {
       "$uid": {
         ".read": "auth.uid === $uid",
-        ".write": "auth.uid === $uid"
+        ".write": "auth.uid === $uid || auth.uid === 'service-account'"
       }
     }
   }
