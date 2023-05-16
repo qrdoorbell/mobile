@@ -38,7 +38,7 @@ import flutter_callkeep
     func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
         print("didReceiveIncomingPushWith")
         guard type == .voIP else { return }
-        
+
         let id = payload.dictionaryPayload["id"] as? String ?? ""
         let callerName = payload.dictionaryPayload["callerName"] as? String ?? ""
         let userId = payload.dictionaryPayload["callerId"] as? String ?? ""
@@ -48,12 +48,14 @@ import flutter_callkeep
         let callToken = payload.dictionaryPayload["callToken"] as? String ?? ""
         
         let data = flutter_callkeep.Data(id: id, callerName: callerName, handle: handle, hasVideo: isVideo)
-        //set more data
-        data.extra = ["userId": userId, "platform": "ios", "callToken": callToken, "doorbellId": doorbellId]
-        // data.extra = payload.dictionaryPayload
         data.appName = "QR Doorbell"
         data.iconName = "CallKitLogo"
-        //data.....
+        data.extra = ["userId": userId, "platform": "ios", "callToken": callToken, "doorbellId": doorbellId]
+        
+//        payload.dictionaryPayload.forEach { (key: AnyHashable, value: Any) in
+//            data.extra.setValue(value, forKey: key.base as! String)
+//        }
+        
         SwiftCallKeepPlugin.sharedInstance?.displayIncomingCall(data, fromPushKit: true)
-    }   
+    }
 }

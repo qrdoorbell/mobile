@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:logging/logging.dart';
 import 'package:nanoid/nanoid.dart';
 
 import '../../data.dart';
@@ -8,6 +9,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'firebase_repositories.dart';
 
 class FirebaseDataStore extends DataStore {
+  static final logger = Logger('FirebaseDataStore');
+
   String? _uid;
   UserAccount? _currentUser;
   final FirebaseDatabase db;
@@ -20,7 +23,7 @@ class FirebaseDataStore extends DataStore {
 
   @override
   Future<void> setUid(String? uid) async {
-    print("FirebaseDataStore.setUid: uid=$uid");
+    logger.info("FirebaseDataStore.setUid: uid=$uid");
     if (_uid != uid) await dispose();
 
     _uid = uid;
@@ -29,9 +32,9 @@ class FirebaseDataStore extends DataStore {
 
   @override
   Future<void> reloadData({bool force = false}) async {
-    print("FirebaseDataStore.reloadData: force=$force, _uid=$_uid");
+    logger.fine("FirebaseDataStore.reloadData: force=$force, _uid=$_uid");
 
-    print("Reloading data for user: userId='$_uid'");
+    logger.info("Reloading data for user: userId='$_uid'");
     if (_currentUser == null || force) _currentUser = UserAccount.fromSnapshot(await db.ref('users/$_uid').get());
 
     // if (force) {
@@ -45,7 +48,7 @@ class FirebaseDataStore extends DataStore {
   }
 
   void _subscribe() {
-    print("FirebaseDataStore._subscribe: _uid=$_uid");
+    logger.fine("FirebaseDataStore._subscribe: _uid=$_uid");
     if (_uid == null) {
       return;
     }
@@ -78,7 +81,7 @@ class FirebaseDataStore extends DataStore {
 
   @override
   Future<void> dispose() async {
-    print("Firebase DataStore dispose");
+    logger.info("Firebase DataStore dispose");
     _currentUser = null;
     await _doorbellsRepository.dispose();
     await _eventsRepository.dispose();
