@@ -160,7 +160,7 @@ class CallKitService extends ChangeNotifier {
       //   ),
       // ));
     } catch (error) {
-      logger.shout("Failed to handle RemoteMessage", error);
+      logger.warning("Failed to handle RemoteMessage", error);
     }
   }
 }

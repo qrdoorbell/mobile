@@ -31,6 +31,9 @@ Future<void> main() async {
   Logger.root.level = Level.FINE;
   Logger.root.onRecord.listen((record) {
     print('${format.format(record.time)}: ${record.message}');
+
+    if (record.level >= Level.INFO)
+      FirebaseCrashlytics.instance.log('[${record.level.toString()}] ${format.format(record.time)}: ${record.message}');
   });
 
   WidgetsFlutterBinding.ensureInitialized();
@@ -237,6 +240,8 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
   }
 
   Future<void> _handleAuthStateChanged(User? user) async {
+    FirebaseCrashlytics.instance.setUserIdentifier(user?.uid ?? "");
+
     if (user == null) {
       _routeState.go('/login');
       return;
@@ -249,7 +254,7 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
 
   Future<void> _handleRemoteMessage(RemoteMessage? message) async {
     if (message == null) {
-      logger.info("Main._handleRemoteMessage: Received empty RemoteMessage!");
+      logger.warning("Main._handleRemoteMessage: received empty RemoteMessage!");
       return;
     }
 

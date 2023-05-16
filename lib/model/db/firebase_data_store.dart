@@ -34,17 +34,14 @@ class FirebaseDataStore extends DataStore {
   Future<void> reloadData({bool force = false}) async {
     logger.fine("FirebaseDataStore.reloadData: force=$force, _uid=$_uid");
 
-    logger.info("Reloading data for user: userId='$_uid'");
-    if (_currentUser == null || force) _currentUser = UserAccount.fromSnapshot(await db.ref('users/$_uid').get());
+    logger.info("FirebaseDataStore.reloadData: Reloading data for user: userId='$_uid'");
+    try {
+      if (_currentUser == null || force) _currentUser = UserAccount.fromSnapshot(await db.ref('users/$_uid').get());
 
-    // if (force) {
-    //   for (var doorbellId in _currentUser!.doorbells) {
-    //     await _doorbellsRepository.getById(doorbellId);
-    //     await _eventsRepository.getByDoorbellId(doorbellId);
-    //   }
-    // }
-
-    _subscribe();
+      _subscribe();
+    } catch (error) {
+      logger.warning("FirebaseDataStore.reloadData: Unable to reload user data: uid=$_uid, force=$force", error);
+    }
   }
 
   void _subscribe() {
