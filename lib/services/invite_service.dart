@@ -21,10 +21,11 @@ class InviteService extends ChangeNotifier {
       if (uid == null) throw AssertionError('User is not logged in');
 
       logger.info("Accepted invitation: id='$inviteId', doorbellId='${invite.doorbellId}'");
-
       await FirebaseDatabase.instance
           .ref('doorbell-users/${invite.doorbellId}/$uid')
           .set({'role': invite.role, 'created': now.millisecondsSinceEpoch, 'inviteId': invite.id});
+
+      await FirebaseDatabase.instance.ref('users/$uid/doorbells/${invite.doorbellId}').set(true);
 
       await FirebaseDatabase.instance
           .ref('invites/$inviteId')
