@@ -13,8 +13,10 @@ import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
+import 'package:uni_links/uni_links.dart';
 
 import 'package:qrdoorbell_mobile/data.dart';
 
@@ -23,6 +25,8 @@ import 'model/db/firebase_data_store.dart';
 import 'routing.dart';
 import 'routing/navigator.dart';
 import 'services/callkit_service.dart';
+
+bool _initialUriIsHandled = false;
 
 final logger = Logger('main');
 
@@ -93,6 +97,7 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
   late final SimpleRouterDelegate _routerDelegate;
   late final TemplateRouteParser _routeParser;
   late final CallKitService _callKitService;
+  StreamSubscription? _sub;
 
   @override
   void initState() {
@@ -111,6 +116,7 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
         '/doorbells/:doorbellId/ring/:accessToken',
         '/doorbells/:doorbellId/join/:accessToken',
         '/doorbells/:doorbellId',
+        '/invite/accept/:inviteId',
         '/profile',
       ],
       guard: _guard,
@@ -172,6 +178,9 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
     FirebaseAuth.instance.authStateChanges().listen(_handleAuthStateChanged);
     Connectivity().onConnectivityChanged.listen(_handleConnectionStateChanged);
 
+    _handleIncomingLinks();
+    _handleInitialUri();
+
     super.initState();
   }
 
@@ -206,6 +215,7 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
 
   @override
   void dispose() {
+    _sub?.cancel();
     _routeState.dispose();
     _routerDelegate.dispose();
     super.dispose();
@@ -268,6 +278,38 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
       await _callKitService.handleCallMessage(message);
     } else if (message.data['doorbellId'] != null) {
       await _routeState.go('/doorbells/${message.data['doorbellId']}');
+    }
+  }
+
+  void _handleIncomingLinks() {
+    _sub = uriLinkStream.listen((Uri? uri) {
+      if (uri == null) return;
+
+      logger.info('Got incoming link: uri=$uri');
+      logger.fine("Navigating to '${uri.path}'");
+      _routeState.go(uri.path);
+    }, onError: (Object err) {
+      logger.warning('Got an error white handling incoming link', err);
+    });
+  }
+
+  Future<void> _handleInitialUri() async {
+    if (!_initialUriIsHandled) {
+      _initialUriIsHandled = true;
+      logger.info('Got incoming link during startup!');
+      try {
+        final uri = await getInitialUri();
+        if (uri == null) {
+          logger.fine('No initial uri');
+        } else {
+          logger.fine('Got initial uri: $uri');
+          await _routeState.go(uri.path);
+        }
+      } on PlatformException {
+        logger.warning('Falied to get initial uri');
+      } on FormatException catch (err) {
+        logger.warning('Malformed initial uri', err);
+      }
     }
   }
 }

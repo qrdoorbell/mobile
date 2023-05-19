@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' show get;
+import 'package:logging/logging.dart';
+import 'package:qrdoorbell_mobile/services/invite_service.dart';
 import 'package:share_plus/share_plus.dart';
 
 import 'package:qrdoorbell_mobile/data.dart';
@@ -11,6 +13,8 @@ import 'package:qrdoorbell_mobile/presentation/controls/sticker_card.dart';
 import '../../routing.dart';
 
 class DoorbellScreen extends StatelessWidget {
+  static final logger = Logger('DoorbellScreen');
+
   final User user = FirebaseAuth.instance.currentUser!;
   final String doorbellId;
 
@@ -26,7 +30,7 @@ class DoorbellScreen extends StatelessWidget {
     FloatingActionButton? floatButton;
 
     if (dataStore.doorbellEvents.any((x) => x.doorbellId == doorbellId)) {
-      floatButton = FloatingActionButton(onPressed: _onShareDoorbell, child: const Icon(CupertinoIcons.share));
+      floatButton = FloatingActionButton(onPressed: () => _onShareDoorbell(doorbell), child: const Icon(CupertinoIcons.share));
     }
 
     return CupertinoPageScaffold(
@@ -111,15 +115,26 @@ class DoorbellScreen extends StatelessWidget {
             ),
             EventList(
               doorbellId: doorbellId,
-              onShareDoorbellCallback: _onShareDoorbell,
+              onShareDoorbellCallback: () => _onShareDoorbell(doorbell),
               onPrintStickerCallback: () => _printSticker(doorbell),
             ),
           ])),
     ));
   }
 
-  Future<void> _onShareDoorbell() async {
-    print("SHARE DOORBELL: $doorbellId");
+  Future<void> _onShareDoorbell(Doorbell doorbell) async {
+    print("SHARE DOORBELL: ${doorbell.doorbellId}");
+
+    var invite = InviteService.createInvite(doorbellId);
+    print('Invite created: inviteId=$invite.id');
+
+    try {
+      var message = "Please follow the link to join '${doorbell.name}': https://j.qrdoorbell.io/invite/accept/${invite.id}";
+      await Share.share(message, subject: "Share ${doorbell.name}");
+      await InviteService.saveInvite(invite);
+    } catch (error) {
+      logger.shout('Share doorbell failed!', error);
+    }
   }
 
   Future<void> _printSticker(Doorbell doorbell) async {

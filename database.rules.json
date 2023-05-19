@@ -35,6 +35,15 @@
       ".read": "auth.uid !== null",
       ".write": "auth.token.stickers_admin === true"
     },
+      
+    "invites": {
+      ".write": "auth.uid !== null",
+      
+      "$inviteId": {
+        ".read": "auth.uid !== null",
+        ".write": "auth.uid === 'service-account' || (auth.uid !== null && auth.uid === data.child('owner').val() && root.child('doorbell-users').child(data.child('doorbell').val()).child(auth.uid).child('role').val() === 'owner')"
+      }
+    },
 
     "user-fcms": {
       "$uid": {

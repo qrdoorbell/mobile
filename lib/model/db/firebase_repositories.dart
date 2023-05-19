@@ -26,12 +26,12 @@ abstract class FirebaseRepository<T> {
 
   void _refSubscribe(StreamSubscription<DatabaseEvent> sub) => _subs.add(sub);
   void _refOnMultipleValues(DatabaseEvent event) {
-    logger.fine("FirebaseRepository<$T>._refOnMultipleValues: event=${event.snapshot.value.toString()}");
+    logger.finest("FirebaseRepository<$T>._refOnMultipleValues: event=${event.snapshot.value.toString()}");
     _addValues(event.snapshot.children.map((x) => convertFromMap(x.value as Map)));
   }
 
   void _refOnSingleValue(DatabaseEvent event) {
-    logger.fine("FirebaseRepository<$T>._refOnSingleValue: event=${event.snapshot.value.toString()}");
+    logger.finest("FirebaseRepository<$T>._refOnSingleValue: event=${event.snapshot.value.toString()}");
     convertFromSnapshot(event.snapshot);
   }
 
@@ -83,7 +83,7 @@ class DoorbellEventsRepository extends FirebaseRepository<DoorbellEvent> {
   // }
 
   void subscribeTo(String doorbellId) {
-    logger.fine("DoorbellEventsRepository.subscribeTo: doorbellId=$doorbellId");
+    logger.finest("DoorbellEventsRepository.subscribeTo: doorbellId=$doorbellId");
     // _refSubscribe(db.ref('doorbell-events/$doorbellId').onValue.listen(_refOnMultipleValues, onError: _refOnError, cancelOnError: false));
     _refSubscribe(db.ref('doorbell-events/$doorbellId').onChildAdded.listen(_refOnSingleValue, onError: _refOnError, cancelOnError: false));
   }
@@ -104,13 +104,13 @@ class DoorbellsRepository extends FirebaseRepository<Doorbell> {
   }
 
   void subscribeTo(String doorbellId) {
-    logger.fine("DoorbellsRepository.subscribeTo: doorbellId=$doorbellId");
+    logger.finest("DoorbellsRepository.subscribeTo: doorbellId=$doorbellId");
 
     var doorbellRef = db.ref('doorbells/$doorbellId')..keepSynced(true);
     _refSubscribe(doorbellRef.onValue.listen(_refOnSingleValue,
         onError: _refOnError,
         cancelOnError: false,
-        onDone: () => logger.fine('DoorbellsRepository._subscription.onDone: subscription=doorbels/$doorbellId')));
+        onDone: () => logger.finest('DoorbellsRepository._subscription.onDone: subscription=doorbels/$doorbellId')));
 
     _refSubscribe(doorbellRef.onChildChanged.listen(_onDoorbellUpdated, onError: _refOnError, cancelOnError: false));
     _refSubscribe(doorbellRef.onChildRemoved.listen(_onDoorbellRemoved, onError: _refOnError, cancelOnError: false));

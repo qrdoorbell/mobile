@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:qrdoorbell_mobile/presentation/screens/doorbell_edit_screen.dart';
 import 'package:qrdoorbell_mobile/presentation/screens/doorbell_screen.dart';
+import 'package:qrdoorbell_mobile/presentation/screens/invite_accepted_screen.dart';
 import 'package:qrdoorbell_mobile/presentation/screens/login_screen.dart';
 import 'package:qrdoorbell_mobile/presentation/screens/main_screen.dart';
 import 'package:qrdoorbell_mobile/presentation/screens/qrcode_screen.dart';
@@ -22,7 +23,6 @@ class _AppNavigatorState extends State<AppNavigator> {
   final _scaffoldKey = const ValueKey('App scaffold');
   final _doorbellDetailsKey = const ValueKey('Doorbell details screen');
   final _doorbellEditKey = const ValueKey('Doorbell edit screen');
-  // final _stickerTemplateDetailsKey = const ValueKey('Sticker details screen');
 
   @override
   Widget build(BuildContext context) {
@@ -31,16 +31,12 @@ class _AppNavigatorState extends State<AppNavigator> {
 
     var doorbellId = routeState.route.parameters['doorbellId'];
     var callAccessToken = routeState.route.parameters['accessToken'];
-    // Author? selectedAuthor;
-    // if (pathTemplate == '/author/:authorId') {
-    //   selectedAuthor = libraryInstance.allAuthors.firstWhereOrNull((b) => b.id.toString() == routeState.route.parameters['authorId']);
-    // }
+    var inviteId = routeState.route.parameters['inviteId'];
 
     return Navigator(
       key: widget.navigatorKey,
       onPopPage: (route, dynamic result) {
-        // When a page that is stacked on top of the scaffold is popped, display
-        // the /books or /authors tab in BookstoreScaffold.
+        // When a page that is stacked on top of the scaffold is popped, display the /doorbells on a back
         if (route.settings is Page && (route.settings as Page).key == _doorbellDetailsKey) {
           routeState.go('/doorbells');
         }
@@ -87,6 +83,11 @@ class _AppNavigatorState extends State<AppNavigator> {
               key: _doorbellEditKey,
               fullscreenDialog: true,
               child: CallScreen(accessToken: callAccessToken, doorbellId: doorbellId),
+            ),
+          if (pathTemplate == '/invite/accept/:inviteId' && inviteId != null)
+            MaterialPage(
+              fullscreenDialog: true,
+              child: InviteAcceptedScreen(inviteId: inviteId),
             ),
           // Add an additional page to the stack if the user is viewing a book
           // or an author

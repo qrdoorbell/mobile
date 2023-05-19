@@ -171,4 +171,6 @@ invites:
     status: created|accepted|rejected|expired|deleted
     expires: 2321237834
     created: 2321237834
+    updated:
     owner: GqxBjRWgIX3leKXavrcEKlDnJ6Bj
+    uid:

@@ -216,7 +216,9 @@
       "status": "created|accepted|rejected|expired|deleted",
       "expires": 2321237834,
       "created": 2321237834,
-      "owner": "GqxBjRWgIX3leKXavrcEKlDnJ6Bj"
+      "updated": null,
+      "owner": "GqxBjRWgIX3leKXavrcEKlDnJ6Bj",
+      "uid": null
     }
   }
 }
