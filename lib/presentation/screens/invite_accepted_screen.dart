@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:qrdoorbell_mobile/data.dart';
 import 'package:qrdoorbell_mobile/routing.dart';
-
-import '../../services/invite_service.dart';
 
 class InviteAcceptedScreen extends StatelessWidget {
   final String inviteId;
@@ -12,8 +11,9 @@ class InviteAcceptedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var dataStore = DataStoreStateScope.of(context).dataStore;
     return FutureBuilder<String>(
-        future: InviteService.accept(inviteId),
+        future: dataStore.acceptInvite(inviteId),
         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
           String text;
           bool isSuccess = false;
@@ -26,13 +26,12 @@ class InviteAcceptedScreen extends StatelessWidget {
           }
 
           return CupertinoPageScaffold(
-              child: Center(
-                  child: Column(children: [
-            Text(text),
+              child: Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
+            Padding(padding: const EdgeInsets.all(16), child: Text(text)),
             const Padding(padding: EdgeInsets.only(top: 40)),
             if (!isSuccess)
               CupertinoButton.filled(child: const Text('Home'), onPressed: () => RouteStateScope.of(context).go('/doorbells')),
-          ])));
+          ]));
         });
   }
 }

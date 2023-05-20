@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:qrdoorbell_mobile/model/helpers/id_provider.dart';
 import 'model/doorbell.dart';
 import 'model/doorbell_event.dart';
+import 'model/invite.dart';
 import 'model/user_account.dart';
 
 export 'model/doorbell.dart';
@@ -18,7 +19,6 @@ abstract class DataStore extends IdProvider {
   UserAccount? get currentUser;
   List<Doorbell> get doorbells;
   Stream<List<Doorbell>> get doorbellsStream;
-
   List<DoorbellEvent> get doorbellEvents;
   Stream<List<DoorbellEvent>> get doorbellEventsStream;
 
@@ -31,15 +31,18 @@ abstract class DataStore extends IdProvider {
   Future<void> updateDoorbellName(Doorbell doorbell);
   Future<Doorbell> updateDoorbellSettings(Doorbell doorbell);
 
+  Future<void> saveInvite(Invite invite);
+  Future<String> acceptInvite(String inviteId);
+
+  Future<UserAccount> createUser(UserAccount user);
   Future<void> setUid(String? uid);
-  Future<void> reloadData({bool force = false});
-  Future<void> dispose();
 
   void addDoorbellEvent(int eventType, String doorbellId, String stickerId);
 
-  static DataStore of(BuildContext context) => context.dependOnInheritedWidgetOfExactType<DataStoreStateScope>()!.notifier!.dataStore;
+  Future<void> reloadData({bool force = false});
+  Future<void> dispose();
 
-  Future<UserAccount> createUser(UserAccount user);
+  static DataStore of(BuildContext context) => context.dependOnInheritedWidgetOfExactType<DataStoreStateScope>()!.notifier!.dataStore;
 }
 
 class DataStoreState extends ChangeNotifier {

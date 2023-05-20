@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' show get;
 import 'package:logging/logging.dart';
-import 'package:qrdoorbell_mobile/services/invite_service.dart';
 import 'package:share_plus/share_plus.dart';
 
 import 'package:qrdoorbell_mobile/data.dart';
@@ -30,7 +29,7 @@ class DoorbellScreen extends StatelessWidget {
     FloatingActionButton? floatButton;
 
     if (dataStore.doorbellEvents.any((x) => x.doorbellId == doorbellId)) {
-      floatButton = FloatingActionButton(onPressed: () => _onShareDoorbell(doorbell), child: const Icon(CupertinoIcons.share));
+      floatButton = FloatingActionButton(onPressed: () => _onShareDoorbell(dataStore, doorbell), child: const Icon(CupertinoIcons.share));
     }
 
     return CupertinoPageScaffold(
@@ -115,23 +114,23 @@ class DoorbellScreen extends StatelessWidget {
             ),
             EventList(
               doorbellId: doorbellId,
-              onShareDoorbellCallback: () => _onShareDoorbell(doorbell),
+              onShareDoorbellCallback: () => _onShareDoorbell(dataStore, doorbell),
               onPrintStickerCallback: () => _printSticker(doorbell),
             ),
           ])),
     ));
   }
 
-  Future<void> _onShareDoorbell(Doorbell doorbell) async {
+  Future<void> _onShareDoorbell(DataStore dataStore, Doorbell doorbell) async {
     print("SHARE DOORBELL: ${doorbell.doorbellId}");
 
-    var invite = InviteService.createInvite(doorbellId);
+    var invite = Invite.create(doorbellId);
     print('Invite created: inviteId=$invite.id');
 
     try {
       var message = "Please follow the link to join '${doorbell.name}': https://j.qrdoorbell.io/invite/accept/${invite.id}";
       await Share.share(message, subject: "Share ${doorbell.name}");
-      await InviteService.saveInvite(invite);
+      await dataStore.saveInvite(invite);
     } catch (error) {
       logger.shout('Share doorbell failed!', error);
     }

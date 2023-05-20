@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:nanoid/nanoid.dart';
+
 class Invite {
   final String id;
   final String doorbellId;
@@ -73,6 +76,19 @@ class Invite {
       owner: map['owner'] ?? '',
       uid: map['uid'],
     );
+  }
+
+  factory Invite.create(String doorbellId, [String role = 'participant']) {
+    return Invite(
+        id: nanoid(10),
+        doorbellId: doorbellId,
+        created: DateTime.now(),
+        expires: DateTime.now().add(const Duration(days: 7)),
+        owner: FirebaseAuth.instance.currentUser!.uid,
+        role: role,
+        status: 'created',
+        updated: null,
+        uid: null);
   }
 
   String toJson() => json.encode(toMap());

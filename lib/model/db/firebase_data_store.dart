@@ -1,11 +1,12 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:http/http.dart' show post;
 import 'package:logging/logging.dart';
 import 'package:nanoid/nanoid.dart';
 
 import '../../data.dart';
-import 'package:firebase_database/firebase_database.dart';
-
 import 'firebase_repositories.dart';
 
 class FirebaseDataStore extends DataStore {
@@ -120,6 +121,28 @@ class FirebaseDataStore extends DataStore {
   Future<Doorbell> updateDoorbellName(Doorbell doorbell) async {
     await db.ref('doorbells/${doorbell.doorbellId}').update({'name': doorbell.name});
     return doorbell;
+  }
+
+  @override
+  Future<String> acceptInvite(String inviteId) async {
+    logger.info("Accept Doorbell invite: id='$inviteId'");
+
+    var jwtToken = await FirebaseAuth.instance.currentUser?.getIdToken();
+    if (jwtToken == null) throw AssertionError('Cannot get JWT token');
+
+    var resp = await post(Uri.https('j.qrdoorbell.io', '/invite/accept/$inviteId'), headers: {'Authorization': 'Bearer $jwtToken'});
+    if (resp.statusCode != 200) {
+      logger.warning('Failed to accept Doorbell Invite - API returned an error: ${resp.body}');
+      throw AssertionError('Failed to accept Doorbell Invite - API returned an error: ${resp.body}');
+    }
+
+    await reloadData(force: true);
+    return resp.body; // doorbellId
+  }
+
+  @override
+  Future<void> saveInvite(Invite invite) async {
+    await db.ref('invites/${invite.id}').set(invite.toMap());
   }
 }
 
