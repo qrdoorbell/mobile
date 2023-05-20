@@ -10,6 +10,7 @@ import 'package:qrdoorbell_mobile/presentation/controls/event_list.dart';
 import 'package:qrdoorbell_mobile/presentation/controls/sticker_card.dart';
 
 import '../../routing.dart';
+import 'empty_screen.dart';
 
 class DoorbellScreen extends StatelessWidget {
   static final logger = Logger('DoorbellScreen');
@@ -25,7 +26,12 @@ class DoorbellScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dataStore = DataStore.of(context);
-    final doorbell = dataStore.getDoorbellById(doorbellId)!;
+    final doorbell = dataStore.getDoorbellById(doorbellId);
+
+    if (doorbell == null) {
+      return FutureBuilder(builder: (context, snapshot) => const EmptyScreen(false), future: RouteStateScope.of(context).go('/doorbells'));
+    }
+
     FloatingActionButton? floatButton;
 
     if (dataStore.doorbellEvents.any((x) => x.doorbellId == doorbellId)) {
