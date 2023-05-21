@@ -43,7 +43,7 @@ class CallScreenState extends State<CallScreen> {
             ),
             fastConnectOptions: FastConnectOptions(
               microphone: const TrackOption(enabled: true),
-              camera: const TrackOption(enabled: true),
+              camera: const TrackOption(enabled: false),
             )),
         builder: (context, snapshot) => VideoCall(room, listener, widget.doorbellId));
   }

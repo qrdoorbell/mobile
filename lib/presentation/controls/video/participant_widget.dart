@@ -109,6 +109,9 @@ abstract class _ParticipantWidgetState<T extends ParticipantWidget> extends Stat
   @override
   Widget build(BuildContext context) {
     var room = context.findAncestorStateOfType<CallScreenState>()?.room;
+    var isMicEnabled = room?.localParticipant?.isMicrophoneEnabled() ?? true;
+    var isCamEnabled = room?.localParticipant?.isCameraEnabled() ?? false;
+    var isSpeakerOn = room?.speakerOn ?? true;
 
     return Scaffold(
         backgroundColor: CupertinoColors.darkBackgroundGray,
@@ -148,42 +151,42 @@ abstract class _ParticipantWidgetState<T extends ParticipantWidget> extends Stat
                       children: [
                         const Spacer(),
                         CupertinoButton(
-                            color: CupertinoColors.white.withOpacity(0.3),
+                            color: CupertinoColors.white.withOpacity(isMicEnabled ? 0.6 : 0.3),
                             borderRadius: const BorderRadius.all(Radius.circular(55)),
                             padding: const EdgeInsets.all(20),
                             child: Icon(
-                              room?.localParticipant?.isMuted == false ? CupertinoIcons.mic_solid : CupertinoIcons.mic_slash_fill,
+                              isMicEnabled ? CupertinoIcons.mic_solid : CupertinoIcons.mic_slash_fill,
                               color: CupertinoColors.white,
                               size: 36,
                             ),
                             onPressed: () => setState(() {
-                                  room?.localParticipant?.setMicrophoneEnabled(!(room.localParticipant?.isMuted ?? false));
+                                  room?.localParticipant?.setMicrophoneEnabled(!isMicEnabled);
                                 })),
                         const Spacer(),
                         CupertinoButton(
-                            color: CupertinoColors.white.withOpacity(0.3),
+                            color: CupertinoColors.white.withOpacity(isCamEnabled ? 0.6 : 0.3),
                             borderRadius: const BorderRadius.all(Radius.circular(55)),
                             padding: const EdgeInsets.all(20),
                             child: Icon(
-                              room?.localParticipant?.hasVideo == true ? CupertinoIcons.video_camera_solid : CupertinoIcons.video_camera,
+                              isCamEnabled ? CupertinoIcons.video_camera_solid : CupertinoIcons.video_camera,
                               color: CupertinoColors.white,
                               size: 36,
                             ),
                             onPressed: () => setState(() {
-                                  room?.localParticipant?.setCameraEnabled(!(room.localParticipant?.hasVideo ?? false));
+                                  room?.localParticipant?.setCameraEnabled(!isCamEnabled);
                                 })),
                         const Spacer(),
                         CupertinoButton(
-                            color: CupertinoColors.white.withOpacity(0.6),
+                            color: CupertinoColors.white.withOpacity(isSpeakerOn ? 0.6 : 0.3),
                             borderRadius: const BorderRadius.all(Radius.circular(55)),
                             padding: const EdgeInsets.all(20),
-                            child: const Icon(
-                              CupertinoIcons.speaker_3_fill,
+                            child: Icon(
+                              isSpeakerOn ? CupertinoIcons.speaker_3_fill : CupertinoIcons.speaker_3,
                               color: CupertinoColors.white,
                               size: 36,
                             ),
                             onPressed: () => setState(() {
-                                  room?.setSpeakerOn(!(room.speakerOn ?? false));
+                                  room?.setSpeakerOn(!isSpeakerOn);
                                 })),
                         const Spacer(),
                       ],
@@ -203,7 +206,7 @@ abstract class _ParticipantWidgetState<T extends ParticipantWidget> extends Stat
                           await CallKitServiceScope.of(context).endCall(widget.doorbellId);
                           await widget.participant.unpublishAllTracks();
                           await widget.participant.dispose();
-                          await router.go('/doorbells');
+                          await router.go('/doorbells/${widget.doorbellId}');
                         }),
                     const Padding(padding: EdgeInsets.only(top: 100)),
                   ],
