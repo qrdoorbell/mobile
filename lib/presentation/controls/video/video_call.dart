@@ -5,11 +5,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:livekit_client/livekit_client.dart';
-import 'package:logging/logging.dart';
 import 'package:qrdoorbell_mobile/services/callkit_service.dart';
 
-import './participant_widget.dart';
 import '../../../routing.dart';
+import './participant_widget.dart';
 
 class VideoCall extends StatefulWidget {
   final Room room;
@@ -47,32 +46,47 @@ class _VideoCallState extends State<VideoCall> {
 
   void _setUpListeners() => _listener
     ..on<RoomDisconnectedEvent>((event) async {
+      logger.info('Room disconnected event: doorbellId=${widget.doorbellId}');
       if (event.reason != null) {
-        print('Room disconnected: reason => ${event.reason}');
+        logger.info('Room disconnected: reason => ${event.reason}');
       }
-
-      await CallKitServiceScope.of(context).endCall(widget.doorbellId);
-      WidgetsBindingCompatible.instance
-          ?.addPostFrameCallback((timeStamp) async => await RouteStateScope.of(context).go('/doorbells/${widget.doorbellId}'));
+      await _endCallIfAlone(context);
     })
-    ..on<TrackPublishedEvent>((event) async {
+    ..on<TrackPublishedEvent>((remoteParty) async {
       setState(() {});
     })
-    ..on<LocalTrackPublishedEvent>((_) async => await CallKitServiceScope.of(context).endCall(widget.doorbellId))
+    ..on<TrackUnpublishedEvent>((remoteParty) async {
+      setState(() {});
+      await _endCallIfAlone(context);
+    })
+    ..on<LocalTrackPublishedEvent>((remoteParty) async {
+      setState(() {});
+    })
+    ..on<LocalTrackUnpublishedEvent>((localParty) async {
+      setState(() {});
+      await _endCallIfAlone(context);
+    })
+    ..on<TrackMutedEvent>((mutedEvent) async {
+      setState(() {});
+    })
+    ..on<TrackUnmutedEvent>((mutedEvent) async {
+      setState(() {});
+    })
     ..on<DataReceivedEvent>((event) {
-      String decoded = 'Failed to decode';
       try {
-        decoded = utf8.decode(event.data);
+        var decoded = utf8.decode(event.data);
+        logger.info('Received the data: $decoded');
       } catch (_) {
         print('Failed to decode: $_');
       }
-      logger.log(Level.INFO, decoded);
     });
 
   @override
   Widget build(BuildContext context) {
     RemoteParticipant? participantTrack = widget.room.participants.values.firstOrNull;
-    if (participantTrack != null) return RemoteParticipantWidget(participantTrack, participantTrack.videoTracks.firstOrNull?.track);
+    if (participantTrack != null)
+      return RemoteParticipantWidget(
+          participantTrack, participantTrack.videoTracks.isNotEmpty ? participantTrack.videoTracks.first.track : null, widget.doorbellId);
 
     return Scaffold(
         backgroundColor: CupertinoColors.darkBackgroundGray,
@@ -82,5 +96,17 @@ class _VideoCallState extends State<VideoCall> {
           width: 120,
           height: 120,
         )));
+  }
+
+  Future<void> _endCallIfAlone(BuildContext context) async {
+    if (!widget.room.participants.values.any((party) => party is RemoteAudioTrack && party.audioTracks.isNotEmpty)) {
+      await _endCall(context);
+    }
+  }
+
+  Future<void> _endCall(BuildContext context) async {
+    var router = RouteStateScope.of(context);
+    await CallKitServiceScope.of(context).endCall(widget.doorbellId);
+    await router.go('/doorbells/${widget.doorbellId}');
   }
 }

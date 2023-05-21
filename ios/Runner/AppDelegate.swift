@@ -32,21 +32,27 @@ import flutter_callkeep
     }
     
     func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
-        print("didReceiveIncomingPushWith \(type): \(payload)")
+        print("didReceiveIncomingPushWith \(type): \(payload.dictionaryPayload.debugDescription)")
         guard type == .voIP else { return }
 
         let id = payload.dictionaryPayload["id"] as? String ?? ""
         let callerName = payload.dictionaryPayload["callerName"] as? String ?? ""
         let userId = payload.dictionaryPayload["callerId"] as? String ?? ""
         let handle = payload.dictionaryPayload["handle"] as? String ?? ""
-        let isVideo = payload.dictionaryPayload["isVideo"] as? Bool ?? false
+        let isVideo = payload.dictionaryPayload["isVideo"] as? Bool ?? true
         let doorbellId = payload.dictionaryPayload["doorbellId"] as? String ?? ""
+        let doorbellName = payload.dictionaryPayload["doorbellName"] as? String ?? ""
+        let doorbellEnabled = payload.dictionaryPayload["doorbellEnabled"] as? Bool ?? true
+        let stickerId = payload.dictionaryPayload["stickerId"] as? String ?? ""
+        let livekitServer = payload.dictionaryPayload["livekitServer"] as? String ?? ""
         let callToken = payload.dictionaryPayload["callToken"] as? String ?? ""
-        
+        let serverTimestampMs = payload.dictionaryPayload["serverTimestampMs"] as? String ?? ""
+
         let data = flutter_callkeep.Data(id: id, callerName: callerName, handle: handle, hasVideo: isVideo)
         data.appName = "QR Doorbell"
         data.iconName = "CallKitLogo"
-        data.extra = ["userId": userId, "platform": "ios", "callToken": callToken, "doorbellId": doorbellId]
+        data.handle = doorbellName
+        data.extra = ["userId": userId, "platform": "ios", "callToken": callToken, "doorbellId": doorbellId, "livekitServer": livekitServer, "doorbellName": doorbellName, "stickerId": stickerId, "doorbellEnabled": doorbellEnabled, "serverTimestampMs": serverTimestampMs]
 
 //        payload.dictionaryPayload.forEach { (key: AnyHashable, value: Any) in
 //            data.extra.setValue(value, forKey: key.base as! String)

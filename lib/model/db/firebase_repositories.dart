@@ -173,12 +173,23 @@ class DoorbellsRepository extends FirebaseRepository<Doorbell> {
     await db.ref('doorbells/${doorbell.doorbellId}').set(doorbell.toMap());
   }
 
-  Future<void> remove(String doorbellId) async {
+  Future<void> remove(Doorbell doorbell) async {
     final uid = FirebaseAuth.instance.currentUser?.uid;
 
-    await db.ref('users/$uid/doorbells/$doorbellId').remove();
-    await db.ref('doorbells/$doorbellId').remove();
-    await db.ref('doorbell-users/$doorbellId').remove();
+    // TODO: move this code to API
+    var role = (await db.ref('doorbell-users/${doorbell.doorbellId}/$uid/role').get()).value as String?;
+    if (role == 'participant') {
+      await db.ref('users/$uid/doorbells/${doorbell.doorbellId}').remove();
+      await db.ref('doorbell-users/${doorbell.doorbellId}/$uid/role').remove();
+    } else if (role == 'owner') {
+      var doorbellUsers = (await db.ref('doorbell-users/${doorbell.doorbellId}').get()).children.map((x) => x.value);
+      for (var u in doorbellUsers) {
+        await db.ref('users/$u/doorbells/${doorbell.doorbellId}').remove();
+      }
+      await db.ref('doorbell-users/${doorbell.doorbellId}').remove();
+      await db.ref('users/$uid/doorbells/${doorbell.doorbellId}').remove();
+      await db.ref('doorbells/${doorbell.doorbellId}').remove();
+    }
   }
 
   @override

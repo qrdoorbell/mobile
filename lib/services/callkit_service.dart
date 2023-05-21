@@ -20,6 +20,7 @@ class CallKitService extends ChangeNotifier {
   }
 
   Future<void> endCall(doorbellId) async {
+    logger.info('End Call: doorbellId=$doorbellId; callId=${_doorbellCalls[doorbellId]}');
     if (_doorbellCalls.containsKey(doorbellId)) {
       await CallKeep.instance.endCall(_doorbellCalls[doorbellId]!);
       _doorbellCalls.remove(doorbellId);
@@ -42,6 +43,7 @@ class CallKitService extends ChangeNotifier {
         if (callEvent.data.extra != null) {
           var doorbellId = callEvent.data.extra!['doorbellId'];
           var callToken = callEvent.data.extra!['callToken'];
+          _doorbellCalls.putIfAbsent(doorbellId, () => callEvent.data.uuid);
           await routeState.go("/doorbells/$doorbellId/join/$callToken", data: callEvent.data.extra!);
         }
         break;

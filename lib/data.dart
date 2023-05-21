@@ -27,7 +27,7 @@ abstract class DataStore extends IdProvider {
 
   Future<Doorbell> createDoorbell();
   Future<void> updateDoorbell(Doorbell doorbell);
-  Future<void> removeDoorbell(String doorbellId);
+  Future<void> removeDoorbell(Doorbell doorbell);
   Future<void> updateDoorbellName(Doorbell doorbell);
   Future<Doorbell> updateDoorbellSettings(Doorbell doorbell);
 

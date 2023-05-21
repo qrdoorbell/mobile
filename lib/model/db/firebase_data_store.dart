@@ -107,8 +107,8 @@ class FirebaseDataStore extends DataStore {
   }
 
   @override
-  Future<void> removeDoorbell(String doorbellId) async {
-    await _doorbellsRepository.remove(doorbellId);
+  Future<void> removeDoorbell(Doorbell doorbell) async {
+    await _doorbellsRepository.remove(doorbell);
   }
 
   @override
