@@ -30,20 +30,21 @@ class CallScreenState extends State<CallScreen> {
   @override
   Widget build(BuildContext context) {
     dynamic routeData = RouteStateScope.of(context).data;
+    logger.fine(routeData);
     return FutureBuilder(
-        future:
-            room.connect('https://${(routeData != null ? routeData['livekitServer'] : null) ?? 'live.qrdoorbell.io'}/', widget.accessToken,
-                roomOptions: const RoomOptions(
-                  adaptiveStream: true,
-                  dynacast: true,
-                  defaultVideoPublishOptions: VideoPublishOptions(
-                    simulcast: false,
-                  ),
-                ),
-                fastConnectOptions: FastConnectOptions(
-                  microphone: const TrackOption(enabled: true),
-                  camera: const TrackOption(enabled: true),
-                )),
+        future: room.connect(
+            'https://${(routeData != null ? routeData['livekitServer'] : null) ?? 'qrdoorbell.livekit.cloud'}/', widget.accessToken,
+            roomOptions: const RoomOptions(
+              adaptiveStream: true,
+              dynacast: true,
+              defaultVideoPublishOptions: VideoPublishOptions(
+                simulcast: false,
+              ),
+            ),
+            fastConnectOptions: FastConnectOptions(
+              microphone: const TrackOption(enabled: true),
+              camera: const TrackOption(enabled: true),
+            )),
         builder: (context, snapshot) => VideoCall(room, listener, widget.doorbellId));
   }
 }

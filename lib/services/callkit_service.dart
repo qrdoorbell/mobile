@@ -26,58 +26,58 @@ class CallKitService extends ChangeNotifier {
     }
   }
 
-  Future<void> _onCallKitEvent(event) async {
-    // logger.log(Level.INFO, event!.event);
-    logger.log(Level.FINE, event);
-    logger.log(Level.INFO, event!.type);
-    switch (event!.type) {
+  Future<void> _onCallKitEvent(CallKeepEvent? event) async {
+    logger.info("Received CallKit event: ${event?.toString()}");
+    logger.fine(event);
+    switch (event?.type) {
       case CallKeepEventType.callIncoming:
-        // TODO: received an incoming call
+        // received an incoming call
         break;
       case CallKeepEventType.callStart:
-        // TODO: started an outgoing call
-        // TODO: show screen calling in Flutter
+        // started an outgoing call
         break;
       case CallKeepEventType.callAccept:
-        // TODO: accepted an incoming call
-        // TODO: show screen calling in Flutter
+        // show screen calling in Flutter
         var callEvent = event as CallKeepCallEvent;
         if (callEvent.data.extra != null) {
           var doorbellId = callEvent.data.extra!['doorbellId'];
           var callToken = callEvent.data.extra!['callToken'];
-          await routeState.go("/doorbells/$doorbellId/ring/$callToken", data: callEvent.data.extra!);
+          await routeState.go("/doorbells/$doorbellId/join/$callToken", data: callEvent.data.extra!);
         }
         break;
       case CallKeepEventType.callDecline:
-        // TODO: declined an incoming call
+        // declined an incoming call
         break;
       case CallKeepEventType.callEnded:
-        // TODO: ended an incoming/outgoing call
+        // ended an incoming/outgoing call
         break;
       case CallKeepEventType.callTimedOut:
-        // TODO: missed an incoming call
+        // missed an incoming call
         break;
       case CallKeepEventType.missedCallback:
-        // TODO: only Android - click action `Call back` from missed call notification
+        // only Android - click action `Call back` from missed call notification
         break;
       case CallKeepEventType.holdToggled:
-        // TODO: only iOS
+        // only iOS
         break;
       case CallKeepEventType.muteToggled:
-        // TODO: only iOS
+        // only iOS
         break;
       case CallKeepEventType.dmtfToggled:
-        // TODO: only iOS
+        // only iOS
         break;
       case CallKeepEventType.callGroupToggled:
-        // TODO: only iOS
+        // only iOS
         break;
       case CallKeepEventType.audioSessionToggled:
-        // TODO: only iOS
+        // only iOS
         break;
       case CallKeepEventType.devicePushTokenUpdated:
-        // TODO: only iOS
+        // only iOS
         logger.log(Level.INFO, 'Got VoIP device token event: $event');
+        break;
+      case null:
+        logger.warning('CallKit event is null');
         break;
     }
   }
@@ -113,6 +113,10 @@ class CallKitService extends ChangeNotifier {
               audioSessionMode: AvAudioSessionMode.videoChat,
               audioSessionPreferredIOBufferDuration: 0.05,
               audioSessionPreferredSampleRate: 44100,
+              supportsDTMF: false,
+              supportsGrouping: false,
+              supportsHolding: false,
+              supportsUngrouping: false,
               iconName: 'CallKitLogo',
               handleType: CallKitHandleType.generic,
               isVideoSupported: true,

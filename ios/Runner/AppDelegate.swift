@@ -11,16 +11,13 @@ import flutter_callkeep
     ) -> Bool {
         GeneratedPluginRegistrant.register(with: self)
         
-        //Setup VOIP
-        let mainQueue = DispatchQueue.main
-        let voipRegistry: PKPushRegistry = PKPushRegistry(queue: mainQueue)
+        let voipRegistry: PKPushRegistry = PKPushRegistry(queue: DispatchQueue.main)
         voipRegistry.delegate = self
         voipRegistry.desiredPushTypes = [PKPushType.voIP]
         
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
-    // Handle updated push credentials
     func pushRegistry(_ registry: PKPushRegistry, didUpdate credentials: PKPushCredentials, for type: PKPushType) {
         print(credentials.token)
         let deviceToken = credentials.token.map { String(format: "%02x", $0) }.joined()
@@ -34,9 +31,8 @@ import flutter_callkeep
         SwiftCallKeepPlugin.sharedInstance?.setDevicePushTokenVoIP("")
     }
     
-    // Handle incoming pushes
     func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
-        print("didReceiveIncomingPushWith")
+        print("didReceiveIncomingPushWith \(type): \(payload)")
         guard type == .voIP else { return }
 
         let id = payload.dictionaryPayload["id"] as? String ?? ""
@@ -51,11 +47,11 @@ import flutter_callkeep
         data.appName = "QR Doorbell"
         data.iconName = "CallKitLogo"
         data.extra = ["userId": userId, "platform": "ios", "callToken": callToken, "doorbellId": doorbellId]
-        
+
 //        payload.dictionaryPayload.forEach { (key: AnyHashable, value: Any) in
 //            data.extra.setValue(value, forKey: key.base as! String)
 //        }
-        
+
         SwiftCallKeepPlugin.sharedInstance?.displayIncomingCall(data, fromPushKit: true)
     }
 }

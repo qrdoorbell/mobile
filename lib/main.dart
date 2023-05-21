@@ -136,9 +136,10 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
     _callKitService = CallKitService(routeState: _routeState);
 
     FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) async {
-      if (FirebaseAuth.instance.currentUser?.uid != null) {
-        await _handleFcmTokenChanged(FirebaseAuth.instance.currentUser!.uid, fcmToken);
-        await _handleVoipTokenChanged(FirebaseAuth.instance.currentUser!.uid, null);
+      var uid = FirebaseAuth.instance.currentUser?.uid;
+      if (uid != null) {
+        await _updateVoipToken(uid);
+        await _handleFcmTokenChanged(uid, fcmToken);
       }
     }).onError((err) {
       logger.warning("Failed to handle FCM token refresh event", err);
@@ -170,8 +171,11 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
     });
 
     FirebaseMessaging.instance.getInitialMessage().then((message) async {
-      logger.info('Initial message received!');
-      await _handleRemoteMessage(message);
+      if (message != null) {
+        logger.info('Initial message received');
+        logger.fine(message);
+        await _handleRemoteMessage(message);
+      }
     });
 
     FirebaseMessaging.onBackgroundMessage(_handleBackgroundMessage);
@@ -243,10 +247,19 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
     await FirebaseDatabase.instance.ref("user-fcms/$uid/$token").set(true);
   }
 
-  Future<void> _handleVoipTokenChanged(String uid, String? token) async {
-    token ??= await _callKitService.getVoipPushToken();
-    logger.fine('Device VoIP access token: $token');
-    await FirebaseDatabase.instance.ref("user-voip-tokens/$uid/$token").set(true);
+  Future<void> _updateVoipToken(String uid) async {
+    var token = await _callKitService.getVoipPushToken();
+    if (token.isEmpty) {
+      logger.warning('Cannot get VoIP token: uid=$uid');
+      return;
+    }
+
+    logger.fine('Device VoIP access token received: uid=$uid, token=$token');
+    try {
+      await FirebaseDatabase.instance.ref("user-voip-tokens/$uid/$token").set(true);
+    } catch (err) {
+      logger.warning('Cannot save VoIP token in the DB', err);
+    }
   }
 
   Future<void> _handleAuthStateChanged(User? user) async {
@@ -257,9 +270,10 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
       return;
     }
 
+    await _updateVoipToken(user.uid);
+
     var token = await FirebaseMessaging.instance.getToken();
     await _handleFcmTokenChanged(user.uid, token);
-    await _handleVoipTokenChanged(user.uid, null);
   }
 
   Future<void> _handleRemoteMessage(RemoteMessage? message) async {
