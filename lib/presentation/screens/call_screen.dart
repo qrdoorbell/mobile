@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:livekit_client/livekit_client.dart';
+import 'package:logging/logging.dart';
 import 'package:qrdoorbell_mobile/routing.dart';
 
 import '../controls/video/video_call.dart';
+import 'empty_screen.dart';
 
 extension VideoScreenExtensions on BuildContext {}
 
 class CallScreen extends StatefulWidget {
+  static final logger = Logger('CallScreen');
+
   final String accessToken;
   final String doorbellId;
 
@@ -28,9 +32,21 @@ class CallScreenState extends State<CallScreen> {
   }
 
   @override
+  void dispose() {
+    room.dispose();
+    listener.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     dynamic routeData = RouteStateScope.of(context).data;
     logger.fine(routeData);
+
+    room.events.on<RoomEvent>((e) {
+      logger.info('Room Event: ${e.toString()}');
+    });
+
     return FutureBuilder(
         future: room.connect(
             'https://${(routeData != null ? routeData['livekitServer'] : null) ?? 'qrdoorbell.livekit.cloud'}/', widget.accessToken,
@@ -42,9 +58,22 @@ class CallScreenState extends State<CallScreen> {
               ),
             ),
             fastConnectOptions: FastConnectOptions(
-              microphone: const TrackOption(enabled: true),
+              microphone: const TrackOption(enabled: false),
               camera: const TrackOption(enabled: false),
             )),
-        builder: (context, snapshot) => VideoCall(room, listener, widget.doorbellId));
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            logger.shout('An error ocured while CallScreen setup', snapshot.error, snapshot.stackTrace);
+            RouteStateScope.of(context).go('/doorbells/${widget.doorbellId}');
+
+            return const EmptyScreen();
+          }
+
+          if (!snapshot.hasData) {
+            return const EmptyScreen();
+          }
+
+          return VideoCall(room, listener, widget.doorbellId);
+        });
   }
 }

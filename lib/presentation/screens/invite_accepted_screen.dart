@@ -1,8 +1,12 @@
 import 'package:flutter/cupertino.dart';
+import 'package:logging/logging.dart';
 import 'package:qrdoorbell_mobile/data.dart';
+import 'package:qrdoorbell_mobile/presentation/screens/empty_screen.dart';
 import 'package:qrdoorbell_mobile/routing.dart';
 
 class InviteAcceptedScreen extends StatelessWidget {
+  static final logger = Logger('InviteAcceptedScreen');
+
   final String inviteId;
 
   const InviteAcceptedScreen({
@@ -15,23 +19,15 @@ class InviteAcceptedScreen extends StatelessWidget {
     return FutureBuilder<String>(
         future: dataStore.acceptInvite(inviteId),
         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-          String text;
-          bool isSuccess = false;
           if (snapshot.hasData && !snapshot.hasError) {
             RouteStateScope.of(context).go('/doorbells/${snapshot.data.toString()}');
-            text = "Adding the Doorbell...";
-            isSuccess = true;
+            return EmptyScreen.white("Adding the Doorbell...");
           } else {
-            text = snapshot.error.toString();
-          }
+            logger.shout('An error occured while processing share request', snapshot.error, snapshot.stackTrace);
+            RouteStateScope.of(context).go('/doorbells/${snapshot.data.toString()}');
 
-          return CupertinoPageScaffold(
-              child: Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
-            Padding(padding: const EdgeInsets.all(16), child: Text(text)),
-            const Padding(padding: EdgeInsets.only(top: 40)),
-            if (!isSuccess)
-              CupertinoButton.filled(child: const Text('Home'), onPressed: () => RouteStateScope.of(context).go('/doorbells')),
-          ]));
+            return EmptyScreen.white("Error occured");
+          }
         });
   }
 }

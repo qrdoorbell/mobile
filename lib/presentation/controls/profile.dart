@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:qrdoorbell_mobile/data.dart';
 
 import '../../routing.dart';
+import '../../services/callkit_service.dart';
 
 class Profile extends StatelessWidget {
   const Profile({
@@ -25,6 +26,26 @@ class Profile extends StatelessWidget {
               FirebaseAuth.instance.signOut();
             },
             child: const Text('Sign out')),
+        const Spacer(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('UID:', style: TextStyle(fontWeight: FontWeight.bold)),
+            Expanded(child: Text(DataStoreStateScope.of(context).dataStore.currentUser?.userId ?? "-")),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('VoIP token:', style: TextStyle(fontWeight: FontWeight.bold)),
+            Expanded(
+                child: FutureBuilder(
+                    future: CallKitServiceScope.of(context).getVoipPushToken(),
+                    builder: (context, snapshot) => Text(snapshot.hasData ? snapshot.requireData : "..."))),
+          ],
+        )
       ])
     ]));
   }
