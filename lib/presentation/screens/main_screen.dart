@@ -6,7 +6,7 @@ import 'package:qrdoorbell_mobile/presentation/controls/event_list.dart';
 
 import '../../routing/route_state.dart';
 import '../controls/doorbell_list.dart';
-import '../controls/profile.dart';
+import 'profile_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({
@@ -74,7 +74,7 @@ class _MainScreenState extends State<MainScreen> {
           tabWidget = const EventList();
           title = 'Events';
         } else if (index == 2) {
-          tabWidget = const Profile();
+          tabWidget = const ProfileScreen();
           title = 'Profile';
         } else {
           throw UnexpectedStateException('Invalid tab index');
