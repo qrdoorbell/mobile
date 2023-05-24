@@ -5,7 +5,7 @@
     "users":{
       "$uid": {
         ".read": "$uid === auth.uid",
-        ".write": "$uid === auth.uid"
+        ".write": "$uid === auth.uid || auth.uid === 'service-account'"
       }
     },
     "doorbells": {
@@ -20,7 +20,7 @@
 
         "$uid": {
           ".read": "auth.uid === $uid",
-          ".write": "auth.uid === $uid && (!data.exists() || data.child('role').val() === 'owner' || !root.child('doorbells/$doorbellId').exists())"
+          ".write": "auth.uid === 'service-account' || (auth.uid === $uid && (!data.exists() || data.child('role').val() === 'owner' || !root.child('doorbells/$doorbellId').exists()))"
         }
       }
     },
@@ -56,6 +56,13 @@
       "$uid": {
         ".read": "auth.uid === $uid",
         ".write": "auth.uid === $uid || auth.uid === 'service-account'"
+      }
+    },
+      
+    "livekit-rooms": {
+      "$roomId": {
+        ".read": "auth.uid !== null",
+        ".write": "auth.uid === 'service-account'"
       }
     }
   }

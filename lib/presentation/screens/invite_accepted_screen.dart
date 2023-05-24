@@ -21,12 +21,12 @@ class InviteAcceptedScreen extends StatelessWidget {
         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
           if (snapshot.hasData && !snapshot.hasError) {
             RouteStateScope.of(context).go('/doorbells/${snapshot.data.toString()}');
-            return EmptyScreen.white("Adding the Doorbell...");
+            return EmptyScreen.white().withText("Adding the Doorbell...");
           } else {
             logger.shout('An error occured while processing share request', snapshot.error, snapshot.stackTrace);
             RouteStateScope.of(context).go('/doorbells/${snapshot.data.toString()}');
 
-            return EmptyScreen.white("Error occured");
+            return EmptyScreen.white().withText("Error occured!");
           }
         });
   }

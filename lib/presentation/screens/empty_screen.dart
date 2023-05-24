@@ -1,28 +1,55 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class EmptyScreen extends StatelessWidget {
-  final bool isBlack;
-  final String text;
+  late final bool _isBlack;
+  late final Widget? _child;
 
-  const EmptyScreen([this.isBlack = true, this.text = '']);
+  EmptyScreen();
+
+  EmptyScreen withBlackBackground() {
+    _isBlack = true;
+    return this;
+  }
+
+  EmptyScreen withWhiteBackground() {
+    _isBlack = false;
+    return this;
+  }
+
+  EmptyScreen withText(String text) {
+    _child = Text(text);
+    return this;
+  }
+
+  EmptyScreen withChild(Widget child) {
+    _child = child;
+    return this;
+  }
+
+  EmptyScreen withWaitingIndicator() {
+    _child = LoadingAnimationWidget.staggeredDotsWave(color: _isBlack ? Colors.white : CupertinoColors.darkBackgroundGray, size: 120);
+    return this;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: isBlack ? CupertinoColors.darkBackgroundGray : Colors.white,
+        backgroundColor: _isBlack ? CupertinoColors.darkBackgroundGray : Colors.white,
         body: Center(
             child: Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
           SvgPicture.asset(
-            isBlack ? 'assets/logo-app-white.svg' : 'assets/logo-app.svg',
+            _isBlack ? 'assets/logo-app-white.svg' : 'assets/logo-app.svg',
             width: 120,
             height: 120,
           ),
           const Padding(padding: EdgeInsets.all(20)),
-          Text(text),
+          _child ?? const Text(''),
         ])));
   }
 
-  factory EmptyScreen.white([String text = '']) => EmptyScreen(false, text);
+  factory EmptyScreen.black() => EmptyScreen()..withBlackBackground();
+  factory EmptyScreen.white() => EmptyScreen()..withWhiteBackground();
 }

@@ -66,11 +66,11 @@ class CallScreenState extends State<CallScreen> {
             logger.shout('An error ocured while CallScreen setup', snapshot.error, snapshot.stackTrace);
             RouteStateScope.of(context).go('/doorbells/${widget.doorbellId}');
 
-            return const EmptyScreen();
+            return EmptyScreen.black();
           }
 
           if (!snapshot.hasData) {
-            return const EmptyScreen();
+            return EmptyScreen.black().withWaitingIndicator();
           }
 
           return VideoCall(room, listener, widget.doorbellId);

@@ -174,3 +174,11 @@ invites:
     updated:
     owner: GqxBjRWgIX3leKXavrcEKlDnJ6Bj
     uid:
+
+livekit-rooms:
+  room1_id:
+    roomId: room1_id
+    roomName: Room 1
+    created: 2321237834
+    doorbellId: doorbell1_id
+    eventId: event1_id
