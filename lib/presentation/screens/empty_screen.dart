@@ -4,8 +4,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class EmptyScreen extends StatelessWidget {
-  late final bool _isBlack;
-  late final Widget? _child;
+  bool _isBlack = true;
+  Widget? _child;
 
   EmptyScreen();
 
@@ -45,8 +45,7 @@ class EmptyScreen extends StatelessWidget {
             width: 120,
             height: 120,
           ),
-          const Padding(padding: EdgeInsets.all(20)),
-          _child ?? const Text(''),
+          if (_child != null) Padding(padding: const EdgeInsets.all(20), child: _child!),
         ])));
   }
 
