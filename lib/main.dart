@@ -16,6 +16,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
+import 'package:newrelic_mobile/newrelic_mobile.dart';
+import 'package:qrdoorbell_mobile/services/newrelic_service.dart';
 import 'package:uni_links/uni_links.dart';
 
 import 'package:qrdoorbell_mobile/data.dart';
@@ -36,17 +38,13 @@ Future<void> main() async {
   Logger.root.onRecord.listen((record) {
     print('${format.format(record.time)}: ${record.message}');
 
-    if (record.level >= Level.INFO)
+    if (record.level >= Level.FINE)
       FirebaseCrashlytics.instance.log('[${record.level.toString()}] ${format.format(record.time)}: ${record.message}');
   });
 
   WidgetsFlutterBinding.ensureInitialized();
 
-  if (Platform.isIOS) {
-    await Firebase.initializeApp();
-  } else {
-    await Firebase.initializeApp(options: WebFirebaseOptions);
-  }
+  await Firebase.initializeApp();
 
   FlutterError.onError = (errorDetails) {
     logger.shout("FlutterError.onError:", errorDetails);
@@ -73,7 +71,12 @@ Future<void> main() async {
   FirebaseDatabase.instance.setPersistenceEnabled(true);
   FirebaseDatabase.instance.setLoggingEnabled(true);
 
-  runApp(const QRDoorbellApp());
+  if (NEWRELIC_APP_TOKEN.isNotEmpty)
+    NewrelicMobile.instance.start(NewRelicLogger.getConfig(NEWRELIC_APP_TOKEN), () {
+      runApp(const QRDoorbellApp());
+    });
+  else
+    runApp(const QRDoorbellApp());
 }
 
 @pragma('vm:entry-point')
