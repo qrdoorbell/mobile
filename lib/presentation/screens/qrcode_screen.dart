@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:qrdoorbell_mobile/presentation/screens/empty_screen.dart';
 import 'package:qrdoorbell_mobile/routing.dart';
 
 class QRCodeScreen extends StatelessWidget {
@@ -9,36 +10,36 @@ class QRCodeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-        navigationBar: CupertinoNavigationBar(
-          backgroundColor: CupertinoColors.white,
-          padding: const EdgeInsetsDirectional.only(start: 5, end: 10),
-          leading: CupertinoNavigationBarBackButton(
-            onPressed: () => RouteStateScope.of(context).go('/doorbells/$doorbellId'),
-            color: CupertinoColors.activeBlue,
-          ),
-        ),
-        child: Center(
-          child: Column(mainAxisSize: MainAxisSize.max, crossAxisAlignment: CrossAxisAlignment.center, children: [
-            Padding(
-                padding: const EdgeInsets.all(20),
-                child: Image.network(
-                  'https://api.qrdoorbell.io/api/v1/qr/$doorbellId',
-                )),
-            const Spacer(),
-            CupertinoButton.filled(
-                onPressed: () => onPrintStickerCallback?.call(),
-                child: const Text(
-                  'Save sticker image',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                )),
-            const Padding(padding: EdgeInsets.all(10)),
-            const Text(
-              'You can print your sticker or save to photos.',
-              style: TextStyle(color: CupertinoColors.inactiveGray, fontSize: 14),
+    return Image.network('https://api.qrdoorbell.io/api/v1/qr/$doorbellId', frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+      if (frame == null) return EmptyScreen.white().withWaitingIndicator();
+
+      return CupertinoPageScaffold(
+          navigationBar: CupertinoNavigationBar(
+            backgroundColor: CupertinoColors.white,
+            padding: const EdgeInsetsDirectional.only(start: 5, end: 10),
+            leading: CupertinoNavigationBarBackButton(
+              onPressed: () => RouteStateScope.of(context).go('/doorbells/$doorbellId'),
+              color: CupertinoColors.activeBlue,
             ),
-            const Padding(padding: EdgeInsets.all(20))
-          ]),
-        ));
+          ),
+          child: Center(
+            child: Column(mainAxisSize: MainAxisSize.max, crossAxisAlignment: CrossAxisAlignment.center, children: [
+              Padding(padding: const EdgeInsets.all(20), child: child),
+              const Spacer(),
+              CupertinoButton.filled(
+                  onPressed: () => onPrintStickerCallback?.call(),
+                  child: const Text(
+                    'Save sticker image',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  )),
+              const Padding(padding: EdgeInsets.all(10)),
+              const Text(
+                'You can print your sticker or save to photos.',
+                style: TextStyle(color: CupertinoColors.inactiveGray, fontSize: 14),
+              ),
+              const Padding(padding: EdgeInsets.all(20))
+            ]),
+          ));
+    });
   }
 }

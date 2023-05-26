@@ -99,12 +99,8 @@ class _MainScreenState extends State<MainScreen> {
                         ),
                         CupertinoSliverRefreshControl(
                           onRefresh: () async {
-                            await Future<void>.delayed(
-                              const Duration(milliseconds: 1000),
-                            );
-                            setState(() {
-                              DataStore.of(context).reloadData(force: true);
-                            });
+                            await DataStore.of(context).reloadData(force: true);
+                            setState(() {});
                           },
                         ),
                         tabWidget,

@@ -4,51 +4,36 @@ import 'package:flutter_svg/svg.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class EmptyScreen extends StatelessWidget {
-  bool _isBlack = true;
-  Widget? _child;
+  final bool isBlack;
+  final Widget child;
 
-  EmptyScreen();
+  const EmptyScreen({
+    required this.child,
+    this.isBlack = true,
+  });
 
-  EmptyScreen withBlackBackground() {
-    _isBlack = true;
-    return this;
-  }
-
-  EmptyScreen withWhiteBackground() {
-    _isBlack = false;
-    return this;
-  }
-
-  EmptyScreen withText(String text) {
-    _child = Text(text);
-    return this;
-  }
-
-  EmptyScreen withChild(Widget child) {
-    _child = child;
-    return this;
-  }
-
-  EmptyScreen withWaitingIndicator() {
-    _child = LoadingAnimationWidget.staggeredDotsWave(color: _isBlack ? Colors.white : CupertinoColors.darkBackgroundGray, size: 120);
-    return this;
-  }
+  EmptyScreen withChild(Widget child) => EmptyScreen(isBlack: isBlack, child: child);
+  EmptyScreen withBlackBackground() => isBlack ? this : EmptyScreen(isBlack: true, child: child);
+  EmptyScreen withWhiteBackground() => !isBlack ? this : EmptyScreen(isBlack: false, child: child);
+  EmptyScreen withText(String text) => withChild(Text(text));
+  EmptyScreen withWaitingIndicator() =>
+      withChild(LoadingAnimationWidget.staggeredDotsWave(color: isBlack ? Colors.white : CupertinoColors.darkBackgroundGray, size: 120));
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: _isBlack ? CupertinoColors.darkBackgroundGray : Colors.white,
+        backgroundColor: isBlack ? CupertinoColors.darkBackgroundGray : Colors.white,
         body: Center(
             child: Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
           SvgPicture.asset(
-            _isBlack ? 'assets/logo-app-white.svg' : 'assets/logo-app.svg',
+            isBlack ? 'assets/logo-app-white.svg' : 'assets/logo-app.svg',
             width: 120,
             height: 120,
           ),
-          if (_child != null) Padding(padding: const EdgeInsets.all(20), child: _child!),
+          Padding(padding: const EdgeInsets.all(20), child: child),
         ])));
   }
 
-  factory EmptyScreen.black() => EmptyScreen()..withBlackBackground();
-  factory EmptyScreen.white() => EmptyScreen()..withWhiteBackground();
+  factory EmptyScreen.black() => const EmptyScreen(isBlack: true, child: Padding(padding: EdgeInsets.zero));
+  factory EmptyScreen.white() => const EmptyScreen(isBlack: false, child: Padding(padding: EdgeInsets.zero));
 }

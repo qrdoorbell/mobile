@@ -29,7 +29,8 @@ class DoorbellScreen extends StatelessWidget {
     final doorbell = dataStore.getDoorbellById(doorbellId);
 
     if (doorbell == null) {
-      return FutureBuilder(builder: (context, snapshot) => EmptyScreen.white(), future: RouteStateScope.of(context).go('/doorbells'));
+      return FutureBuilder(
+          builder: (context, snapshot) => EmptyScreen.white().withWaitingIndicator(), future: RouteStateScope.of(context).go('/doorbells'));
     }
 
     FloatingActionButton? floatButton;
