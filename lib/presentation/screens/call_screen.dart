@@ -9,8 +9,6 @@ import 'empty_screen.dart';
 extension VideoScreenExtensions on BuildContext {}
 
 class CallScreen extends StatefulWidget {
-  static final logger = Logger('CallScreen');
-
   final String accessToken;
   final String doorbellId;
 
@@ -21,59 +19,58 @@ class CallScreen extends StatefulWidget {
 }
 
 class CallScreenState extends State<CallScreen> {
-  late final Room room;
-  late final EventsListener<RoomEvent> listener;
+  static final logger = Logger('CallScreenState');
+
+  late final Room? room;
+  late final EventsListener<RoomEvent>? listener;
 
   @override
   void initState() {
     super.initState();
-    room = Room();
-    listener = room.createListener();
   }
 
   @override
   void dispose() {
-    room.dispose();
-    listener.dispose();
+    listener?.dispose();
+    room?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     dynamic routeData = RouteStateScope.of(context).data;
-    logger.fine(routeData);
-
-    room.events.on<RoomEvent>((e) {
-      logger.info('Room Event: ${e.toString()}');
-    });
-
     return FutureBuilder(
-        future: room.connect(
-            'https://${(routeData != null ? routeData['livekitServer'] : null) ?? 'qrdoorbell.livekit.cloud'}/', widget.accessToken,
-            roomOptions: const RoomOptions(
-              adaptiveStream: true,
-              dynacast: true,
-              defaultVideoPublishOptions: VideoPublishOptions(
-                simulcast: false,
-              ),
-            ),
-            fastConnectOptions: FastConnectOptions(
-              microphone: const TrackOption(enabled: false),
-              camera: const TrackOption(enabled: false),
-            )),
+        future: _connectToRoom(routeData?['livekitServer'], widget.accessToken),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             logger.shout('An error ocured while CallScreen setup', snapshot.error, snapshot.stackTrace);
             RouteStateScope.of(context).go('/doorbells/${widget.doorbellId}');
-
             return EmptyScreen.black();
-          }
-
-          if (!snapshot.hasData) {
+          } else if (!snapshot.hasData) {
             return EmptyScreen.black().withWaitingIndicator();
+          } else {
+            listener = room!.createListener();
+            return VideoCall(room!, listener!, widget.doorbellId);
           }
-
-          return VideoCall(room, listener, widget.doorbellId);
         });
+  }
+
+  Future<Room> _connectToRoom(String? livekitServer, String accessToken) async {
+    room = Room();
+
+    await room!.connect('https://${livekitServer ?? 'qrdoorbell.livekit.cloud'}/', accessToken,
+        roomOptions: const RoomOptions(
+          adaptiveStream: true,
+          // dynacast: true,
+          defaultVideoPublishOptions: VideoPublishOptions(
+            simulcast: false,
+          ),
+        ),
+        fastConnectOptions: FastConnectOptions(
+          microphone: const TrackOption(enabled: false),
+          camera: const TrackOption(enabled: false),
+        ));
+
+    return room!;
   }
 }
