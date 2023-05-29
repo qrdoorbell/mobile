@@ -21,8 +21,8 @@ class CallScreen extends StatefulWidget {
 class CallScreenState extends State<CallScreen> {
   static final logger = Logger('CallScreenState');
 
-  late final Room? room;
-  late final EventsListener<RoomEvent>? listener;
+  Room? room;
+  EventsListener<RoomEvent>? listener;
 
   @override
   void initState() {
