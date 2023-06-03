@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:logging/logging.dart';
-import 'package:qrdoorbell_mobile/data.dart';
-import 'package:qrdoorbell_mobile/presentation/screens/empty_screen.dart';
-import 'package:qrdoorbell_mobile/routing.dart';
+import '../screens/empty_screen.dart';
+import '../../data.dart';
+import '../../routing.dart';
 
 class InviteAcceptedScreen extends StatelessWidget {
   static final logger = Logger('InviteAcceptedScreen');

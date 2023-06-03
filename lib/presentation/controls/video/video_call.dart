@@ -5,8 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:livekit_client/livekit_client.dart';
-import 'package:qrdoorbell_mobile/services/callkit_service.dart';
 
+import '../../../services/callkit_service.dart';
 import '../../../routing.dart';
 import './participant_widget.dart';
 

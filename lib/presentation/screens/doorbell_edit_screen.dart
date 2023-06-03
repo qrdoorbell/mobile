@@ -1,8 +1,8 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:qrdoorbell_mobile/routing.dart';
 
+import '../../routing.dart';
 import '../../data.dart';
 
 class DoorbellEditScreen extends StatefulWidget {

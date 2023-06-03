@@ -16,16 +16,15 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:newrelic_mobile/newrelic_mobile.dart';
-import 'package:qrdoorbell_mobile/services/newrelic_service.dart';
 import 'package:uni_links/uni_links.dart';
 
-import 'package:qrdoorbell_mobile/data.dart';
-
-import 'app_options.dart';
-import 'model/db/firebase_data_store.dart';
+import 'services/newrelic_logger.dart';
+import 'services/db/firebase_data_store.dart';
+import 'services/callkit_service.dart';
 import 'routing.dart';
 import 'routing/navigator.dart';
-import 'services/callkit_service.dart';
+import 'app_options.dart';
+import 'data.dart';
 
 bool _initialUriIsHandled = false;
 

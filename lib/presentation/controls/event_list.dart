@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:qrdoorbell_mobile/data.dart';
 
+import '../../data.dart';
 import 'event_card.dart';
 
 class EventList extends StatelessWidget {

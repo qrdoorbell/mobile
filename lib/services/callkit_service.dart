@@ -2,8 +2,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_callkeep/flutter_callkeep.dart';
 import 'package:logging/logging.dart';
-import 'package:qrdoorbell_mobile/routing/route_state.dart';
 import 'package:uuid/uuid.dart';
+
+import '../routing/route_state.dart';
 
 class CallKitService extends ChangeNotifier {
   static final logger = Logger('CallKitService');

@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:livekit_client/livekit_client.dart';
-import 'package:qrdoorbell_mobile/data.dart';
-import 'package:qrdoorbell_mobile/presentation/controls/event_list.dart';
 
+import '../../data.dart';
 import '../../routing/route_state.dart';
+import '../controls/event_list.dart';
 import '../controls/doorbell_list.dart';
 import 'profile_screen.dart';
 

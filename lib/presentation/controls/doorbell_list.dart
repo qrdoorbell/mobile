@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:qrdoorbell_mobile/data.dart';
+import '../../data.dart';
 import 'doorbell_card.dart';
 
 class DoorbellList extends StatelessWidget {

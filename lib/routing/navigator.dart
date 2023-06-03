@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:qrdoorbell_mobile/presentation/screens/doorbell_edit_screen.dart';
-import 'package:qrdoorbell_mobile/presentation/screens/doorbell_screen.dart';
-import 'package:qrdoorbell_mobile/presentation/screens/invite_accepted_screen.dart';
-import 'package:qrdoorbell_mobile/presentation/screens/login_screen.dart';
-import 'package:qrdoorbell_mobile/presentation/screens/main_screen.dart';
-import 'package:qrdoorbell_mobile/presentation/screens/qrcode_screen.dart';
 
+import '../presentation/screens/doorbell_edit_screen.dart';
+import '../presentation/screens/doorbell_screen.dart';
+import '../presentation/screens/invite_accepted_screen.dart';
+import '../presentation/screens/login_screen.dart';
+import '../presentation/screens/main_screen.dart';
+import '../presentation/screens/qrcode_screen.dart';
 import '../presentation/screens/call_screen.dart';
 import '../routing.dart';
 import '../widgets/fade_transition_page.dart';

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:livekit_client/livekit_client.dart';
 import 'package:logging/logging.dart';
-import 'package:qrdoorbell_mobile/routing.dart';
 
+import '../../routing.dart';
 import '../controls/video/video_call.dart';
 import 'empty_screen.dart';
 

@@ -5,9 +5,9 @@ import 'package:http/http.dart' show get;
 import 'package:logging/logging.dart';
 import 'package:share_plus/share_plus.dart';
 
-import 'package:qrdoorbell_mobile/data.dart';
-import 'package:qrdoorbell_mobile/presentation/controls/event_list.dart';
-import 'package:qrdoorbell_mobile/presentation/controls/sticker_card.dart';
+import '../../data.dart';
+import '../controls/event_list.dart';
+import '../controls/sticker_card.dart';
 
 import '../../routing.dart';
 import 'empty_screen.dart';

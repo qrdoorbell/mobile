@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:qrdoorbell_mobile/data.dart';
 
+import '../../data.dart';
 import '../../routing/route_state.dart';
 
 class EventCard extends StatelessWidget {

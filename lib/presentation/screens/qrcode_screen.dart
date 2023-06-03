@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:qrdoorbell_mobile/presentation/screens/empty_screen.dart';
-import 'package:qrdoorbell_mobile/routing.dart';
+import '../screens/empty_screen.dart';
+import '../../routing.dart';
 
 class QRCodeScreen extends StatelessWidget {
   final String doorbellId;

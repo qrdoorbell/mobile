@@ -5,9 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:livekit_client/livekit_client.dart';
-import 'package:qrdoorbell_mobile/presentation/screens/empty_screen.dart';
-import 'package:qrdoorbell_mobile/routing.dart';
-import 'package:qrdoorbell_mobile/services/callkit_service.dart';
+import '../../screens/empty_screen.dart';
+import '../../../routing.dart';
+import '../../../services/callkit_service.dart';
 
 import '../../screens/call_screen.dart';
 

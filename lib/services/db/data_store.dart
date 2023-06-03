@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:qrdoorbell_mobile/services/helpers/id_provider.dart';
+import '../../services/helpers/id_provider.dart';
 import '../../model/doorbell.dart';
 import '../../model/doorbell_event.dart';
 import '../../model/invite.dart';
