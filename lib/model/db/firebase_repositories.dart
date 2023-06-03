@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:logging/logging.dart';
@@ -27,7 +28,7 @@ abstract class FirebaseRepository<T> {
   void _refSubscribe(StreamSubscription<DatabaseEvent> sub) => _subs.add(sub);
   void _refOnMultipleValues(DatabaseEvent event) {
     logger.finest("FirebaseRepository<$T>._refOnMultipleValues: event=${event.snapshot.value.toString()}");
-    _addValues(event.snapshot.children.map((x) => convertFromMap(x.value as Map)));
+    _addValues(event.snapshot.children.map((x) => convertFromMap(x.value as Map)).whereNot((x) => x == null).map((x) => x!));
   }
 
   void _refOnSingleValue(DatabaseEvent event) {
@@ -40,9 +41,9 @@ abstract class FirebaseRepository<T> {
   }
 
   T? convertFromSnapshot(DataSnapshot snapshot) {
-    if (snapshot.value != null) {
+    if (snapshot.value != null && snapshot.value is Map) {
       final val = convertFromMap(snapshot.value as Map);
-      _addValues([val]);
+      if (val != null) _addValues([val]);
 
       return val;
     }
@@ -70,7 +71,7 @@ abstract class FirebaseRepository<T> {
     _setupStream();
   }
 
-  T convertFromMap(Map m);
+  T? convertFromMap(Map m);
 }
 
 class DoorbellEventsRepository extends FirebaseRepository<DoorbellEvent> {
@@ -91,7 +92,7 @@ class DoorbellEventsRepository extends FirebaseRepository<DoorbellEvent> {
   void addValues(Iterable<DoorbellEvent> data) => _addValues(data);
 
   @override
-  DoorbellEvent convertFromMap(Map m) => DoorbellEvent.fromMap(m);
+  DoorbellEvent? convertFromMap(Map m) => DoorbellEvent.fromMap(m);
 }
 
 class DoorbellsRepository extends FirebaseRepository<Doorbell> {
@@ -139,10 +140,12 @@ class DoorbellsRepository extends FirebaseRepository<Doorbell> {
 
     if (event.snapshot.key?.length == 10) {
       var newValue = convertFromMap(event.snapshot.value as Map);
-      _cache.removeWhere((x) => x.doorbellId == newValue.doorbellId);
-      _cache.add(newValue);
+      if (newValue != null) {
+        _cache.removeWhere((x) => x.doorbellId == newValue.doorbellId);
+        _cache.add(newValue);
 
-      _controller.sink.add(_cache);
+        _controller.sink.add(_cache);
+      }
     }
   }
 
@@ -193,5 +196,5 @@ class DoorbellsRepository extends FirebaseRepository<Doorbell> {
   }
 
   @override
-  Doorbell convertFromMap(Map m) => Doorbell.fromMap(m);
+  Doorbell? convertFromMap(Map m) => Doorbell.fromMap(m);
 }
