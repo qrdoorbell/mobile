@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:http/http.dart' show post;
@@ -17,6 +18,7 @@ class FirebaseDataStore extends DataStore {
   final FirebaseDatabase db;
   final DoorbellEventsRepository _eventsRepository;
   final DoorbellsRepository _doorbellsRepository;
+  final Map<String, List<DoorbellUser>> _doorbellUsersCache = {};
 
   FirebaseDataStore(this.db)
       : _eventsRepository = DoorbellEventsRepository(db),
@@ -34,7 +36,6 @@ class FirebaseDataStore extends DataStore {
   @override
   Future<void> reloadData({bool force = false}) async {
     logger.fine("FirebaseDataStore.reloadData: force=$force, _uid=$_uid");
-
     logger.info("FirebaseDataStore.reloadData: Reloading data for user: userId='$_uid'");
     try {
       if (_currentUser == null || force) _currentUser = UserAccount.fromSnapshot(await db.ref('users/$_uid').get());
@@ -43,6 +44,8 @@ class FirebaseDataStore extends DataStore {
     } catch (error) {
       logger.warning("FirebaseDataStore.reloadData: Unable to reload user data: uid=$_uid, force=$force", error);
     }
+
+    await _refreshDoorbellUsersCache();
   }
 
   void _subscribe() {
@@ -55,6 +58,38 @@ class FirebaseDataStore extends DataStore {
       _doorbellsRepository.subscribeTo(doorbellId);
       _eventsRepository.subscribeTo(doorbellId);
     }
+  }
+
+  Future<void> _refreshDoorbellUsersCache() async {
+    logger.fine('Cleanup DoorbellUsers cache');
+    _doorbellUsersCache.clear();
+
+    for (var doorbellId in _currentUser!.doorbells) {
+      var records = await db.ref('doorbell-users/$doorbellId').get();
+      _doorbellUsersCache[doorbellId] = <DoorbellUser>[
+        ...records.children.map((x) => DoorbellUser(doorbellId: doorbellId, userId: x.key!, role: (x.value as Map)['role']))
+      ];
+    }
+
+    var displayNames = {};
+    var uids = _doorbellUsersCache.values.map((x) => x.map((e) => e.userId)).flattened.toSet();
+    var dataLoaders = Map.fromEntries(
+        uids.map((uid) => MapEntry(uid, db.ref('users/$uid/displayName').get().then((v) => displayNames[uid] = v.value?.toString()))));
+
+    logger.fine('Loading user display names from DB');
+    if (logger.isLoggable(Level.FINEST)) logger.finest('User ids: $uids');
+
+    await Future.wait(dataLoaders.values);
+
+    logger.finest('Update DoorbellUsers cache');
+    _doorbellUsersCache.forEach((doorbellId, doorbellUsers) {
+      for (var user in doorbellUsers) {
+        user.userDisplayName = displayNames[user.userId] ?? "";
+        user.userShortName = UserAccount.getShortNameFromDisplayName(user.userDisplayName);
+      }
+    });
+
+    logger.fine('DoorbellUsers cache reload complete!');
   }
 
   @override
@@ -144,6 +179,9 @@ class FirebaseDataStore extends DataStore {
   Future<void> saveInvite(Invite invite) async {
     await db.ref('invites/${invite.id}').set(invite.toMap());
   }
+
+  @override
+  List<DoorbellUser> getDoorbellUsers(String doorbellId) => _doorbellUsersCache[doorbellId] ?? [];
 }
 
 String? _digitName(int n) {

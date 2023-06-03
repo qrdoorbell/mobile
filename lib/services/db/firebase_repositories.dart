@@ -27,12 +27,14 @@ abstract class FirebaseRepository<T> {
 
   void _refSubscribe(StreamSubscription<DatabaseEvent> sub) => _subs.add(sub);
   void _refOnMultipleValues(DatabaseEvent event) {
-    logger.finest("FirebaseRepository<$T>._refOnMultipleValues: event=${event.snapshot.value.toString()}");
+    if (logger.isLoggable(Level.FINEST))
+      logger.finest("FirebaseRepository<$T>._refOnMultipleValues: event=${event.snapshot.value.toString()}");
     _addValues(event.snapshot.children.map((x) => convertFromMap(x.value as Map)).whereNot((x) => x == null).map((x) => x!));
   }
 
   void _refOnSingleValue(DatabaseEvent event) {
-    logger.finest("FirebaseRepository<$T>._refOnSingleValue: event=${event.snapshot.value.toString()}");
+    if (logger.isLoggable(Level.FINEST))
+      logger.finest("FirebaseRepository<$T>._refOnSingleValue: event=${event.snapshot.value.toString()}");
     convertFromSnapshot(event.snapshot);
   }
 
@@ -84,7 +86,7 @@ class DoorbellEventsRepository extends FirebaseRepository<DoorbellEvent> {
   // }
 
   void subscribeTo(String doorbellId) {
-    logger.finest("DoorbellEventsRepository.subscribeTo: doorbellId=$doorbellId");
+    if (logger.isLoggable(Level.FINEST)) logger.finest("DoorbellEventsRepository.subscribeTo: doorbellId=$doorbellId");
     // _refSubscribe(db.ref('doorbell-events/$doorbellId').onValue.listen(_refOnMultipleValues, onError: _refOnError, cancelOnError: false));
     _refSubscribe(db.ref('doorbell-events/$doorbellId').onChildAdded.listen(_refOnSingleValue, onError: _refOnError, cancelOnError: false));
   }
@@ -105,13 +107,16 @@ class DoorbellsRepository extends FirebaseRepository<Doorbell> {
   }
 
   void subscribeTo(String doorbellId) {
-    logger.finest("DoorbellsRepository.subscribeTo: doorbellId=$doorbellId");
+    if (logger.isLoggable(Level.FINEST)) logger.finest("DoorbellsRepository.subscribeTo: doorbellId=$doorbellId");
 
     var doorbellRef = db.ref('doorbells/$doorbellId')..keepSynced(true);
     _refSubscribe(doorbellRef.onValue.listen(_refOnSingleValue,
         onError: _refOnError,
         cancelOnError: false,
-        onDone: () => logger.finest('DoorbellsRepository._subscription.onDone: subscription=doorbels/$doorbellId')));
+        onDone: () => {
+              if (logger.isLoggable(Level.FINEST))
+                logger.finest('DoorbellsRepository._subscription.onDone: subscription=doorbels/$doorbellId')
+            }));
 
     _refSubscribe(doorbellRef.onChildChanged.listen(_onDoorbellUpdated, onError: _refOnError, cancelOnError: false));
     _refSubscribe(doorbellRef.onChildRemoved.listen(_onDoorbellRemoved, onError: _refOnError, cancelOnError: false));
@@ -159,6 +164,7 @@ class DoorbellsRepository extends FirebaseRepository<Doorbell> {
   Future<Doorbell> create(Doorbell doorbell) async {
     final uid = FirebaseAuth.instance.currentUser?.uid;
 
+    // TODO: move this code to API
     await db.ref('users/$uid/doorbells/${doorbell.doorbellId}').set(true);
     await db.ref('doorbell-users/${doorbell.doorbellId}/$uid').set({'role': 'owner', 'created': DateTime.now().millisecondsSinceEpoch});
     await db.ref('doorbells/${doorbell.doorbellId}').set(doorbell.toMap());

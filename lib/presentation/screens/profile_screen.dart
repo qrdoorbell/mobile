@@ -13,7 +13,8 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var user = DataStore.of(context).currentUser?.displayName ?? "N/A";
+    var user = DataStore.of(context).currentUser;
+    var userName = user?.displayName ?? "N/A";
     return SliverList(
         delegate: SliverChildListDelegate.fixed(<Widget>[
       Padding(
@@ -23,9 +24,9 @@ class ProfileScreen extends StatelessWidget {
             CircleAvatar(
                 backgroundColor: CupertinoColors.lightBackgroundGray,
                 minRadius: 60,
-                child: Text((user.length > 1 ? user.substring(0, 2) : user).toUpperCase())),
+                child: Text(UserAccount.getShortName(user), textScaleFactor: 2)),
             const Padding(padding: EdgeInsets.only(top: 20)),
-            Text(user, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 32)),
+            Text(userName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 32)),
             const Padding(padding: EdgeInsets.only(top: 40)),
             CupertinoButton.filled(
                 onPressed: () {

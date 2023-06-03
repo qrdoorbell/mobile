@@ -106,6 +106,22 @@ class DoorbellSettings {
       };
 }
 
+class DoorbellUser {
+  String doorbellId;
+  String userId;
+  String role;
+  String? userDisplayName;
+  String? userShortName;
+
+  DoorbellUser({
+    required this.doorbellId,
+    required this.userId,
+    required this.role,
+    this.userDisplayName,
+    this.userShortName,
+  });
+}
+
 class TimeRangeForStateSettings {
   DateTime startTime;
   DateTime endTime;
