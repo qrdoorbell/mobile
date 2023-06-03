@@ -13,21 +13,21 @@ class DoorbellList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dataStore = DataStore.of(context);
-    return StreamBuilder<List<Doorbell>>(
-        stream: dataStore.doorbellsStream,
-        initialData: dataStore.doorbells,
-        builder: (BuildContext context, AsyncSnapshot<List<Doorbell>> snapshot) {
-          var data = !snapshot.hasData ? <Doorbell>[] : snapshot.data!;
-          return SliverList(
-              delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) => DoorbellCard(
-                        doorbell: data[index],
-                        announce: data[index].lastEvent != null
-                            ? "${data[index].lastEvent!.formattedName} ${data[index].lastEvent!.formattedDateTimeSingleLine}"
-                            : 'No events',
-                        onTapHandler: onTapHandler,
-                      ),
-                  childCount: data.length));
-        });
+    return FutureBuilder(
+      future: dataStore.dataAvailable,
+      builder: (context, snapshot) {
+        var data = DataStore.of(context).doorbells;
+        return SliverList(
+            delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) => DoorbellCard(
+                      doorbell: data[index],
+                      announce: data[index].lastEvent != null
+                          ? "${data[index].lastEvent!.formattedName} ${data[index].lastEvent!.formattedDateTimeSingleLine}"
+                          : 'No events',
+                      onTapHandler: onTapHandler,
+                    ),
+                childCount: data.length));
+      },
+    );
   }
 }

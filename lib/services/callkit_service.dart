@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_callkeep/flutter_callkeep.dart';
 import 'package:logging/logging.dart';
+import 'package:newrelic_mobile/newrelic_mobile.dart';
 import 'package:uuid/uuid.dart';
 
 import '../routing/route_state.dart';
@@ -24,6 +25,8 @@ class CallKitService extends ChangeNotifier {
     logger.info('End Call: doorbellId=$doorbellId; callId=${_doorbellCalls[doorbellId]}');
     if (_doorbellCalls.containsKey(doorbellId)) {
       await CallKeep.instance.endCall(_doorbellCalls[doorbellId]!);
+      await NewrelicMobile.instance
+          .recordCustomEvent('EndCall', eventAttributes: {"doorbellId": doorbellId, "callUuid": _doorbellCalls[doorbellId]});
       _doorbellCalls.remove(doorbellId);
     }
   }
@@ -31,7 +34,10 @@ class CallKitService extends ChangeNotifier {
   Future<void> _onCallKitEvent(CallKeepEvent? event) async {
     logger.info("Received CallKit event: ${event?.toString()}");
     logger.fine(event);
-    switch (event?.type) {
+    if (event?.type == null) return;
+
+    await NewrelicMobile.instance.recordCustomEvent(event!.type.name, eventAttributes: _getEventMetadata(event!));
+    switch (event.type) {
       case CallKeepEventType.callIncoming:
         // received an incoming call
         break;
@@ -79,7 +85,7 @@ class CallKitService extends ChangeNotifier {
         // only iOS
         logger.log(Level.INFO, 'Got VoIP device token event: $event');
         break;
-      case null:
+      default:
         logger.warning('CallKit event is null');
         break;
     }
@@ -96,6 +102,8 @@ class CallKitService extends ChangeNotifier {
       var callId = UuidValue(message.data['id']).toString();
       message.data['uuid'] = callId;
       _doorbellCalls[message.data['doorbellId']] = callId;
+
+      await NewrelicMobile.instance.recordCustomEvent('IncomingCall', eventAttributes: message.data);
 
       await CallKeep.instance.displayIncomingCall(CallKeepIncomingConfig(
           uuid: callId,
@@ -169,6 +177,17 @@ class CallKitService extends ChangeNotifier {
     } catch (error) {
       logger.warning("Failed to handle RemoteMessage", error);
     }
+  }
+
+  static Map<String, dynamic> _getEventMetadata(CallKeepEvent event) {
+    if (event is CallKeepHoldEvent)
+      return {"callUuid": event.data.uuid, "isOnHold": event.data.isOnHold};
+    else if (event is CallKeepMuteEvent)
+      return {"callUuid": event.data.uuid, "isOnHold": event.data.isMuted};
+    else if (event is CallKeepAudioSessionEvent)
+      return {"callUuid": event.data.uuid, "isActivated": event.data.isActivated};
+    else
+      return {"callUuid": event.data.uuid};
   }
 }
 

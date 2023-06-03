@@ -46,12 +46,14 @@ Future<void> main() async {
 
   FlutterError.onError = (errorDetails) {
     logger.shout("FlutterError.onError:", errorDetails);
+    NewrelicMobile.instance.recordError(errorDetails, errorDetails.stack);
     FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
   };
 
   if (USE_CRASHALYTICS) {
     PlatformDispatcher.instance.onError = (error, stack) {
       logger.shout("PlatformDispatcher.instance.onError:", error, stack);
+      NewrelicMobile.instance.recordError(error, stack);
       FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
       return true;
     };
@@ -265,6 +267,7 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
 
   Future<void> _handleAuthStateChanged(User? user) async {
     FirebaseCrashlytics.instance.setUserIdentifier(user?.uid ?? "");
+    await NewrelicMobile.instance.setUserId(user?.uid ?? "");
 
     if (user == null) {
       _routeState.go('/login');

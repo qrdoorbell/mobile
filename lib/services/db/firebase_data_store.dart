@@ -15,6 +15,7 @@ class FirebaseDataStore extends DataStore {
 
   String? _uid;
   UserAccount? _currentUser;
+  Completer<bool> _reloadCompleter = Completer<bool>();
   final FirebaseDatabase db;
   final DoorbellEventsRepository _eventsRepository;
   final DoorbellsRepository _doorbellsRepository;
@@ -34,6 +35,9 @@ class FirebaseDataStore extends DataStore {
   }
 
   @override
+  Future<bool> get dataAvailable => _reloadCompleter.future;
+
+  @override
   Future<void> reloadData({bool force = false}) async {
     logger.fine("FirebaseDataStore.reloadData: force=$force, _uid=$_uid");
     logger.info("FirebaseDataStore.reloadData: Reloading data for user: userId='$_uid'");
@@ -45,7 +49,27 @@ class FirebaseDataStore extends DataStore {
       logger.warning("FirebaseDataStore.reloadData: Unable to reload user data: uid=$_uid, force=$force", error);
     }
 
-    await _refreshDoorbellUsersCache();
+    var doorbells = _currentUser?.doorbells ?? [];
+    if (doorbells.isEmpty) return;
+
+    logger.fine('Doorbells to be loaded: $doorbells');
+
+    _reloadCompleter = Completer<bool>();
+    var sub = _doorbellsRepository.stream.listen((data) {
+      if (doorbells.every((x) => data.any((y) => y.doorbellId == x))) {
+        logger.fine('Doorbells to loaded (${data.length}): $data');
+        _refreshDoorbellUsersCache().then((value) => {if (!_reloadCompleter.isCompleted) _reloadCompleter.complete(true)},
+            onError: (error) => {if (!_reloadCompleter.isCompleted) _reloadCompleter.completeError(error)});
+      }
+    });
+
+    Future.delayed(
+        const Duration(seconds: 30),
+        () =>
+            {if (!_reloadCompleter.isCompleted) _reloadCompleter.completeError(TimeoutException('Error loading data from DB - timeout'))});
+
+    await _reloadCompleter.future;
+    sub.cancel();
   }
 
   void _subscribe() {

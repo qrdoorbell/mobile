@@ -34,6 +34,7 @@ abstract class DataStore extends IdProvider {
 
   void addDoorbellEvent(int eventType, String doorbellId, String stickerId);
 
+  Future<bool> get dataAvailable;
   Future<void> reloadData({bool force = false});
   Future<void> dispose();
 

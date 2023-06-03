@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:newrelic_mobile/newrelic_mobile.dart';
 
 import 'parsed_route.dart';
 import 'parser.dart';
@@ -21,6 +22,7 @@ class RouteState extends ChangeNotifier {
   }
 
   Future<void> go(String route, {dynamic data}) async {
+    await NewrelicMobile.instance.recordBreadcrumb(route);
     _data = data;
     this.route = await _parser.parseRouteInformation(RouteInformation(location: route));
   }

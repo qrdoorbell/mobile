@@ -70,7 +70,7 @@ class EventCard extends StatelessWidget {
                       child: Row(
                         children: [
                           Text(event.formattedStatus),
-                          Text(event.getFormattedDuration(', duration: ')),
+                          Text(event.getFormattedDuration('  ')),
                         ],
                       ))
                 ],

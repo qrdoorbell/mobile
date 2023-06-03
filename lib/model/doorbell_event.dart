@@ -19,7 +19,7 @@ class DoorbellEvent implements Comparable<DoorbellEvent> {
   });
 
   String get formattedStatus {
-    if (voip == null) return "";
+    if (voip == null) return "Answered";
 
     switch (voip!['state']) {
       case 'end':
@@ -33,7 +33,7 @@ class DoorbellEvent implements Comparable<DoorbellEvent> {
                         ? 'Missed'
                         : '';
       default:
-        return 'Active';
+        return 'Answered';
     }
   }
 
