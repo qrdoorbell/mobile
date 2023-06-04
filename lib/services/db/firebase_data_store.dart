@@ -52,12 +52,12 @@ class FirebaseDataStore extends DataStore {
     var doorbells = _currentUser?.doorbells ?? [];
     if (doorbells.isEmpty) return;
 
-    logger.fine('Doorbells to be loaded: $doorbells');
+    logger.finest('Doorbells to be loaded: $doorbells');
 
     _reloadCompleter = Completer<bool>();
     var sub = _doorbellsRepository.stream.listen((data) {
       if (doorbells.every((x) => data.any((y) => y.doorbellId == x))) {
-        logger.fine('Doorbells to loaded (${data.length}): $data');
+        logger.finest('Doorbells loaded (${data.length}): $data');
         _refreshDoorbellUsersCache().then((value) => {if (!_reloadCompleter.isCompleted) _reloadCompleter.complete(true)},
             onError: (error) => {if (!_reloadCompleter.isCompleted) _reloadCompleter.completeError(error)});
       }
@@ -91,7 +91,9 @@ class FirebaseDataStore extends DataStore {
     for (var doorbellId in _currentUser!.doorbells) {
       var records = await db.ref('doorbell-users/$doorbellId').get();
       _doorbellUsersCache[doorbellId] = <DoorbellUser>[
-        ...records.children.map((x) => DoorbellUser(doorbellId: doorbellId, userId: x.key!, role: (x.value as Map)['role']))
+        ...records.children
+            .where((x) => x.key != null && x.value != null && (x.value is Map) && (x.value as Map)['role'] != null)
+            .map((x) => DoorbellUser(doorbellId: doorbellId, userId: x.key!, role: (x.value as Map)['role']))
       ];
     }
 
