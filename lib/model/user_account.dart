@@ -90,10 +90,10 @@ class UserAccount {
       var parts = displayName!.split(' ');
       if (parts.length > 1)
         return '${parts[0][0]}${parts[parts.length - 1][0]}'.toUpperCase();
-      else if (displayName!.length > 1)
-        return displayName!.substring(0, 2).toUpperCase();
+      else if (displayName.length > 1)
+        return displayName.substring(0, 2).toUpperCase();
       else
-        return displayName!.toUpperCase();
+        return displayName.toUpperCase();
     }
 
     return "--";

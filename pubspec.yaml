@@ -1,7 +1,7 @@
 name: qrdoorbell_mobile
 description: QR Doorbell mobile application.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 0.2.37
+version: 0.2.38
 homepage: https://www.qrdoorbell.io/
 
 environment:
@@ -63,6 +63,8 @@ flutter:
   - assets/qrcode-blue.svg
   - assets/logo-app.svg
   - assets/logo-app-white.svg
+  - assets/video.svg
+  - assets/video.slash.svg
 
   # fonts:
   #   - family: vg5000

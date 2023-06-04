@@ -36,7 +36,7 @@ class CallKitService extends ChangeNotifier {
     logger.fine(event);
     if (event?.type == null) return;
 
-    await NewrelicMobile.instance.recordCustomEvent(event!.type.name, eventAttributes: _getEventMetadata(event!));
+    await NewrelicMobile.instance.recordCustomEvent(event!.type.name, eventAttributes: _getEventMetadata(event));
     switch (event.type) {
       case CallKeepEventType.callIncoming:
         // received an incoming call

@@ -39,7 +39,7 @@ class _VideoCallState extends State<VideoCall> {
   void dispose() {
     (() async {
       await _listener.dispose();
-      await widget.room.dispose();
+      await widget.room.disconnect();
     })();
     super.dispose();
   }
@@ -56,14 +56,12 @@ class _VideoCallState extends State<VideoCall> {
       setState(() {});
     })
     ..on<TrackUnpublishedEvent>((remoteParty) async {
-      setState(() {});
       await _endCallIfAlone(context);
     })
     ..on<LocalTrackPublishedEvent>((remoteParty) async {
       setState(() {});
     })
     ..on<LocalTrackUnpublishedEvent>((localParty) async {
-      setState(() {});
       await _endCallIfAlone(context);
     })
     ..on<TrackMutedEvent>((mutedEvent) async {

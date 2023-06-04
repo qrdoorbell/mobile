@@ -5,11 +5,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:livekit_client/livekit_client.dart';
-import '../../screens/empty_screen.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
 import '../../../routing.dart';
 import '../../../services/callkit_service.dart';
-
 import '../../screens/call_screen.dart';
+import '../../screens/empty_screen.dart';
 
 class ParticipantTrack {
   ParticipantTrack({required this.participant, required this.videoTrack});
@@ -73,16 +74,14 @@ abstract class _ParticipantWidgetState<T extends ParticipantWidget> extends Stat
   VideoTrack? get activeVideoTrack;
   TrackPublication? get videoPublication;
   TrackPublication? get firstAudioPublication;
-  Duration? callDuration;
+  Duration callDuration = Duration.zero;
 
   @override
   void initState() {
-    callDuration = Duration.zero;
-    timer = Timer(const Duration(seconds: 1), () {
-      if (callDuration != null)
-        setState(() {
-          callDuration = (callDuration ?? Duration.zero) + const Duration(seconds: 1);
-        });
+    timer = Timer.periodic(const Duration(seconds: 1), (t) {
+      setState(() {
+        callDuration += const Duration(seconds: 1);
+      });
     });
 
     super.initState();
@@ -141,12 +140,10 @@ abstract class _ParticipantWidgetState<T extends ParticipantWidget> extends Stat
                     ),
                     Padding(
                         padding: const EdgeInsets.only(top: 10),
-                        child: callDuration != null
-                            ? Text(_printDuration(callDuration!),
-                                style: const TextStyle(
-                                  color: CupertinoColors.white,
-                                ))
-                            : Container()),
+                        child: Text(_printDuration(callDuration),
+                            style: const TextStyle(
+                              color: CupertinoColors.white,
+                            ))),
                     const Spacer(),
                     Row(
                       children: [
@@ -168,11 +165,7 @@ abstract class _ParticipantWidgetState<T extends ParticipantWidget> extends Stat
                             color: CupertinoColors.white.withOpacity(isCamEnabled ? 0.6 : 0.3),
                             borderRadius: const BorderRadius.all(Radius.circular(55)),
                             padding: const EdgeInsets.all(20),
-                            child: Icon(
-                              isCamEnabled ? CupertinoIcons.video_camera_solid : CupertinoIcons.video_camera,
-                              color: CupertinoColors.white,
-                              size: 36,
-                            ),
+                            child: SvgPicture.asset(isCamEnabled ? 'assets/video.svg' : 'assets/video.slash.svg', width: 36, height: 36),
                             onPressed: () => setState(() {
                                   room?.localParticipant?.setCameraEnabled(!isCamEnabled);
                                 })),
@@ -227,7 +220,7 @@ abstract class _ParticipantWidgetState<T extends ParticipantWidget> extends Stat
     var audioTracksCount = room?.participants.values.where((p) => p.audioTracks.isNotEmpty).length ?? 0;
     var localAudioTracksCount = room?.localParticipant?.audioTracks.length ?? 0;
     if (audioTracksCount == 0) return "Connecting...";
-    if (localAudioTracksCount == 0) return "Ringing...";
+    if (localAudioTracksCount == 0) return "Preview";
     if (audioTracksCount > 0) return "Active";
 
     return "Unknown";
