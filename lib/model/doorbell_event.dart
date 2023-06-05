@@ -186,7 +186,12 @@ class DoorbellEvent implements Comparable<DoorbellEvent> {
     if (diff.inMinutes < 60) return "${diff.inMinutes} minutes ago";
 
     var hourMin = "${dateTime.hour < 10 ? '0' : ''}${dateTime.hour}:${dateTime.minute < 10 ? '0' : ''}${dateTime.minute}";
-    if (diff.inDays == 0) return "today at $hourMin";
+    if (diff.inDays == 0) {
+      if (now.day == dateTime.day)
+        return "today at $hourMin";
+      else
+        return "yesterday at $hourMin";
+    }
     if (diff.inDays < weekday) return "on ${_convertWeekDayLong(dateTime.weekday)} at $hourMin";
     if (dateTime.year < now.year) {
       if (diff.inDays > 365) {

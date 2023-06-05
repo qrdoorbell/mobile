@@ -162,16 +162,16 @@ abstract class _ParticipantWidgetState<T extends ParticipantWidget> extends Stat
                                 })),
                         const Spacer(),
                         CupertinoButton(
-                            color: CupertinoColors.white.withOpacity(isCamEnabled ? 0.6 : 0.3),
+                            color: CupertinoColors.white.withOpacity(isCamEnabled ? 0.7 : 0.3),
                             borderRadius: const BorderRadius.all(Radius.circular(55)),
                             padding: const EdgeInsets.all(20),
-                            child: SvgPicture.asset(isCamEnabled ? 'assets/video.svg' : 'assets/video.slash.svg', width: 36, height: 36),
+                            child: SvgPicture.asset(isCamEnabled ? 'assets/video.svg' : 'assets/video.slash.svg', width: 30, height: 30),
                             onPressed: () => setState(() {
                                   room?.localParticipant?.setCameraEnabled(!isCamEnabled);
                                 })),
                         const Spacer(),
                         CupertinoButton(
-                            color: CupertinoColors.white.withOpacity(isSpeakerOn ? 0.6 : 0.3),
+                            color: CupertinoColors.white.withOpacity(isSpeakerOn ? 0.7 : 0.3),
                             borderRadius: const BorderRadius.all(Radius.circular(55)),
                             padding: const EdgeInsets.all(20),
                             child: Icon(

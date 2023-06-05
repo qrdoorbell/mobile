@@ -17,6 +17,10 @@ doorbells:
       enableVoiceMail: false
       enableTextMail: false
       enablePushNotifications: true
+      lang: uk
+      pageTitle:
+      pageText:
+      pageButtonText:
       automaticStateSettings:
         start: 2321237834
         end: 2321237834
@@ -26,6 +30,10 @@ doorbells:
       sicker1_id:
         id: sicker1_id
         created: 2321237834
+        lang: uk
+        pageTitle:
+        pageText:
+        pageButtonText:
         template:
           id: sticker-template1_id
           handler: hrzntlHandlerClassName
