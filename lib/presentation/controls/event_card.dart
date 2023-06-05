@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:qrdoorbell_mobile/data.dart';
 
+import '../../data.dart';
 import '../../routing/route_state.dart';
 
 class EventCard extends StatelessWidget {
@@ -45,27 +45,34 @@ class EventCard extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    event.formattedName,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  Row(
+                    children: [
+                      doorbell != null
+                          ? CupertinoButton(
+                              borderRadius: BorderRadius.zero,
+                              minSize: 0,
+                              padding: EdgeInsets.zero,
+                              child: Text(
+                                doorbell.name,
+                                style: const TextStyle(fontSize: 14, color: CupertinoColors.activeBlue),
+                              ),
+                              onPressed: () async => await RouteStateScope.of(context).go('/doorbells/${event.doorbellId}'),
+                            )
+                          : const Text(
+                              "Doorbell",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                      Text(" ${event.formattedName}"),
+                    ],
                   ),
-                  if (showDoorbellLink && doorbell != null)
-                    Padding(
-                        padding: const EdgeInsets.only(top: 5),
-                        child: CupertinoButton(
-                          borderRadius: BorderRadius.zero,
-                          minSize: 0,
-                          padding: EdgeInsets.zero,
-                          child: Text(
-                            doorbell.name,
-                            style: const TextStyle(fontSize: 14, color: CupertinoColors.activeBlue),
-                          ),
-                          onPressed: () async => await RouteStateScope.of(context).go('/doorbells/${event.doorbellId}'),
-                        )),
-                  if (showDoorbellLink && doorbell == null)
-                    const Padding(
-                        padding: EdgeInsets.only(top: 5),
-                        child: Text('--', style: TextStyle(fontSize: 14, color: CupertinoColors.inactiveGray)))
+                  Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Row(
+                        children: [
+                          Text(event.formattedStatus),
+                          Text(event.getFormattedDuration('  ')),
+                        ],
+                      ))
                 ],
               ),
               const Spacer(),

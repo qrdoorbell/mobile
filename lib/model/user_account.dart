@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:quiver/strings.dart';
 
 class UserAccount {
   late final String userId;
@@ -76,6 +77,27 @@ class UserAccount {
     ..displayName = user.displayName
     ..firstName = user.displayName
     ..lastName = '';
+
+  static String getShortName(UserAccount? user) {
+    if (user == null) return "--";
+
+    if (isNotEmpty(user.firstName) && isNotEmpty(user.lastName)) return '${user.firstName![0]}${user.lastName![0]}'.toUpperCase();
+    return getShortNameFromDisplayName(user.displayName);
+  }
+
+  static String getShortNameFromDisplayName(String? displayName) {
+    if (isNotEmpty(displayName)) {
+      var parts = displayName!.split(' ');
+      if (parts.length > 1)
+        return '${parts[0][0]}${parts[parts.length - 1][0]}'.toUpperCase();
+      else if (displayName.length > 1)
+        return displayName.substring(0, 2).toUpperCase();
+      else
+        return displayName.toUpperCase();
+    }
+
+    return "--";
+  }
 }
 
 class UserAccountIdp {

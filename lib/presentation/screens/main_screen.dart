@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:livekit_client/livekit_client.dart';
-import 'package:qrdoorbell_mobile/data.dart';
-import 'package:qrdoorbell_mobile/presentation/controls/event_list.dart';
 
+import '../../data.dart';
 import '../../routing/route_state.dart';
+import '../controls/event_list.dart';
 import '../controls/doorbell_list.dart';
-import '../controls/profile.dart';
+import 'profile_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({
@@ -74,7 +74,7 @@ class _MainScreenState extends State<MainScreen> {
           tabWidget = const EventList();
           title = 'Events';
         } else if (index == 2) {
-          tabWidget = Profile();
+          tabWidget = const ProfileScreen();
           title = 'Profile';
         } else {
           throw UnexpectedStateException('Invalid tab index');
@@ -99,12 +99,8 @@ class _MainScreenState extends State<MainScreen> {
                         ),
                         CupertinoSliverRefreshControl(
                           onRefresh: () async {
-                            await Future<void>.delayed(
-                              const Duration(milliseconds: 1000),
-                            );
-                            setState(() {
-                              DataStore.of(context).reloadData(force: true);
-                            });
+                            await DataStore.of(context).reloadData(force: true);
+                            setState(() {});
                           },
                         ),
                         tabWidget,

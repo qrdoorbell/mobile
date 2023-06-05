@@ -67,28 +67,36 @@ class DoorbellCard extends StatelessWidget {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          if (doorbell.settings.automaticStateSettings == null)
-                            CupertinoButton(
-                              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
-                              color: CupertinoColors.systemBlue.withAlpha(25),
-                              borderRadius: BorderRadius.circular(10),
-                              child: const Text(
-                                'Set silent mode time',
-                                style: TextStyle(color: CupertinoColors.activeBlue, fontSize: 16),
-                              ),
-                              onPressed: () => {},
-                            ),
-                          if (doorbell.settings.automaticStateSettings != null)
-                            CupertinoButton(
-                              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
-                              color: CupertinoColors.systemBlue.withAlpha(25),
-                              borderRadius: BorderRadius.circular(10),
-                              child: const Text(
-                                'Set silent mode time',
-                                style: TextStyle(color: CupertinoColors.activeBlue, fontSize: 16),
-                              ),
-                              onPressed: () => {},
-                            ),
+                          // if (doorbell.settings.automaticStateSettings == null)
+                          //   CupertinoButton(
+                          //     padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+                          //     color: CupertinoColors.systemBlue.withAlpha(25),
+                          //     borderRadius: BorderRadius.circular(10),
+                          //     child: const Text(
+                          //       'Set silent mode time',
+                          //       style: TextStyle(color: CupertinoColors.activeBlue, fontSize: 16),
+                          //     ),
+                          //     onPressed: () => RouteStateScope.of(context).go('/settings'),
+                          //   ),
+                          // if (doorbell.settings.automaticStateSettings != null)
+                          //   CupertinoButton(
+                          //     padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+                          //     color: CupertinoColors.systemBlue.withAlpha(25),
+                          //     borderRadius: BorderRadius.circular(10),
+                          //     child: const Text(
+                          //       'Set silent mode time',
+                          //       style: TextStyle(color: CupertinoColors.activeBlue, fontSize: 16),
+                          //     ),
+                          //     onPressed: () => {},
+                          //   ),
+                          for (var user in DataStore.of(context).getDoorbellUsers(doorbell.doorbellId))
+                            Padding(
+                                padding: const EdgeInsets.only(right: 4),
+                                child: CircleAvatar(
+                                    backgroundColor: CupertinoColors.lightBackgroundGray,
+                                    minRadius: 20,
+                                    child: Text(user.userShortName ?? "--", textScaleFactor: 1))),
+
                           const Spacer(),
                           CupertinoSwitch(
                             onChanged: (bool value) async {

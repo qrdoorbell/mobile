@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	</array>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
@@ -24,6 +28,19 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>io.qrdoorbell.app</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>io.qrdoorbell.app</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
@@ -32,6 +49,8 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Camera is going to be used for ad-hoc video calls between anonymous clients (effectively guests at a door -- doorbell clients) and doorbell owners (effectively app owners)</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Microphone is going to be used for ad-hoc video calls between anonymous clients (effectively guests at a door -- doorbell clients) and doorbell owners (effectively app owners)</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>

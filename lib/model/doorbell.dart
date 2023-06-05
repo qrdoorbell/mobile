@@ -1,5 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:qrdoorbell_mobile/data.dart';
+import '../data.dart';
 
 class Doorbell implements Comparable<Doorbell> {
   late final String doorbellId;
@@ -104,6 +104,22 @@ class DoorbellSettings {
         'enablePushNotifications': enablePushNotifications,
         'automaticStateSettings': automaticStateSettings?.toMap(),
       };
+}
+
+class DoorbellUser {
+  String doorbellId;
+  String userId;
+  String role;
+  String? userDisplayName;
+  String? userShortName;
+
+  DoorbellUser({
+    required this.doorbellId,
+    required this.userId,
+    required this.role,
+    this.userDisplayName,
+    this.userShortName,
+  });
 }
 
 class TimeRangeForStateSettings {
