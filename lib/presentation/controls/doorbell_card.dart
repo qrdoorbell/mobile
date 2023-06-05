@@ -13,7 +13,7 @@ final Widget qrcodeSvg = Padding(
       fit: BoxFit.scaleDown,
     ));
 
-class DoorbellCard extends StatelessWidget {
+class DoorbellCard extends StatefulWidget {
   final Doorbell doorbell;
   final String announce;
   final DoorbellCallback onTapHandler;
@@ -24,6 +24,11 @@ class DoorbellCard extends StatelessWidget {
     required this.onTapHandler,
   });
 
+  @override
+  State<DoorbellCard> createState() => _DoorbellCardState();
+}
+
+class _DoorbellCardState extends State<DoorbellCard> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -37,7 +42,7 @@ class DoorbellCard extends StatelessWidget {
                 )),
             shadowColor: Colors.grey.shade100,
             child: InkWell(
-                onTap: () => onTapHandler(doorbell),
+                onTap: () => widget.onTapHandler(widget.doorbell),
                 child: Padding(
                   padding: const EdgeInsets.only(top: 24, left: 22, right: 16, bottom: 20),
                   child: Column(
@@ -52,10 +57,10 @@ class DoorbellCard extends StatelessWidget {
                                   child: Padding(
                                       padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 14),
                                       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                        Text(doorbell.name, style: const TextStyle(fontSize: 24)),
+                                        Text(widget.doorbell.name, style: const TextStyle(fontSize: 24)),
                                         const Padding(padding: EdgeInsets.only(top: 9)),
                                         Text(
-                                          announce,
+                                          widget.announce,
                                           style: const TextStyle(color: Colors.grey),
                                           softWrap: true,
                                           overflow: TextOverflow.clip,
@@ -89,7 +94,7 @@ class DoorbellCard extends StatelessWidget {
                           //     ),
                           //     onPressed: () => {},
                           //   ),
-                          for (var user in DataStore.of(context).getDoorbellUsers(doorbell.doorbellId))
+                          for (var user in DataStore.of(context).getDoorbellUsers(widget.doorbell.doorbellId))
                             Padding(
                                 padding: const EdgeInsets.only(right: 4),
                                 child: CircleAvatar(
@@ -100,16 +105,17 @@ class DoorbellCard extends StatelessWidget {
                           const Spacer(),
                           CupertinoSwitch(
                             onChanged: (bool value) async {
-                              doorbell.settings.enablePushNotifications = value;
-                              await DataStore.of(context).updateDoorbellSettings(doorbell);
+                              widget.doorbell.settings.enablePushNotifications = value;
+                              await DataStore.of(context).updateDoorbellSettings(widget.doorbell);
+                              setState(() {});
                             },
-                            value: doorbell.settings.enablePushNotifications,
+                            value: widget.doorbell.settings.enablePushNotifications,
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left: 3),
                             child: Icon(
-                              doorbell.settings.enablePushNotifications ? CupertinoIcons.bell : CupertinoIcons.bell_slash,
-                              color: doorbell.settings.enablePushNotifications ? Colors.blue.shade700 : CupertinoColors.inactiveGray,
+                              widget.doorbell.settings.enablePushNotifications ? CupertinoIcons.bell : CupertinoIcons.bell_slash,
+                              color: widget.doorbell.settings.enablePushNotifications ? Colors.blue.shade700 : CupertinoColors.inactiveGray,
                               size: 28,
                             ),
                           )

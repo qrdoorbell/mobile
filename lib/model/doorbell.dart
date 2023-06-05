@@ -72,6 +72,10 @@ class DoorbellSettings {
   bool enableTextMail = false;
   bool enablePushNotifications = true;
   TimeRangeForStateSettings? automaticStateSettings;
+  String? lang;
+  String? pageTitle;
+  String? pageText;
+  String? pageButtonText;
 
   DoorbellSettings({
     this.enableVideoCalls = true,
@@ -81,6 +85,10 @@ class DoorbellSettings {
     this.enableTextMail = false,
     this.enablePushNotifications = true,
     this.automaticStateSettings,
+    this.lang,
+    this.pageTitle,
+    this.pageText,
+    this.pageButtonText,
   });
 
   factory DoorbellSettings.fromMap(Map s) {
@@ -92,6 +100,10 @@ class DoorbellSettings {
       enableTextMail: s['enableTextMail'],
       enablePushNotifications: s['enablePushNotifications'],
       automaticStateSettings: s['automaticStateSettings'] != null ? TimeRangeForStateSettings.fromMap(s['automaticStateSettings']) : null,
+      lang: s['lang'],
+      pageTitle: s['pageTitle'],
+      pageText: s['pageText'],
+      pageButtonText: s['pageButtonText'],
     );
   }
 
@@ -103,6 +115,10 @@ class DoorbellSettings {
         'enableTextMail': enableTextMail,
         'enablePushNotifications': enablePushNotifications,
         'automaticStateSettings': automaticStateSettings?.toMap(),
+        'lang': lang,
+        'pageTitle': pageTitle,
+        'pageText': pageText,
+        'pageButtonText': pageButtonText,
       };
 }
 

@@ -7,6 +7,7 @@ class StickerTemplateInfo {
   final bool enabled;
   final DateTime created;
   final String owner;
+
   StickerTemplateInfo({
     required this.id,
     required this.name,
@@ -145,11 +146,20 @@ class DoorbellSticker {
   final DateTime created;
   final StickerTemplate template;
   final Map params;
+  final String? lang;
+  final String? pageTitle;
+  final String? pageText;
+  final String? pageButtonText;
+
   DoorbellSticker({
     required this.stickerId,
     required this.created,
     required this.template,
     required this.params,
+    this.lang,
+    this.pageTitle,
+    this.pageText,
+    this.pageButtonText,
   });
 
   DoorbellSticker copyWith({
@@ -157,12 +167,20 @@ class DoorbellSticker {
     DateTime? created,
     StickerTemplate? template,
     Map? params,
+    String? lang,
+    String? pageTitle,
+    String? pageText,
+    String? pageButtonText,
   }) {
     return DoorbellSticker(
       stickerId: stickerId ?? this.stickerId,
       created: created ?? this.created,
       template: template ?? this.template,
       params: params ?? this.params,
+      lang: lang ?? this.lang,
+      pageTitle: pageTitle ?? this.pageTitle,
+      pageText: pageText ?? this.pageText,
+      pageButtonText: pageButtonText ?? this.pageButtonText,
     );
   }
 
@@ -172,6 +190,10 @@ class DoorbellSticker {
       'created': created.millisecondsSinceEpoch,
       'template': template.toMap(),
       'params': params,
+      'lang': lang,
+      'pageTitle': pageTitle,
+      'pageText': pageText,
+      'pageButtonText': pageButtonText,
     };
   }
 
@@ -181,6 +203,10 @@ class DoorbellSticker {
       created: DateTime.fromMillisecondsSinceEpoch(map['created']),
       template: StickerTemplate.fromMap(Map.from(map['template'])),
       params: map['params'] != null ? Map.from(map['params']) : {},
+      lang: map['lang'],
+      pageTitle: map['pageTitle'],
+      pageText: map['pageText'],
+      pageButtonText: map['pageButtonText'],
     );
   }
 
@@ -190,6 +216,10 @@ class DoorbellSticker {
       created: DateTime.fromMillisecondsSinceEpoch(map['created']),
       template: StickerTemplate.fromMap(Map.from(map['template'])),
       params: map['params'] != null ? Map.from(map['params']) : {},
+      lang: map['lang'],
+      pageTitle: map['pageTitle'],
+      pageText: map['pageText'],
+      pageButtonText: map['pageButtonText'],
     );
   }
 
