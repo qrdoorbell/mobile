@@ -5,6 +5,11 @@ import 'package:flutter/material.dart';
 import '../../routing.dart';
 import '../../data.dart';
 
+var languages = Map<String, String>.from({
+  "en": "English",
+  "uk": "Ukrainian",
+});
+
 class DoorbellEditScreen extends StatefulWidget {
   final String doorbellId;
 
@@ -20,11 +25,13 @@ class _DoorbellEditScreenState extends State<DoorbellEditScreen> {
   bool silentModeControl = false;
   bool startTimeControl = false;
   bool endTimeControl = false;
+  bool languageControl = false;
 
   @override
   Widget build(BuildContext context) {
     doorbell = DataStore.of(context).getDoorbellById(widget.doorbellId)!;
     var doorbellNameController = TextEditingController(text: doorbell.name);
+    var pageTextController = TextEditingController(text: doorbell.settings.pageText);
     return CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
           backgroundColor: CupertinoColors.white,
@@ -129,6 +136,53 @@ class _DoorbellEditScreenState extends State<DoorbellEditScreen> {
                   ),
                 ],
               ),
+
+              // GUEST PAGE
+              CupertinoListSection.insetGrouped(
+                  additionalDividerMargin: 6,
+                  header: const Text(
+                    'GUEST PAGE',
+                    style: TextStyle(fontSize: 13.0, color: CupertinoColors.inactiveGray, fontWeight: FontWeight.normal),
+                  ),
+                  children: [
+                    CupertinoListTile(
+                      title: CupertinoTextField(
+                        controller: pageTextController,
+                        onTapOutside: (event) async {
+                          if (doorbell.settings.pageText != pageTextController.text.trim() && pageTextController.text.isNotEmpty) {
+                            doorbell.settings.pageText = pageTextController.text;
+                            await DataStore.of(context).updateDoorbellSettings(doorbell);
+                          }
+                        },
+                        onTap: () async => await _hideSilentModeControls(context),
+                        prefix: const Text('Page text'),
+                        decoration: const BoxDecoration(),
+                        textAlign: TextAlign.right,
+                      ),
+                    ),
+                    CupertinoListTile(
+                      title: const Text('Language'),
+                      additionalInfo: Text(languages[doorbell.settings.lang] ?? 'Default'),
+                      trailing: const CupertinoListTileChevron(),
+                      onTap: () {
+                        setState(() => languageControl = !languageControl);
+                      },
+                    ),
+                    if (languageControl)
+                      for (var x in languages.entries)
+                        CupertinoListTile(
+                            title: Padding(padding: const EdgeInsets.only(left: 18), child: Text(x.value)),
+                            trailing: doorbell.settings.lang == x.key
+                                ? const Icon(CupertinoIcons.check_mark, color: CupertinoColors.activeBlue)
+                                : null,
+                            onTap: () async {
+                              setState(() {
+                                doorbell.settings.lang = x.key;
+                                languageControl = false;
+                              });
+                              await DataStore.of(context).updateDoorbellSettings(doorbell);
+                            })
+                  ]),
 
               // VOICE CALLS
               CupertinoListSection.insetGrouped(
@@ -282,22 +336,6 @@ class _DoorbellEditScreenState extends State<DoorbellEditScreen> {
           ],
         );
       },
-    );
-  }
-
-  Widget _buildDateAndTimePicker(BuildContext context) {
-    return SizedBox(
-      height: 200,
-      child: CupertinoDatePicker(
-        mode: CupertinoDatePickerMode.time,
-        use24hFormat: true,
-        initialDateTime: doorbell.settings.automaticStateSettings?.startTime,
-        onDateTimeChanged: (newDateTime) {
-          setState(() {
-            (doorbell.settings.automaticStateSettings ??= TimeRangeForStateSettings.createDefault()).startTime = newDateTime;
-          });
-        },
-      ),
     );
   }
 
