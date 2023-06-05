@@ -1,0 +1,26 @@
+name: iOS build
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    name: Build and Test default scheme using any available iPhone simulator
+    runs-on: macos-latest
+
+    steps:
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable' # or: 'beta', 'dev' or 'master'      
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Build
+        run: |
+          cd ./ios
+          pod install
+          cd ..
+          ./build_ipa.sh
