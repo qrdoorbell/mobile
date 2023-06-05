@@ -1,7 +1,7 @@
 name: qrdoorbell_mobile
 description: QR Doorbell mobile application.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 0.1.12
+version: 0.2.38
 homepage: https://www.qrdoorbell.io/
 
 environment:
@@ -13,6 +13,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   provider: ^6.0.2
   livekit_client: ^1.1.12
+  flutter_webrtc: ^0.9.27
   firebase_core: ^2.5.0
   firebase_messaging: ^14.2.1
   firebase_analytics: ^10.1.6
@@ -22,20 +23,26 @@ dependencies:
   firebase_ui_auth: ^1.1.14
   firebase_ui_oauth_apple: ^1.0.21
   firebase_ui_oauth_google: ^1.0.21
-  flutter_svg: ^1.1.6
+  flutter_svg: ^1.1.2
+  flutter_callkeep: ^0.3.1+1
   shared_preferences: ^2.0.17
   path_to_regexp: ^0.4.0
   adaptive_navigation: ^0.0.3
-  collection: ^1.17.0
+  collection: ^1.17.1
   quiver: ^3.2.1
   nanoid: ^1.0.0
-  connectivity_plus: ^3.0.3
+  connectivity_plus: ^3.0.2
   firebase_dynamic_links: ^5.0.17
-  share_plus: ^6.3.1
+  share_plus: ^7.0.0
   http: ^0.13.5
   logging: ^1.1.1
-  intl: ^0.17.0
-  
+  intl: ^0.18.0
+  uuid: ^3.0.6
+  uni_links: ^0.5.1
+  package_info_plus: ^4.0.1
+  loading_animation_widget: ^1.2.0+4
+  newrelic_mobile: ^1.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -54,6 +61,10 @@ flutter:
   - assets/logo-app-01_1024.png
   - assets/logo-embed-01.png
   - assets/qrcode-blue.svg
+  - assets/logo-app.svg
+  - assets/logo-app-white.svg
+  - assets/video.svg
+  - assets/video.slash.svg
 
   # fonts:
   #   - family: vg5000

@@ -1,8 +1,8 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:qrdoorbell_mobile/routing.dart';
 
+import '../../routing.dart';
 import '../../data.dart';
 
 class DoorbellEditScreen extends StatefulWidget {
@@ -275,7 +275,7 @@ class _DoorbellEditScreenState extends State<DoorbellEditScreen> {
               ),
               onPressed: () async {
                 final route = RouteStateScope.of(context);
-                await DataStore.of(context).removeDoorbell(widget.doorbellId);
+                await DataStore.of(context).removeDoorbell(doorbell);
                 route.go('/doorbells');
               },
             ),

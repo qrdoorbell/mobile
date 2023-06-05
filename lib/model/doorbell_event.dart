@@ -7,6 +7,7 @@ class DoorbellEvent implements Comparable<DoorbellEvent> {
   final String doorbellId;
   final int eventType;
   final DateTime dateTime;
+  final Map? voip;
 
   DoorbellEvent._({
     required this.eventId,
@@ -14,15 +15,46 @@ class DoorbellEvent implements Comparable<DoorbellEvent> {
     required this.doorbellId,
     required this.eventType,
     required this.dateTime,
+    required this.voip,
   });
+
+  String get formattedStatus {
+    if (voip == null) return "Answered";
+
+    switch (voip!['state']) {
+      case 'end':
+        return voip!['reason'] == 'ok'
+            ? 'Answered'
+            : voip!['reason'] == 'guest_cant_connect'
+                ? 'Guest can\'t connect'
+                : voip!['reason'] == 'user_not_answered'
+                    ? 'Ignored'
+                    : voip!['reason'] == 'user_not_available'
+                        ? 'Missed'
+                        : '';
+      default:
+        return 'Answered';
+    }
+  }
+
+  String getFormattedDuration(String? prefix) {
+    if (voip?['duration'] != null && voip!['duration'] > 0) {
+      var duration = Duration(milliseconds: voip!['duration']);
+      if (duration.inSeconds < 60) return "${prefix ?? ""}${duration.inSeconds}s";
+      if (duration.inMinutes < 60) return "${prefix ?? ""}${duration.inMinutes}m";
+    }
+
+    return "";
+  }
 
   static DoorbellEvent create(int eventType, String doorbellId, String stickerId) {
     return DoorbellEvent._(
-        eventId: nanoid(10), stickerId: stickerId, doorbellId: doorbellId, eventType: eventType, dateTime: DateTime.now());
+        eventId: nanoid(10), stickerId: stickerId, doorbellId: doorbellId, eventType: eventType, dateTime: DateTime.now(), voip: {});
   }
 
-  static DoorbellEvent fromMap(Map s) {
-    return DoorbellEvent.fromMapAndId(s['d'], s['i'], s);
+  static DoorbellEvent? fromMap(Map s) {
+    if (s['t'] != null) return DoorbellEvent.fromMapAndId(s['d'], s['i'], s);
+    return null;
   }
 
   static DoorbellEvent fromMapAndDoorbellId(String doorbellId, Map s) => DoorbellEvent.fromMapAndId(doorbellId, s['i'], s);
@@ -30,44 +62,57 @@ class DoorbellEvent implements Comparable<DoorbellEvent> {
   static DoorbellEvent fromMapAndId(String doorbellId, String eventId, Map s) {
     if (s['t'] == DoorbellEventType.textMessage.typeCode) {
       return TextMessageDoorbellEvent._(
-          eventId: eventId,
-          doorbellId: doorbellId,
-          stickerId: s['s'],
-          textMessage: s['txt'],
-          dateTime: DateTime.fromMillisecondsSinceEpoch(s['ts']));
+        eventId: eventId,
+        doorbellId: doorbellId,
+        stickerId: s['s'] ?? "",
+        textMessage: s['txt'] ?? "",
+        dateTime: DateTime.fromMillisecondsSinceEpoch(s['ts']),
+        voip: s['voip'],
+      );
     }
 
     if (s['t'] == DoorbellEventType.voiceMessage.typeCode) {
       return VoiceMessageDoorbellEvent._(
-          eventId: eventId,
-          doorbellId: doorbellId,
-          stickerId: s['s'],
-          recordingLink: s['rec'],
-          dateTime: DateTime.fromMillisecondsSinceEpoch(s['ts']));
+        eventId: eventId,
+        doorbellId: doorbellId,
+        stickerId: s['s'] ?? "",
+        recordingLink: s['rec'] ?? "",
+        dateTime: DateTime.fromMillisecondsSinceEpoch(s['ts']),
+        voip: s['voip'],
+      );
     }
 
     return DoorbellEvent._(
-        eventId: eventId,
-        doorbellId: doorbellId,
-        stickerId: s['s'],
-        eventType: s['t'],
-        dateTime: DateTime.fromMillisecondsSinceEpoch(s['ts']));
+      eventId: eventId,
+      doorbellId: doorbellId,
+      stickerId: s['s'] ?? "",
+      eventType: s['t'] ?? "",
+      dateTime: DateTime.fromMillisecondsSinceEpoch(s['ts']),
+      voip: s['voip'],
+    );
   }
 
   static DoorbellEvent fromSnapshotAndDoorbellId(String doorbellId, DataSnapshot snapshot) {
     final s = Map.of(snapshot.value as dynamic);
     return DoorbellEvent._(
-        eventId: s['i'],
-        doorbellId: doorbellId,
-        stickerId: s['s'],
-        eventType: s['t'],
-        dateTime: DateTime.fromMillisecondsSinceEpoch(s['ts']));
+      eventId: s['i'],
+      doorbellId: doorbellId,
+      stickerId: s['s'],
+      eventType: s['t'],
+      dateTime: DateTime.fromMillisecondsSinceEpoch(s['ts']),
+      voip: s['voip'],
+    );
   }
 
   static DoorbellEvent fromSnapshot(DataSnapshot snapshot) {
     final s = Map.of(snapshot.value as dynamic);
     return DoorbellEvent._(
-        eventId: s['i'], doorbellId: s['d'], stickerId: s['s'], eventType: s['t'], dateTime: DateTime.fromMillisecondsSinceEpoch(s['ts']));
+        eventId: s['i'],
+        doorbellId: s['d'],
+        stickerId: s['s'],
+        eventType: s['t'],
+        dateTime: DateTime.fromMillisecondsSinceEpoch(s['ts']),
+        voip: s['voip']);
   }
 
   Map toMap() => {
@@ -76,6 +121,7 @@ class DoorbellEvent implements Comparable<DoorbellEvent> {
         's': stickerId,
         't': eventType,
         'ts': dateTime.millisecondsSinceEpoch,
+        'voip': voip,
       };
 
   factory DoorbellEvent.doorbell(String doorbellId, String stickerId, DateTime? dateTime) => DoorbellEvent._(
@@ -83,33 +129,38 @@ class DoorbellEvent implements Comparable<DoorbellEvent> {
       doorbellId: doorbellId,
       stickerId: stickerId,
       eventType: DoorbellEventType.doorbell.typeCode,
-      dateTime: dateTime ?? DateTime.now());
+      dateTime: dateTime ?? DateTime.now(),
+      voip: null);
   factory DoorbellEvent.missedCall(String doorbellId, String stickerId, DateTime? dateTime) => DoorbellEvent._(
       eventId: nanoid(10).toString(),
       doorbellId: doorbellId,
       stickerId: stickerId,
       eventType: DoorbellEventType.missedCall.typeCode,
-      dateTime: dateTime ?? DateTime.now());
+      dateTime: dateTime ?? DateTime.now(),
+      voip: null);
   factory DoorbellEvent.answeredCall(String doorbellId, String stickerId, DateTime? dateTime) => DoorbellEvent._(
       eventId: nanoid(10).toString(),
       doorbellId: doorbellId,
       stickerId: stickerId,
       eventType: DoorbellEventType.answeredCall.typeCode,
-      dateTime: dateTime ?? DateTime.now());
+      dateTime: dateTime ?? DateTime.now(),
+      voip: null);
   factory DoorbellEvent.textMessage(String doorbellId, String stickerId, DateTime? dateTime, String textMessage) =>
       TextMessageDoorbellEvent._(
           eventId: nanoid(10).toString(),
           doorbellId: doorbellId,
           stickerId: stickerId,
           dateTime: dateTime ?? DateTime.now(),
-          textMessage: textMessage);
+          textMessage: textMessage,
+          voip: null);
   factory DoorbellEvent.voiceMessage(String doorbellId, String stickerId, DateTime? dateTime, String recordingLink) =>
       VoiceMessageDoorbellEvent._(
           eventId: nanoid(10).toString(),
           doorbellId: doorbellId,
           stickerId: stickerId,
           recordingLink: recordingLink,
-          dateTime: dateTime ?? DateTime.now());
+          dateTime: dateTime ?? DateTime.now(),
+          voip: null);
 
   String get formattedDateTime {
     var now = DateTime.now();
@@ -253,6 +304,7 @@ class TextMessageDoorbellEvent extends DoorbellEvent {
     required super.stickerId,
     required super.dateTime,
     required this.textMessage,
+    required super.voip,
   }) : super._(eventType: DoorbellEventType.textMessage.typeCode);
 
   @override
@@ -268,6 +320,7 @@ class VoiceMessageDoorbellEvent extends DoorbellEvent {
     required super.stickerId,
     required super.dateTime,
     required this.recordingLink,
+    required super.voip,
   }) : super._(eventType: DoorbellEventType.voiceMessage.typeCode);
 
   @override
@@ -292,15 +345,15 @@ enum DoorbellEventType {
   static String? getString(int? typeCode) {
     switch (typeCode) {
       case 1:
-        return "Doorbell rings";
+        return "rings";
       case 2:
-        return "Missed call";
+        return "missed";
       case 3:
-        return "Answered call";
+        return "answered";
       case 4:
-        return "Text message";
+        return "text message";
       case 5:
-        return "Voice message";
+        return "voice message";
       case 0:
       default:
         return null;

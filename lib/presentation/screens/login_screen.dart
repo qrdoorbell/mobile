@@ -1,7 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fa;
+import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
+import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 
+import '../../app_options.dart';
 import '../../data.dart';
 import '../../routing/route_state.dart';
 
@@ -9,7 +12,12 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SignInScreen(
-      auth: FirebaseAuth.instance,
+      providers: [
+        EmailAuthProvider(),
+        AppleProvider(),
+        GoogleProvider(clientId: GOOGLE_CLIENT_ID),
+      ],
+      auth: fa.FirebaseAuth.instance,
       headerBuilder: (context, constr, _) =>
           Padding(padding: const EdgeInsets.only(top: 20), child: Image.asset('assets/logo-app-01_512.png')),
       actions: [
