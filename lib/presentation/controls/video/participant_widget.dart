@@ -163,11 +163,14 @@ abstract class _ParticipantWidgetState<T extends ParticipantWidget> extends Stat
                         const Spacer(),
                         CupertinoButton(
                             color: CupertinoColors.white.withOpacity(isCamEnabled ? 0.7 : 0.3),
-                            borderRadius: const BorderRadius.all(Radius.circular(55)),
+                            borderRadius: const BorderRadius.all(Radius.circular(110)),
                             padding: const EdgeInsets.all(20),
                             child: SvgPicture.asset(isCamEnabled ? 'assets/video.svg' : 'assets/video.slash.svg', width: 30, height: 30),
                             onPressed: () => setState(() {
                                   room?.localParticipant?.setCameraEnabled(!isCamEnabled);
+                                  if (room?.localParticipant?.isCameraEnabled() == true &&
+                                      room?.localParticipant?.isMicrophoneEnabled() == false)
+                                    room?.localParticipant?.setMicrophoneEnabled(true);
                                 })),
                         const Spacer(),
                         CupertinoButton(
