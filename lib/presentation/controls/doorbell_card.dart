@@ -98,7 +98,7 @@ class _DoorbellCardState extends State<DoorbellCard> {
                             Padding(
                                 padding: const EdgeInsets.only(right: 4),
                                 child: CircleAvatar(
-                                    backgroundColor: CupertinoColors.lightBackgroundGray,
+                                    backgroundColor: user.userColor,
                                     minRadius: 20,
                                     child: Text(user.userShortName ?? "--", textScaleFactor: 1))),
 

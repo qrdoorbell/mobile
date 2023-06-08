@@ -22,7 +22,7 @@ class ProfileScreen extends StatelessWidget {
           child: Column(children: [
             const Padding(padding: EdgeInsets.only(top: 80)),
             CircleAvatar(
-                backgroundColor: CupertinoColors.lightBackgroundGray,
+                backgroundColor: UserAccount.getColorFromDisplayName(user?.displayName),
                 minRadius: 60,
                 child: Text(UserAccount.getShortName(user), textScaleFactor: 2)),
             const Padding(padding: EdgeInsets.only(top: 20)),
