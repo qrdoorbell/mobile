@@ -112,6 +112,7 @@ class FirebaseDataStore extends DataStore {
       for (var user in doorbellUsers) {
         user.userDisplayName = displayNames[user.userId] ?? "";
         user.userShortName = UserAccount.getShortNameFromDisplayName(user.userDisplayName);
+        user.userColor = UserAccount.getColorFromDisplayName(user.userShortName!);
       }
     });
 

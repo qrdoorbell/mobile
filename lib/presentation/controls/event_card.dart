@@ -62,15 +62,17 @@ class EventCard extends StatelessWidget {
                               "Doorbell",
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                      Text(" ${event.formattedName}"),
+                      Text(' ${event.formattedStatus.toLowerCase()}'),
+                      // Text(" ${event.formattedName}"),
                     ],
                   ),
                   Padding(
                       padding: const EdgeInsets.only(top: 5),
                       child: Row(
                         children: [
-                          Text(event.formattedStatus),
-                          Text(event.getFormattedDuration('  ')),
+                          // Text(event.formattedStatus),
+                          // if (event.hasDuration) const Text(' ⦁ ', style: TextStyle(color: CupertinoColors.inactiveGray)),
+                          Text(event.formattedDuration),
                         ],
                       ))
                 ],
@@ -91,7 +93,7 @@ class EventCard extends StatelessWidget {
       case 1:
         return CupertinoIcons.bell;
       case 2:
-        return CupertinoIcons.phone;
+        return CupertinoIcons.phone_down_fill;
       case 3:
         return CupertinoIcons.phone;
       case 4:

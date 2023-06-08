@@ -1,5 +1,7 @@
+import 'package:collection/collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:quiver/strings.dart';
 
 class UserAccount {
@@ -97,6 +99,13 @@ class UserAccount {
     }
 
     return "--";
+  }
+
+  static Color getColorFromDisplayName(String? displayName) {
+    if (displayName == null || displayName.isEmpty || displayName.startsWith('-')) return CupertinoColors.lightBackgroundGray;
+
+    var h = hashIgnoreAsciiCase(displayName);
+    return Color.fromARGB(255, (h << 4) % 101 + 154, (h << 2) % 101 + 154, h % 101 + 154);
   }
 }
 

@@ -37,11 +37,15 @@ class DoorbellEvent implements Comparable<DoorbellEvent> {
     }
   }
 
-  String getFormattedDuration(String? prefix) {
-    if (voip?['duration'] != null && voip!['duration'] > 0) {
+  bool get hasDuration {
+    return voip?['duration'] != null && voip!['duration'] > 0;
+  }
+
+  String get formattedDuration {
+    if (hasDuration) {
       var duration = Duration(milliseconds: voip!['duration']);
-      if (duration.inSeconds < 60) return "${prefix ?? ""}${duration.inSeconds}s";
-      if (duration.inMinutes < 60) return "${prefix ?? ""}${duration.inMinutes}m";
+      if (duration.inSeconds < 60) return "${duration.inSeconds}s";
+      if (duration.inMinutes < 60) return "${duration.inMinutes}m";
     }
 
     return "";
