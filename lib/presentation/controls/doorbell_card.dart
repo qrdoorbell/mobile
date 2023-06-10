@@ -106,7 +106,7 @@ class _DoorbellCardState extends State<DoorbellCard> {
                           CupertinoSwitch(
                             onChanged: (bool value) async {
                               widget.doorbell.settings.enablePushNotifications = value;
-                              await DataStore.of(context).updateDoorbellSettings(widget.doorbell);
+                              DataStore.of(context).updateDoorbellSettings(widget.doorbell);
                               setState(() {});
                             },
                             value: widget.doorbell.settings.enablePushNotifications,
