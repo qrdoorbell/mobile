@@ -55,7 +55,8 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: release-ipa
-          path: build/ios/ipa/*.ipa
+          path: build/ios/*
+          # path: build/ios/ipa/*.ipa
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # - name: Upload IPA assets

@@ -65,7 +65,7 @@ Future<void> main() async {
     ]);
   }
 
-  FirebaseDatabase.instance.setPersistenceEnabled(false);
+  FirebaseDatabase.instance.setPersistenceEnabled(true);
   // FirebaseDatabase.instance.setLoggingEnabled(true);
 
   if (NEWRELIC_APP_TOKEN.isNotEmpty)
