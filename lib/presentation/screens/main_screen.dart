@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:livekit_client/livekit_client.dart';
+import 'package:qrdoorbell_mobile/presentation/screens/empty_screen.dart';
 
 import '../../data.dart';
 import '../../routing/route_state.dart';
@@ -19,6 +22,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   late final CupertinoTabController _tabController;
+  bool isBusy = false;
 
   @override
   void initState() {
@@ -28,6 +32,18 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var routeState = RouteStateScope.of(context);
+    if (routeState.data?['refresh'] != null && routeState.data?['refresh'] == true) {
+      isBusy = true;
+      DataStore.of(context).reloadData(true);
+      Timer(const Duration(seconds: 1), () {
+        setState(() => isBusy = false);
+        routeState.go('/doorbells');
+      });
+    }
+
+    if (isBusy) return EmptyScreen.white().withWaitingIndicator();
+
     return CupertinoTabScaffold(
       controller: _tabController,
       backgroundColor: Colors.white,
@@ -61,14 +77,22 @@ class _MainScreenState extends State<MainScreen> {
               child: const Icon(CupertinoIcons.add),
               onPressed: () async {
                 final dataStore = DataStore.of(context);
-                if (dataStore.doorbells.length >= 5) {
+                if (dataStore.doorbells.items.length >= 5) {
                   _showAlert(context);
                   return;
                 }
 
+                setState(() {
+                  isBusy = true;
+                });
+
                 final routeState = RouteStateScope.of(context);
                 final newDoorbell = await dataStore.createDoorbell();
-                await routeState.go('/doorbells/${newDoorbell.doorbellId}');
+
+                routeState.go('/doorbells/${newDoorbell.doorbellId}');
+                setState(() {
+                  isBusy = false;
+                });
               });
         } else if (index == 1) {
           tabWidget = const EventList();
@@ -99,8 +123,13 @@ class _MainScreenState extends State<MainScreen> {
                         ),
                         CupertinoSliverRefreshControl(
                           onRefresh: () async {
-                            await DataStore.of(context).reloadData(force: true);
-                            setState(() {});
+                            setState(() {
+                              isBusy = true;
+                            });
+                            await DataStore.of(context).reloadData(true);
+                            setState(() {
+                              isBusy = false;
+                            });
                           },
                         ),
                         tabWidget,

@@ -59,17 +59,14 @@ Future<void> main() async {
     };
 
     FirebaseUIAuth.configureProviders([
-      EmailAuthProvider(),
+      // EmailAuthProvider(),
       AppleProvider(),
-      GoogleProvider(clientId: GOOGLE_CLIENT_ID),
+      // GoogleProvider(clientId: GOOGLE_CLIENT_ID),
     ]);
   }
 
-  if (USE_DATABASE_EMULATOR) FirebaseDatabase.instance.useDatabaseEmulator("127.0.0.1", 9041);
-  if (USE_AUTH_EMULATOR) await FirebaseAuth.instance.useAuthEmulator("127.0.0.1", 9042);
-
-  FirebaseDatabase.instance.setPersistenceEnabled(true);
-  FirebaseDatabase.instance.setLoggingEnabled(true);
+  FirebaseDatabase.instance.setPersistenceEnabled(false);
+  // FirebaseDatabase.instance.setLoggingEnabled(true);
 
   if (NEWRELIC_APP_TOKEN.isNotEmpty)
     NewrelicMobile.instance.start(NewRelicLogger.getConfig(NEWRELIC_APP_TOKEN), () {
