@@ -15,7 +15,7 @@ class RouteState extends ChangeNotifier {
   dynamic get data => _data;
 
   set route(ParsedRoute route) {
-    if (_route == route) return;
+    // if (_route == route) return;
 
     _route = route;
     notifyListeners();

@@ -1,13 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 
-import 'package:collection/collection.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:http/http.dart' show post;
 import 'package:logging/logging.dart';
-import 'package:nanoid/nanoid.dart';
+import 'package:qrdoorbell_mobile/app_options.dart';
 
 import '../../data.dart';
+import '../../tools.dart';
 import 'firebase_repositories.dart';
 
 class FirebaseDataStore extends DataStore {
@@ -15,38 +14,46 @@ class FirebaseDataStore extends DataStore {
 
   String? _uid;
   UserAccount? _currentUser;
-  Completer<bool> _reloadCompleter = Completer<bool>();
+  Completer<DataStore> _reloadCompleter = Completer<DataStore>();
   final FirebaseDatabase db;
-  final DoorbellEventsRepository _eventsRepository;
-  final DoorbellsRepository _doorbellsRepository;
-  final Map<String, List<DoorbellUser>> _doorbellUsersCache = {};
+  late final DoorbellEventsRepository _eventsRepository;
+  late final DoorbellUsersRepository _doorbellUsersRepository;
+  late final DoorbellsRepository _doorbellsRepository;
 
-  FirebaseDataStore(this.db)
-      : _eventsRepository = DoorbellEventsRepository(db),
-        _doorbellsRepository = DoorbellsRepository(db);
+  FirebaseDataStore(this.db) {
+    _reloadCompleter.complete(this);
+    _doorbellsRepository = DoorbellsRepository(db, this);
+    _eventsRepository = DoorbellEventsRepository(db, _doorbellsRepository);
+    _doorbellUsersRepository = DoorbellUsersRepository(db, _doorbellsRepository);
+  }
 
   @override
   Future<void> setUid(String? uid) async {
     logger.info("FirebaseDataStore.setUid: uid=$uid");
-    if (_uid != uid) await dispose();
-
-    _uid = uid;
-    await reloadData();
+    if (_uid != uid) {
+      _uid = uid;
+      await reloadData(true);
+    }
   }
 
   @override
-  Future<bool> get dataAvailable => _reloadCompleter.future;
+  Future<DataStore> isDataAvailable() => _reloadCompleter.future;
 
   @override
-  Future<void> reloadData({bool force = false}) async {
+  Future<void> reloadData(bool force) async {
     logger.fine("FirebaseDataStore.reloadData: force=$force, _uid=$_uid");
     logger.info("FirebaseDataStore.reloadData: Reloading data for user: userId='$_uid'");
-    try {
-      if (_currentUser == null || force) _currentUser = UserAccount.fromSnapshot(await db.ref('users/$_uid').get());
 
-      _subscribe();
-    } catch (error) {
-      logger.warning("FirebaseDataStore.reloadData: Unable to reload user data: uid=$_uid, force=$force", error);
+    if (!_reloadCompleter.isCompleted) {
+      logger.warning('Reload already in progress!');
+      await _reloadCompleter.future;
+      return;
+    }
+
+    await db.goOnline();
+
+    if (_currentUser == null || force) {
+      _currentUser = UserAccount.fromSnapshot(await db.ref('users/$_uid').get());
     }
 
     var doorbells = _currentUser?.doorbells ?? [];
@@ -54,106 +61,64 @@ class FirebaseDataStore extends DataStore {
 
     logger.finest('Doorbells to be loaded: $doorbells');
 
-    _reloadCompleter = Completer<bool>();
-    var sub = _doorbellsRepository.stream.listen((data) {
-      if (doorbells.every((x) => data.any((y) => y.doorbellId == x))) {
-        logger.finest('Doorbells loaded (${data.length}): $data');
-        _refreshDoorbellUsersCache().then((value) => {if (!_reloadCompleter.isCompleted) _reloadCompleter.complete(true)},
-            onError: (error) => {if (!_reloadCompleter.isCompleted) _reloadCompleter.completeError(error)});
-      }
-    });
-
+    _reloadCompleter = Completer<DataStore>();
+    notifyListeners();
     Future.delayed(
         const Duration(seconds: 30),
         () =>
             {if (!_reloadCompleter.isCompleted) _reloadCompleter.completeError(TimeoutException('Error loading data from DB - timeout'))});
 
-    await _reloadCompleter.future;
-    sub.cancel();
-  }
+    Future.wait([
+      _doorbellsRepository.reload().then((_) => Future.wait([
+            _doorbellUsersRepository.reload(),
+            _eventsRepository.reload(),
+          ])),
+    ]).then((_) => _reloadCompleter.complete(this));
 
-  void _subscribe() {
-    logger.fine("FirebaseDataStore._subscribe: _uid=$_uid");
-    if (_uid == null) {
-      return;
-    }
+    await _reloadCompleter.future.timeout(const Duration(seconds: 30));
+    await db.goOffline();
 
-    for (var doorbellId in _currentUser!.doorbells) {
-      _doorbellsRepository.subscribeTo(doorbellId);
-      _eventsRepository.subscribeTo(doorbellId);
-    }
-  }
-
-  Future<void> _refreshDoorbellUsersCache() async {
-    logger.fine('Cleanup DoorbellUsers cache');
-    _doorbellUsersCache.clear();
-
-    for (var doorbellId in _currentUser!.doorbells) {
-      var records = await db.ref('doorbell-users/$doorbellId').get();
-      _doorbellUsersCache[doorbellId] = <DoorbellUser>[
-        ...records.children
-            .where((x) => x.key != null && x.value != null && (x.value is Map) && (x.value as Map)['role'] != null)
-            .map((x) => DoorbellUser(doorbellId: doorbellId, userId: x.key!, role: (x.value as Map)['role']))
-      ];
-    }
-
-    var displayNames = {};
-    var uids = _doorbellUsersCache.values.map((x) => x.map((e) => e.userId)).flattened.toSet();
-    var dataLoaders = Map.fromEntries(
-        uids.map((uid) => MapEntry(uid, db.ref('users/$uid/displayName').get().then((v) => displayNames[uid] = v.value?.toString()))));
-
-    logger.fine('Loading user display names from DB');
-    if (logger.isLoggable(Level.FINEST)) logger.finest('User ids: $uids');
-
-    await Future.wait(dataLoaders.values);
-
-    logger.finest('Update DoorbellUsers cache');
-    _doorbellUsersCache.forEach((doorbellId, doorbellUsers) {
-      for (var user in doorbellUsers) {
-        user.userDisplayName = displayNames[user.userId] ?? "";
-        user.userShortName = UserAccount.getShortNameFromDisplayName(user.userDisplayName);
-        user.userColor = UserAccount.getColorFromDisplayName(user.userShortName!);
-      }
-    });
-
-    logger.fine('DoorbellUsers cache reload complete!');
+    logger.info('Firebase DataStore reload complete!');
   }
 
   @override
   UserAccount? get currentUser => _currentUser;
 
   @override
-  List<Doorbell> get doorbells => _doorbellsRepository.snapshot;
+  DoorbellsRepository get doorbells => _doorbellsRepository;
 
   @override
-  Stream<List<Doorbell>> get doorbellsStream => _doorbellsRepository.stream;
+  DoorbellEventsRepository get doorbellEvents => _eventsRepository;
 
   @override
-  List<DoorbellEvent> get doorbellEvents => _eventsRepository.snapshot;
+  DoorbellUsersRepository get doorbellUsers => _doorbellUsersRepository;
 
   @override
-  Stream<List<DoorbellEvent>> get doorbellEventsStream => _eventsRepository.stream;
-
-  @override
-  void addDoorbellEvent(int eventType, String doorbellId, String stickerId) {
-    _eventsRepository.addValues([DoorbellEvent.create(eventType, doorbellId, stickerId)]);
-  }
+  Iterable<DoorbellUser> getDoorbellUsers(String doorbellId) =>
+      _doorbellUsersRepository.items.where((x) => x.doorbellId == doorbellId).toList();
 
   @override
   Future<void> dispose() async {
     logger.info("Firebase DataStore dispose");
-    _currentUser = null;
     await _doorbellsRepository.dispose();
     await _eventsRepository.dispose();
+    await _doorbellUsersRepository.dispose();
+    _currentUser = null;
   }
 
   @override
   Future<Doorbell> createDoorbell([String name = '']) async {
-    if (name.isEmpty) name = "My ${_digitName(_doorbellsRepository.snapshot.length + 1)} doorbell";
+    logger.info("Create Doorbell: name='$name'");
 
-    final doorbell = Doorbell(nanoid(10), name);
+    var resp = await HttpUtils.securePost(Uri.parse('$QRDOORBELL_API_URL/api/v1/doorbells/create'), body: {'doorbellName': name});
+    if (resp.statusCode != 200) {
+      logger.warning('Failed to accept Doorbell Invite - API returned an error: ${resp.body}');
+      throw AssertionError('Failed to remove Doorbell - API returned an error: ${resp.body}');
+    }
 
-    await _doorbellsRepository.create(doorbell);
+    var doorbell = Doorbell.fromMap(json.decode(resp.body));
+    doorbells.add(doorbell);
+
     return doorbell;
   }
 
@@ -170,7 +135,16 @@ class FirebaseDataStore extends DataStore {
 
   @override
   Future<void> removeDoorbell(Doorbell doorbell) async {
-    await _doorbellsRepository.remove(doorbell);
+    logger.info("Remove Doorbell: doorbellId='${doorbell.doorbellId}'");
+
+    var resp =
+        await HttpUtils.securePost(Uri.parse('$QRDOORBELL_API_URL/api/v1/doorbells/remove'), body: {'doorbellId': doorbell.doorbellId});
+    if (resp.statusCode != 200) {
+      logger.warning('Failed to accept Doorbell Invite - API returned an error: ${resp.body}');
+      throw AssertionError('Failed to remove Doorbell - API returned an error: ${resp.body}');
+    }
+
+    await reloadData(true);
   }
 
   @override
@@ -189,49 +163,18 @@ class FirebaseDataStore extends DataStore {
   Future<String> acceptInvite(String inviteId) async {
     logger.info("Accept Doorbell invite: id='$inviteId'");
 
-    var jwtToken = await FirebaseAuth.instance.currentUser?.getIdToken();
-    if (jwtToken == null) throw AssertionError('Cannot get JWT token');
-
-    var resp = await post(Uri.https('j.qrdoorbell.io', '/invite/accept/$inviteId'), headers: {'Authorization': 'Bearer $jwtToken'});
+    var resp = await HttpUtils.securePost(Uri.parse('$QRDOORBELL_INVITE_API_URL/invite/accept/$inviteId'));
     if (resp.statusCode != 200) {
       logger.warning('Failed to accept Doorbell Invite - API returned an error: ${resp.body}');
       throw AssertionError('Failed to accept Doorbell Invite - API returned an error: ${resp.body}');
     }
 
-    await reloadData(force: true);
+    await reloadData(true);
     return resp.body; // doorbellId
   }
 
   @override
   Future<void> saveInvite(Invite invite) async {
     await db.ref('invites/${invite.id}').set(invite.toMap());
-  }
-
-  @override
-  List<DoorbellUser> getDoorbellUsers(String doorbellId) => _doorbellUsersCache[doorbellId] ?? [];
-}
-
-String? _digitName(int n) {
-  switch (n) {
-    case 1:
-      return 'first';
-    case 2:
-      return 'second';
-    case 3:
-      return 'third';
-    case 4:
-      return 'fourth';
-    case 5:
-      return 'fifth';
-    case 6:
-      return 'sixth';
-    case 7:
-      return 'sevenths';
-    case 8:
-      return 'eights';
-    case 9:
-      return 'nines';
-    default:
-      return null;
   }
 }

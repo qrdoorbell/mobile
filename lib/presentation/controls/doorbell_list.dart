@@ -1,9 +1,9 @@
 import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import '../../data.dart';
 import 'doorbell_card.dart';
 
-class DoorbellList extends StatelessWidget {
+class DoorbellList extends StatefulWidget {
   final DoorbellCallback onTapHandler;
 
   const DoorbellList({
@@ -12,27 +12,24 @@ class DoorbellList extends StatelessWidget {
   });
 
   @override
+  State<DoorbellList> createState() => DoorbellListState();
+}
+
+class DoorbellListState extends State<DoorbellList> {
+  @override
   Widget build(BuildContext context) {
     final dataStore = DataStore.of(context);
-    return FutureBuilder(
-      future: dataStore.dataAvailable,
-      builder: (context, snapshot) {
-        var data = DataStore.of(context).doorbells
-          ..sortByCompare((x) => x, (a, b) {
-            if (a.lastEvent != null && b.lastEvent != null) return b.lastEvent!.dateTime.isAfter(a.lastEvent!.dateTime) ? 1 : -1;
-            return a.name.compareTo(b.name);
-          });
-        return SliverList(
-            delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) => DoorbellCard(
-                      doorbell: data[index],
-                      announce: data[index].lastEvent != null
-                          ? "${data[index].lastEvent!.formattedName} ${data[index].lastEvent!.formattedDateTimeSingleLine}"
-                          : 'No events',
-                      onTapHandler: onTapHandler,
-                    ),
-                childCount: data.length));
-      },
-    );
+    var data = dataStore.doorbells.items.sortedByCompare((x) => x, (a, b) {
+      if (a.lastEvent != null && b.lastEvent != null) return b.lastEvent!.dateTime.isAfter(a.lastEvent!.dateTime) ? 1 : -1;
+      return a.name.compareTo(b.name);
+    });
+    return SliverList.list(
+        children: data
+            .map((x) => DoorbellCard(
+                  doorbell: x,
+                  announce: x.lastEvent != null ? "${x.lastEvent!.formattedName} ${x.lastEvent!.formattedDateTimeSingleLine}" : 'No events',
+                  onTapHandler: widget.onTapHandler,
+                ))
+            .toList());
   }
 }

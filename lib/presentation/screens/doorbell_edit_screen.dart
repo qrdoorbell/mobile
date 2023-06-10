@@ -329,8 +329,10 @@ class _DoorbellEditScreenState extends State<DoorbellEditScreen> {
               ),
               onPressed: () async {
                 final route = RouteStateScope.of(context);
-                await DataStore.of(context).removeDoorbell(doorbell);
-                route.go('/doorbells');
+                final dataStore = DataStore.of(context);
+
+                route.go('/doorbells', data: {"refresh": true});
+                await dataStore.removeDoorbell(doorbell);
               },
             ),
           ],

@@ -1,11 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' show get;
 import 'package:logging/logging.dart';
+import 'package:qrdoorbell_mobile/app_options.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../data.dart';
+import '../../tools.dart';
 import '../controls/event_list.dart';
 import '../controls/sticker_card.dart';
 
@@ -35,7 +36,7 @@ class DoorbellScreen extends StatelessWidget {
 
     FloatingActionButton? floatButton;
 
-    if (dataStore.doorbellEvents.any((x) => x.doorbellId == doorbellId)) {
+    if (dataStore.doorbellEvents.items.any((x) => x.doorbellId == doorbellId)) {
       floatButton = FloatingActionButton(onPressed: () => _onShareDoorbell(dataStore, doorbell), child: const Icon(CupertinoIcons.share));
     }
 
@@ -135,7 +136,7 @@ class DoorbellScreen extends StatelessWidget {
     print('Invite created: inviteId=$invite.id');
 
     try {
-      var message = "Please follow the link to join '${doorbell.name}': https://j.qrdoorbell.io/invite/accept/${invite.id}";
+      var message = "$QRDOORBELL_INVITE_API_URL/invite/accept/${invite.id}";
       await Share.share(message, subject: "Share ${doorbell.name}");
       await dataStore.saveInvite(invite);
     } catch (error) {
@@ -146,10 +147,9 @@ class DoorbellScreen extends StatelessWidget {
   Future<void> _printSticker(Doorbell doorbell) async {
     print("PRINT DOORBELL STICKER: $doorbellId");
 
-    final uri = Uri.https('api.qrdoorbell.io', '/api/v1/qr/$doorbellId');
-    final imgResp = await get(uri);
+    var imgResp = await HttpUtils.secureGet(Uri.parse('$QRDOORBELL_API_URL/api/v1/doorbells/$doorbellId/qr/'));
     if (imgResp.statusCode != 200) {
-      print('ERROR: unable to download image: uri=$uri, responseCode=${imgResp.statusCode}');
+      print('ERROR: unable to download image: responseCode=${imgResp.statusCode}');
       return;
     }
 
