@@ -18,7 +18,7 @@ import 'package:logging/logging.dart';
 import 'package:newrelic_mobile/newrelic_mobile.dart';
 import 'package:uni_links/uni_links.dart';
 
-import 'services/newrelic_logger.dart';
+// import 'services/newrelic_logger.dart';
 import 'services/db/firebase_data_store.dart';
 import 'services/callkit_service.dart';
 import 'routing.dart';
@@ -36,8 +36,9 @@ Future<void> main() async {
   Logger.root.onRecord.listen((record) {
     print('${format.format(record.time)}: ${record.message}');
 
-    if (record.level >= Level.FINE)
+    if (USE_CRASHALYTICS_LOGS && record.level >= Level.FINE) {
       FirebaseCrashlytics.instance.log('[${record.level.toString()}] ${format.format(record.time)}: ${record.message}');
+    }
   });
 
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,34 +47,36 @@ Future<void> main() async {
 
   FlutterError.onError = (errorDetails) {
     logger.shout("FlutterError.onError:", errorDetails);
-    NewrelicMobile.instance.recordError(errorDetails, errorDetails.stack);
-    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+    if (NEWRELIC_APP_TOKEN.isNotEmpty) NewrelicMobile.instance.recordError(errorDetails, errorDetails.stack);
+    if (USE_CRASHALYTICS == true) FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
   };
 
-  if (USE_CRASHALYTICS) {
-    PlatformDispatcher.instance.onError = (error, stack) {
-      logger.shout("PlatformDispatcher.instance.onError:", error, stack);
-      NewrelicMobile.instance.recordError(error, stack);
-      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-      return true;
-    };
+  PlatformDispatcher.instance.onError = (error, stack) {
+    logger.shout("PlatformDispatcher.instance.onError:", error, stack);
+    if (USE_CRASHALYTICS) FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
 
-    FirebaseUIAuth.configureProviders([
-      // EmailAuthProvider(),
-      AppleProvider(),
-      // GoogleProvider(clientId: GOOGLE_CLIENT_ID),
-    ]);
-  }
+    if (NEWRELIC_APP_TOKEN.isNotEmpty) NewrelicMobile.instance.recordError(error, stack);
+
+    return true;
+  };
+
+  FirebaseUIAuth.configureProviders([
+    EmailAuthProvider(),
+    AppleProvider(),
+    GoogleProvider(clientId: GOOGLE_CLIENT_ID),
+  ]);
 
   FirebaseDatabase.instance.setPersistenceEnabled(true);
   // FirebaseDatabase.instance.setLoggingEnabled(true);
 
-  if (NEWRELIC_APP_TOKEN.isNotEmpty)
-    NewrelicMobile.instance.start(NewRelicLogger.getConfig(NEWRELIC_APP_TOKEN), () {
-      runApp(const QRDoorbellApp());
-    });
-  else
-    runApp(const QRDoorbellApp());
+  runApp(const QRDoorbellApp());
+
+  // if (NEWRELIC_APP_TOKEN.isNotEmpty)
+  //   NewrelicMobile.instance.start(NewRelicLogger.getConfig(NEWRELIC_APP_TOKEN), () {
+  //     runApp(const QRDoorbellApp());
+  //   });
+  // else
+  //   runApp(const QRDoorbellApp());
 }
 
 @pragma('vm:entry-point')
@@ -182,8 +185,10 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
     FirebaseAuth.instance.authStateChanges().listen(_handleAuthStateChanged);
     Connectivity().onConnectivityChanged.listen(_handleConnectionStateChanged);
 
-    _handleIncomingLinks();
-    _handleInitialUri();
+    if (FirebaseAuth.instance.currentUser != null) {
+      _handleIncomingLinks();
+      _handleInitialUri();
+    }
 
     super.initState();
   }
@@ -242,13 +247,18 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
     logger.info("Connection state changed: state=$state");
   }
 
-  Future<void> _handleFcmTokenChanged(String uid, String? token) async {
-    token ??= await FirebaseMessaging.instance.getToken();
+  Future<void> _handleFcmTokenChanged(String uid, String token) async {
     await FirebaseDatabase.instance.ref("user-fcms/$uid/$token").set(true);
   }
 
   Future<void> _updateVoipToken(String uid) async {
-    var token = await _callKitService.getVoipPushToken();
+    String token = '';
+    try {
+      token = await _callKitService.getVoipPushToken();
+    } catch (e) {
+      logger.shout('An error occured while getting VoIP token', e);
+    }
+
     if (token.isEmpty) {
       logger.warning('Cannot get VoIP token: uid=$uid');
       return;
@@ -264,7 +274,6 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
 
   Future<void> _handleAuthStateChanged(User? user) async {
     FirebaseCrashlytics.instance.setUserIdentifier(user?.uid ?? "");
-    await NewrelicMobile.instance.setUserId(user?.uid ?? "");
 
     if (user == null) {
       _routeState.go('/login');
@@ -273,8 +282,11 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
 
     await _updateVoipToken(user.uid);
 
-    var token = await FirebaseMessaging.instance.getToken();
-    await _handleFcmTokenChanged(user.uid, token);
+    try {
+      await _handleFcmTokenChanged(user.uid, (await FirebaseMessaging.instance.getToken())!);
+    } catch (e) {
+      logger.shout('An error occured while getting FCM token', e);
+    }
   }
 
   Future<void> _handleRemoteMessage(RemoteMessage? message) async {
