@@ -49,7 +49,7 @@ jobs:
       - name: Build
         run: |
           flutter pub get
-          xcodebuild -workspace ios/Runner.xcworkspace -allowProvisioningUpdates -exportArchive -allowProvisioningDeviceRegistration
+          xcodebuild -workspace ios/Runner.xcworkspace -allowProvisioningUpdates -exportArchive -allowProvisioningDeviceRegistration -archivePath build/ios/archive
           flutter build ipa --release --dart-define=USE_CRASHALYTICS=true --dart-define=NEWRELIC_APP_TOKEN=eu01xx79f98fc731cd7778b793ed8af8a632bce3d0-NRMA --dart-define=GOOGLE_CLIENT_ID=AIzaSyBVBruJnxt4zW0Eqlg7JtLVvotnSSiz8UI
       # Collect the file and upload as artifact         
       - name: Upload IPA artifacts
