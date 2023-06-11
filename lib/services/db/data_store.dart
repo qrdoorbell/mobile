@@ -49,6 +49,7 @@ abstract class DataStore extends ChangeNotifier {
   Future<DataStore> isDataAvailable();
   Future<void> reloadData(bool force);
 
+  @override
   Future<void> dispose();
 
   static DataStore of(BuildContext context) => context.dependOnInheritedWidgetOfExactType<DataStoreStateScope>()!.notifier!.dataStore;
@@ -99,14 +100,6 @@ class DataStoreState extends ChangeNotifier {
       notifyListeners();
     }
   }
-}
-
-class DataStoreRepositoryState<T> extends InheritedNotifier<DataStoreRepository<T>> {
-  const DataStoreRepositoryState({
-    required super.notifier,
-    required super.child,
-    super.key,
-  });
 }
 
 class DataStoreStateScope extends InheritedNotifier<DataStoreState> {

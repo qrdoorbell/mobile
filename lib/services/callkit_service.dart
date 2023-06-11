@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_callkeep/flutter_callkeep.dart';
 import 'package:logging/logging.dart';
 import 'package:newrelic_mobile/newrelic_mobile.dart';
+import 'package:qrdoorbell_mobile/app_options.dart';
 import 'package:uuid/uuid.dart';
 
 import '../routing/route_state.dart';
@@ -25,9 +26,11 @@ class CallKitService extends ChangeNotifier {
     logger.info('End Call: doorbellId=$doorbellId; callId=${_doorbellCalls[doorbellId]}');
     if (_doorbellCalls.containsKey(doorbellId)) {
       await CallKeep.instance.endCall(_doorbellCalls[doorbellId]!);
-      await NewrelicMobile.instance
-          .recordCustomEvent('EndCall', eventAttributes: {"doorbellId": doorbellId, "callUuid": _doorbellCalls[doorbellId]});
       _doorbellCalls.remove(doorbellId);
+
+      if (NEWRELIC_APP_TOKEN.isNotEmpty)
+        NewrelicMobile.instance
+            .recordCustomEvent('EndCall', eventAttributes: {"doorbellId": doorbellId, "callUuid": _doorbellCalls[doorbellId]});
     }
   }
 
@@ -36,8 +39,10 @@ class CallKitService extends ChangeNotifier {
     logger.fine(event);
     if (event?.type == null) return;
 
-    await NewrelicMobile.instance.recordCustomEvent(event!.type.name, eventAttributes: _getEventMetadata(event));
-    switch (event.type) {
+    if (NEWRELIC_APP_TOKEN.isNotEmpty)
+      NewrelicMobile.instance.recordCustomEvent(event!.type.name, eventAttributes: _getEventMetadata(event));
+
+    switch (event!.type) {
       case CallKeepEventType.callIncoming:
         // received an incoming call
         break;
@@ -103,7 +108,7 @@ class CallKitService extends ChangeNotifier {
       message.data['uuid'] = callId;
       _doorbellCalls[message.data['doorbellId']] = callId;
 
-      await NewrelicMobile.instance.recordCustomEvent('IncomingCall', eventAttributes: message.data);
+      if (NEWRELIC_APP_TOKEN.isNotEmpty) NewrelicMobile.instance.recordCustomEvent('IncomingCall', eventAttributes: message.data);
 
       await CallKeep.instance.displayIncomingCall(CallKeepIncomingConfig(
           uuid: callId,
