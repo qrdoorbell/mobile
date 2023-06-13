@@ -32,7 +32,12 @@ class FirebaseDataStore extends DataStore {
     logger.info("FirebaseDataStore.setUid: uid=$uid");
     if (_uid != uid) {
       _uid = uid;
-      await reloadData(true);
+
+      if (uid != null) {
+        await reloadData(true);
+      } else {
+        _clearData();
+      }
     }
   }
 
@@ -104,6 +109,8 @@ class FirebaseDataStore extends DataStore {
     await _eventsRepository.dispose();
     await _doorbellUsersRepository.dispose();
     _currentUser = null;
+
+    super.dispose();
   }
 
   @override
@@ -176,5 +183,12 @@ class FirebaseDataStore extends DataStore {
   @override
   Future<void> saveInvite(Invite invite) async {
     await db.ref('invites/${invite.id}').set(invite.toMap());
+  }
+
+  void _clearData() {
+    _doorbellUsersRepository.clear();
+    _eventsRepository.clear();
+    _doorbellUsersRepository.clear();
+    _currentUser = null;
   }
 }

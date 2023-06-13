@@ -15,6 +15,10 @@ abstract class FirebaseRepository<T> extends DataStoreRepository<T> {
   @override
   Future<void> reload();
 
+  void clear() {
+    _items.clear();
+  }
+
   @override
   Future<void> dispose() async {
     super.dispose();
