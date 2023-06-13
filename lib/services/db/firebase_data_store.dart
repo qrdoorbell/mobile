@@ -99,9 +99,7 @@ class FirebaseDataStore extends DataStore {
   DoorbellUsersRepository get doorbellUsers => _doorbellUsersRepository;
 
   @override
-  Iterable<DoorbellUser> getDoorbellUsers(String doorbellId) =>
-      _doorbellUsersRepository.items.where((x) => x.doorbellId == doorbellId).toList();
-
+  Iterable<DoorbellUser> getDoorbellUsers(String doorbellId) => _doorbellUsersRepository.getDoorbellUsers(doorbellId);
   @override
   Future<void> dispose() async {
     logger.info("Firebase DataStore dispose");

@@ -71,7 +71,11 @@ class DoorbellEventsRepository extends FirebaseRepository<DoorbellEvent> {
   final FirebaseDatabase db;
   final DoorbellsRepository doorbellsRepository;
 
-  DoorbellEventsRepository(this.db, this.doorbellsRepository);
+  DoorbellEventsRepository(this.db, this.doorbellsRepository) {
+    doorbellsRepository.addListener(() {
+      notifyListeners();
+    });
+  }
 
   @override
   Future<void> reload() async {
@@ -92,7 +96,13 @@ class DoorbellUsersRepository extends FirebaseRepository<DoorbellUser> {
   final FirebaseDatabase db;
   final DoorbellsRepository doorbellsRepository;
 
-  DoorbellUsersRepository(this.db, this.doorbellsRepository);
+  DoorbellUsersRepository(this.db, this.doorbellsRepository) {
+    doorbellsRepository.addListener(() {
+      notifyListeners();
+    });
+  }
+
+  Iterable<DoorbellUser> getDoorbellUsers(String doorbellId) => _items.where((x) => x.doorbellId == doorbellId).toList();
 
   @override
   Future<void> reload() async {

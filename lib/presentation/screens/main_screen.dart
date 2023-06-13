@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:livekit_client/livekit_client.dart';
-import 'package:qrdoorbell_mobile/presentation/screens/empty_screen.dart';
 
 import '../../data.dart';
 import '../../routing/route_state.dart';
@@ -22,7 +21,6 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   late final CupertinoTabController _tabController;
-  bool isBusy = false;
 
   @override
   void initState() {
@@ -32,18 +30,6 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var routeState = RouteStateScope.of(context);
-    if (routeState.data?['refresh'] != null && routeState.data?['refresh'] == true) {
-      isBusy = true;
-      DataStore.of(context).reloadData(true);
-      Timer(const Duration(seconds: 1), () {
-        setState(() => isBusy = false);
-        routeState.go('/doorbells');
-      });
-    }
-
-    if (isBusy) return EmptyScreen.white().withWaitingIndicator();
-
     return CupertinoTabScaffold(
       controller: _tabController,
       backgroundColor: Colors.white,
@@ -73,7 +59,7 @@ class _MainScreenState extends State<MainScreen> {
             onTapHandler: (Doorbell doorbell) async => await RouteStateScope.of(context).go('/doorbells/${doorbell.doorbellId}'),
           );
           title = 'Doorbells';
-          floatButton = FloatingActionButton(onPressed: _onNewDoorbellNeeded, child: const Icon(CupertinoIcons.add));
+          floatButton = FloatingActionButton(onPressed: _createDoorbellHandler, child: const Icon(CupertinoIcons.add));
         } else if (index == 1) {
           tabWidget = const EventList();
           title = 'Events';
@@ -111,33 +97,21 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Future<void> _onRefreshNeeded() async {
-    setState(() {
-      isBusy = true;
-    });
     await DataStore.of(context).reloadData(true);
-    setState(() {
-      isBusy = false;
-    });
   }
 
-  Future<void> _onNewDoorbellNeeded() async {
+  Future<void> _createDoorbellHandler() async {
     final dataStore = DataStore.of(context);
     if (dataStore.doorbells.items.length >= 5) {
       _showAlert(context);
       return;
     }
 
-    setState(() {
-      isBusy = true;
-    });
-
     final routeState = RouteStateScope.of(context);
     final newDoorbell = await dataStore.createDoorbell();
 
     routeState.go('/doorbells/${newDoorbell.doorbellId}');
-    setState(() {
-      isBusy = false;
-    });
+    // routeState.go('/reload', data: {"url": '/doorbells/${newDoorbell.doorbellId}'});
   }
 
   void _handleTabIndexChanged() {

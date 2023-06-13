@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qrdoorbell_mobile/presentation/screens/empty_screen.dart';
 
 import '../presentation/screens/doorbell_edit_screen.dart';
 import '../presentation/screens/doorbell_screen.dart';
@@ -8,6 +9,7 @@ import '../presentation/screens/main_screen.dart';
 import '../presentation/screens/qrcode_screen.dart';
 import '../presentation/screens/call_screen.dart';
 import '../routing.dart';
+import '../services/db/data_store.dart';
 import '../widgets/fade_transition_page.dart';
 
 class AppNavigator extends StatefulWidget {
@@ -22,7 +24,6 @@ class _AppNavigatorState extends State<AppNavigator> {
   final _signInKey = const ValueKey('Sign in');
   final _scaffoldKey = const ValueKey('App scaffold');
   final _doorbellDetailsKey = const ValueKey('Doorbell details screen');
-  final _doorbellEditKey = const ValueKey('Doorbell edit screen');
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +34,10 @@ class _AppNavigatorState extends State<AppNavigator> {
     var callAccessToken = routeState.route.parameters['accessToken'];
     var inviteId = routeState.route.parameters['inviteId'];
 
+    if (routeState.data?['refresh'] != null) {
+      DataStore.of(context).reloadData(true);
+    }
+
     return Navigator(
       key: widget.navigatorKey,
       onPopPage: (route, dynamic result) {
@@ -40,10 +45,6 @@ class _AppNavigatorState extends State<AppNavigator> {
         if (route.settings is Page && (route.settings as Page).key == _doorbellDetailsKey) {
           routeState.go('/doorbells');
         }
-
-        // if (route.settings is Page && (route.settings as Page).key == _stickerDetailsKey) {
-        //   routeState.go('/authors');
-        // }
 
         return route.didPop(result);
       },
@@ -55,6 +56,20 @@ class _AppNavigatorState extends State<AppNavigator> {
             key: _scaffoldKey,
             child: const MainScreen(),
           ),
+          if (pathTemplate == '/reload')
+            FadeTransitionPage<void>(
+              key: _scaffoldKey,
+              child: const MainScreen(),
+            ),
+          // MaterialPage(
+          //   key: _scaffoldKey,
+          //   child: FutureBuilder(
+          //       future: DataStore.of(context).reloadData(true),
+          //       builder: (context, snapshot) {
+          //         if (snapshot.hasData) routeState.go(routeState.data?['url'] != null ? routeState.data['url'] : '/doorbells');
+          //         return EmptyScreen.white().withWaitingIndicator();
+          //       }),
+          // ),
           if (pathTemplate == '/doorbells/:doorbellId' && doorbellId != null)
             MaterialPage(
               key: _doorbellDetailsKey,
@@ -62,49 +77,40 @@ class _AppNavigatorState extends State<AppNavigator> {
             ),
           if (pathTemplate == '/doorbells/:doorbellId/qr' && doorbellId != null)
             MaterialPage(
-              key: _doorbellEditKey,
+              key: _doorbellDetailsKey,
               fullscreenDialog: true,
               child: QRCodeScreen(doorbellId: doorbellId),
             ),
           if (pathTemplate == '/doorbells/:doorbellId/edit' && doorbellId != null)
             MaterialPage(
-              key: _doorbellEditKey,
+              key: _doorbellDetailsKey,
               fullscreenDialog: true,
               child: DoorbellEditScreen(doorbellId: doorbellId),
             ),
           if (pathTemplate == '/doorbells/:doorbellId/ring/:accessToken' && callAccessToken != null && doorbellId != null)
             MaterialPage(
-              key: _doorbellEditKey,
+              key: _doorbellDetailsKey,
               fullscreenDialog: true,
               child: CallScreen(accessToken: callAccessToken, doorbellId: doorbellId),
             ),
           if (pathTemplate == '/doorbells/:doorbellId/join/:accessToken' && callAccessToken != null && doorbellId != null)
             MaterialPage(
-              key: _doorbellEditKey,
+              key: _doorbellDetailsKey,
               fullscreenDialog: true,
               child: CallScreen(accessToken: callAccessToken, doorbellId: doorbellId),
             ),
           if (pathTemplate == '/invite/accept/:inviteId' && inviteId != null)
             MaterialPage(
+              key: _scaffoldKey,
               fullscreenDialog: true,
               child: InviteAcceptedScreen(inviteId: inviteId),
             ),
-          // Add an additional page to the stack if the user is viewing a book
-          // or an author
-          // if (selectedDoorbell != null)
-          //   MaterialPage<void>(
-          //     key: _doorbellDetailsKey,
-          //     child: MainScreen(
-          //       book: selectedBook,
-          //     ),
-          //   )
-          // else if (selectedAuthor != null)
-          //   MaterialPage<void>(
-          //     key: _stickerDetailsKey,
-          //     child: AuthorDetailsScreen(
-          //       author: selectedAuthor,
-          //     ),
-          //   ),
+          if (pathTemplate == '/invite/accept/:inviteId' && inviteId != null)
+            MaterialPage(
+              key: _scaffoldKey,
+              fullscreenDialog: true,
+              child: InviteAcceptedScreen(inviteId: inviteId),
+            ),
         ],
       ],
     );
