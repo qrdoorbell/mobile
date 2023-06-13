@@ -73,27 +73,7 @@ class _MainScreenState extends State<MainScreen> {
             onTapHandler: (Doorbell doorbell) async => await RouteStateScope.of(context).go('/doorbells/${doorbell.doorbellId}'),
           );
           title = 'Doorbells';
-          floatButton = FloatingActionButton(
-              child: const Icon(CupertinoIcons.add),
-              onPressed: () async {
-                final dataStore = DataStore.of(context);
-                if (dataStore.doorbells.items.length >= 5) {
-                  _showAlert(context);
-                  return;
-                }
-
-                setState(() {
-                  isBusy = true;
-                });
-
-                final routeState = RouteStateScope.of(context);
-                final newDoorbell = await dataStore.createDoorbell();
-
-                routeState.go('/doorbells/${newDoorbell.doorbellId}');
-                setState(() {
-                  isBusy = false;
-                });
-              });
+          floatButton = FloatingActionButton(onPressed: _onNewDoorbellNeeded, child: const Icon(CupertinoIcons.add));
         } else if (index == 1) {
           tabWidget = const EventList();
           title = 'Events';
@@ -121,23 +101,43 @@ class _MainScreenState extends State<MainScreen> {
                           largeTitle: Text(title),
                           border: Border.all(width: 0, color: Colors.white),
                         ),
-                        CupertinoSliverRefreshControl(
-                          onRefresh: () async {
-                            setState(() {
-                              isBusy = true;
-                            });
-                            await DataStore.of(context).reloadData(true);
-                            setState(() {
-                              isBusy = false;
-                            });
-                          },
-                        ),
+                        CupertinoSliverRefreshControl(onRefresh: _onRefreshNeeded),
                         tabWidget,
                         const SliverPadding(padding: EdgeInsets.only(top: 70)),
                       ],
                     ))));
       },
     );
+  }
+
+  Future<void> _onRefreshNeeded() async {
+    setState(() {
+      isBusy = true;
+    });
+    await DataStore.of(context).reloadData(true);
+    setState(() {
+      isBusy = false;
+    });
+  }
+
+  Future<void> _onNewDoorbellNeeded() async {
+    final dataStore = DataStore.of(context);
+    if (dataStore.doorbells.items.length >= 5) {
+      _showAlert(context);
+      return;
+    }
+
+    setState(() {
+      isBusy = true;
+    });
+
+    final routeState = RouteStateScope.of(context);
+    final newDoorbell = await dataStore.createDoorbell();
+
+    routeState.go('/doorbells/${newDoorbell.doorbellId}');
+    setState(() {
+      isBusy = false;
+    });
   }
 
   void _handleTabIndexChanged() {
