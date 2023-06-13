@@ -30,8 +30,8 @@ abstract class DataStore extends ChangeNotifier {
   DataStoreRepository<DoorbellEvent> get doorbellEvents;
   DataStoreRepository<DoorbellUser> get doorbellUsers;
 
-  Iterable<DoorbellEvent> getDoorbellEvents(String doorbellId) => doorbellEvents.items.where((x) => x.doorbellId == doorbellId);
-  Iterable<DoorbellUser> getDoorbellUsers(String doorbellId) => doorbellUsers.items.where((x) => x.doorbellId == doorbellId);
+  Iterable<DoorbellEvent> getDoorbellEvents(String doorbellId);
+  Iterable<DoorbellUser> getDoorbellUsers(String doorbellId);
   Doorbell? getDoorbellById(String doorbellId) => doorbells.items.firstWhereOrNull((x) => x.doorbellId == doorbellId);
 
   Future<Doorbell> createDoorbell();
