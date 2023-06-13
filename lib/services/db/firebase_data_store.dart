@@ -100,6 +100,10 @@ class FirebaseDataStore extends DataStore {
 
   @override
   Iterable<DoorbellUser> getDoorbellUsers(String doorbellId) => _doorbellUsersRepository.getDoorbellUsers(doorbellId);
+
+  @override
+  Iterable<DoorbellEvent> getDoorbellEvents(String doorbellId) => _eventsRepository.getDoorbellEvents(doorbellId);
+
   @override
   Future<void> dispose() async {
     logger.info("Firebase DataStore dispose");

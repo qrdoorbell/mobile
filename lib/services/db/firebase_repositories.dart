@@ -77,6 +77,8 @@ class DoorbellEventsRepository extends FirebaseRepository<DoorbellEvent> {
     });
   }
 
+  Iterable<DoorbellEvent> getDoorbellEvents(String doorbellId) => _items.where((x) => x.doorbellId == doorbellId);
+
   @override
   Future<void> reload() async {
     _items.clear();
