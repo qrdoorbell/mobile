@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/widgets.dart';
 import 'package:newrelic_mobile/newrelic_mobile.dart';
 import 'package:qrdoorbell_mobile/app_options.dart';
@@ -21,6 +23,9 @@ class RouteState extends ChangeNotifier {
     _route = route;
     notifyListeners();
   }
+
+  Future<void> wait(Future future, Function(dynamic) destinationRouteFunc, [String? errorRoute]) =>
+      go("/_wait", data: {"future": future, "destinationRouteFunc": destinationRouteFunc, "errorRoute": errorRoute});
 
   Future<void> go(String route, {dynamic data}) async {
     if (NEWRELIC_APP_TOKEN.isNotEmpty) NewrelicMobile.instance.recordBreadcrumb(route);

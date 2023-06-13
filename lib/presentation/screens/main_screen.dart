@@ -108,10 +108,12 @@ class _MainScreenState extends State<MainScreen> {
     }
 
     final routeState = RouteStateScope.of(context);
-    final newDoorbell = await dataStore.createDoorbell();
+    await routeState.wait((() async {
+      var doorbell = await dataStore.createDoorbell();
+      await dataStore.reloadData(true);
 
-    routeState.go('/doorbells/${newDoorbell.doorbellId}');
-    // routeState.go('/reload', data: {"url": '/doorbells/${newDoorbell.doorbellId}'});
+      return doorbell;
+    })(), (newDoorbell) => '/doorbells/${newDoorbell.doorbellId}');
   }
 
   void _handleTabIndexChanged() {
