@@ -27,6 +27,7 @@ import 'app_options.dart';
 import 'data.dart';
 
 bool _initialUriIsHandled = false;
+ParsedRoute signInRoute = ParsedRoute('/login', '/login', {}, {});
 
 final logger = Logger('main');
 
@@ -46,7 +47,7 @@ Future<void> main() async {
   await Firebase.initializeApp();
 
   FlutterError.onError = (errorDetails) {
-    logger.shout("FlutterError.onError:", errorDetails);
+    logger.shout("FlutterError.onError: ${errorDetails.exception.toString()}\nStack trace: ${errorDetails.stack?.toString()}");
     if (NEWRELIC_APP_TOKEN.isNotEmpty) NewrelicMobile.instance.recordError(errorDetails, errorDetails.stack);
     if (USE_CRASHALYTICS == true) FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
   };
@@ -100,13 +101,15 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
   late final SimpleRouterDelegate _routerDelegate;
   late final TemplateRouteParser _routeParser;
   late final CallKitService _callKitService;
-  StreamSubscription? _sub;
+  late final DataStore _dataStore;
+  StreamSubscription? _uriLinkStreamSubscription;
 
   @override
   void initState() {
     _routeParser = TemplateRouteParser(
       allowedPaths: [
         '/login',
+        '/_wait',
         // '/reload',
         '/doorbells',
         '/events',
@@ -186,6 +189,8 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
     FirebaseAuth.instance.authStateChanges().listen(_handleAuthStateChanged);
     Connectivity().onConnectivityChanged.listen(_handleConnectionStateChanged);
 
+    _dataStore = FirebaseDataStore(FirebaseDatabase.instance);
+
     if (FirebaseAuth.instance.currentUser != null) {
       _handleIncomingLinks();
       _handleInitialUri();
@@ -197,7 +202,7 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
   @override
   Widget build(BuildContext context) {
     return DataStoreStateScope(
-        notifier: DataStoreState(dataStore: /*USE_DATABASE_MOCK ? MockedDataStore() :*/ FirebaseDataStore(FirebaseDatabase.instance)),
+        notifier: DataStoreState(dataStore: _dataStore),
         child: RouteStateScope(
             notifier: _routeState,
             child: CallKitServiceScope(
@@ -211,6 +216,7 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
                   ],
                   supportedLocales: const [
                     Locale('en', 'US'),
+                    // Locale('uk', 'UA'),
                   ],
                   routerDelegate: _routerDelegate,
                   routeInformationParser: _routeParser,
@@ -226,7 +232,7 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
 
   @override
   void dispose() {
-    _sub?.cancel();
+    _uriLinkStreamSubscription?.cancel();
     _routeState.dispose();
     _routerDelegate.dispose();
     super.dispose();
@@ -234,7 +240,6 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
 
   Future<ParsedRoute> _guard(ParsedRoute from) async {
     final signedIn = FirebaseAuth.instance.currentUser?.uid != null;
-    final signInRoute = ParsedRoute('/login', '/login', {}, {});
 
     if (!signedIn && from != signInRoute)
       return signInRoute;
@@ -311,7 +316,7 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
   }
 
   void _handleIncomingLinks() {
-    _sub = uriLinkStream.listen((Uri? uri) {
+    _uriLinkStreamSubscription = uriLinkStream.listen((Uri? uri) {
       if (uri == null) return;
 
       logger.info('Got incoming link: uri=$uri');
