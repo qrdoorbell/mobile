@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import 'package:qrdoorbell_mobile/services/db/firebase_repositories.dart';
 
 import '../../data.dart';
 
@@ -69,58 +71,61 @@ class _DoorbellCardState extends State<DoorbellCard> {
                             ],
                           )),
                       const Padding(padding: EdgeInsets.only(top: 30)),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          // if (doorbell.settings.automaticStateSettings == null)
-                          //   CupertinoButton(
-                          //     padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
-                          //     color: CupertinoColors.systemBlue.withAlpha(25),
-                          //     borderRadius: BorderRadius.circular(10),
-                          //     child: const Text(
-                          //       'Set silent mode time',
-                          //       style: TextStyle(color: CupertinoColors.activeBlue, fontSize: 16),
-                          //     ),
-                          //     onPressed: () => RouteStateScope.of(context).go('/settings'),
-                          //   ),
-                          // if (doorbell.settings.automaticStateSettings != null)
-                          //   CupertinoButton(
-                          //     padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
-                          //     color: CupertinoColors.systemBlue.withAlpha(25),
-                          //     borderRadius: BorderRadius.circular(10),
-                          //     child: const Text(
-                          //       'Set silent mode time',
-                          //       style: TextStyle(color: CupertinoColors.activeBlue, fontSize: 16),
-                          //     ),
-                          //     onPressed: () => {},
-                          //   ),
-                          for (var user in DataStore.of(context).getDoorbellUsers(widget.doorbell.doorbellId))
-                            Padding(
-                                padding: const EdgeInsets.only(right: 4),
-                                child: CircleAvatar(
-                                    backgroundColor: user.userColor,
-                                    minRadius: 20,
-                                    child: Text(user.userShortName ?? "--", textScaleFactor: 1))),
+                      Consumer<DoorbellUsersRepository>(
+                          builder: (context, repo, child) => Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  // if (doorbell.settings.automaticStateSettings == null)
+                                  //   CupertinoButton(
+                                  //     padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+                                  //     color: CupertinoColors.systemBlue.withAlpha(25),
+                                  //     borderRadius: BorderRadius.circular(10),
+                                  //     child: const Text(
+                                  //       'Set silent mode time',
+                                  //       style: TextStyle(color: CupertinoColors.activeBlue, fontSize: 16),
+                                  //     ),
+                                  //     onPressed: () => RouteStateScope.of(context).go('/settings'),
+                                  //   ),
+                                  // if (doorbell.settings.automaticStateSettings != null)
+                                  //   CupertinoButton(
+                                  //     padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+                                  //     color: CupertinoColors.systemBlue.withAlpha(25),
+                                  //     borderRadius: BorderRadius.circular(10),
+                                  //     child: const Text(
+                                  //       'Set silent mode time',
+                                  //       style: TextStyle(color: CupertinoColors.activeBlue, fontSize: 16),
+                                  //     ),
+                                  //     onPressed: () => {},
+                                  //   ),
+                                  for (var user in repo.getDoorbellUsers(widget.doorbell.doorbellId))
+                                    Padding(
+                                        padding: const EdgeInsets.only(right: 4),
+                                        child: CircleAvatar(
+                                            backgroundColor: user.userColor,
+                                            minRadius: 20,
+                                            child: Text(user.userShortName ?? "--", textScaleFactor: 1))),
 
-                          const Spacer(),
-                          CupertinoSwitch(
-                            onChanged: (bool value) async {
-                              widget.doorbell.settings.enablePushNotifications = value;
-                              DataStore.of(context).updateDoorbellSettings(widget.doorbell);
-                              setState(() {});
-                            },
-                            value: widget.doorbell.settings.enablePushNotifications,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 3),
-                            child: Icon(
-                              widget.doorbell.settings.enablePushNotifications ? CupertinoIcons.bell : CupertinoIcons.bell_slash,
-                              color: widget.doorbell.settings.enablePushNotifications ? Colors.blue.shade700 : CupertinoColors.inactiveGray,
-                              size: 28,
-                            ),
-                          )
-                        ],
-                      )
+                                  const Spacer(),
+                                  CupertinoSwitch(
+                                    onChanged: (bool value) async {
+                                      widget.doorbell.settings.enablePushNotifications = value;
+                                      DataStore.of(context).updateDoorbellSettings(widget.doorbell);
+                                      setState(() {});
+                                    },
+                                    value: widget.doorbell.settings.enablePushNotifications,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 3),
+                                    child: Icon(
+                                      widget.doorbell.settings.enablePushNotifications ? CupertinoIcons.bell : CupertinoIcons.bell_slash,
+                                      color: widget.doorbell.settings.enablePushNotifications
+                                          ? Colors.blue.shade700
+                                          : CupertinoColors.inactiveGray,
+                                      size: 28,
+                                    ),
+                                  )
+                                ],
+                              ))
                     ],
                   ),
                 ))));

@@ -331,8 +331,8 @@ class _DoorbellEditScreenState extends State<DoorbellEditScreen> {
                 final route = RouteStateScope.of(context);
                 final dataStore = DataStore.of(context);
 
-                route.go('/doorbells', data: {"refresh": true});
                 await dataStore.removeDoorbell(doorbell);
+                route.go('/reload', data: {"url": "/doorbells"});
               },
             ),
           ],

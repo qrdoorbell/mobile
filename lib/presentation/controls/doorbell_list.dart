@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import '../../data.dart';
+import '../../services/db/firebase_repositories.dart';
 import 'doorbell_card.dart';
 
 class DoorbellList extends StatefulWidget {
@@ -23,8 +24,11 @@ class DoorbellListState extends State<DoorbellList> {
     //   if (a.lastEvent != null && b.lastEvent != null) return b.lastEvent!.dateTime.isAfter(a.lastEvent!.dateTime) ? 1 : -1;
     //   return a.name.compareTo(b.name);
     // });
-    return ChangeNotifierProvider(
-        create: (context) => DataStore.of(context).doorbells,
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider.value(value: DataStore.of(context).doorbells),
+          ChangeNotifierProvider.value(value: (DataStore.of(context).doorbellUsers as DoorbellUsersRepository)),
+        ],
         builder: (context, child) => Consumer<DataStoreRepository<Doorbell>>(
             builder: (context, doorbells, child) => SliverList.list(
                 children: doorbells.items

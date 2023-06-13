@@ -107,6 +107,7 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
     _routeParser = TemplateRouteParser(
       allowedPaths: [
         '/login',
+        // '/reload',
         '/doorbells',
         '/events',
         '/doorbells/new',
