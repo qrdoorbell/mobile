@@ -203,6 +203,7 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
             child: CallKitServiceScope(
                 notifier: _callKitService,
                 child: CupertinoApp.router(
+                  debugShowCheckedModeBanner: false,
                   localizationsDelegates: const [
                     DefaultCupertinoLocalizations.delegate,
                     DefaultMaterialLocalizations.delegate,
