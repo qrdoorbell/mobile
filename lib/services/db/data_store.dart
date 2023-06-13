@@ -46,7 +46,7 @@ abstract class DataStore extends ChangeNotifier {
   Future<UserAccount> createUser(UserAccount user);
   Future<void> setUid(String? uid);
 
-  Future<DataStore> isDataAvailable();
+  Future<DataStore> get future;
   Future<void> reloadData(bool force);
 
   @override

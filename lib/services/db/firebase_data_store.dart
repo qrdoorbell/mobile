@@ -42,7 +42,7 @@ class FirebaseDataStore extends DataStore {
   }
 
   @override
-  Future<DataStore> isDataAvailable() => _reloadCompleter.future;
+  Future<DataStore> get future => _reloadCompleter.future;
 
   @override
   Future<void> reloadData(bool force) async {

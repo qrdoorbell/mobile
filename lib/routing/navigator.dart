@@ -51,16 +51,23 @@ class _AppNavigatorState extends State<AppNavigator> {
       pages: [
         if (routeState.route.pathTemplate == '/login')
           FadeTransitionPage<void>(key: _signInKey, child: LoginScreen())
-        else ...[
+        else if (pathTemplate == '/_wait') ...[
+          FadeTransitionPage<void>(
+              key: _scaffoldKey,
+              child: FutureBuilder(
+                future: routeState.data["future"],
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    RouteStateScope.of(context).go(routeState.data["destinationRouteFunc"](snapshot.data));
+                  }
+                  return EmptyScreen.white().withWaitingIndicator();
+                },
+              )),
+        ] else ...[
           FadeTransitionPage<void>(
             key: _scaffoldKey,
             child: const MainScreen(),
           ),
-          if (pathTemplate == '/reload')
-            FadeTransitionPage<void>(
-              key: _scaffoldKey,
-              child: const MainScreen(),
-            ),
           // MaterialPage(
           //   key: _scaffoldKey,
           //   child: FutureBuilder(

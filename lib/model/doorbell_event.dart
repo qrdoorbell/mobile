@@ -26,7 +26,7 @@ class DoorbellEvent implements Comparable<DoorbellEvent> {
         return voip!['reason'] == 'ok'
             ? 'Answered'
             : voip!['reason'] == 'guest_cant_connect'
-                ? 'Guest can\'t connect'
+                ? 'Cancelled'
                 : voip!['reason'] == 'user_not_answered'
                     ? 'Ignored'
                     : voip!['reason'] == 'user_not_available'
