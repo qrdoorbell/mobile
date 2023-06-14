@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qrdoorbell_mobile/main.dart';
 import 'package:qrdoorbell_mobile/presentation/screens/empty_screen.dart';
 
 import '../presentation/screens/doorbell_edit_screen.dart';
@@ -58,7 +59,12 @@ class _AppNavigatorState extends State<AppNavigator> {
                 future: routeState.data["future"],
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
-                    RouteStateScope.of(context).go(routeState.data["destinationRouteFunc"](snapshot.data));
+                    if (snapshot.hasError) {
+                      logger.shout('An async error occured!', snapshot.error);
+                      RouteStateScope.of(context).go(routeState.data["errorRoute"] ?? "/doorbells");
+                    } else {
+                      RouteStateScope.of(context).go(routeState.data["destinationRouteFunc"](snapshot.data));
+                    }
                   }
                   return EmptyScreen.white().withWaitingIndicator();
                 },
@@ -68,15 +74,6 @@ class _AppNavigatorState extends State<AppNavigator> {
             key: _scaffoldKey,
             child: const MainScreen(),
           ),
-          // MaterialPage(
-          //   key: _scaffoldKey,
-          //   child: FutureBuilder(
-          //       future: DataStore.of(context).reloadData(true),
-          //       builder: (context, snapshot) {
-          //         if (snapshot.hasData) routeState.go(routeState.data?['url'] != null ? routeState.data['url'] : '/doorbells');
-          //         return EmptyScreen.white().withWaitingIndicator();
-          //       }),
-          // ),
           if (pathTemplate == '/doorbells/:doorbellId' && doorbellId != null)
             MaterialPage(
               key: _doorbellDetailsKey,
@@ -108,13 +105,7 @@ class _AppNavigatorState extends State<AppNavigator> {
             ),
           if (pathTemplate == '/invite/accept/:inviteId' && inviteId != null)
             MaterialPage(
-              key: _scaffoldKey,
-              fullscreenDialog: true,
-              child: InviteAcceptedScreen(inviteId: inviteId),
-            ),
-          if (pathTemplate == '/invite/accept/:inviteId' && inviteId != null)
-            MaterialPage(
-              key: _scaffoldKey,
+              key: _doorbellDetailsKey,
               fullscreenDialog: true,
               child: InviteAcceptedScreen(inviteId: inviteId),
             ),

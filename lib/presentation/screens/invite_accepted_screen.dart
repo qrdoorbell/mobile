@@ -15,19 +15,7 @@ class InviteAcceptedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var dataStore = DataStoreStateScope.of(context).dataStore;
-    return FutureBuilder<String>(
-        future: dataStore.acceptInvite(inviteId),
-        builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-          if (snapshot.hasData && !snapshot.hasError) {
-            RouteStateScope.of(context).go('/doorbells/${snapshot.data.toString()}');
-            return EmptyScreen.white().withText("Adding the Doorbell...");
-          } else {
-            logger.shout('An error occured while processing share request', snapshot.error, snapshot.stackTrace);
-            RouteStateScope.of(context).go('/doorbells/${snapshot.data.toString()}');
-
-            return EmptyScreen.white().withText("Error occured!");
-          }
-        });
+    RouteStateScope.of(context).wait(DataStore.of(context).acceptInvite(inviteId), (doorbellId) => '/doorbells/$doorbellId');
+    return EmptyScreen.white().withWaitingIndicator();
   }
 }
