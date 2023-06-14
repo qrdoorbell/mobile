@@ -59,6 +59,12 @@ class FirebaseDataStore extends DataStore {
 
     if (_currentUser == null || force) {
       _currentUser = UserAccount.fromSnapshot(await db.ref('users/$_uid').get());
+      force = true;
+    }
+
+    if (!force) {
+      await db.goOffline();
+      return;
     }
 
     var doorbells = _currentUser?.doorbells ?? [];

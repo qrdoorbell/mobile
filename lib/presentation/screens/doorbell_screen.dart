@@ -37,7 +37,8 @@ class DoorbellScreen extends StatelessWidget {
     FloatingActionButton? floatButton;
 
     if (dataStore.doorbellEvents.items.any((x) => x.doorbellId == doorbellId)) {
-      floatButton = FloatingActionButton(onPressed: () => _onShareDoorbell(dataStore, doorbell), child: const Icon(CupertinoIcons.share));
+      floatButton =
+          FloatingActionButton(onPressed: () => _onShareDoorbell(context, dataStore, doorbell), child: const Icon(CupertinoIcons.share));
     }
 
     return CupertinoPageScaffold(
@@ -122,23 +123,28 @@ class DoorbellScreen extends StatelessWidget {
             ),
             EventList(
               doorbellId: doorbellId,
-              onShareDoorbellCallback: () => _onShareDoorbell(dataStore, doorbell),
+              onShareDoorbellCallback: () => _onShareDoorbell(context, dataStore, doorbell),
               onPrintStickerCallback: () => _printSticker(doorbell),
             ),
           ])),
     ));
   }
 
-  Future<void> _onShareDoorbell(DataStore dataStore, Doorbell doorbell) async {
+  Future<void> _onShareDoorbell(BuildContext context, DataStore dataStore, Doorbell doorbell) async {
     print("SHARE DOORBELL: ${doorbell.doorbellId}");
 
+    var route = RouteStateScope.of(context);
     var invite = Invite.create(doorbellId);
     print('Invite created: inviteId=$invite.id');
 
     try {
       var message = "$QRDOORBELL_INVITE_API_URL/invite/accept/${invite.id}";
       await Share.share(message, subject: "Share ${doorbell.name}");
-      await dataStore.saveInvite(invite);
+
+      route.wait((() async {
+        await dataStore.saveInvite(invite);
+        await dataStore.reloadData(false);
+      })(), (p0) => route.route);
     } catch (error) {
       logger.shout('Share doorbell failed!', error);
     }

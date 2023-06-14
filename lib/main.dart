@@ -110,7 +110,6 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
       allowedPaths: [
         '/login',
         '/_wait',
-        // '/reload',
         '/doorbells',
         '/events',
         '/doorbells/new',
