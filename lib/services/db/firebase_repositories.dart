@@ -104,7 +104,9 @@ class DoorbellUsersRepository extends FirebaseRepository<DoorbellUser> {
     });
   }
 
-  Iterable<DoorbellUser> getDoorbellUsers(String doorbellId) => _items.where((x) => x.doorbellId == doorbellId).toList();
+  Iterable<DoorbellUser> getDoorbellUsers(String doorbellId) => _items
+      .where((x) => x.doorbellId == doorbellId)
+      .sortedByCompare((x) => x.userShortName ?? "--", (a, b) => b[0] == '-' ? -1 : a.compareTo(b));
 
   @override
   Future<void> reload() async {
@@ -133,7 +135,7 @@ class DoorbellUsersRepository extends FirebaseRepository<DoorbellUser> {
       if (displayNames.containsKey(doorbellUser.userId)) {
         doorbellUser.userDisplayName = displayNames[doorbellUser.userId] ?? "";
         doorbellUser.userShortName = UserAccount.getShortNameFromDisplayName(doorbellUser.userDisplayName);
-        doorbellUser.userColor = UserAccount.getColorFromDisplayName(doorbellUser.userShortName!);
+        doorbellUser.userColor = UserAccount.getColorFromShortName(doorbellUser.userShortName!);
       }
     }
 

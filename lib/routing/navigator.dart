@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qrdoorbell_mobile/main.dart';
+import 'package:qrdoorbell_mobile/presentation/screens/call_screen_test.dart';
 import 'package:qrdoorbell_mobile/presentation/screens/empty_screen.dart';
 
 import '../presentation/screens/doorbell_edit_screen.dart';
@@ -69,6 +70,11 @@ class _AppNavigatorState extends State<AppNavigator> {
                   return EmptyScreen.white().withWaitingIndicator();
                 },
               )),
+        ] else if (pathTemplate == '/_test1') ...[
+          FadeTransitionPage<void>(
+            key: _scaffoldKey,
+            child: const TestCallScreen(),
+          ),
         ] else ...[
           FadeTransitionPage<void>(
             key: _scaffoldKey,

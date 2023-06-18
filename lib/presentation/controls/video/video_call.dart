@@ -8,7 +8,7 @@ import 'package:livekit_client/livekit_client.dart';
 
 import '../../../services/callkit_service.dart';
 import '../../../routing.dart';
-import './participant_widget.dart';
+import 'remote_participant_widget.dart';
 
 class VideoCall extends StatefulWidget {
   final Room room;

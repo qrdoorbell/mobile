@@ -124,6 +124,7 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
         '/doorbells/:doorbellId',
         '/invite/accept/:inviteId',
         '/profile',
+        '/_test1',
       ],
       guard: _guard,
       initialRoute: '/doorbells',

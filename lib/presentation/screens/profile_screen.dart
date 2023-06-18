@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../data.dart';
+import '../../routing/route_state.dart';
 import '../../services/callkit_service.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -15,6 +16,8 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var user = DataStore.of(context).currentUser;
     var userName = user?.displayName ?? "N/A";
+    var shortName = user.getShortName();
+    var avatarColor = user.getAvatarColor();
     return SliverList(
         delegate: SliverChildListDelegate.fixed(<Widget>[
       Padding(
@@ -22,17 +25,27 @@ class ProfileScreen extends StatelessWidget {
           child: Column(children: [
             const Padding(padding: EdgeInsets.only(top: 80)),
             CircleAvatar(
-                backgroundColor: UserAccount.getColorFromDisplayName(user?.displayName),
+                backgroundColor: avatarColor,
                 minRadius: 60,
-                child: Text(UserAccount.getShortName(user), textScaleFactor: 2)),
+                child: Text(
+                  shortName,
+                  textScaleFactor: 2,
+                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                )),
             const Padding(padding: EdgeInsets.only(top: 20)),
             Text(userName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 32)),
             const Padding(padding: EdgeInsets.only(top: 40)),
             CupertinoButton.filled(
                 onPressed: () {
-                  FirebaseAuth.instance.signOut();
+                  RouteStateScope.of(context).wait(FirebaseAuth.instance.signOut(), (p0) => "/login");
                 },
                 child: const Text('Sign out')),
+            const Padding(padding: EdgeInsets.only(top: 40)),
+            CupertinoButton.filled(
+                onPressed: () {
+                  RouteStateScope.of(context).go('/_test1');
+                },
+                child: const Text('Call Screen')),
             const Padding(padding: EdgeInsets.only(top: 100)),
             Row(
               children: [
