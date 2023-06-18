@@ -42,7 +42,7 @@ abstract class ParticipantWidgetState<T extends ParticipantWidget> extends State
   Room? get room => context.findAncestorStateOfType<CallScreenState>()?.room;
   bool get isMicEnabled => room?.localParticipant?.isMicrophoneEnabled() ?? false;
   bool get isCamEnabled => room?.localParticipant?.isCameraEnabled() ?? false;
-  bool get isSpeakerOn => room?.speakerOn ?? false;
+  bool get isSpeakerOn => room?.speakerOn ?? true;
 
   @override
   void initState() {
@@ -157,15 +157,15 @@ abstract class ParticipantWidgetState<T extends ParticipantWidget> extends State
                     style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
                   ),
                 )),
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.grey.shade600,
             label: Container(
                 width: 76,
                 alignment: AlignmentDirectional.center,
-                child: Text(_printDuration(callDuration), style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.w300))),
+                child: Text(_printDuration(callDuration), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w300))),
           ),
         if (!_isAnswered)
           Chip(
-              backgroundColor: Colors.blueGrey.shade500,
+              backgroundColor: Colors.grey.shade600,
               label: Container(
                   alignment: AlignmentDirectional.center,
                   child: Row(

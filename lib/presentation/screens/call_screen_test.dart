@@ -85,15 +85,15 @@ class TestCallScreenState extends State<TestCallScreen> {
                     style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
                   ),
                 )),
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.grey.shade600,
             label: Container(
                 width: 76,
                 alignment: AlignmentDirectional.center,
-                child: const Text("00:34:12", style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w300))),
+                child: const Text("00:34:12", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w300))),
           ),
         if (!isAnswered)
           Chip(
-              backgroundColor: Colors.blueGrey.shade500,
+              backgroundColor: Colors.grey.shade600,
               label: Container(
                   alignment: AlignmentDirectional.center,
                   child: const Row(
