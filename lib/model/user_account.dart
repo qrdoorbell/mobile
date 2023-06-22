@@ -125,6 +125,7 @@ class _UserAvatarColorScheme {
   final Color backgroundColor;
   final Color textColor;
 
+  // ignore: unused_element
   _UserAvatarColorScheme(this.backgroundColor, [this.textColor = Colors.white]);
 
   static _UserAvatarColorScheme getColorFromDisplayName(String? displayName) {

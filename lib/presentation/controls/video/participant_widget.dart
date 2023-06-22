@@ -239,8 +239,8 @@ abstract class ParticipantWidgetState<T extends ParticipantWidget> extends State
                     size: 32,
                   ),
                 ),
-                onPressed: () => setState(() {
-                      room?.setSpeakerOn(!isSpeakerOn);
+                onPressed: () => setState(() async {
+                      await room?.setSpeakerOn(!isSpeakerOn);
                     })),
           ),
           const Spacer(),

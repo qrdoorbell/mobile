@@ -106,6 +106,18 @@ class DoorbellScreen extends StatelessWidget {
                       ))),
             ])),
 
+            // USERS
+            SliverList(
+                delegate: SliverChildListDelegate.fixed(<Widget>[
+              Row(children: [
+                const Padding(padding: EdgeInsets.only(left: 18, top: 10)),
+                const Text('Shared with', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400)),
+                const Spacer(),
+                CupertinoButton(
+                    child: const Text('See all'), onPressed: () => {RouteStateScope.of(context).go('/doorbells/$doorbellId/users')})
+              ]),
+            ])),
+
             // EVENTS
             const SliverList(
                 delegate: SliverChildListDelegate.fixed(<Widget>[
@@ -116,9 +128,10 @@ class DoorbellScreen extends StatelessWidget {
 
             CupertinoSliverRefreshControl(
               onRefresh: () async {
-                await Future<void>.delayed(
-                  const Duration(milliseconds: 1000),
-                );
+                var route = RouteStateScope.of(context);
+                route.wait((() async {
+                  await dataStore.reloadData(false);
+                })(), (p0) => route.route);
               },
             ),
             EventList(

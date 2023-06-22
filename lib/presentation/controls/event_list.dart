@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../data.dart';
 import 'event_card.dart';
@@ -26,13 +27,17 @@ class _EventListState extends State<EventList> {
     var dataStore = DataStore.of(context);
     var data = (widget.doorbellId != null ? dataStore.getDoorbellEvents(widget.doorbellId!) : dataStore.doorbellEvents.items);
     if (data.isNotEmpty) {
-      return SliverList.list(
-          children: data
-              .map((x) => EventCard(
-                    event: x,
-                    showDoorbellLink: widget.doorbellId == null,
-                  ))
-              .toList());
+      return ChangeNotifierProvider.value(
+          value: DataStore.of(context).doorbellEvents,
+          builder: (context, child) => Consumer<DataStoreRepository<DoorbellEvent>>(
+              builder: (context, events, child) => SliverList.list(
+                  children: events.items
+                      .where((x) => (widget.doorbellId != null && x.doorbellId == widget.doorbellId) || widget.doorbellId == null)
+                      .map((x) => EventCard(
+                            event: x,
+                            showDoorbellLink: widget.doorbellId == null,
+                          ))
+                      .toList())));
     } else {
       return SliverFillRemaining(
           hasScrollBody: false,

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:qrdoorbell_mobile/main.dart';
-import 'package:qrdoorbell_mobile/presentation/screens/call_screen_test.dart';
 import 'package:qrdoorbell_mobile/presentation/screens/empty_screen.dart';
 
 import '../presentation/screens/doorbell_edit_screen.dart';
 import '../presentation/screens/doorbell_screen.dart';
+import '../presentation/screens/doorbell_users_screen.dart';
 import '../presentation/screens/invite_accepted_screen.dart';
 import '../presentation/screens/login_screen.dart';
 import '../presentation/screens/main_screen.dart';
@@ -70,11 +70,6 @@ class _AppNavigatorState extends State<AppNavigator> {
                   return EmptyScreen.white().withWaitingIndicator();
                 },
               )),
-        ] else if (pathTemplate == '/_test1') ...[
-          FadeTransitionPage<void>(
-            key: _scaffoldKey,
-            child: const TestCallScreen(),
-          ),
         ] else ...[
           FadeTransitionPage<void>(
             key: _scaffoldKey,
@@ -108,6 +103,12 @@ class _AppNavigatorState extends State<AppNavigator> {
               key: _doorbellDetailsKey,
               fullscreenDialog: true,
               child: CallScreen(accessToken: callAccessToken, doorbellId: doorbellId),
+            ),
+          if (pathTemplate == '/doorbells/:doorbellId/users' && doorbellId != null)
+            MaterialPage(
+              key: _doorbellDetailsKey,
+              fullscreenDialog: true,
+              child: DoorbellUsersScreen(doorbellId: doorbellId),
             ),
           if (pathTemplate == '/invite/accept/:inviteId' && inviteId != null)
             MaterialPage(
