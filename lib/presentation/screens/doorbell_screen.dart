@@ -41,6 +41,10 @@ class DoorbellScreen extends StatelessWidget {
           FloatingActionButton(onPressed: () => _onShareDoorbell(context, dataStore, doorbell), child: const Icon(CupertinoIcons.share));
     }
 
+    var avatars = dataStore.getDoorbellUsers(doorbellId);
+    var nonEmptyAvatars = avatars.where((x) => x.userShortName != "--").toList();
+    var emptyAvatarsCount = avatars.where((x) => x.userShortName == null || x.userShortName == "--").length;
+
     return CupertinoPageScaffold(
         child: Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -110,12 +114,34 @@ class DoorbellScreen extends StatelessWidget {
             SliverList(
                 delegate: SliverChildListDelegate.fixed(<Widget>[
               Row(children: [
-                const Padding(padding: EdgeInsets.only(left: 18, top: 10)),
+                const Padding(padding: EdgeInsets.only(left: 18, top: 30)),
                 const Text('Shared with', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400)),
                 const Spacer(),
                 CupertinoButton(
-                    child: const Text('See all'), onPressed: () => {RouteStateScope.of(context).go('/doorbells/$doorbellId/users')})
+                    child: const Text('Manage'), onPressed: () => {RouteStateScope.of(context).go('/doorbells/$doorbellId/users')})
               ]),
+              Padding(
+                  padding: const EdgeInsets.only(left: 18),
+                  child: SizedBox(
+                      height: 45,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: <Widget>[
+                          for (var user in nonEmptyAvatars)
+                            Padding(
+                                padding: const EdgeInsets.only(right: 4),
+                                child: CircleAvatar(
+                                    backgroundColor: user.userColor,
+                                    minRadius: 20,
+                                    child: Text(user.userShortName ?? "--",
+                                        textScaleFactor: 1, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)))),
+                          if (nonEmptyAvatars.isNotEmpty && emptyAvatarsCount > 0)
+                            Padding(
+                                padding: const EdgeInsets.only(left: 8, top: 15),
+                                child: Text("+$emptyAvatarsCount",
+                                    textScaleFactor: 1, style: const TextStyle(color: CupertinoColors.inactiveGray))),
+                        ],
+                      )))
             ])),
 
             // EVENTS

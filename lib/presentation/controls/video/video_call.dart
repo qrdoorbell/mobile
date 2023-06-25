@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:livekit_client/livekit_client.dart';
-import 'package:wakelock/wakelock.dart';
 
 import '../../../services/callkit_service.dart';
 import '../../../routing.dart';
@@ -35,7 +34,6 @@ class _VideoCallState extends State<VideoCall> {
   void initState() {
     super.initState();
     _setUpListeners();
-    Wakelock.enable();
   }
 
   @override
@@ -43,7 +41,6 @@ class _VideoCallState extends State<VideoCall> {
     (() async {
       await _listener.dispose();
       await widget.room.disconnect();
-      await Wakelock.disable();
     })();
     super.dispose();
   }
