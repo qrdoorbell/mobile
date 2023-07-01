@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 import 'package:newrelic_mobile/newrelic_mobile.dart';
-import 'package:qrdoorbell_mobile/app_options.dart';
+
+import '../app_options.dart';
 
 import 'parsed_route.dart';
 import 'parser.dart';

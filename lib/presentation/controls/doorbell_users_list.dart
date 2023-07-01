@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:qrdoorbell_mobile/routing.dart';
 
-import 'package:qrdoorbell_mobile/services/db/firebase_repositories.dart';
+import '../../services/db/firebase_repositories.dart';
 
+import '../../routing.dart';
 import '../../data.dart';
 
 class DoorbellUsersList extends StatefulWidget {

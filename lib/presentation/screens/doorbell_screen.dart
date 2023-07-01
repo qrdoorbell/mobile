@@ -2,9 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
-import 'package:qrdoorbell_mobile/app_options.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../app_options.dart';
 import '../../data.dart';
 import '../../tools.dart';
 import '../controls/event_list.dart';

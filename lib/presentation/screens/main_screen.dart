@@ -6,6 +6,7 @@ import 'package:livekit_client/livekit_client.dart';
 
 import '../../data.dart';
 import '../../routing/route_state.dart';
+import '../controls/call_manager_banner.dart';
 import '../controls/event_list.dart';
 import '../controls/doorbell_list.dart';
 import 'profile_screen.dart';
@@ -65,7 +66,8 @@ class _MainScreenState extends State<MainScreen> {
           title = 'Events';
         } else if (index == 2) {
           tabWidget = const ProfileScreen();
-          title = 'Profile';
+          // title = 'Profile';
+          title = '';
         } else {
           throw UnexpectedStateException('Invalid tab index');
         }
@@ -81,12 +83,15 @@ class _MainScreenState extends State<MainScreen> {
                     backgroundColor: Colors.white,
                     body: CustomScrollView(
                       slivers: <Widget>[
-                        CupertinoSliverNavigationBar(
-                          transitionBetweenRoutes: true,
-                          backgroundColor: Colors.white,
-                          largeTitle: Text(title),
-                          border: Border.all(width: 0, color: Colors.white),
-                        ),
+                        if (title != '')
+                          CupertinoSliverNavigationBar(
+                            transitionBetweenRoutes: true,
+                            backgroundColor: Colors.white,
+                            padding: EdgeInsetsDirectional.zero,
+                            largeTitle: Text(title),
+                            border: Border.all(width: 0, color: Colors.white),
+                          ),
+                        if (title == '') const SliverPadding(padding: EdgeInsets.only(top: 70)),
                         CupertinoSliverRefreshControl(onRefresh: _onRefreshNeeded),
                         tabWidget,
                         const SliverPadding(padding: EdgeInsets.only(top: 70)),

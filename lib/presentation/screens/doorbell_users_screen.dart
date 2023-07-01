@@ -1,10 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:logging/logging.dart';
-import 'package:qrdoorbell_mobile/presentation/controls/doorbell_users_list.dart';
+
+import '../../presentation/controls/doorbell_users_list.dart';
 
 class DoorbellUsersScreen extends StatelessWidget {
-  static final logger = Logger('DoorbellScreen');
+  static final logger = Logger('DoorbellUsersScreen');
 
   final User user = FirebaseAuth.instance.currentUser!;
   final String doorbellId;
