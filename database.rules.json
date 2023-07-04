@@ -10,8 +10,12 @@
         "displayName": {
         	".read": "null !== auth.uid",
         	".write": "$uid === auth.uid || auth.uid === 'service-account'"
+	      },
+          
+        "email": {
+        	".read": "null !== auth.uid",
+        	".write": "$uid === auth.uid || auth.uid === 'service-account'"
 	      }
-
       }
     },
     "doorbells": {

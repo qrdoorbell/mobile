@@ -6,23 +6,22 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../app_options.dart';
 import '../../data.dart';
+import '../../routing.dart';
 import '../../tools.dart';
 import '../controls/event_list.dart';
 import '../controls/sticker_card.dart';
-
-import '../../routing.dart';
 import 'empty_screen.dart';
 
 class DoorbellScreen extends StatelessWidget {
   static final logger = Logger('DoorbellScreen');
 
-  final User user = FirebaseAuth.instance.currentUser!;
   final String doorbellId;
+  final User user = FirebaseAuth.instance.currentUser!;
 
   DoorbellScreen({
-    super.key,
+    Key? key,
     required this.doorbellId,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +36,7 @@ class DoorbellScreen extends StatelessWidget {
     FloatingActionButton? floatButton;
 
     if (dataStore.doorbellEvents.items.any((x) => x.doorbellId == doorbellId)) {
-      floatButton =
-          FloatingActionButton(onPressed: () => _onShareDoorbell(context, dataStore, doorbell), child: const Icon(CupertinoIcons.share));
+      floatButton = FloatingActionButton(onPressed: () => shareDoorbell(context, doorbell), child: const Icon(CupertinoIcons.share));
     }
 
     var avatars = dataStore.getDoorbellUsers(doorbellId);
@@ -66,7 +64,7 @@ class DoorbellScreen extends StatelessWidget {
                   "Edit",
                   style: TextStyle(color: CupertinoColors.activeBlue),
                 ),
-                onPressed: () => RouteStateScope.of(context).go('/doorbells/$doorbellId/edit'),
+                onPressed: () => RouteStateScope.of(context).go('/doorbells/${doorbellId}/edit'),
               ),
               middle: Text(doorbell.name),
               largeTitle: Padding(padding: const EdgeInsets.only(left: 0), child: Text(doorbell.name)),
@@ -118,7 +116,7 @@ class DoorbellScreen extends StatelessWidget {
                 const Text('Shared with', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400)),
                 const Spacer(),
                 CupertinoButton(
-                    child: const Text('Manage'), onPressed: () => {RouteStateScope.of(context).go('/doorbells/$doorbellId/users')})
+                    child: const Text('Manage'), onPressed: () => {RouteStateScope.of(context).go('/doorbells/${doorbellId}/users')})
               ]),
               Padding(
                   padding: const EdgeInsets.only(left: 18),
@@ -162,37 +160,41 @@ class DoorbellScreen extends StatelessWidget {
             ),
             EventList(
               doorbellId: doorbellId,
-              onShareDoorbellCallback: () => _onShareDoorbell(context, dataStore, doorbell),
-              onPrintStickerCallback: () => _printSticker(doorbell),
+              onShareDoorbellCallback: () => shareDoorbell(context, doorbell),
+              // onPrintStickerCallback: () => _printSticker(doorbell),
+              onPrintStickerCallback: () => RouteStateScope.of(context).go('/doorbells/$doorbellId/qr'),
             ),
           ])),
     ));
   }
 
-  Future<void> _onShareDoorbell(BuildContext context, DataStore dataStore, Doorbell doorbell) async {
+  static Future<void> shareDoorbell(BuildContext context, Doorbell doorbell) async {
     print("SHARE DOORBELL: ${doorbell.doorbellId}");
 
+    var dataStore = DataStore.of(context);
     var route = RouteStateScope.of(context);
-    var invite = Invite.create(doorbellId);
+    var invite = Invite.create(doorbell.doorbellId);
     print('Invite created: inviteId=$invite.id');
 
     try {
       var message = "$QRDOORBELL_INVITE_API_URL/invite/accept/${invite.id}";
-      await Share.share(message, subject: "Share ${doorbell.name}");
+      var result = await Share.shareWithResult(message, subject: "Share ${doorbell.name}");
 
-      route.wait((() async {
-        await dataStore.saveInvite(invite);
-        await dataStore.reloadData(false);
-      })(), (p0) => route.route);
+      if (result.status == ShareResultStatus.success) {
+        route.wait((() async {
+          await dataStore.saveInvite(invite);
+          await dataStore.reloadData(false);
+        })(), (_) => "/doorbells/${doorbell.doorbellId}");
+      }
     } catch (error) {
-      logger.shout('Share doorbell failed!', error);
+      DoorbellScreen.logger.shout('Share doorbell failed!', error);
     }
   }
 
-  Future<void> _printSticker(Doorbell doorbell) async {
-    print("PRINT DOORBELL STICKER: $doorbellId");
+  static Future<void> printSticker(Doorbell doorbell) async {
+    print("PRINT DOORBELL STICKER: ${doorbell.doorbellId}");
 
-    var imgResp = await HttpUtils.secureGet(Uri.parse('$QRDOORBELL_API_URL/api/v1/doorbells/$doorbellId/qr/'));
+    var imgResp = await HttpUtils.secureGet(Uri.parse('$QRDOORBELL_API_URL/api/v1/doorbells/${doorbell.doorbellId}/qr/'));
     if (imgResp.statusCode != 200) {
       print('ERROR: unable to download image: responseCode=${imgResp.statusCode}');
       return;

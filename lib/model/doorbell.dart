@@ -129,6 +129,7 @@ class DoorbellUser {
   String role;
   String? userDisplayName;
   String? userShortName;
+  String? email;
   Color userColor = Colors.blueGrey.shade700;
 
   DoorbellUser({
@@ -137,6 +138,7 @@ class DoorbellUser {
     required this.role,
     this.userDisplayName,
     this.userShortName,
+    this.email,
   });
 }
 

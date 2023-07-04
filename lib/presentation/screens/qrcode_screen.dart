@@ -1,19 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import '../../app_options.dart';
+import '../../data.dart';
 import '../../tools.dart';
-import '../screens/empty_screen.dart';
 import '../../routing.dart';
+import '../screens/empty_screen.dart';
+import 'doorbell_screen.dart';
 
 class QRCodeScreen extends StatelessWidget {
   final String doorbellId;
-  final VoidCallback? onPrintStickerCallback;
 
-  const QRCodeScreen({super.key, required this.doorbellId, this.onPrintStickerCallback});
+  const QRCodeScreen({super.key, required this.doorbellId});
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(future: (() async {
-      var imgResp = await HttpUtils.secureGet(Uri.parse('$QRDOORBELL_API_URL/api/v1/doorbells/$doorbellId/qr/'));
+      var imgResp = await HttpUtils.secureGet(Uri.parse('$QRDOORBELL_API_URL/api/v1/doorbells/$doorbellId/qr'));
       if (imgResp.statusCode != 200) {
         throw FlutterError('ERROR: unable to download image: responseCode=${imgResp.statusCode}');
       }
@@ -24,19 +25,31 @@ class QRCodeScreen extends StatelessWidget {
       bool showSaveButton = true;
       if (snapshot.hasError) {
         showSaveButton = false;
-        child = Column(children: [
+        child = Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
           const Padding(padding: EdgeInsets.all(8)),
-          const Text('Error occured!', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
-          const Padding(padding: EdgeInsets.all(12)),
-          const Text('Server returns non success result code.'),
-          const Padding(padding: EdgeInsets.all(8)),
-          const Text('Please reach out support team for more details.'),
-          const Padding(padding: EdgeInsets.all(20)),
-          CupertinoButton.filled(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Back')),
+          const Padding(
+            padding: EdgeInsets.all(12),
+            child: Text('Error occured!', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
+          ),
+          const Padding(
+            padding: EdgeInsets.all(8),
+            child: Text('Server returns non success result code!'),
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 8),
+            child: Text(
+              'Please reach out support team for more details.',
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: CupertinoButton.filled(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Back')),
+          ),
         ]);
       } else if (!snapshot.hasData)
         return EmptyScreen.white().withWaitingIndicator();
@@ -58,7 +71,8 @@ class QRCodeScreen extends StatelessWidget {
               const Spacer(),
               if (showSaveButton) ...[
                 CupertinoButton.filled(
-                    onPressed: () => onPrintStickerCallback?.call(),
+                    onPressed: () async => await RouteStateScope.of(context).wait(
+                        DoorbellScreen.printSticker(DataStore.of(context).getDoorbellById(doorbellId)!), (_) => "/doorbells/$doorbellId"),
                     child: const Text(
                       'Save sticker image',
                       style: TextStyle(fontWeight: FontWeight.bold),

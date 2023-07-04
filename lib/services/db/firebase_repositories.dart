@@ -121,11 +121,16 @@ class DoorbellUsersRepository extends FirebaseRepository<DoorbellUser> {
     await Future.wait(loaders);
 
     var displayNames = {};
+    var emails = {};
     var uids = _items.map((x) => x.userId).toSet();
 
     logger.fine('Loading user display names from DB');
-    var userDataLoaders = Map.fromEntries(
-        uids.map((uid) => MapEntry(uid, db.ref('users/$uid/displayName').get().then((v) => displayNames[uid] = v.value?.toString()))));
+    var userDataLoaders = Map.fromEntries(uids.map((uid) => MapEntry(
+        uid,
+        Future.wait([
+          db.ref('users/$uid/displayName').get().then((v) => displayNames[uid] = v.value?.toString()),
+          db.ref('users/$uid/email').get().then((v) => emails[uid] = v.value?.toString())
+        ]))));
 
     if (logger.isLoggable(Level.FINEST)) logger.finest('User ids: $uids');
     await Future.wait(userDataLoaders.values);
@@ -134,6 +139,7 @@ class DoorbellUsersRepository extends FirebaseRepository<DoorbellUser> {
     for (var doorbellUser in _items) {
       if (displayNames.containsKey(doorbellUser.userId)) {
         doorbellUser.userDisplayName = displayNames[doorbellUser.userId] ?? "";
+        doorbellUser.email = emails[doorbellUser.userId] ?? "";
         doorbellUser.userShortName = UserAccount.getShortNameFromDisplayName(doorbellUser.userDisplayName);
         doorbellUser.userColor = UserAccount.getColorFromShortName(doorbellUser.userShortName!);
       }

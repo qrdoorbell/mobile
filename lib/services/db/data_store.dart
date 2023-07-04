@@ -43,7 +43,7 @@ abstract class DataStore extends ChangeNotifier {
   Future<void> saveInvite(Invite invite);
   Future<String> acceptInvite(String inviteId);
 
-  Future<UserAccount> createUser(UserAccount user);
+  Future<UserAccount> updateUserAccount(UserAccount user);
   Future<UserAccount> updateUserDisplayName(String displayName);
   Future<void> setUid(String? uid);
 
@@ -85,7 +85,7 @@ class DataStoreState extends ChangeNotifier {
       }
 
       if (dataStore.currentUser == null) {
-        await dataStore.createUser(UserAccount.fromUser(user!));
+        await dataStore.updateUserAccount(UserAccount.fromUser(user!));
 
         try {
           await dataStore.setUid(user.uid);

@@ -44,7 +44,7 @@ class LoginScreen extends StatelessWidget {
                   user.updateDisplayName(defaultDisplayName);
                 }
 
-                await DataStore.of(context).createUser(UserAccount.fromUser(user));
+                await DataStore.of(context).updateUserAccount(UserAccount.fromUser(user));
               }
 
               await routeState.go('/doorbells');

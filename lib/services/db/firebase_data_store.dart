@@ -149,21 +149,18 @@ class FirebaseDataStore extends DataStore {
   }
 
   @override
-  Future<UserAccount> createUser(UserAccount user) async {
-    await db.ref('users/${user.userId}').set(user.toMap());
-    return user;
+  Future<UserAccount> updateUserAccount(UserAccount user) async {
+    await db.ref('users/${user.userId}').update(user.toMap() as Map<String, dynamic>);
+
+    return UserAccount.fromSnapshot(await db.ref('users/${user.userId}').get());
   }
 
   @override
   Future<UserAccount> updateUserDisplayName(String displayName) async {
     if (displayName.isEmpty) throw AssertionError('Display name cannot be empty!');
 
-    var dataToUpdate = {
-      'displayName': displayName,
-    };
-
     await db.goOnline();
-    await db.ref('users/$_uid').update(dataToUpdate);
+    await db.ref('users/$_uid/displayName').set(displayName);
 
     _currentUser = UserAccount.fromSnapshot(await db.ref('users/$_uid').get());
     if (_currentUser == null) throw AssertionError('Failed to update user display name!');
@@ -215,7 +212,13 @@ class FirebaseDataStore extends DataStore {
 
   @override
   Future<void> saveInvite(Invite invite) async {
-    await db.ref('invites/${invite.id}').set(invite.toMap());
+    var resp = await HttpUtils.securePost(Uri.parse('$QRDOORBELL_API_URL/api/v1/doorbells/invite'), body: invite.toJson());
+    if (resp.statusCode != 200) {
+      logger.warning('Failed to accept Doorbell Invite - API returned an error: ${resp.body}');
+      throw AssertionError('Failed to remove Doorbell - API returned an error: ${resp.body}');
+    }
+
+    await reloadData(true);
   }
 
   void _clearData() {

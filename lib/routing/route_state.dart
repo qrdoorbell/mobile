@@ -25,8 +25,18 @@ class RouteState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> wait(Future future, Function(dynamic) destinationRouteFunc, [String? errorRoute]) =>
-      go("/_wait", data: {"future": future, "destinationRouteFunc": destinationRouteFunc, "errorRoute": errorRoute});
+  Future<void> wait(Future future,
+          [Function(dynamic)? destinationRouteFunc,
+          String? destinationRoute,
+          String? errorRoute,
+          Duration timeout = const Duration(seconds: 10)]) =>
+      go("/_wait", data: {
+        "future": future,
+        "destinationRouteFunc": destinationRouteFunc,
+        "destinationRoute": destinationRoute,
+        "errorRoute": errorRoute,
+        "timeout": timeout
+      });
 
   Future<void> go(String route, {dynamic data}) async {
     if (NEWRELIC_APP_TOKEN.isNotEmpty) NewrelicMobile.instance.recordBreadcrumb(route);

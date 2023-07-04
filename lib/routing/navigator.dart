@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
@@ -107,14 +109,28 @@ class _AppNavigatorState extends State<AppNavigator> {
           FadeTransitionPage<void>(
               key: _waitScreenKey,
               child: FutureBuilder(
-                future: routeState.data["future"],
+                future: Future.any(<Future>[
+                  routeState.data["future"],
+                  Future.delayed(routeState.data["timeout"], () {
+                    logger.warning('Wait timed out');
+                    throw TimeoutException('Wait timed out');
+                  })
+                ]),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done && routeState.data != null) {
                     if (snapshot.hasError) {
                       logger.shout('An async error occured!', snapshot.error);
                       RouteStateScope.of(context).go(routeState.data["errorRoute"] ?? "/doorbells");
                     } else {
-                      RouteStateScope.of(context).go(routeState.data["destinationRouteFunc"](snapshot.data));
+                      var route = (routeState.data["destinationRouteFunc"] != null
+                              ? routeState.data["destinationRouteFunc"](snapshot.data)
+                              : null) ??
+                          routeState.data["destinationRoute"] ??
+                          routeState.data["errorRoute"] ??
+                          "/doorbells";
+
+                      logger.fine('Redirecting to: $route');
+                      RouteStateScope.of(context).go(route);
                     }
                   }
                   return EmptyScreen.white().withWaitingIndicator();

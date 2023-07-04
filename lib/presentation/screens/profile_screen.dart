@@ -43,7 +43,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           leadingSize: 60,
           padding: const EdgeInsets.symmetric(horizontal: 18),
           title: Text(userName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 25)),
-          subtitle: Text(user!.email ?? "")),
+          subtitle: Text(user?.email ?? "")),
       const Padding(padding: EdgeInsets.only(top: 20)),
       CupertinoListTile(
         title: CupertinoTextField(
@@ -75,7 +75,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         title: const Text('User ID', style: TextStyle(color: CupertinoColors.inactiveGray)),
         trailing: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 5),
-          child: Text(user.userId, style: const TextStyle(color: CupertinoColors.inactiveGray)),
+          child: Text(user?.userId ?? "", style: const TextStyle(color: CupertinoColors.inactiveGray)),
         ),
       ),
       const Padding(padding: EdgeInsets.only(top: 20)),
@@ -86,19 +86,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 await RouteStateScope.of(context).wait(DataStore.of(context).updateUserDisplayName(userName), (_) => "/doorbells");
               },
               child: const Text('Save'))),
-      const Padding(padding: EdgeInsets.only(top: 200)),
-      Padding(
-          padding: const EdgeInsets.all(18),
-          child: CupertinoButton.filled(
-              onPressed: () {
-                RouteStateScope.of(context).wait(FirebaseAuth.instance.signOut(), (_) => "/login");
-              },
-              child: const Text('Sign out'))),
-      if (kDebugMode) ...[
-        Padding(
-            padding: const EdgeInsets.all(18),
-            child: CupertinoButton(color: CupertinoColors.systemTeal, onPressed: _onEmulateCall, child: const Text('Emulate call'))),
-      ],
+      Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Padding(
+              padding: const EdgeInsets.all(18),
+              child: CupertinoButton.filled(
+                  onPressed: () {
+                    RouteStateScope.of(context).wait(FirebaseAuth.instance.signOut(), (_) => "/login");
+                  },
+                  child: const Text('Sign out'))),
+          if (kDebugMode) ...[
+            Padding(
+                padding: const EdgeInsets.all(18),
+                child: CupertinoButton(color: CupertinoColors.systemTeal, onPressed: _onEmulateCall, child: const Text('Emulate call'))),
+          ],
+        ],
+      ),
     ]));
   }
 
