@@ -8,9 +8,15 @@ import '../../data.dart';
 
 abstract class FirebaseRepository<T> extends DataStoreRepository<T> {
   final _items = <T>[];
+  final DataStore dataStore;
+
+  @override
+  bool get isLoaded => this.dataStore.isLoaded;
 
   @override
   Iterable<T> get items => _items;
+
+  FirebaseRepository(this.dataStore);
 
   @override
   Future<void> reload();
@@ -28,9 +34,8 @@ abstract class FirebaseRepository<T> extends DataStoreRepository<T> {
 
 class DoorbellsRepository extends FirebaseRepository<Doorbell> {
   final FirebaseDatabase db;
-  final DataStore dataStore;
 
-  DoorbellsRepository(this.db, this.dataStore);
+  DoorbellsRepository(this.db, super.dataStore);
 
   Future<void> update(Doorbell doorbell) async {
     await db.ref('doorbells/${doorbell.doorbellId}').set(doorbell.toMap());
@@ -71,7 +76,7 @@ class DoorbellEventsRepository extends FirebaseRepository<DoorbellEvent> {
   final FirebaseDatabase db;
   final DoorbellsRepository doorbellsRepository;
 
-  DoorbellEventsRepository(this.db, this.doorbellsRepository) {
+  DoorbellEventsRepository(this.db, this.doorbellsRepository) : super(doorbellsRepository.dataStore) {
     doorbellsRepository.addListener(() {
       notifyListeners();
     });
@@ -98,13 +103,15 @@ class DoorbellUsersRepository extends FirebaseRepository<DoorbellUser> {
   final FirebaseDatabase db;
   final DoorbellsRepository doorbellsRepository;
 
-  DoorbellUsersRepository(this.db, this.doorbellsRepository) {
+  DoorbellUsersRepository(this.db, this.doorbellsRepository) : super(doorbellsRepository.dataStore) {
     doorbellsRepository.addListener(() {
       notifyListeners();
     });
   }
 
-  Iterable<DoorbellUser> getDoorbellUsers(String doorbellId) => _items.where((x) => x.doorbellId == doorbellId).toList();
+  Iterable<DoorbellUser> getDoorbellUsers(String doorbellId) => _items
+      .where((x) => x.doorbellId == doorbellId)
+      .sortedByCompare((x) => x.userShortName ?? "--", (a, b) => b[0] == '-' ? -1 : a.compareTo(b));
 
   @override
   Future<void> reload() async {
@@ -119,11 +126,16 @@ class DoorbellUsersRepository extends FirebaseRepository<DoorbellUser> {
     await Future.wait(loaders);
 
     var displayNames = {};
+    var emails = {};
     var uids = _items.map((x) => x.userId).toSet();
 
     logger.fine('Loading user display names from DB');
-    var userDataLoaders = Map.fromEntries(
-        uids.map((uid) => MapEntry(uid, db.ref('users/$uid/displayName').get().then((v) => displayNames[uid] = v.value?.toString()))));
+    var userDataLoaders = Map.fromEntries(uids.map((uid) => MapEntry(
+        uid,
+        Future.wait([
+          db.ref('users/$uid/displayName').get().then((v) => displayNames[uid] = v.value?.toString()),
+          db.ref('users/$uid/email').get().then((v) => emails[uid] = v.value?.toString())
+        ]))));
 
     if (logger.isLoggable(Level.FINEST)) logger.finest('User ids: $uids');
     await Future.wait(userDataLoaders.values);
@@ -132,8 +144,9 @@ class DoorbellUsersRepository extends FirebaseRepository<DoorbellUser> {
     for (var doorbellUser in _items) {
       if (displayNames.containsKey(doorbellUser.userId)) {
         doorbellUser.userDisplayName = displayNames[doorbellUser.userId] ?? "";
+        doorbellUser.email = emails[doorbellUser.userId] ?? "";
         doorbellUser.userShortName = UserAccount.getShortNameFromDisplayName(doorbellUser.userDisplayName);
-        doorbellUser.userColor = UserAccount.getColorFromDisplayName(doorbellUser.userShortName!);
+        doorbellUser.userColor = UserAccount.getColorFromShortName(doorbellUser.userShortName!);
       }
     }
 

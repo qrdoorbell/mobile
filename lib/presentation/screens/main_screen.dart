@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:livekit_client/livekit_client.dart';
+import 'package:qrdoorbell_mobile/presentation/screens/empty_screen.dart';
 
 import '../../data.dart';
 import '../../routing/route_state.dart';
@@ -16,10 +17,10 @@ class MainScreen extends StatefulWidget {
   });
 
   @override
-  State<MainScreen> createState() => _MainScreenState();
+  State<MainScreen> createState() => MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class MainScreenState extends State<MainScreen> {
   late final CupertinoTabController _tabController;
 
   @override
@@ -30,6 +31,8 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (!DataStore.of(context).isLoaded) return EmptyScreen.white().withWaitingIndicator();
+
     return CupertinoTabScaffold(
       controller: _tabController,
       backgroundColor: Colors.white,
@@ -59,13 +62,14 @@ class _MainScreenState extends State<MainScreen> {
             onTapHandler: (Doorbell doorbell) async => await RouteStateScope.of(context).go('/doorbells/${doorbell.doorbellId}'),
           );
           title = 'Doorbells';
-          floatButton = FloatingActionButton(onPressed: _createDoorbellHandler, child: const Icon(CupertinoIcons.add));
+          floatButton = FloatingActionButton(onPressed: createDoorbell, child: const Icon(CupertinoIcons.add));
         } else if (index == 1) {
           tabWidget = const EventList();
           title = 'Events';
         } else if (index == 2) {
           tabWidget = const ProfileScreen();
-          title = 'Profile';
+          // title = 'Profile';
+          title = '';
         } else {
           throw UnexpectedStateException('Invalid tab index');
         }
@@ -81,12 +85,15 @@ class _MainScreenState extends State<MainScreen> {
                     backgroundColor: Colors.white,
                     body: CustomScrollView(
                       slivers: <Widget>[
-                        CupertinoSliverNavigationBar(
-                          transitionBetweenRoutes: true,
-                          backgroundColor: Colors.white,
-                          largeTitle: Text(title),
-                          border: Border.all(width: 0, color: Colors.white),
-                        ),
+                        if (title != '')
+                          CupertinoSliverNavigationBar(
+                            transitionBetweenRoutes: true,
+                            backgroundColor: Colors.white,
+                            padding: EdgeInsetsDirectional.zero,
+                            largeTitle: Text(title),
+                            border: Border.all(width: 0, color: Colors.white),
+                          ),
+                        if (title == '') const SliverPadding(padding: EdgeInsets.only(top: 70)),
                         CupertinoSliverRefreshControl(onRefresh: _onRefreshNeeded),
                         tabWidget,
                         const SliverPadding(padding: EdgeInsets.only(top: 70)),
@@ -100,7 +107,7 @@ class _MainScreenState extends State<MainScreen> {
     await DataStore.of(context).reloadData(true);
   }
 
-  Future<void> _createDoorbellHandler() async {
+  Future<void> createDoorbell() async {
     final dataStore = DataStore.of(context);
     if (dataStore.doorbells.items.length >= 5) {
       _showAlert(context);
@@ -113,7 +120,7 @@ class _MainScreenState extends State<MainScreen> {
       await dataStore.reloadData(true);
 
       return doorbell;
-    })(), (newDoorbell) => '/doorbells/${newDoorbell.doorbellId}');
+    })(), destinationRouteFunc: (newDoorbell) => '/doorbells/${newDoorbell.doorbellId}');
   }
 
   void _handleTabIndexChanged() {

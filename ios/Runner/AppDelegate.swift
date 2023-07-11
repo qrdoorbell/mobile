@@ -52,11 +52,17 @@ import flutter_callkeep
         data.appName = "QR Doorbell"
         data.iconName = "CallKitLogo"
         data.handle = doorbellName
-        data.extra = ["userId": userId, "platform": "ios", "callToken": callToken, "doorbellId": doorbellId, "livekitServer": livekitServer, "doorbellName": doorbellName, "stickerId": stickerId, "doorbellEnabled": doorbellEnabled, "serverTimestampMs": serverTimestampMs]
-
-//        payload.dictionaryPayload.forEach { (key: AnyHashable, value: Any) in
-//            data.extra.setValue(value, forKey: key.base as! String)
-//        }
+        data.extra = [
+            "userId": userId, 
+            "platform": "ios", 
+            "callToken": callToken, 
+            "doorbellId": doorbellId, 
+            "livekitServer": livekitServer, 
+            "doorbellName": doorbellName, 
+            "stickerId": stickerId, 
+            "doorbellEnabled": doorbellEnabled, 
+            "serverTimestampMs": serverTimestampMs
+        ]
 
         SwiftCallKeepPlugin.sharedInstance?.displayIncomingCall(data, fromPushKit: true)
     }

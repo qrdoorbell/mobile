@@ -3,8 +3,8 @@ import 'dart:convert';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:logging/logging.dart';
-import 'package:qrdoorbell_mobile/app_options.dart';
 
+import '../../app_options.dart';
 import '../../data.dart';
 import '../../tools.dart';
 import 'firebase_repositories.dart';
@@ -42,6 +42,9 @@ class FirebaseDataStore extends DataStore {
   }
 
   @override
+  bool get isLoaded => _reloadCompleter.isCompleted;
+
+  @override
   Future<DataStore> get future => _reloadCompleter.future;
 
   @override
@@ -59,6 +62,12 @@ class FirebaseDataStore extends DataStore {
 
     if (_currentUser == null || force) {
       _currentUser = UserAccount.fromSnapshot(await db.ref('users/$_uid').get());
+      if (_currentUser != null) {
+        if (_currentUser!.displayName == null || _currentUser!.displayName == "") {
+          _currentUser!.displayName = _currentUser!.email?.split('@').first;
+          await db.ref('users/$_uid').update({"displayName": _currentUser!.displayName});
+        }
+      }
       force = true;
     }
 
@@ -143,9 +152,25 @@ class FirebaseDataStore extends DataStore {
   }
 
   @override
-  Future<UserAccount> createUser(UserAccount user) async {
-    await db.ref('users/${user.userId}').set(user.toMap());
-    return user;
+  Future<UserAccount> updateUserAccount(UserAccount user) async {
+    await db.ref('users/${user.userId}').update(user.toMap() as Map<String, dynamic>);
+
+    return UserAccount.fromSnapshot(await db.ref('users/${user.userId}').get());
+  }
+
+  @override
+  Future<UserAccount> updateUserDisplayName(String displayName) async {
+    if (displayName.isEmpty) throw AssertionError('Display name cannot be empty!');
+
+    await db.goOnline();
+    await db.ref('users/$_uid/displayName').set(displayName);
+
+    _currentUser = UserAccount.fromSnapshot(await db.ref('users/$_uid').get());
+    if (_currentUser == null) throw AssertionError('Failed to update user display name!');
+
+    await db.goOffline();
+
+    return _currentUser!;
   }
 
   @override
@@ -190,7 +215,13 @@ class FirebaseDataStore extends DataStore {
 
   @override
   Future<void> saveInvite(Invite invite) async {
-    await db.ref('invites/${invite.id}').set(invite.toMap());
+    var resp = await HttpUtils.securePost(Uri.parse('$QRDOORBELL_API_URL/api/v1/doorbells/invite'), body: invite.toJson());
+    if (resp.statusCode != 200) {
+      logger.warning('Failed to accept Doorbell Invite - API returned an error: ${resp.body}');
+      throw AssertionError('Failed to remove Doorbell - API returned an error: ${resp.body}');
+    }
+
+    await reloadData(true);
   }
 
   void _clearData() {

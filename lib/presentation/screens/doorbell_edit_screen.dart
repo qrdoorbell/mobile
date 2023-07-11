@@ -334,7 +334,7 @@ class _DoorbellEditScreenState extends State<DoorbellEditScreen> {
                 await route.wait((() async {
                   await dataStore.removeDoorbell(doorbell);
                   await dataStore.reloadData(true);
-                })(), (_) => "/doorbells");
+                })(), destinationRoute: "/doorbells");
               },
             ),
           ],

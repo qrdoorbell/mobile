@@ -61,7 +61,6 @@ class CallScreenState extends State<CallScreen> {
     await room!.connect('https://${livekitServer ?? 'qrdoorbell.livekit.cloud'}/', accessToken,
         roomOptions: const RoomOptions(
           adaptiveStream: true,
-          // dynacast: true,
           defaultVideoPublishOptions: VideoPublishOptions(
             simulcast: false,
           ),

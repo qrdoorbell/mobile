@@ -8,7 +8,7 @@ import 'package:livekit_client/livekit_client.dart';
 
 import '../../../services/callkit_service.dart';
 import '../../../routing.dart';
-import './participant_widget.dart';
+import 'remote_participant_widget.dart';
 
 class VideoCall extends StatefulWidget {
   final Room room;
@@ -28,6 +28,7 @@ class VideoCall extends StatefulWidget {
 
 class _VideoCallState extends State<VideoCall> {
   EventsListener<RoomEvent> get _listener => widget.listener;
+  bool _isLocalAnswered = false;
 
   @override
   void initState() {
@@ -53,13 +54,21 @@ class _VideoCallState extends State<VideoCall> {
       await _endCallIfAlone(context);
     })
     ..on<TrackPublishedEvent>((remoteParty) async {
-      setState(() {});
+      if (!_isLocalAnswered && remoteParty.participant.identity.startsWith('user-'))
+        setState(() async {
+          await _endCall(context);
+        });
     })
     ..on<TrackUnpublishedEvent>((remoteParty) async {
-      await _endCallIfAlone(context);
+      if (!_isLocalAnswered && remoteParty.participant.identity.startsWith('guest-'))
+        setState(() async {
+          await _endCall(context);
+        });
     })
     ..on<LocalTrackPublishedEvent>((remoteParty) async {
-      setState(() {});
+      setState(() {
+        _isLocalAnswered = true;
+      });
     })
     ..on<LocalTrackUnpublishedEvent>((localParty) async {
       await _endCallIfAlone(context);

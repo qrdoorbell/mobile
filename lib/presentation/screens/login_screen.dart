@@ -15,7 +15,7 @@ class LoginScreen extends StatelessWidget {
       providers: [
         EmailAuthProvider(),
         AppleProvider(),
-        GoogleProvider(clientId: GOOGLE_CLIENT_ID),
+        // GoogleProvider(clientId: GOOGLE_CLIENT_ID),
       ],
       auth: fa.FirebaseAuth.instance,
       headerBuilder: (context, constr, _) =>
@@ -44,7 +44,7 @@ class LoginScreen extends StatelessWidget {
                   user.updateDisplayName(defaultDisplayName);
                 }
 
-                await DataStore.of(context).createUser(UserAccount.fromUser(user));
+                await DataStore.of(context).updateUserAccount(UserAccount.fromUser(user));
               }
 
               await routeState.go('/doorbells');

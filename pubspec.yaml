@@ -1,11 +1,23 @@
 name: qrdoorbell_mobile
 description: QR Doorbell mobile application.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 0.2.46
-homepage: https://www.qrdoorbell.io/
+version: 0.2.55
+homepage: https://qrdoorbell.io/
+repository: https://github.com/qrdoorbell/mobile
+issue_tracker: https://github.com/qrdoorbell/mobile/issues
+
+topics:
+  - qr
+  - doorbell
+  - video
+  - livekit
+  - webrtc
+
+platforms:
+  - ios:
 
 environment:
-  sdk: '>=2.18.6 <3.0.0'
+  sdk: '^3.0.0'
 
 dependencies:
   flutter:
@@ -63,12 +75,8 @@ flutter:
   - assets/logo-app.svg
   - assets/logo-app-white.svg
   - assets/video.svg
-  - assets/video.slash.svg
-
-  # fonts:
-  #   - family: vg5000
-  #     fonts:
-  #       - asset: fonts/vg5000-regular.ttf
+  - assets/video.fill.svg
+  - assets/video.slash.fill.svg
 
 flutter_icons:
   image_path: "assets/logo-app-01_1024.png" 

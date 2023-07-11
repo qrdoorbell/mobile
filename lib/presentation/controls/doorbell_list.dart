@@ -1,5 +1,7 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+import '../../presentation/screens/main_screen.dart';
 import '../../data.dart';
 import '../../services/db/firebase_repositories.dart';
 import 'doorbell_card.dart';
@@ -19,26 +21,42 @@ class DoorbellList extends StatefulWidget {
 class DoorbellListState extends State<DoorbellList> {
   @override
   Widget build(BuildContext context) {
-    // final dataStore = DataStore.of(context);
-    // var data = dataStore.doorbells.items.sortedByCompare((x) => x, (a, b) {
-    //   if (a.lastEvent != null && b.lastEvent != null) return b.lastEvent!.dateTime.isAfter(a.lastEvent!.dateTime) ? 1 : -1;
-    //   return a.name.compareTo(b.name);
-    // });
     return MultiProvider(
         providers: [
           ChangeNotifierProvider.value(value: DataStore.of(context).doorbells),
           ChangeNotifierProvider.value(value: (DataStore.of(context).doorbellUsers as DoorbellUsersRepository)),
         ],
-        builder: (context, child) => Consumer<DataStoreRepository<Doorbell>>(
-            builder: (context, doorbells, child) => SliverList.list(
-                children: doorbells.items
-                    .map((x) => DoorbellCard(
-                          doorbell: x,
-                          announce: x.lastEvent != null
-                              ? "${x.lastEvent!.formattedName} ${x.lastEvent!.formattedDateTimeSingleLine}"
-                              : 'No events',
-                          onTapHandler: widget.onTapHandler,
-                        ))
-                    .toList())));
+        builder: (context, child) => Consumer<DataStoreRepository<Doorbell>>(builder: (context, doorbells, child) {
+              if (doorbells.items.isEmpty && doorbells.isLoaded)
+                return SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      const Text("Add your first doorbell", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
+                      const Padding(
+                        padding: EdgeInsets.only(top: 15, bottom: 40, left: 20, right: 20),
+                        child: Text("Generate QR code, print stickers, and share your doorbell with friends.",
+                            style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
+                      ),
+                      CupertinoButton.filled(
+                          onPressed: () => context.findAncestorStateOfType<MainScreenState>()?.createDoorbell(),
+                          child: const Text(
+                            "Add Doorbell",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          )),
+                      const Padding(padding: EdgeInsets.all(50))
+                    ]));
+
+              return SliverList.list(
+                  children: doorbells.items
+                      .sortedByCompare((x) => x.lastEvent?.dateTime, (a, b) => a != null ? (a.isBefore(b ?? DateTime.now()) ? 1 : -1) : -1)
+                      .map((x) => DoorbellCard(
+                            doorbell: x,
+                            announce: x.lastEvent != null
+                                ? "${x.lastEvent!.formattedName} ${x.lastEvent!.formattedDateTimeSingleLine}"
+                                : 'No events',
+                            onTapHandler: widget.onTapHandler,
+                          ))
+                      .toList());
+            }));
   }
 }

@@ -1,8 +1,13 @@
 import 'package:collection/collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:quiver/strings.dart';
+
+extension AvatarExtensions on UserAccount? {
+  String getShortName() => UserAccount.getShortName(this);
+  Color getAvatarColor() => UserAccount.getColorFromShortName(UserAccount.getShortName(this));
+}
 
 class UserAccount {
   late final String userId;
@@ -101,12 +106,7 @@ class UserAccount {
     return "--";
   }
 
-  static Color getColorFromDisplayName(String? displayName) {
-    if (displayName == null || displayName.isEmpty || displayName.startsWith('-')) return CupertinoColors.lightBackgroundGray;
-
-    var h = hashIgnoreAsciiCase(displayName);
-    return Color.fromARGB(255, (h << 4) % 101 + 154, (h << 2) % 101 + 154, h % 101 + 154);
-  }
+  static Color getColorFromShortName(String? displayName) => _UserAvatarColorScheme.getColorFromDisplayName(displayName).backgroundColor;
 }
 
 class UserAccountIdp {
@@ -119,4 +119,38 @@ class UserAccountIdp {
         'provider': provider,
         'id': providerUserId,
       };
+}
+
+class _UserAvatarColorScheme {
+  final Color backgroundColor;
+  final Color textColor;
+
+  // ignore: unused_element
+  _UserAvatarColorScheme(this.backgroundColor, [this.textColor = Colors.white]);
+
+  static _UserAvatarColorScheme getColorFromDisplayName(String? displayName) {
+    if (displayName == null || displayName.isEmpty || displayName.startsWith('-')) return _userAvatarColorSchemes[0];
+
+    var h = hashIgnoreAsciiCase(displayName);
+    var i = (h % (_userAvatarColorSchemes.length - 1)) + 1;
+
+    return _userAvatarColorSchemes[i];
+  }
+
+  static final _userAvatarColorSchemes = <_UserAvatarColorScheme>[
+    _UserAvatarColorScheme(Colors.blueGrey.shade100),
+    _UserAvatarColorScheme(Colors.pinkAccent),
+    _UserAvatarColorScheme(Colors.redAccent.shade400),
+    _UserAvatarColorScheme(Colors.deepOrange),
+    _UserAvatarColorScheme(Colors.amberAccent),
+    _UserAvatarColorScheme(Colors.deepPurpleAccent),
+    _UserAvatarColorScheme(Colors.purpleAccent),
+    _UserAvatarColorScheme(Colors.indigoAccent),
+    _UserAvatarColorScheme(Colors.blueAccent),
+    _UserAvatarColorScheme(Colors.lightBlueAccent.shade700),
+    _UserAvatarColorScheme(Colors.cyan.shade600),
+    _UserAvatarColorScheme(Colors.teal.shade400),
+    _UserAvatarColorScheme(Colors.green),
+    _UserAvatarColorScheme(Colors.yellow),
+  ];
 }

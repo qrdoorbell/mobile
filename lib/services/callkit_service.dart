@@ -3,9 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_callkeep/flutter_callkeep.dart';
 import 'package:logging/logging.dart';
 import 'package:newrelic_mobile/newrelic_mobile.dart';
-import 'package:qrdoorbell_mobile/app_options.dart';
 import 'package:uuid/uuid.dart';
 
+import '../app_options.dart';
 import '../routing/route_state.dart';
 
 class CallKitService extends ChangeNotifier {
@@ -63,6 +63,10 @@ class CallKitService extends ChangeNotifier {
         // declined an incoming call
         break;
       case CallKeepEventType.callEnded:
+        var callEvent = event as CallKeepCallEvent;
+        if (callEvent.data.extra != null) {
+          _doorbellCalls.remove(callEvent.data.extra!['doorbellId']);
+        }
         // ended an incoming/outgoing call
         break;
       case CallKeepEventType.callTimedOut:
