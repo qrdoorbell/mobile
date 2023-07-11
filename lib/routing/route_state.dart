@@ -26,10 +26,10 @@ class RouteState extends ChangeNotifier {
   }
 
   Future<void> wait(Future future,
-          [Function(dynamic)? destinationRouteFunc,
+          {Function(dynamic)? destinationRouteFunc,
           String? destinationRoute,
           String? errorRoute,
-          Duration timeout = const Duration(seconds: 10)]) =>
+          Duration timeout = const Duration(seconds: 10)}) =>
       go("/_wait", data: {
         "future": future,
         "destinationRouteFunc": destinationRouteFunc,

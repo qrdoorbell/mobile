@@ -1,4 +1,7 @@
+import 'dart:typed_data';
+
 import 'package:flutter/cupertino.dart';
+import 'package:share_plus/share_plus.dart';
 import '../../app_options.dart';
 import '../../data.dart';
 import '../../tools.dart';
@@ -72,7 +75,11 @@ class QRCodeScreen extends StatelessWidget {
               if (showSaveButton) ...[
                 CupertinoButton.filled(
                     onPressed: () async => await RouteStateScope.of(context).wait(
-                        DoorbellScreen.printSticker(DataStore.of(context).getDoorbellById(doorbellId)!), (_) => "/doorbells/$doorbellId"),
+                        // DoorbellScreen.printSticker(DataStore.of(context).getDoorbellById(doorbellId)!),
+                        Share.shareXFiles(
+                            [XFile.fromData(Uint8List.fromList(snapshot.data!.toList(growable: false)), mimeType: 'image/png')],
+                            subject: 'Doorbell'),
+                        destinationRoute: '/doorbells/$doorbellId'),
                     child: const Text(
                       'Save sticker image',
                       style: TextStyle(fontWeight: FontWeight.bold),

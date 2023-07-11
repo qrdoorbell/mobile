@@ -64,7 +64,7 @@ class DoorbellScreen extends StatelessWidget {
                   "Edit",
                   style: TextStyle(color: CupertinoColors.activeBlue),
                 ),
-                onPressed: () => RouteStateScope.of(context).go('/doorbells/${doorbellId}/edit'),
+                onPressed: () => RouteStateScope.of(context).go('/doorbells/$doorbellId/edit'),
               ),
               middle: Text(doorbell.name),
               largeTitle: Padding(padding: const EdgeInsets.only(left: 0), child: Text(doorbell.name)),
@@ -116,7 +116,7 @@ class DoorbellScreen extends StatelessWidget {
                 const Text('Shared with', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400)),
                 const Spacer(),
                 CupertinoButton(
-                    child: const Text('Manage'), onPressed: () => {RouteStateScope.of(context).go('/doorbells/${doorbellId}/users')})
+                    child: const Text('Manage'), onPressed: () => {RouteStateScope.of(context).go('/doorbells/$doorbellId/users')})
               ]),
               Padding(
                   padding: const EdgeInsets.only(left: 18),
@@ -152,10 +152,7 @@ class DoorbellScreen extends StatelessWidget {
 
             CupertinoSliverRefreshControl(
               onRefresh: () async {
-                var route = RouteStateScope.of(context);
-                route.wait((() async {
-                  await dataStore.reloadData(false);
-                })(), (p0) => route.route);
+                await RouteStateScope.of(context).wait(dataStore.reloadData(false));
               },
             ),
             EventList(
@@ -184,7 +181,7 @@ class DoorbellScreen extends StatelessWidget {
         route.wait((() async {
           await dataStore.saveInvite(invite);
           await dataStore.reloadData(false);
-        })(), (_) => "/doorbells/${doorbell.doorbellId}");
+        })(), destinationRoute: "/doorbells/${doorbell.doorbellId}");
       }
     } catch (error) {
       DoorbellScreen.logger.shout('Share doorbell failed!', error);

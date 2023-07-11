@@ -12,6 +12,8 @@ import '../../model/user_account.dart';
 abstract class DataStoreRepository<T> extends ChangeNotifier {
   final logger = Logger("DataStoreRepository<$T>");
 
+  bool get isLoaded;
+
   Iterable<T> get items;
 
   Future<void> reload();
@@ -47,6 +49,7 @@ abstract class DataStore extends ChangeNotifier {
   Future<UserAccount> updateUserDisplayName(String displayName);
   Future<void> setUid(String? uid);
 
+  bool get isLoaded;
   Future<DataStore> get future;
   Future<void> reloadData(bool force);
 

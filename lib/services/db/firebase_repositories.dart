@@ -8,9 +8,15 @@ import '../../data.dart';
 
 abstract class FirebaseRepository<T> extends DataStoreRepository<T> {
   final _items = <T>[];
+  final DataStore dataStore;
+
+  @override
+  bool get isLoaded => this.dataStore.isLoaded;
 
   @override
   Iterable<T> get items => _items;
+
+  FirebaseRepository(this.dataStore);
 
   @override
   Future<void> reload();
@@ -28,9 +34,8 @@ abstract class FirebaseRepository<T> extends DataStoreRepository<T> {
 
 class DoorbellsRepository extends FirebaseRepository<Doorbell> {
   final FirebaseDatabase db;
-  final DataStore dataStore;
 
-  DoorbellsRepository(this.db, this.dataStore);
+  DoorbellsRepository(this.db, super.dataStore);
 
   Future<void> update(Doorbell doorbell) async {
     await db.ref('doorbells/${doorbell.doorbellId}').set(doorbell.toMap());
@@ -71,7 +76,7 @@ class DoorbellEventsRepository extends FirebaseRepository<DoorbellEvent> {
   final FirebaseDatabase db;
   final DoorbellsRepository doorbellsRepository;
 
-  DoorbellEventsRepository(this.db, this.doorbellsRepository) {
+  DoorbellEventsRepository(this.db, this.doorbellsRepository) : super(doorbellsRepository.dataStore) {
     doorbellsRepository.addListener(() {
       notifyListeners();
     });
@@ -98,7 +103,7 @@ class DoorbellUsersRepository extends FirebaseRepository<DoorbellUser> {
   final FirebaseDatabase db;
   final DoorbellsRepository doorbellsRepository;
 
-  DoorbellUsersRepository(this.db, this.doorbellsRepository) {
+  DoorbellUsersRepository(this.db, this.doorbellsRepository) : super(doorbellsRepository.dataStore) {
     doorbellsRepository.addListener(() {
       notifyListeners();
     });

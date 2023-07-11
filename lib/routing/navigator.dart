@@ -127,6 +127,7 @@ class _AppNavigatorState extends State<AppNavigator> {
                               : null) ??
                           routeState.data["destinationRoute"] ??
                           routeState.data["errorRoute"] ??
+                          routeState.route.path ??
                           "/doorbells";
 
                       logger.fine('Redirecting to: $route');

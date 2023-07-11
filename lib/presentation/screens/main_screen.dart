@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:livekit_client/livekit_client.dart';
+import 'package:qrdoorbell_mobile/presentation/screens/empty_screen.dart';
 
 import '../../data.dart';
 import '../../routing/route_state.dart';
-import '../controls/call_manager_banner.dart';
 import '../controls/event_list.dart';
 import '../controls/doorbell_list.dart';
 import 'profile_screen.dart';
@@ -31,6 +31,8 @@ class MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (!DataStore.of(context).isLoaded) return EmptyScreen.white().withWaitingIndicator();
+
     return CupertinoTabScaffold(
       controller: _tabController,
       backgroundColor: Colors.white,
@@ -118,7 +120,7 @@ class MainScreenState extends State<MainScreen> {
       await dataStore.reloadData(true);
 
       return doorbell;
-    })(), (newDoorbell) => '/doorbells/${newDoorbell.doorbellId}');
+    })(), destinationRouteFunc: (newDoorbell) => '/doorbells/${newDoorbell.doorbellId}');
   }
 
   void _handleTabIndexChanged() {

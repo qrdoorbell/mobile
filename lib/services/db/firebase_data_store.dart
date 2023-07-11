@@ -42,6 +42,9 @@ class FirebaseDataStore extends DataStore {
   }
 
   @override
+  bool get isLoaded => _reloadCompleter.isCompleted;
+
+  @override
   Future<DataStore> get future => _reloadCompleter.future;
 
   @override

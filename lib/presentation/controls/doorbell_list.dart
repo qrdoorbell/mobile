@@ -27,7 +27,7 @@ class DoorbellListState extends State<DoorbellList> {
           ChangeNotifierProvider.value(value: (DataStore.of(context).doorbellUsers as DoorbellUsersRepository)),
         ],
         builder: (context, child) => Consumer<DataStoreRepository<Doorbell>>(builder: (context, doorbells, child) {
-              if (doorbells.items.isEmpty)
+              if (doorbells.items.isEmpty && doorbells.isLoaded)
                 return SliverFillRemaining(
                     hasScrollBody: false,
                     child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -45,6 +45,7 @@ class DoorbellListState extends State<DoorbellList> {
                           )),
                       const Padding(padding: EdgeInsets.all(50))
                     ]));
+
               return SliverList.list(
                   children: doorbells.items
                       .sortedByCompare((x) => x.lastEvent?.dateTime, (a, b) => a != null ? (a.isBefore(b ?? DateTime.now()) ? 1 : -1) : -1)

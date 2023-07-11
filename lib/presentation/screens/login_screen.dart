@@ -15,7 +15,7 @@ class LoginScreen extends StatelessWidget {
       providers: [
         EmailAuthProvider(),
         AppleProvider(),
-        GoogleProvider(clientId: GOOGLE_CLIENT_ID),
+        // GoogleProvider(clientId: GOOGLE_CLIENT_ID),
       ],
       auth: fa.FirebaseAuth.instance,
       headerBuilder: (context, constr, _) =>

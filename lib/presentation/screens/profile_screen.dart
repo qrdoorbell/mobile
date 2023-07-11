@@ -52,7 +52,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
           decoration: const BoxDecoration(),
           textAlign: TextAlign.right,
           onTapOutside: (event) async {
-            userName = displayNameController.text;
+            if (userName != displayNameController.text) {
+              await RouteStateScope.of(context)
+                  .wait(DataStore.of(context).updateUserDisplayName(displayNameController.text), destinationRoute: "/profile");
+            }
           },
         ),
       ),
@@ -78,14 +81,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Text(user?.userId ?? "", style: const TextStyle(color: CupertinoColors.inactiveGray)),
         ),
       ),
-      const Padding(padding: EdgeInsets.only(top: 20)),
-      Padding(
-          padding: const EdgeInsets.all(18),
-          child: CupertinoButton.filled(
-              onPressed: () async {
-                await RouteStateScope.of(context).wait(DataStore.of(context).updateUserDisplayName(userName), (_) => "/doorbells");
-              },
-              child: const Text('Save'))),
       Column(
         mainAxisAlignment: MainAxisAlignment.end,
         mainAxisSize: MainAxisSize.max,
@@ -94,7 +89,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               padding: const EdgeInsets.all(18),
               child: CupertinoButton.filled(
                   onPressed: () {
-                    RouteStateScope.of(context).wait(FirebaseAuth.instance.signOut(), (_) => "/login");
+                    RouteStateScope.of(context).wait(FirebaseAuth.instance.signOut(), destinationRoute: "/login");
                   },
                   child: const Text('Sign out'))),
           if (kDebugMode) ...[
