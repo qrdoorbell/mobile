@@ -1,5 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import '../data.dart';
 
 class Doorbell implements Comparable<Doorbell> {
@@ -129,7 +129,8 @@ class DoorbellUser {
   String role;
   String? userDisplayName;
   String? userShortName;
-  Color userColor = CupertinoColors.lightBackgroundGray;
+  String? email;
+  Color userColor = Colors.blueGrey.shade700;
 
   DoorbellUser({
     required this.doorbellId,
@@ -137,6 +138,7 @@ class DoorbellUser {
     required this.role,
     this.userDisplayName,
     this.userShortName,
+    this.email,
   });
 }
 

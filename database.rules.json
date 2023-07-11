@@ -5,7 +5,17 @@
     "users":{
       "$uid": {
         ".read": "$uid === auth.uid",
-        ".write": "$uid === auth.uid || auth.uid === 'service-account'"
+        ".write": "$uid === auth.uid || auth.uid === 'service-account'",
+  
+        "displayName": {
+        	".read": "null !== auth.uid",
+        	".write": "$uid === auth.uid || auth.uid === 'service-account'"
+	      },
+          
+        "email": {
+        	".read": "null !== auth.uid",
+        	".write": "$uid === auth.uid || auth.uid === 'service-account'"
+	      }
       }
     },
     "doorbells": {

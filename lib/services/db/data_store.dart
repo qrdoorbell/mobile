@@ -12,6 +12,8 @@ import '../../model/user_account.dart';
 abstract class DataStoreRepository<T> extends ChangeNotifier {
   final logger = Logger("DataStoreRepository<$T>");
 
+  bool get isLoaded;
+
   Iterable<T> get items;
 
   Future<void> reload();
@@ -43,9 +45,11 @@ abstract class DataStore extends ChangeNotifier {
   Future<void> saveInvite(Invite invite);
   Future<String> acceptInvite(String inviteId);
 
-  Future<UserAccount> createUser(UserAccount user);
+  Future<UserAccount> updateUserAccount(UserAccount user);
+  Future<UserAccount> updateUserDisplayName(String displayName);
   Future<void> setUid(String? uid);
 
+  bool get isLoaded;
   Future<DataStore> get future;
   Future<void> reloadData(bool force);
 
@@ -84,7 +88,7 @@ class DataStoreState extends ChangeNotifier {
       }
 
       if (dataStore.currentUser == null) {
-        await dataStore.createUser(UserAccount.fromUser(user!));
+        await dataStore.updateUserAccount(UserAccount.fromUser(user!));
 
         try {
           await dataStore.setUid(user.uid);

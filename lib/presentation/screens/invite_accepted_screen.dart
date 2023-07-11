@@ -15,7 +15,8 @@ class InviteAcceptedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    RouteStateScope.of(context).wait(DataStore.of(context).acceptInvite(inviteId), (doorbellId) => '/doorbells/$doorbellId');
+    RouteStateScope.of(context)
+        .wait(DataStore.of(context).acceptInvite(inviteId), destinationRouteFunc: (doorbellId) => '/doorbells/$doorbellId');
     return EmptyScreen.white().withWaitingIndicator();
   }
 }
