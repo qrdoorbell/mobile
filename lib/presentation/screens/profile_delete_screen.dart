@@ -80,9 +80,9 @@ class ProfileDeleteScreen extends StatelessWidget {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return CupertinoAlertDialog(
-          title: Text("Confirm delete account!"),
-          content: Padding(
-              padding: const EdgeInsets.only(top: 10),
+          title: const Text("Confirm delete account!"),
+          content: const Padding(
+              padding: EdgeInsets.only(top: 10),
               child: Text(
                   "Are you sure you want to delete you account profile?\n\nThis cannot be undone and all associated data will be lost.")),
           actions: <Widget>[
