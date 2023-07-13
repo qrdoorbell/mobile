@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
+import 'package:qrdoorbell_mobile/presentation/screens/profile_delete_screen.dart';
 
 import '../presentation/screens/empty_screen.dart';
 import '../presentation/screens/doorbell_edit_screen.dart';
@@ -67,6 +68,13 @@ class _AppNavigatorState extends State<AppNavigator> {
             key: _mainScreenKey,
             child: const MainScreen(),
           ),
+
+          if (pathTemplate == '/profile/delete-account')
+            MaterialPage(
+              key: _inviteScreenKey,
+              child: ProfileDeleteScreen(),
+            ),
+
           // path: /doorbells/:doorbellId
           if (pathTemplate.startsWith('/doorbells/:doorbellId') && doorbellId != null) ...[
             MaterialPage(
@@ -76,31 +84,26 @@ class _AppNavigatorState extends State<AppNavigator> {
             if (pathTemplate == '/doorbells/:doorbellId/qr')
               MaterialPage(
                 key: _doorbellDetailsEditKey,
-                // fullscreenDialog: true,
                 child: QRCodeScreen(doorbellId: doorbellId),
               ),
             if (pathTemplate == '/doorbells/:doorbellId/edit')
               MaterialPage(
                 key: _doorbellDetailsEditKey,
-                // fullscreenDialog: true,
                 child: DoorbellEditScreen(doorbellId: doorbellId),
               ),
             if (pathTemplate == '/doorbells/:doorbellId/ring/:accessToken' && callAccessToken != null)
               MaterialPage(
                 key: _doorbellDetailsEditKey,
-                fullscreenDialog: true,
                 child: CallScreen(accessToken: callAccessToken, doorbellId: doorbellId),
               ),
             if (pathTemplate == '/doorbells/:doorbellId/join/:accessToken' && callAccessToken != null)
               MaterialPage(
                 key: _doorbellDetailsEditKey,
-                fullscreenDialog: true,
                 child: CallScreen(accessToken: callAccessToken, doorbellId: doorbellId),
               ),
             if (pathTemplate == '/doorbells/:doorbellId/users')
               MaterialPage(
                 key: _doorbellDetailsEditKey,
-                // fullscreenDialog: true,
                 child: DoorbellUsersScreen(doorbellId: doorbellId),
               ),
           ],

@@ -3,24 +3,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:uuid/uuid.dart';
 
 import '../../data.dart';
 import '../../routing/route_state.dart';
-import '../../services/call_manager.dart';
+import '../../services/call_emulator_service.dart';
 
-class ProfileScreen extends StatefulWidget {
+class ProfileScreen extends StatelessWidget {
   const ProfileScreen({
     super.key,
   });
-
-  @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
-}
-
-class _ProfileScreenState extends State<ProfileScreen> {
-  String _callId = const Uuid().v4();
-  int _i = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -32,87 +23,121 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     var displayNameController = TextEditingController(text: userName);
 
-    return SliverList(
-        delegate: SliverChildListDelegate.fixed(<Widget>[
-      CupertinoListTile(
-          leading: CircleAvatar(
-            radius: 33,
-            backgroundColor: avatarColor,
-            child: Text(shortName, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 26)),
-          ),
-          leadingSize: 60,
-          padding: const EdgeInsets.symmetric(horizontal: 18),
-          title: Text(userName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 25)),
-          subtitle: Text(user?.email ?? "")),
-      const Padding(padding: EdgeInsets.only(top: 20)),
-      CupertinoListTile(
-        title: CupertinoTextField(
-          controller: displayNameController,
-          prefix: const Text('Display Name'),
-          decoration: const BoxDecoration(),
-          textAlign: TextAlign.right,
-          onTapOutside: (event) async {
-            if (userName != displayNameController.text) {
-              await RouteStateScope.of(context)
-                  .wait(DataStore.of(context).updateUserDisplayName(displayNameController.text), destinationRoute: "/profile");
-            }
-          },
-        ),
-      ),
-      const Padding(padding: EdgeInsets.symmetric(horizontal: 18, vertical: 10), child: Divider(height: 1, thickness: 1)),
-      CupertinoListTile(
-        title: const Text('App Version', style: TextStyle(color: CupertinoColors.inactiveGray)),
-        trailing: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 5),
-          child: FutureBuilder(
-              future: PackageInfo.fromPlatform(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) return const Text("...", style: TextStyle(color: CupertinoColors.inactiveGray));
-                if (snapshot.data == null) return const Text("-", style: TextStyle(color: CupertinoColors.inactiveGray));
+    return CupertinoPageScaffold(
+      child: Container(
+        color: CupertinoColors.systemGroupedBackground,
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            CupertinoListTile(
+                backgroundColor: CupertinoColors.systemBackground,
+                padding: const EdgeInsets.only(left: 18, right: 18, top: 90, bottom: 15),
+                title: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 30,
+                      backgroundColor: avatarColor,
+                      child: Text(shortName, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 26)),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(userName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 25)),
+                          Text(
+                            user?.email ?? "",
+                            style: const TextStyle(fontSize: 14, color: CupertinoColors.inactiveGray),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                )),
+            CupertinoListSection.insetGrouped(
+              header: const Text(
+                'ACCOUNT',
+                style: TextStyle(fontSize: 13.0, color: CupertinoColors.inactiveGray, fontWeight: FontWeight.normal),
+              ),
+              additionalDividerMargin: 5,
+              children: [
+                CupertinoListTile(
+                  title: CupertinoTextField(
+                    controller: displayNameController,
+                    prefix: const Text('Display Name'),
+                    decoration: const BoxDecoration(),
+                    textAlign: TextAlign.right,
+                    onTapOutside: (event) async {
+                      if (userName != displayNameController.text) {
+                        await RouteStateScope.of(context)
+                            .wait(DataStore.of(context).updateUserDisplayName(displayNameController.text), destinationRoute: "/profile");
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
+            CupertinoListSection.insetGrouped(
+              header: const Text(
+                'APPLICATION',
+                style: TextStyle(fontSize: 13.0, color: CupertinoColors.inactiveGray, fontWeight: FontWeight.normal),
+              ),
+              additionalDividerMargin: 5,
+              children: [
+                CupertinoListTile(
+                  title: const Text('App Version'),
+                  trailing: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child: FutureBuilder(
+                        future: PackageInfo.fromPlatform(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) return const Text("...", style: TextStyle(color: CupertinoColors.inactiveGray));
+                          if (snapshot.data == null) return const Text("-", style: TextStyle(color: CupertinoColors.inactiveGray));
 
-                return Text("${snapshot.data?.version}", style: const TextStyle(color: CupertinoColors.inactiveGray));
-              }),
-        ),
-      ),
-      CupertinoListTile(
-        title: const Text('User ID', style: TextStyle(color: CupertinoColors.inactiveGray)),
-        trailing: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 5),
-          child: Text(user?.userId ?? "", style: const TextStyle(color: CupertinoColors.inactiveGray)),
-        ),
-      ),
-      Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Padding(
-              padding: const EdgeInsets.all(18),
-              child: CupertinoButton.filled(
-                  onPressed: () {
-                    RouteStateScope.of(context).wait(FirebaseAuth.instance.signOut(), destinationRoute: "/login");
-                  },
-                  child: const Text('Sign out'))),
-          if (kDebugMode) ...[
-            Padding(
-                padding: const EdgeInsets.all(18),
-                child: CupertinoButton(color: CupertinoColors.systemTeal, onPressed: _onEmulateCall, child: const Text('Emulate call'))),
+                          return Text("${snapshot.data?.version}",
+                              style: const TextStyle(color: CupertinoColors.inactiveGray, fontSize: 14));
+                        }),
+                  ),
+                ),
+                CupertinoListTile(
+                  title: const Text('User ID'),
+                  trailing: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child: Text(user?.userId ?? "", style: const TextStyle(color: CupertinoColors.inactiveGray, fontSize: 14)),
+                  ),
+                ),
+                if (kDebugMode) ...[
+                  TextButton(onPressed: CallEmulatorService().setNextCallState, child: const Text('Emulate call')),
+                ],
+              ],
+            ),
+            const Spacer(),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+              child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 15),
+                  child: Center(
+                      child: TextButton(
+                          child: const Text(
+                            'Delete account',
+                            style: TextStyle(color: CupertinoColors.destructiveRed, fontWeight: FontWeight.normal),
+                          ),
+                          onPressed: () => RouteStateScope.of(context).go('/profile/delete-account'))),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: CupertinoButton.filled(
+                      onPressed: () {
+                        RouteStateScope.of(context).wait(FirebaseAuth.instance.signOut(), destinationRoute: "/login");
+                      },
+                      child: const Text('Sign out')),
+                ),
+              ]),
+            )
           ],
-        ],
+        ),
       ),
-    ]));
-  }
-
-  void _onEmulateCall() {
-    if (_i == 0) CallManager().addCallEvent(StartCallEvent(_callId, "doorbell1_id", "room1_id"));
-    if (_i == 1) CallManager().addCallEvent(IncomingCallEvent(_callId, "call_token_bla_bla_bla"));
-    if (_i == 2) CallManager().addCallEvent(AcceptCallEvent(_callId, "user_me_id"));
-    if (_i == 3) CallManager().addCallEvent(DeclineCallEvent(_callId, "user_me_id"));
-    if (_i == 4) CallManager().addCallEvent(EndCallEvent(_callId, "ok"));
-
-    _i++;
-    if (_i == 5) {
-      _i = 0;
-      _callId = const Uuid().v4();
-    }
+    );
   }
 }

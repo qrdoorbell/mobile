@@ -70,6 +70,8 @@ class MainScreenState extends State<MainScreen> {
           tabWidget = const ProfileScreen();
           // title = 'Profile';
           title = '';
+
+          return const ProfileScreen();
         } else {
           throw UnexpectedStateException('Invalid tab index');
         }
