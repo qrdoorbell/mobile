@@ -2,14 +2,16 @@ name: iOS build
 
 on:
   push:
+    branches:
+      - dev/v*
     tags: [ v* ]
 
 jobs:
   build:
-    name: Build and Test default scheme using any available iPhone simulator
+    name: Build and Test default scheme
     runs-on: macos-latest
     env:
-      PRODUCT_NAME: QR Doorbell
+      PRODUCT_NAME: QR Doorbell App
 
     steps:
       - name: Install Flutter
@@ -48,10 +50,15 @@ jobs:
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
       - name: Build
         run: |
+          if [[ "${GITHUB_REF#refs/*/v}" = "$GITHUB_REF" ]] then
+            export BUILD_NAME=$(cat pubspec.yaml | perl -lne 'print $& if /version\:\s\K\d+.\d+.\d+/')
+          else 
+            export BUILD_NAME=${GITHUB_REF#refs/*/v} 
+          fi
+          ################
           flutter pub get
-          xcodebuild -workspace ios/Runner.xcworkspace -allowProvisioningUpdates -allowProvisioningDeviceRegistration -configuration Release -scheme Runner
-          flutter build ipa --release --dart-define=USE_CRASHALYTICS=true --dart-define=NEWRELIC_APP_TOKEN=eu01xx79f98fc731cd7778b793ed8af8a632bce3d0-NRMA --dart-define=GOOGLE_CLIENT_ID=AIzaSyBVBruJnxt4zW0Eqlg7JtLVvotnSSiz8UI
-      # Collect the file and upload as artifact         
+          xcodebuild -UseNewBuildSystem=YES -IDEPackageSupportUseBuiltinSCM=YES -workspace ios/Runner.xcworkspace -allowProvisioningUpdates -allowProvisioningDeviceRegistration -configuration Release -scheme Runner
+          flutter build ipa --release --dart-define=USE_CRASHALYTICS=true --dart-define=NEWRELIC_APP_TOKEN=eu01xx79f98fc731cd7778b793ed8af8a632bce3d0-NRMA --dart-define=GOOGLE_CLIENT_ID=AIzaSyBVBruJnxt4zW0Eqlg7JtLVvotnSSiz8UI --build-name=$BUILD_NAME --build-number=$GITHUB_RUN_ATTEMPT --export-options-plist=exportOptions.plist
       - name: Upload IPA artifacts
         uses: actions/upload-artifact@v2
         with:
