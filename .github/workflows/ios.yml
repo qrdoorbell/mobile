@@ -61,7 +61,7 @@ jobs:
         env:
           # BUILD_NAME: ${{ steps.vars.outputs.tag }}
           BUILD_NAME: 0.2.59
-          BUILD_NUMBER: $GITHUB_RUN_ATTEMPT
+          BUILD_NUMBER: 8
         run: |
           flutter pub get
           xcodebuild -UseNewBuildSystem=YES -IDEPackageSupportUseBuiltinSCM=YES -workspace ios/Runner.xcworkspace -allowProvisioningUpdates -allowProvisioningDeviceRegistration -configuration Release -scheme Runner
