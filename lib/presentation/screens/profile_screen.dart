@@ -16,6 +16,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var user = DataStore.of(context).currentUser;
+    var authUser = FirebaseAuth.instance.currentUser;
 
     var userName = user?.displayName ?? "N/A";
     var shortName = user.getShortName();
@@ -73,6 +74,14 @@ class ProfileScreen extends StatelessWidget {
                             .wait(DataStore.of(context).updateUserDisplayName(displayNameController.text), destinationRoute: "/profile");
                       }
                     },
+                  ),
+                ),
+                CupertinoListTile(
+                  title: const Text('Email status'),
+                  trailing: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child: Text(authUser?.emailVerified == true ? 'verified' : 'not verified',
+                        style: const TextStyle(color: CupertinoColors.inactiveGray, fontSize: 14)),
                   ),
                 ),
               ],
