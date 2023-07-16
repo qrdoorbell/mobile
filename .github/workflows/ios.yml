@@ -8,10 +8,10 @@ on:
 
 jobs:
   build:
-    name: Build and Test default scheme using any available iPhone simulator
+    name: Build and Test default scheme
     runs-on: macos-latest
     env:
-      PRODUCT_NAME: QR Doorbell
+      PRODUCT_NAME: QR Doorbell App
 
     steps:
       - name: Install Flutter
@@ -20,6 +20,15 @@ jobs:
           channel: 'stable' # or: 'beta', 'dev' or 'master'      
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Version output
+        id: vars
+        run: echo "tag=${GITHUB_REF_NAME#v*}" >> $GITHUB_OUTPUT
+      - name: Check output
+        env:
+          BUILD_NAME: ${{ steps.vars.outputs.tag }}
+        run: |
+          echo $BUILD_NAME
+          echo ${{ steps.vars.outputs.tag }}
       - name: Install the Apple certificate and provisioning profile
         env:
           BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
@@ -49,10 +58,13 @@ jobs:
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
       - name: Build
+        env:
+          BUILD_NAME: ${{ steps.vars.outputs.tag }}
+          BUILD_NUMBER: $GITHUB_RUN_ATTEMPT
         run: |
           flutter pub get
           xcodebuild -UseNewBuildSystem=YES -IDEPackageSupportUseBuiltinSCM=YES -workspace ios/Runner.xcworkspace -allowProvisioningUpdates -allowProvisioningDeviceRegistration -configuration Release -scheme Runner
-          flutter build ipa --release --dart-define=USE_CRASHALYTICS=true --dart-define=NEWRELIC_APP_TOKEN=eu01xx79f98fc731cd7778b793ed8af8a632bce3d0-NRMA --dart-define=GOOGLE_CLIENT_ID=AIzaSyBVBruJnxt4zW0Eqlg7JtLVvotnSSiz8UI
+          flutter build ipa --release --dart-define=USE_CRASHALYTICS=true --dart-define=NEWRELIC_APP_TOKEN=eu01xx79f98fc731cd7778b793ed8af8a632bce3d0-NRMA --dart-define=GOOGLE_CLIENT_ID=AIzaSyBVBruJnxt4zW0Eqlg7JtLVvotnSSiz8UI --build-name=${{ env.BUILD_NAME }} --build-number=${{ env.BUILD_NUMBER }} --export-options-plist=exportOptions.plist
       - name: Upload IPA artifacts
         uses: actions/upload-artifact@v2
         with:
