@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:logging/logging.dart';
 
@@ -152,25 +153,27 @@ class FirebaseDataStore extends DataStore {
   }
 
   @override
-  Future<UserAccount> updateUserAccount(UserAccount user) async {
+  Future<void> updateUserAccount(UserAccount user) async {
+    await db.goOnline();
     await db.ref('users/${user.userId}').update(user.toMap() as Map<String, dynamic>);
 
-    return UserAccount.fromSnapshot(await db.ref('users/${user.userId}').get());
+    _currentUser = UserAccount.fromSnapshot(await db.ref('users/${user.userId}').get());
+    if (_currentUser == null) throw AssertionError('Failed to update user account!');
+
+    await db.goOffline();
   }
 
   @override
-  Future<UserAccount> updateUserDisplayName(String displayName) async {
+  Future<void> updateUserDisplayName(String displayName) async {
     if (displayName.isEmpty) throw AssertionError('Display name cannot be empty!');
 
-    await db.goOnline();
-    await db.ref('users/$_uid/displayName').set(displayName);
+    _currentUser?.displayName = displayName;
+    await FirebaseAuth.instance.currentUser?.updateDisplayName(displayName);
 
-    _currentUser = UserAccount.fromSnapshot(await db.ref('users/$_uid').get());
-    if (_currentUser == null) throw AssertionError('Failed to update user display name!');
+    await db.goOnline();
+    await db.ref('users/$_uid').update({'displayName': displayName});
 
     await db.goOffline();
-
-    return _currentUser!;
   }
 
   @override
@@ -226,8 +229,8 @@ class FirebaseDataStore extends DataStore {
 
   void _clearData() {
     _doorbellUsersRepository.clear();
+    _doorbellsRepository.clear();
     _eventsRepository.clear();
-    _doorbellUsersRepository.clear();
     _currentUser = null;
   }
 }

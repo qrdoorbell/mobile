@@ -60,22 +60,27 @@ class UserAccount {
       doorbells = [];
   }
 
-  Map toMap() => {
-        'id': userId,
-        'firstName': firstName,
-        'lastName': lastName,
-        'displayName': displayName,
-        'email': email,
-        'created': created.millisecondsSinceEpoch,
-        'idps': idps.map((e) => {'key': e.provider, 'value': e.toMap()}).toList(growable: false),
-        'doorbells': doorbells.map((e) => {'key': e, 'value': true}).toList(growable: false),
-        'enableVideoCalls': enableVideoCalls,
-        'enableAudioCalls': enableAudioCalls,
-        'enableVideoPreview': enableVideoPreview,
-        'enableVoiceMail': enableVoiceMail,
-        'enableTextMail': enableTextMail,
-        'enablePushNotifications': enablePushNotifications,
-      };
+  Map toMap() {
+    var result = {
+      'id': userId,
+      'created': created.millisecondsSinceEpoch,
+      // 'idps': idps.map((e) => {'key': e.provider, 'value': e.toMap()}).toList(growable: false),
+      'enableVideoCalls': enableVideoCalls,
+      'enableAudioCalls': enableAudioCalls,
+      'enableVideoPreview': enableVideoPreview,
+      'enableVoiceMail': enableVoiceMail,
+      'enableTextMail': enableTextMail,
+      'enablePushNotifications': enablePushNotifications,
+    };
+
+    if (firstName != null) result['firstName'] = firstName!;
+    if (lastName != null) result['lastName'] = lastName!;
+    if (displayName != null) result['displayName'] = displayName!;
+    if (email != null) result['email'] = email!;
+    if (doorbells.isNotEmpty) result['doorbells'] = doorbells.map((e) => {'key': e, 'value': true}).toList(growable: false);
+
+    return result;
+  }
 
   static UserAccount fromSnapshot(DataSnapshot snapshot) => UserAccount._(snapshot);
 

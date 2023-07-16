@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
@@ -64,14 +65,11 @@ class ProfileDeleteScreen extends StatelessWidget {
   }
 
   Future<void> _deleteAccount(BuildContext context) async {
-    var router = RouteStateScope.of(context);
     var resp = await HttpUtils.securePost(Uri.parse('$QRDOORBELL_API_URL/user/profile/delete'));
     if (resp.statusCode != 200) {
       logger.warning('Failed to delete account!\n\n${resp.body}');
       throw AssertionError('Failed to delete account!\n\n${resp.body}');
     }
-
-    router.go('/logout');
   }
 
   Future<void> _showDeleteConfirmationDialog(BuildContext context) async {
@@ -80,9 +78,9 @@ class ProfileDeleteScreen extends StatelessWidget {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return CupertinoAlertDialog(
-          title: Text("Confirm delete account!"),
-          content: Padding(
-              padding: const EdgeInsets.only(top: 10),
+          title: const Text("Confirm delete account!"),
+          content: const Padding(
+              padding: EdgeInsets.only(top: 10),
               child: Text(
                   "Are you sure you want to delete you account profile?\n\nThis cannot be undone and all associated data will be lost.")),
           actions: <Widget>[
@@ -103,7 +101,10 @@ class ProfileDeleteScreen extends StatelessWidget {
                 style: TextStyle(color: CupertinoColors.destructiveRed, fontWeight: FontWeight.bold, fontSize: 17),
               ),
               onPressed: () async {
-                await RouteStateScope.of(context).wait(_deleteAccount(context), destinationRouteFunc: (_) => '/logout');
+                await RouteStateScope.of(context).wait((() async {
+                  await _deleteAccount(context);
+                  await FirebaseAuth.instance.signOut();
+                })(), destinationRoute: '/logout', errorRoute: '/logout');
               },
             ),
           ],

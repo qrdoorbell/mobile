@@ -108,8 +108,9 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
   void initState() {
     _routeParser = TemplateRouteParser(
       allowedPaths: [
-        '/login',
         '/_wait',
+        '/login',
+        '/login/forgot-password',
         '/doorbells',
         '/events',
         '/doorbells/new',
@@ -242,7 +243,7 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
   Future<ParsedRoute> _guard(ParsedRoute from) async {
     final signedIn = FirebaseAuth.instance.currentUser?.uid != null;
 
-    if (!signedIn && from != signInRoute)
+    if (!signedIn && from != signInRoute && from.pathTemplate != '/login/forgot-password')
       return signInRoute;
     else if (signedIn && from == signInRoute) {
       return ParsedRoute('/doorbells', '/doorbells', {}, {});
