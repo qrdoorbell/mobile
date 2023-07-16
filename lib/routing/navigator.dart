@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:qrdoorbell_mobile/presentation/screens/profile_delete_screen.dart';
@@ -28,6 +29,7 @@ class _AppNavigatorState extends State<AppNavigator> {
   static final logger = Logger('AppNavigator');
 
   final _signInKey = const ValueKey('Sign in');
+  final _forgotPasswordKey = const ValueKey('Forgot password');
   final _waitScreenKey = const ValueKey('Wait screen');
   final _mainScreenKey = const ValueKey('Main screen');
   final _inviteScreenKey = const ValueKey('Invite screen');
@@ -54,9 +56,11 @@ class _AppNavigatorState extends State<AppNavigator> {
         return route.didPop(result);
       },
       pages: [
-        if (routeState.route.pathTemplate == '/login')
-          FadeTransitionPage<void>(key: _signInKey, child: LoginScreen())
-        else if (pathTemplate == '/invite/accept/:inviteId' && inviteId != null)
+        if (routeState.route.pathTemplate.startsWith('/login')) ...[
+          FadeTransitionPage<void>(key: _signInKey, child: LoginScreen()),
+          if (pathTemplate == '/login/forgot-password')
+            MaterialPage(child: ForgotPasswordScreen(key: _forgotPasswordKey, email: routeState.data['email'])),
+        ] else if (pathTemplate == '/invite/accept/:inviteId' && inviteId != null)
           MaterialPage(
             key: _inviteScreenKey,
             fullscreenDialog: true,

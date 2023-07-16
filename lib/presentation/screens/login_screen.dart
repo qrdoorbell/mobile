@@ -21,35 +21,47 @@ class LoginScreen extends StatelessWidget {
       headerBuilder: (context, constr, _) =>
           Padding(padding: const EdgeInsets.only(top: 20), child: Image.asset('assets/logo-app-01_512.png')),
       actions: [
-        ForgotPasswordAction(
-          ((context, email) {
-            Navigator.of(context).pushNamed('/forgot-password', arguments: {'email': email});
-          }),
-        ),
+        SignedOutAction(((context) async {
+          var routeState = RouteStateScope.of(context);
+
+          await DataStore.of(context).setUid(null);
+          routeState.go('/login');
+        })),
+        AuthCancelledAction(((context) async {
+          var routeState = RouteStateScope.of(context);
+
+          await DataStore.of(context).setUid(null);
+          routeState.go('/login');
+        })),
+        ForgotPasswordAction((context, email) {
+          RouteStateScope.of(context).go('/login/forgot-password', data: {'email': email});
+        }),
         AuthStateChangeAction(
-          ((context, state) async {
+          (context, state) async => await RouteStateScope.of(context).wait((() async {
             if (state is UserCreated || state is SignedIn) {
               var user = (state is SignedIn) ? state.user : (state as UserCreated).credential.user;
               if (user == null) {
                 return;
               }
 
-              var routeState = RouteStateScope.of(context);
-              if (!user.emailVerified && (state is UserCreated)) {
-                user.sendEmailVerification();
-              }
+              var dataStore = DataStore.of(context);
+              var displayName = user.displayName;
+
               if (state is UserCreated) {
                 if (user.displayName == null && user.email != null) {
-                  var defaultDisplayName = user.email!.split('@')[0];
-                  user.updateDisplayName(defaultDisplayName);
+                  displayName = user.email!.split('@')[0];
+                  await user.updateDisplayName(displayName);
                 }
 
-                await DataStore.of(context).updateUserAccount(UserAccount.fromUser(user));
+                var userAccount = UserAccount(userId: user.uid, displayName: displayName, email: user.email);
+                await dataStore.updateUserAccount(userAccount);
               }
 
-              await routeState.go('/doorbells');
+              if (!user.emailVerified && (state is UserCreated)) {
+                await user.sendEmailVerification();
+              }
             }
-          }),
+          })(), destinationRoute: '/doorbells', errorRoute: '/login'),
         ),
       ],
     );

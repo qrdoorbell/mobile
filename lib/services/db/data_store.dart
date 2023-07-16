@@ -45,8 +45,9 @@ abstract class DataStore extends ChangeNotifier {
   Future<void> saveInvite(Invite invite);
   Future<String> acceptInvite(String inviteId);
 
-  Future<UserAccount> updateUserAccount(UserAccount user);
-  Future<UserAccount> updateUserDisplayName(String displayName);
+  Future<void> updateUserAccount(UserAccount user);
+  Future<void> updateUserDisplayName(String displayName);
+
   Future<void> setUid(String? uid);
 
   bool get isLoaded;
