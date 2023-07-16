@@ -50,7 +50,7 @@ jobs:
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
       - name: Build
         run: |
-          if [[ "${GITHUB_REF#refs/*/v}" = "$GITHUB_REF" ]] then
+          if [[ "${GITHUB_REF#refs/*/v}" = "$GITHUB_REF" ]]; then
             export BUILD_NAME=$(cat pubspec.yaml | perl -lne 'print $& if /version\:\s\K\d+.\d+.\d+/')
           else 
             export BUILD_NAME=${GITHUB_REF#refs/*/v} 
