@@ -9,7 +9,7 @@ jobs:
     name: Build and Test default scheme
     runs-on: macos-latest
     env:
-      PRODUCT_NAME: QR Doorbell App
+      PRODUCT_NAME: QR Doorbell
 
     steps:
       - name: Install Flutter
@@ -66,7 +66,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            build/ios/ipa/${{ env.PRODUCT_NAME }}.ipa
+            build/ios/ipa/*.ipa
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload gSYM assets
