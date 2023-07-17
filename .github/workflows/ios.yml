@@ -2,8 +2,6 @@ name: iOS build
 
 on:
   push:
-    branches:
-      - dev/v*
     tags: [ v* ]
 
 jobs:
@@ -63,14 +61,14 @@ jobs:
           # path: build/ios/ipa/*.ipa
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      # - name: Upload IPA assets
-      #   if: startsWith(github.ref, 'refs/tags/v')
-      #   uses: softprops/action-gh-release@v1
-      #   with:
-      #     files: |
-      #       build/ios/ipa/${{ env.PRODUCT_NAME }}.ipa
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload IPA assets
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            build/ios/ipa/${{ env.PRODUCT_NAME }}.ipa
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload gSYM assets
         run: ./ios/Pods/FirebaseCrashlytics/upload-symbols -gsp ios/Runner/GoogleService-Info.plist -p ios build/ios
       - name: Upload app to App Store Connect
