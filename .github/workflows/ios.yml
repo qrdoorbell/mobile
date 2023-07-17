@@ -53,20 +53,11 @@ jobs:
             export BUILD_NAME=${GITHUB_REF#refs/*/v} 
           fi
           flutter build ipa --release --dart-define=USE_CRASHALYTICS=true --dart-define=NEWRELIC_APP_TOKEN=eu01xx79f98fc731cd7778b793ed8af8a632bce3d0-NRMA --dart-define=GOOGLE_CLIENT_ID=AIzaSyBVBruJnxt4zW0Eqlg7JtLVvotnSSiz8UI --build-name=$BUILD_NAME --build-number=$GITHUB_RUN_ATTEMPT --export-options-plist=exportOptions.plist
-      - name: Upload IPA artifacts
+      - name: Upload build artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: release-ipa
+          name: ios
           path: build/ios/*
-          # path: build/ios/ipa/*.ipa
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Upload IPA assets
-        if: startsWith(github.ref, 'refs/tags/v')
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            build/ios/ipa/*.ipa
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload gSYM assets
