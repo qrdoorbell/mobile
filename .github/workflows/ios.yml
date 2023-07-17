@@ -68,4 +68,4 @@ jobs:
           APP_STORE_CONNECT_USERNAME: ${{ secrets.APP_STORE_CONNECT_USERNAME }}
           APP_STORE_CONNECT_PASSWORD: ${{ secrets.APP_STORE_CONNECT_PASSWORD }}
         run: |
-          xcrun altool --upload-app -t ios -f "build/ios/ipa/*.ipa" -u "$APP_STORE_CONNECT_USERNAME" -p "$APP_STORE_CONNECT_PASSWORD"
+          xcrun altool --upload-app -t ios -f "build/ios/ipa/QR Doorbell.ipa" -u "$APP_STORE_CONNECT_USERNAME" -p "$APP_STORE_CONNECT_PASSWORD"
