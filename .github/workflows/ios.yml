@@ -8,8 +8,6 @@ jobs:
   build:
     name: Build and Test default scheme
     runs-on: macos-latest
-    env:
-      PRODUCT_NAME: QR Doorbell
 
     steps:
       - name: Install Flutter
