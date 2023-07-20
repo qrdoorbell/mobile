@@ -1,7 +1,7 @@
 name: qrdoorbell_mobile
-description: QR Doorbell mobile application.
+description: QR Doorbell Mobile Application
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 0.2.59
+version: 0.0.0
 homepage: https://qrdoorbell.io/
 repository: https://github.com/qrdoorbell/mobile
 issue_tracker: https://github.com/qrdoorbell/mobile/issues
@@ -24,8 +24,8 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.2
   provider: ^6.0.2
-  livekit_client: ^1.1.12
-  flutter_webrtc: ^0.9.27
+  livekit_client: ^1.4.0
+  flutter_webrtc: ^0.9.36
   firebase_core: ^2.5.0
   firebase_messaging: ^14.2.1
   firebase_analytics: ^10.1.6
@@ -43,9 +43,9 @@ dependencies:
   collection: ^1.17.1
   quiver: ^3.2.1
   nanoid: ^1.0.0
-  connectivity_plus: ^3.0.2
+  connectivity_plus: ^4.0.1
   share_plus: ^7.0.0
-  http: ^0.13.5
+  http: ^1.1.0
   logging: ^1.1.1
   intl: ^0.18.0
   uuid: ^3.0.6

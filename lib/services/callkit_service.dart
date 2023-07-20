@@ -61,16 +61,24 @@ class CallKitService extends ChangeNotifier {
         break;
       case CallKeepEventType.callDecline:
         // declined an incoming call
+        var callEvent = event as CallKeepCallEvent;
+        if (callEvent.data.extra != null) {
+          await endCall(callEvent.data.extra!['doorbellId']);
+        }
         break;
       case CallKeepEventType.callEnded:
         var callEvent = event as CallKeepCallEvent;
         if (callEvent.data.extra != null) {
-          _doorbellCalls.remove(callEvent.data.extra!['doorbellId']);
+          await endCall(callEvent.data.extra!['doorbellId']);
         }
         // ended an incoming/outgoing call
         break;
       case CallKeepEventType.callTimedOut:
         // missed an incoming call
+        var callEvent = event as CallKeepCallEvent;
+        if (callEvent.data.extra != null) {
+          await endCall(callEvent.data.extra!['doorbellId']);
+        }
         break;
       case CallKeepEventType.missedCallback:
         // only Android - click action `Call back` from missed call notification
@@ -117,7 +125,6 @@ class CallKitService extends ChangeNotifier {
       await CallKeep.instance.displayIncomingCall(CallKeepIncomingConfig(
           uuid: callId,
           appName: 'QR Doorbell',
-          avatar: 'https://qrdoorbell.io/logo-100.jpg',
           callerName: message.data['doorbellName'],
           hasVideo: true,
           extra: message.data,
@@ -140,49 +147,9 @@ class CallKitService extends ChangeNotifier {
               iconName: 'CallKitLogo',
               handleType: CallKitHandleType.generic,
               isVideoSupported: true,
+              maximumCallGroups: 1,
+              maximumCallsPerCallGroup: 1,
               ringtoneFileName: 'system_ringtone_default')));
-
-      // await FlutterCallkitIncoming.showCallkitIncoming(CallKitParams(
-      //   id: callUuid,
-      //   nameCaller: message.data['doorbellName'],
-      //   avatar: 'https://qrdoorbell.io/logo-100.jpg',
-      //   appName: 'QR Doorbell',
-      //   handle: message.data['doorbellName'],
-      //   type: 1,
-      //   duration: 60000,
-      //   textAccept: 'Accept',
-      //   textDecline: 'Decline',
-      //   textMissedCall: 'Missed call',
-      //   textCallback: 'Call back',
-      //   extra: message.data,
-      //   headers: message.data,
-      //   ios: IOSParams(
-      //     iconName: 'CallKitLogo',
-      //     handleType: 'generic',
-      //     supportsVideo: true,
-      //     maximumCallGroups: 2,
-      //     maximumCallsPerCallGroup: 2,
-      //     audioSessionMode: 'default',
-      //     audioSessionActive: true,
-      //     audioSessionPreferredSampleRate: 44100.0,
-      //     audioSessionPreferredIOBufferDuration: 0.005,
-      //     supportsDTMF: false,
-      //     supportsHolding: false,
-      //     supportsGrouping: false,
-      //     supportsUngrouping: false,
-      //     ringtonePath: 'system_ringtone_default',
-      //   ),
-      //   android: const AndroidParams(
-      //     isCustomNotification: true,
-      //     isShowLogo: true,
-      //     isShowCallback: true,
-      //     isShowMissedCallNotification: true,
-      //     ringtonePath: 'system_ringtone_default',
-      //     backgroundColor: '#0955fa',
-      //     backgroundUrl: 'assets/test.png',
-      //     actionColor: '#4CAF50',
-      //   ),
-      // ));
     } catch (error) {
       logger.warning("Failed to handle RemoteMessage", error);
     }

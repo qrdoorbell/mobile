@@ -15,14 +15,14 @@ class FirebaseDataStore extends DataStore {
 
   String? _uid;
   UserAccount? _currentUser;
-  Completer<DataStore> _reloadCompleter = Completer<DataStore>();
+  Completer<DataStore>? _reloadCompleter = Completer<DataStore>();
   final FirebaseDatabase db;
   late final DoorbellEventsRepository _eventsRepository;
   late final DoorbellUsersRepository _doorbellUsersRepository;
   late final DoorbellsRepository _doorbellsRepository;
 
   FirebaseDataStore(this.db) {
-    _reloadCompleter.complete(this);
+    _reloadCompleter?.complete(this);
     _doorbellsRepository = DoorbellsRepository(db, this);
     _eventsRepository = DoorbellEventsRepository(db, _doorbellsRepository);
     _doorbellUsersRepository = DoorbellUsersRepository(db, _doorbellsRepository);
@@ -43,19 +43,19 @@ class FirebaseDataStore extends DataStore {
   }
 
   @override
-  bool get isLoaded => _reloadCompleter.isCompleted;
+  bool get isLoaded => _reloadCompleter?.isCompleted == true && _uid != null && _currentUser != null;
 
   @override
-  Future<DataStore> get future => _reloadCompleter.future;
+  Future<DataStore> get future => _reloadCompleter?.future ?? Future.value(this);
 
   @override
   Future<void> reloadData(bool force) async {
     logger.fine("FirebaseDataStore.reloadData: force=$force, _uid=$_uid");
     logger.info("FirebaseDataStore.reloadData: Reloading data for user: userId='$_uid'");
 
-    if (!_reloadCompleter.isCompleted) {
+    if (_reloadCompleter != null && !_reloadCompleter!.isCompleted) {
       logger.warning('Reload already in progress!');
-      await _reloadCompleter.future;
+      await _reloadCompleter!.future;
       return;
     }
 
@@ -86,17 +86,19 @@ class FirebaseDataStore extends DataStore {
     notifyListeners();
     Future.delayed(
         const Duration(seconds: 30),
-        () =>
-            {if (!_reloadCompleter.isCompleted) _reloadCompleter.completeError(TimeoutException('Error loading data from DB - timeout'))});
+        () => {
+              if (_reloadCompleter != null && !_reloadCompleter!.isCompleted)
+                _reloadCompleter?.completeError(TimeoutException('Error loading data from DB - timeout'))
+            });
 
     Future.wait([
       _doorbellsRepository.reload().then((_) => Future.wait([
             _doorbellUsersRepository.reload(),
             _eventsRepository.reload(),
           ])),
-    ]).then((_) => _reloadCompleter.complete(this));
+    ]).then((_) => _reloadCompleter?.complete(this));
 
-    await _reloadCompleter.future.timeout(const Duration(seconds: 10));
+    await _reloadCompleter?.future.timeout(const Duration(seconds: 10));
     await db.goOffline();
 
     logger.info('Firebase DataStore reload complete!');
