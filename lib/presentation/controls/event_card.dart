@@ -17,10 +17,14 @@ class EventCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var doorbell = DataStore.of(context).getDoorbellById(event.doorbellId);
-    var users = DataStore.of(context)
-        .doorbellUsers
-        .items
-        .where((x) => event.users.any((element) => element == x.userId) && x.doorbellId == event.doorbellId && x.userShortName != null);
+
+    var users = event.acceptedBy != null
+        ? DataStore.of(context)
+            .doorbellUsers
+            .items
+            .where((x) => event.acceptedBy == x.userId && x.doorbellId == event.doorbellId && x.userShortName != null)
+        : <DoorbellUser>[];
+
     return Padding(
         padding: const EdgeInsets.only(left: 15, top: 5, right: 10),
         child: Card(
@@ -66,28 +70,27 @@ class EventCard extends StatelessWidget {
                               "Doorbell",
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                      if (users.isNotEmpty) ...[
-                        ...users.map<Widget>((u) => Padding(
-                              padding: const EdgeInsets.only(left: 5),
-                              child: CircleAvatar(
-                                radius: 10,
-                                backgroundColor: u.userColor,
-                                child: Text(
-                                  u.userShortName!,
-                                  style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white),
-                                ),
-                              ),
-                            )),
-                      ]
-                      // Text(" ${event.formattedName}"),
                     ],
                   ),
                   Padding(
                       padding: const EdgeInsets.only(top: 5),
                       child: Row(
                         children: [
+                          if (users.isNotEmpty) ...[
+                            ...users.map<Widget>((u) => Padding(
+                                  padding: const EdgeInsets.only(right: 5),
+                                  child: CircleAvatar(
+                                    radius: 10,
+                                    backgroundColor: u.userColor,
+                                    child: Text(
+                                      u.userShortName!,
+                                      style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white),
+                                    ),
+                                  ),
+                                )),
+                          ],
                           Text(event.formattedStatus.toLowerCase()),
-                          if (event.hasDuration) const Text(' ⦁ ', style: TextStyle(color: CupertinoColors.inactiveGray)),
+                          if (event.hasDuration) const Text(', '),
                           Text(event.formattedDuration),
                         ],
                       ))
