@@ -9,6 +9,8 @@ class DoorbellEvent implements Comparable<DoorbellEvent> {
   final DateTime dateTime;
   final Map? voip;
 
+  List<String> users = <String>[];
+
   DoorbellEvent._({
     required this.eventId,
     required this.stickerId,
@@ -72,7 +74,7 @@ class DoorbellEvent implements Comparable<DoorbellEvent> {
         textMessage: s['txt'] ?? "",
         dateTime: DateTime.fromMillisecondsSinceEpoch(s['ts']),
         voip: s['voip'],
-      );
+      )..users = List<String>.from(s['users'] ?? <String>[]);
     }
 
     if (s['t'] == DoorbellEventType.voiceMessage.typeCode) {
@@ -83,7 +85,7 @@ class DoorbellEvent implements Comparable<DoorbellEvent> {
         recordingLink: s['rec'] ?? "",
         dateTime: DateTime.fromMillisecondsSinceEpoch(s['ts']),
         voip: s['voip'],
-      );
+      )..users = List<String>.from(s['users'] ?? <String>[]);
     }
 
     return DoorbellEvent._(
@@ -93,7 +95,7 @@ class DoorbellEvent implements Comparable<DoorbellEvent> {
       eventType: s['t'] ?? "",
       dateTime: DateTime.fromMillisecondsSinceEpoch(s['ts']),
       voip: s['voip'],
-    );
+    )..users = List<String>.from(s['users'] ?? <String>[]);
   }
 
   static DoorbellEvent fromSnapshotAndDoorbellId(String doorbellId, DataSnapshot snapshot) {
@@ -105,7 +107,7 @@ class DoorbellEvent implements Comparable<DoorbellEvent> {
       eventType: s['t'],
       dateTime: DateTime.fromMillisecondsSinceEpoch(s['ts']),
       voip: s['voip'],
-    );
+    )..users = List<String>.from(s['users'] ?? <String>[]);
   }
 
   static DoorbellEvent fromSnapshot(DataSnapshot snapshot) {
@@ -116,7 +118,8 @@ class DoorbellEvent implements Comparable<DoorbellEvent> {
         stickerId: s['s'],
         eventType: s['t'],
         dateTime: DateTime.fromMillisecondsSinceEpoch(s['ts']),
-        voip: s['voip']);
+        voip: s['voip'])
+      ..users = List<String>.from(s['users'] ?? <String>[]);
   }
 
   Map toMap() => {
@@ -126,45 +129,8 @@ class DoorbellEvent implements Comparable<DoorbellEvent> {
         't': eventType,
         'ts': dateTime.millisecondsSinceEpoch,
         'voip': voip,
+        'users': users,
       };
-
-  factory DoorbellEvent.doorbell(String doorbellId, String stickerId, DateTime? dateTime) => DoorbellEvent._(
-      eventId: nanoid(10).toString(),
-      doorbellId: doorbellId,
-      stickerId: stickerId,
-      eventType: DoorbellEventType.doorbell.typeCode,
-      dateTime: dateTime ?? DateTime.now(),
-      voip: null);
-  factory DoorbellEvent.missedCall(String doorbellId, String stickerId, DateTime? dateTime) => DoorbellEvent._(
-      eventId: nanoid(10).toString(),
-      doorbellId: doorbellId,
-      stickerId: stickerId,
-      eventType: DoorbellEventType.missedCall.typeCode,
-      dateTime: dateTime ?? DateTime.now(),
-      voip: null);
-  factory DoorbellEvent.answeredCall(String doorbellId, String stickerId, DateTime? dateTime) => DoorbellEvent._(
-      eventId: nanoid(10).toString(),
-      doorbellId: doorbellId,
-      stickerId: stickerId,
-      eventType: DoorbellEventType.answeredCall.typeCode,
-      dateTime: dateTime ?? DateTime.now(),
-      voip: null);
-  factory DoorbellEvent.textMessage(String doorbellId, String stickerId, DateTime? dateTime, String textMessage) =>
-      TextMessageDoorbellEvent._(
-          eventId: nanoid(10).toString(),
-          doorbellId: doorbellId,
-          stickerId: stickerId,
-          dateTime: dateTime ?? DateTime.now(),
-          textMessage: textMessage,
-          voip: null);
-  factory DoorbellEvent.voiceMessage(String doorbellId, String stickerId, DateTime? dateTime, String recordingLink) =>
-      VoiceMessageDoorbellEvent._(
-          eventId: nanoid(10).toString(),
-          doorbellId: doorbellId,
-          stickerId: stickerId,
-          recordingLink: recordingLink,
-          dateTime: dateTime ?? DateTime.now(),
-          voip: null);
 
   String get formattedDateTime {
     var now = DateTime.now();

@@ -17,6 +17,10 @@ class EventCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var doorbell = DataStore.of(context).getDoorbellById(event.doorbellId);
+    var users = DataStore.of(context)
+        .doorbellUsers
+        .items
+        .where((x) => event.users.any((element) => element == x.userId) && x.doorbellId == event.doorbellId && x.userShortName != null);
     return Padding(
         padding: const EdgeInsets.only(left: 15, top: 5, right: 10),
         child: Card(
@@ -62,7 +66,19 @@ class EventCard extends StatelessWidget {
                               "Doorbell",
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                      Text(' ${event.formattedStatus.toLowerCase()}'),
+                      if (users.isNotEmpty) ...[
+                        ...users.map<Widget>((u) => Padding(
+                              padding: const EdgeInsets.only(left: 5),
+                              child: CircleAvatar(
+                                radius: 10,
+                                backgroundColor: u.userColor,
+                                child: Text(
+                                  u.userShortName!,
+                                  style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white),
+                                ),
+                              ),
+                            )),
+                      ]
                       // Text(" ${event.formattedName}"),
                     ],
                   ),
@@ -70,8 +86,8 @@ class EventCard extends StatelessWidget {
                       padding: const EdgeInsets.only(top: 5),
                       child: Row(
                         children: [
-                          // Text(event.formattedStatus),
-                          // if (event.hasDuration) const Text(' ⦁ ', style: TextStyle(color: CupertinoColors.inactiveGray)),
+                          Text(event.formattedStatus.toLowerCase()),
+                          if (event.hasDuration) const Text(' ⦁ ', style: TextStyle(color: CupertinoColors.inactiveGray)),
                           Text(event.formattedDuration),
                         ],
                       ))
