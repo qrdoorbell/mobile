@@ -3,11 +3,9 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../app_options.dart';
-import '../../data.dart';
 import '../../tools.dart';
 import '../../routing.dart';
 import '../screens/empty_screen.dart';
-import 'doorbell_screen.dart';
 
 class QRCodeScreen extends StatelessWidget {
   final String doorbellId;
