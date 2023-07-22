@@ -1,4 +1,3 @@
-import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -70,6 +69,18 @@ class _DoorbellEditScreenState extends State<DoorbellEditScreen> {
                     ),
                   ),
                   CupertinoListTile(
+                    title: const Text('Allow notifications'),
+                    trailing: CupertinoSwitch(
+                        onChanged: (bool value) async {
+                          doorbell.settings.enablePushNotifications = value;
+                          await DataStore.of(context).updateDoorbellSettings(doorbell);
+                          setState(() => doorbell);
+                        },
+                        value: doorbell.settings.enablePushNotifications),
+                  ),
+
+/* DISABLE FOR NOW
+                  CupertinoListTile(
                     title: const Text('Silent mode time'),
                     additionalInfo: Text(doorbell.settings.automaticStateSettings != null
                         ? "${DateFormat.Hm().format(doorbell.settings.automaticStateSettings!.startTime)} to ${DateFormat.Hm().format(doorbell.settings.automaticStateSettings!.endTime)}"
@@ -134,6 +145,7 @@ class _DoorbellEditScreenState extends State<DoorbellEditScreen> {
                         },
                         value: doorbell.settings.enablePushNotifications),
                   ),
+*/
                 ],
               ),
 
@@ -183,7 +195,7 @@ class _DoorbellEditScreenState extends State<DoorbellEditScreen> {
                               await DataStore.of(context).updateDoorbellSettings(doorbell);
                             })
                   ]),
-
+/* DISABLE FOR NOW
               // VOICE CALLS
               CupertinoListSection.insetGrouped(
                 additionalDividerMargin: 6,
@@ -209,7 +221,7 @@ class _DoorbellEditScreenState extends State<DoorbellEditScreen> {
                   ),
                 ],
               ),
-
+*/
               // VIDEO CALLS
               CupertinoListSection.insetGrouped(
                 additionalDividerMargin: 6,
@@ -238,14 +250,18 @@ class _DoorbellEditScreenState extends State<DoorbellEditScreen> {
                         },
                         value: doorbell.settings.enableVideoPreview),
                   ),
+
+/* DISABLE FOR NOW
                   const CupertinoListTile(
                     title: Text('Notification sound'),
                     additionalInfo: Text('Ding-dong'),
                     trailing: CupertinoListTileChevron(),
                   ),
+*/
                 ],
               ),
 
+/* DISABLE FOR NOW
               // MESSAGES
               CupertinoListSection.insetGrouped(
                 additionalDividerMargin: 6,
@@ -281,6 +297,7 @@ class _DoorbellEditScreenState extends State<DoorbellEditScreen> {
                   ),
                 ],
               ),
+*/
 
               // DELETE DOORBELL
               CupertinoListSection.insetGrouped(
