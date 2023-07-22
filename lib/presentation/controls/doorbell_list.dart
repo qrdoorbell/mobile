@@ -1,33 +1,24 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+import '../../tools.dart';
 import '../../presentation/screens/main_screen.dart';
 import '../../data.dart';
+import '../../routing.dart';
 import '../../services/db/firebase_repositories.dart';
 import 'doorbell_card.dart';
 
-class DoorbellList extends StatefulWidget {
-  final DoorbellCallback onTapHandler;
-
-  const DoorbellList({
-    super.key,
-    required this.onTapHandler,
-  });
-
-  @override
-  State<DoorbellList> createState() => DoorbellListState();
-}
-
-class DoorbellListState extends State<DoorbellList> {
+class DoorbellList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider.value(value: DataStore.of(context).doorbells),
           ChangeNotifierProvider.value(value: (DataStore.of(context).doorbellUsers as DoorbellUsersRepository)),
+          ChangeNotifierProvider.value(value: PeriodicChangeNotifier(const Duration(seconds: 10))),
         ],
         builder: (context, child) => Consumer<DataStoreRepository<Doorbell>>(builder: (context, doorbells, child) {
-              if (doorbells.items.isEmpty && doorbells.isLoaded)
+              if (doorbells.isLoaded && doorbells.items.isEmpty)
                 return SliverFillRemaining(
                     hasScrollBody: false,
                     child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -46,17 +37,22 @@ class DoorbellListState extends State<DoorbellList> {
                       const Padding(padding: EdgeInsets.all(50))
                     ]));
 
-              return SliverList.list(
-                  children: doorbells.items
-                      .sortedByCompare((x) => x.lastEvent?.dateTime, (a, b) => a != null ? (a.isBefore(b ?? DateTime.now()) ? 1 : -1) : -1)
-                      .map((x) => DoorbellCard(
-                            doorbell: x,
-                            announce: x.lastEvent != null
-                                ? "${x.lastEvent!.formattedName} ${x.lastEvent!.formattedDateTimeSingleLine}"
-                                : 'No events',
-                            onTapHandler: widget.onTapHandler,
-                          ))
-                      .toList());
+              return Consumer<PeriodicChangeNotifier>(
+                  builder: (context, value, child) => SliverList.list(
+                      children: doorbells.items
+                          .sortedByCompare(
+                              (x) => x.lastEvent?.dateTime, (a, b) => a != null ? (a.isBefore(b ?? DateTime.now()) ? 1 : -1) : -1)
+                          .map(
+                            (x) => DoorbellCard(
+                              doorbell: x,
+                              announce: x.lastEvent != null
+                                  ? "${x.lastEvent!.formattedName} ${x.lastEvent!.formattedDateTimeSingleLine}"
+                                  : 'No events',
+                              onTapHandler: (Doorbell doorbell) async =>
+                                  await RouteStateScope.of(context).go('/doorbells/${doorbell.doorbellId}'),
+                            ),
+                          )
+                          .toList()));
             }));
   }
 }
