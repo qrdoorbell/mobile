@@ -161,7 +161,7 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
       badge: true,
       carPlay: false,
       criticalAlert: true,
-      provisional: false,
+      provisional: true,
       sound: true,
     )
         .then((settings) async {
@@ -290,7 +290,6 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
 
   Future<void> _handleRemoteMessage(RemoteMessage? message) async {
     if (message == null) {
-      logger.warning("Main._handleRemoteMessage: received empty RemoteMessage!");
       return;
     }
 

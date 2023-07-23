@@ -144,7 +144,7 @@ class _UserAvatarColorScheme {
 
   static final _userAvatarColorSchemes = <_UserAvatarColorScheme>[
     _UserAvatarColorScheme(Colors.blueGrey.shade100),
-    _UserAvatarColorScheme(Colors.pinkAccent),
+    _UserAvatarColorScheme(Colors.pinkAccent.shade200),
     _UserAvatarColorScheme(Colors.redAccent.shade400),
     _UserAvatarColorScheme(Colors.deepOrange),
     _UserAvatarColorScheme(Colors.amberAccent),
@@ -152,10 +152,7 @@ class _UserAvatarColorScheme {
     _UserAvatarColorScheme(Colors.purpleAccent),
     _UserAvatarColorScheme(Colors.indigoAccent),
     _UserAvatarColorScheme(Colors.blueAccent),
-    _UserAvatarColorScheme(Colors.lightBlueAccent.shade700),
-    _UserAvatarColorScheme(Colors.cyan.shade600),
     _UserAvatarColorScheme(Colors.teal.shade400),
-    _UserAvatarColorScheme(Colors.green),
-    _UserAvatarColorScheme(Colors.yellow),
+    _UserAvatarColorScheme(Colors.greenAccent.shade400),
   ];
 }

@@ -111,7 +111,7 @@ abstract class ParticipantWidgetState<T extends ParticipantWidget> extends State
                       const Spacer(),
                       _incomingCallControls(context),
                     ],
-                    if (_isAnswered) ...[
+                    if (_isAnswered && false) ...[
                       const Spacer(),
                       _doorLockControls(context),
                     ],

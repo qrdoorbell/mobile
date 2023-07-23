@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:livekit_client/livekit_client.dart';
+import 'package:qrdoorbell_mobile/data.dart';
 
 import '../../../services/callkit_service.dart';
 import '../../../routing.dart';
@@ -51,7 +52,7 @@ class _VideoCallState extends State<VideoCall> {
       if (event.reason != null) {
         logger.info('Room disconnected: reason => ${event.reason}');
       }
-      await _endCallIfAlone(context);
+      await _endCall(context);
     })
     ..on<TrackPublishedEvent>((remoteParty) async {
       if (!_isLocalAnswered && remoteParty.participant.identity.startsWith('user-'))
@@ -60,10 +61,7 @@ class _VideoCallState extends State<VideoCall> {
         });
     })
     ..on<TrackUnpublishedEvent>((remoteParty) async {
-      if (!_isLocalAnswered && remoteParty.participant.identity.startsWith('guest-'))
-        setState(() async {
-          await _endCall(context);
-        });
+      if (!_isLocalAnswered && remoteParty.participant.identity.startsWith('guest-')) await _endCall(context);
     })
     ..on<LocalTrackPublishedEvent>((remoteParty) async {
       setState(() {
@@ -71,7 +69,11 @@ class _VideoCallState extends State<VideoCall> {
       });
     })
     ..on<LocalTrackUnpublishedEvent>((localParty) async {
-      await _endCallIfAlone(context);
+      if (_isLocalAnswered) {
+        await _endCall(context);
+      } else {
+        await _endCallIfAlone(context);
+      }
     })
     ..on<TrackMutedEvent>((mutedEvent) async {
       setState(() {});
@@ -93,7 +95,11 @@ class _VideoCallState extends State<VideoCall> {
     RemoteParticipant? participantTrack = widget.room.participants.values.firstOrNull;
     if (participantTrack != null)
       return RemoteParticipantWidget(
-          participantTrack, participantTrack.videoTracks.isNotEmpty ? participantTrack.videoTracks.first.track : null, widget.doorbellId);
+          participantTrack,
+          participantTrack.videoTracks.isNotEmpty
+              ? participantTrack.videoTracks.where((x) => x.participant.identity.startsWith("guest-")).first.track
+              : null,
+          widget.doorbellId);
 
     return Scaffold(
         backgroundColor: CupertinoColors.darkBackgroundGray,
@@ -106,14 +112,17 @@ class _VideoCallState extends State<VideoCall> {
   }
 
   Future<void> _endCallIfAlone(BuildContext context) async {
-    if (!widget.room.participants.values.any((party) => party is RemoteAudioTrack && party.audioTracks.isNotEmpty)) {
+    if (!widget.room.participants.values.any((party) => party is RemoteAudioTrack && party.identity.startsWith('guest-'))) {
       await _endCall(context);
     }
   }
 
   Future<void> _endCall(BuildContext context) async {
     var router = RouteStateScope.of(context);
+    var dataStore = context.dataStore;
     await CallKitServiceScope.of(context).endCall(widget.doorbellId);
-    await router.go('/doorbells/${widget.doorbellId}');
+    await dataStore.doorbellEvents.reload();
+
+    router.go('/doorbells/${widget.doorbellId}');
   }
 }

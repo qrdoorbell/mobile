@@ -157,13 +157,32 @@ class CallKitService extends ChangeNotifier {
 
   static Map<String, dynamic> _getEventMetadata(CallKeepEvent event) {
     if (event is CallKeepHoldEvent)
-      return {"callUuid": event.data.uuid, "isOnHold": event.data.isOnHold};
+      return {
+        "callUuid": event.data.uuid,
+        "isOnHold": event.data.isOnHold,
+        "reason": "hold",
+        "eventType": event.type.name,
+        "data": event.data
+      };
     else if (event is CallKeepMuteEvent)
-      return {"callUuid": event.data.uuid, "isOnHold": event.data.isMuted};
+      return {
+        "callUuid": event.data.uuid,
+        "isOnHold": event.data.isMuted,
+        "reason": "mute",
+        "eventType": event.type.name,
+        "data": event.data
+      };
     else if (event is CallKeepAudioSessionEvent)
-      return {"callUuid": event.data.uuid, "isActivated": event.data.isActivated};
+      return {
+        "callUuid": event.data.uuid,
+        "isActivated": event.data.isActivated,
+        "answerCall": event.data.answerCall?.toMap(),
+        "outgoingCall": event.data.outgoingCall?.toMap(),
+        "eventType": event.type.name,
+        "data": event.data
+      };
     else
-      return {"callUuid": event.data.uuid};
+      return {"callUuid": event.data.uuid, "eventType": event.type.name, "data": event.data};
   }
 }
 
