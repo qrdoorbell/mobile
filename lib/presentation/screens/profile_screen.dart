@@ -163,7 +163,7 @@ class ProfileScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   child: CupertinoButton.filled(
                       onPressed: () {
-                        RouteStateScope.of(context).wait(FirebaseAuth.instance.signOut(), destinationRoute: "/login");
+                        RouteStateScope.of(context).wait(context.dataStore.signOut(), destinationRoute: "/login");
                       },
                       child: const Text('Sign out')),
                 ),

@@ -1,7 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
+import 'package:qrdoorbell_mobile/data.dart';
 import 'package:qrdoorbell_mobile/presentation/screens/privacy_policy_screen.dart';
 
 import '../../app_options.dart';
@@ -102,8 +102,9 @@ class ProfileDeleteScreen extends StatelessWidget {
               ),
               onPressed: () async {
                 await RouteStateScope.of(context).wait((() async {
+                  var dataStore = context.dataStore;
                   await _deleteAccount(context);
-                  await FirebaseAuth.instance.signOut();
+                  await dataStore.signOut();
                 })(), destinationRoute: '/logout', errorRoute: '/logout');
               },
             ),

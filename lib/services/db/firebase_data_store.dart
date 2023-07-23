@@ -60,7 +60,7 @@ class FirebaseDataStore extends DataStore {
     logger.info("FirebaseDataStore.updateVoipPushToken: voipPushToken=$voipPushToken");
     await runTransaction(() async {
       if (_voipPushToken != null) {
-        await db.ref("user-voip-tokens/$_uid/$_voipPushToken").set(null);
+        await db.ref("user-voip-tokens/$_uid/$_voipPushToken").remove();
       }
 
       _voipPushToken = voipPushToken;
@@ -77,7 +77,7 @@ class FirebaseDataStore extends DataStore {
     logger.info("FirebaseDataStore.updateFcmPushToken: fcmPushToken=$fcmPushToken");
     await runTransaction(() async {
       if (_fcmPushToken != null) {
-        await db.ref("user-fcms/$_uid/$_fcmPushToken").set(null);
+        await db.ref("user-fcms/$_uid/$_fcmPushToken").remove();
       }
 
       _fcmPushToken = fcmPushToken;

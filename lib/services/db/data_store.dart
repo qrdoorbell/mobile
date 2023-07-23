@@ -64,6 +64,11 @@ abstract class DataStore extends ChangeNotifier {
   Future<void> dispose();
 
   static DataStore of(BuildContext context) => context.dependOnInheritedWidgetOfExactType<DataStoreStateScope>()!.notifier!.dataStore;
+
+  Future<void> signOut() async {
+    await setUid(null);
+    await FirebaseAuth.instance.signOut();
+  }
 }
 
 class DataStoreState extends ChangeNotifier {
