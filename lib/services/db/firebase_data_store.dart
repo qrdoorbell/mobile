@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 
 import '../../app_options.dart';
@@ -13,8 +15,11 @@ import 'firebase_repositories.dart';
 class FirebaseDataStore extends DataStore {
   static final logger = Logger('FirebaseDataStore');
 
+  int _transactionCount = 0;
   String? _uid;
   UserAccount? _currentUser;
+  String? _voipPushToken;
+  String? _fcmPushToken;
   Completer<DataStore>? _reloadCompleter = Completer<DataStore>();
   final FirebaseDatabase db;
   late final DoorbellEventsRepository _eventsRepository;
@@ -29,16 +34,76 @@ class FirebaseDataStore extends DataStore {
   }
 
   @override
+  Future<void> startTransaction([String? name]) async {
+    if (kDebugMode) logger.fine("FirebaseDataStore.startTransaction: Starting transaction #$_transactionCount for '$name'");
+    if (_transactionCount == 0) {
+      logger.info("FirebaseDataStore.startTransaction: connecting to DB");
+      await db.goOnline();
+    }
+    _transactionCount++;
+  }
+
+  @override
+  Future<void> endTransaction() async {
+    _transactionCount--;
+    logger.fine("FirebaseDataStore.endTransaction: Ending transaction #$_transactionCount");
+    if (_transactionCount == 0) {
+      logger.info("FirebaseDataStore.endTransaction: disconnecting from DB");
+      await db.goOffline();
+    }
+  }
+
+  @override
+  Future<void> updateVoipPushToken(String? voipPushToken) async {
+    if (_voipPushToken == voipPushToken || _uid == null) return;
+
+    logger.info("FirebaseDataStore.updateVoipPushToken: voipPushToken=$voipPushToken");
+    await runTransaction(() async {
+      if (_voipPushToken != null) {
+        await db.ref("user-voip-tokens/$_uid/$_voipPushToken").set(null);
+      }
+
+      _voipPushToken = voipPushToken;
+      if (_voipPushToken != null) {
+        await db.ref("user-voip-tokens/$_uid/$_voipPushToken").set(true);
+      }
+    });
+  }
+
+  @override
+  Future<void> updateFcmPushToken(String? fcmPushToken) async {
+    if (_fcmPushToken == fcmPushToken || _uid == null) return;
+
+    logger.info("FirebaseDataStore.updateFcmPushToken: fcmPushToken=$fcmPushToken");
+    await runTransaction(() async {
+      if (_fcmPushToken != null) {
+        await db.ref("user-fcms/$_uid/$_fcmPushToken").set(null);
+      }
+
+      _fcmPushToken = fcmPushToken;
+      if (_fcmPushToken != null) {
+        await db.ref("user-fcms/$_uid/$_fcmPushToken").set(true);
+      }
+    });
+  }
+
+  @override
   Future<void> setUid(String? uid) async {
     logger.info("FirebaseDataStore.setUid: uid=$uid");
     if (_uid != uid) {
-      _uid = uid;
+      await runTransaction(() async {
+        if (uid == null) {
+          await updateVoipPushToken(null);
+          await updateFcmPushToken(null);
+        }
+        _uid = uid;
 
-      if (uid != null) {
-        await reloadData(true);
-      } else {
-        _clearData();
-      }
+        if (uid != null) {
+          await reloadData(true);
+        } else {
+          _clearData();
+        }
+      });
     }
   }
 
@@ -59,47 +124,45 @@ class FirebaseDataStore extends DataStore {
       return;
     }
 
-    await db.goOnline();
-
-    if (_currentUser == null || force) {
-      _currentUser = UserAccount.fromSnapshot(await db.ref('users/$_uid').get());
-      if (_currentUser != null) {
-        if (_currentUser!.displayName == null || _currentUser!.displayName == "") {
-          _currentUser!.displayName = _currentUser!.email?.split('@').first;
-          await db.ref('users/$_uid').update({"displayName": _currentUser!.displayName});
+    await runTransaction(() async {
+      if (_currentUser == null || force) {
+        _currentUser = UserAccount.fromSnapshot(await db.ref('users/$_uid').get());
+        if (_currentUser != null) {
+          if (_currentUser!.displayName == null || _currentUser!.displayName == "") {
+            _currentUser!.displayName = _currentUser!.email?.split('@').first;
+            await db.ref('users/$_uid').update({"displayName": _currentUser!.displayName});
+          }
         }
+        force = true;
       }
-      force = true;
-    }
 
-    if (!force) {
-      await db.goOffline();
-      return;
-    }
+      if (!force) {
+        return;
+      }
 
-    var doorbells = _currentUser?.doorbells ?? [];
-    if (doorbells.isEmpty) return;
+      var doorbells = _currentUser?.doorbells ?? [];
+      if (doorbells.isEmpty) return;
 
-    logger.finest('Doorbells to be loaded: $doorbells');
+      logger.finest('Doorbells to be loaded: $doorbells');
 
-    _reloadCompleter = Completer<DataStore>();
-    notifyListeners();
-    Future.delayed(
-        const Duration(seconds: 30),
-        () => {
-              if (_reloadCompleter != null && !_reloadCompleter!.isCompleted)
-                _reloadCompleter?.completeError(TimeoutException('Error loading data from DB - timeout'))
-            });
+      _reloadCompleter = Completer<DataStore>();
+      notifyListeners();
+      Future.delayed(
+          const Duration(seconds: 30),
+          () => {
+                if (_reloadCompleter != null && !_reloadCompleter!.isCompleted)
+                  _reloadCompleter?.completeError(TimeoutException('Error loading data from DB - timeout'))
+              });
 
-    Future.wait([
-      _doorbellsRepository.reload().then((_) => Future.wait([
-            _doorbellUsersRepository.reload(),
-            _eventsRepository.reload(),
-          ])),
-    ]).then((_) => _reloadCompleter?.complete(this));
+      Future.wait([
+        _doorbellsRepository.reload().then((_) => Future.wait([
+              _doorbellUsersRepository.reload(),
+              _eventsRepository.reload(),
+            ])),
+      ]).then((_) => _reloadCompleter?.complete(this));
 
-    await _reloadCompleter?.future.timeout(const Duration(seconds: 10));
-    await db.goOffline();
+      await _reloadCompleter?.future.timeout(const Duration(seconds: 10));
+    });
 
     logger.info('Firebase DataStore reload complete!');
   }
@@ -156,13 +219,12 @@ class FirebaseDataStore extends DataStore {
 
   @override
   Future<void> updateUserAccount(UserAccount user) async {
-    await db.goOnline();
-    await db.ref('users/${user.userId}').update(user.toMap() as Map<String, dynamic>);
+    await runTransaction(() async {
+      await db.ref('users/${user.userId}').update(user.toMap() as Map<String, dynamic>);
 
-    _currentUser = UserAccount.fromSnapshot(await db.ref('users/${user.userId}').get());
-    if (_currentUser == null) throw AssertionError('Failed to update user account!');
-
-    await db.goOffline();
+      _currentUser = UserAccount.fromSnapshot(await db.ref('users/${user.userId}').get());
+      if (_currentUser == null) throw AssertionError('Failed to update user account!');
+    });
   }
 
   @override
@@ -172,10 +234,9 @@ class FirebaseDataStore extends DataStore {
     _currentUser?.displayName = displayName;
     await FirebaseAuth.instance.currentUser?.updateDisplayName(displayName);
 
-    await db.goOnline();
-    await db.ref('users/$_uid').update({'displayName': displayName});
-
-    await db.goOffline();
+    await runTransaction(() async {
+      await db.ref('users/$_uid').update({'displayName': displayName});
+    });
   }
 
   @override
@@ -194,13 +255,17 @@ class FirebaseDataStore extends DataStore {
 
   @override
   Future<Doorbell> updateDoorbellSettings(Doorbell doorbell) async {
-    await db.ref('doorbells/${doorbell.doorbellId}').update({'settings': doorbell.settings.toMap()});
+    await runTransaction(() async {
+      await db.ref('doorbells/${doorbell.doorbellId}').update({'settings': doorbell.settings.toMap()});
+    });
     return doorbell;
   }
 
   @override
   Future<Doorbell> updateDoorbellName(Doorbell doorbell) async {
-    await db.ref('doorbells/${doorbell.doorbellId}').update({'name': doorbell.name});
+    await runTransaction(() async {
+      await db.ref('doorbells/${doorbell.doorbellId}').update({'name': doorbell.name});
+    });
     return doorbell;
   }
 
@@ -220,10 +285,11 @@ class FirebaseDataStore extends DataStore {
 
   @override
   Future<void> saveInvite(Invite invite) async {
-    var resp = await HttpUtils.securePost(Uri.parse('$QRDOORBELL_API_URL/api/v1/doorbells/invite'), body: invite.toJson());
+    var resp = await HttpUtils.securePost(Uri.parse('$QRDOORBELL_API_URL/api/v1/doorbells/invite'),
+        headers: {'Content-Type': 'application/json'}, body: invite.toJson());
     if (resp.statusCode != 200) {
-      logger.warning('Failed to accept Doorbell Invite - API returned an error: ${resp.body}');
-      throw AssertionError('Failed to remove Doorbell - API returned an error: ${resp.body}');
+      logger.warning('Failed to create Doorbell Invite - API returned an error (${resp.statusCode}): ${resp.body}');
+      throw HttpException('Failed to create Doorbell Invite - API returned an error (${resp.statusCode}): ${resp.body}');
     }
 
     await reloadData(true);

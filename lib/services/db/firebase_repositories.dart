@@ -38,7 +38,9 @@ class DoorbellsRepository extends FirebaseRepository<Doorbell> {
   DoorbellsRepository(this.db, super.dataStore);
 
   Future<void> update(Doorbell doorbell) async {
-    await db.ref('doorbells/${doorbell.doorbellId}').set(doorbell.toMap());
+    await dataStore.runTransaction(() async {
+      await db.ref('doorbells/${doorbell.doorbellId}').set(doorbell.toMap());
+    });
     notifyListeners();
   }
 
@@ -46,13 +48,15 @@ class DoorbellsRepository extends FirebaseRepository<Doorbell> {
   Future<void> reload() async {
     _items.clear();
 
-    var loaders = <Future<Doorbell?>>[];
-    for (var doorbellId in dataStore.currentUser!.doorbells) {
-      loaders.add(_loadOne(db.ref('doorbells/$doorbellId').get()));
-    }
+    await dataStore.runTransaction(() async {
+      var loaders = <Future<Doorbell?>>[];
+      for (var doorbellId in dataStore.currentUser!.doorbells) {
+        loaders.add(_loadOne(db.ref('doorbells/$doorbellId').get()));
+      }
 
-    var doorbells = (await Future.wait(loaders)).whereNotNull();
-    _items.addAll(doorbells);
+      var doorbells = (await Future.wait(loaders)).whereNotNull();
+      _items.addAll(doorbells);
+    });
 
     notifyListeners();
   }
@@ -88,12 +92,14 @@ class DoorbellEventsRepository extends FirebaseRepository<DoorbellEvent> {
   Future<void> reload() async {
     _items.clear();
 
-    for (var doorbell in doorbellsRepository.items) {
-      var events = await db.ref('doorbell-events/${doorbell.doorbellId}').get();
-      _items.addAll(events.children.map((x) => DoorbellEvent.fromMap(x.value as Map)).whereNotNull());
-    }
+    await dataStore.runTransaction(() async {
+      for (var doorbell in doorbellsRepository.items) {
+        var events = await db.ref('doorbell-events/${doorbell.doorbellId}').get();
+        _items.addAll(events.children.map((x) => DoorbellEvent.fromMap(x.value as Map)).whereNotNull());
+      }
 
-    _items.sortByCompare((x) => x.dateTime, (a, b) => a.isBefore(b) ? 1 : -1);
+      _items.sortByCompare((x) => x.dateTime, (a, b) => a.isBefore(b) ? 1 : -1);
+    });
 
     notifyListeners();
   }
@@ -118,37 +124,39 @@ class DoorbellUsersRepository extends FirebaseRepository<DoorbellUser> {
     logger.fine('Reload DoorbellUsers');
     _items.clear();
 
-    var loaders = <Future<void>>[];
-    for (var doorbell in doorbellsRepository.items) {
-      loaders.add(_loadOne(doorbell.doorbellId, db.ref('doorbell-users/${doorbell.doorbellId}').get()));
-    }
-
-    await Future.wait(loaders);
-
-    var displayNames = {};
-    var emails = {};
-    var uids = _items.map((x) => x.userId).toSet();
-
-    logger.fine('Loading user display names from DB');
-    var userDataLoaders = Map.fromEntries(uids.map((uid) => MapEntry(
-        uid,
-        Future.wait([
-          db.ref('users/$uid/displayName').get().then((v) => displayNames[uid] = v.value?.toString()),
-          db.ref('users/$uid/email').get().then((v) => emails[uid] = v.value?.toString())
-        ]))));
-
-    if (logger.isLoggable(Level.FINEST)) logger.finest('User ids: $uids');
-    await Future.wait(userDataLoaders.values);
-
-    logger.finest('Update DoorbellUsers cache');
-    for (var doorbellUser in _items) {
-      if (displayNames.containsKey(doorbellUser.userId)) {
-        doorbellUser.userDisplayName = displayNames[doorbellUser.userId] ?? "";
-        doorbellUser.email = emails[doorbellUser.userId] ?? "";
-        doorbellUser.userShortName = UserAccount.getShortNameFromDisplayName(doorbellUser.userDisplayName);
-        doorbellUser.userColor = UserAccount.getColorFromShortName(doorbellUser.userShortName!);
+    await dataStore.runTransaction(() async {
+      var loaders = <Future<void>>[];
+      for (var doorbell in doorbellsRepository.items) {
+        loaders.add(_loadOne(doorbell.doorbellId, db.ref('doorbell-users/${doorbell.doorbellId}').get()));
       }
-    }
+
+      await Future.wait(loaders);
+
+      var displayNames = {};
+      var emails = {};
+      var uids = _items.map((x) => x.userId).toSet();
+
+      logger.fine('Loading user display names from DB');
+      var userDataLoaders = Map.fromEntries(uids.map((uid) => MapEntry(
+          uid,
+          Future.wait([
+            db.ref('users/$uid/displayName').get().then((v) => displayNames[uid] = v.value?.toString()),
+            db.ref('users/$uid/email').get().then((v) => emails[uid] = v.value?.toString())
+          ]))));
+
+      if (logger.isLoggable(Level.FINEST)) logger.finest('User ids: $uids');
+      await Future.wait(userDataLoaders.values);
+
+      logger.finest('Update DoorbellUsers cache');
+      for (var doorbellUser in _items) {
+        if (displayNames.containsKey(doorbellUser.userId)) {
+          doorbellUser.userDisplayName = displayNames[doorbellUser.userId] ?? "";
+          doorbellUser.email = emails[doorbellUser.userId] ?? "";
+          doorbellUser.userShortName = UserAccount.getShortNameFromDisplayName(doorbellUser.userDisplayName);
+          doorbellUser.userColor = UserAccount.getColorFromShortName(doorbellUser.userShortName!);
+        }
+      }
+    });
 
     logger.fine('DoorbellUsers cache reload complete!');
 

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import '../../model/doorbell.dart';
 import '../../model/doorbell_event.dart';
@@ -47,12 +48,17 @@ abstract class DataStore extends ChangeNotifier {
 
   Future<void> updateUserAccount(UserAccount user);
   Future<void> updateUserDisplayName(String displayName);
+  Future<void> updateVoipPushToken(String? voipPushToken);
+  Future<void> updateFcmPushToken(String? fcmPushToken);
 
   Future<void> setUid(String? uid);
 
   bool get isLoaded;
   Future<DataStore> get future;
   Future<void> reloadData(bool force);
+
+  Future<void> startTransaction([String? name]);
+  Future<void> endTransaction();
 
   @override
   Future<void> dispose();
@@ -115,4 +121,23 @@ class DataStoreStateScope extends InheritedNotifier<DataStoreState> {
   });
 
   static DataStoreState of(BuildContext context) => context.dependOnInheritedWidgetOfExactType<DataStoreStateScope>()!.notifier!;
+}
+
+extension DataStoreBuildContextExtensions on BuildContext {
+  DataStore get dataStore => DataStore.of(this);
+}
+
+extension DataStoreExtensions on DataStore {
+  Future<void> runTransaction(Future<void> Function() transaction) async {
+    if (kDebugMode)
+      await startTransaction(StackTrace.current.toString().split("\n")[1]);
+    else
+      await startTransaction();
+
+    try {
+      await transaction();
+    } finally {
+      await endTransaction();
+    }
+  }
 }

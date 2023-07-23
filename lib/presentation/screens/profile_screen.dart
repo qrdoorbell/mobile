@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_callkeep/flutter_callkeep.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../data.dart';
@@ -117,6 +118,28 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ),
                 if (kDebugMode) ...[
+                  CupertinoListTile(
+                      title: const Text(
+                        'VoIP',
+                        textAlign: TextAlign.start,
+                      ),
+                      trailing: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: FutureBuilder(
+                          future: CallKeep.instance.getDevicePushTokenVoIP(),
+                          builder: (context, snapshot) => snapshot.hasData
+                              ? Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 8),
+                                  child: Wrap(direction: Axis.vertical, children: [
+                                    Text(
+                                        snapshot.data!
+                                            .splitMapJoin(RegExp(r'([\w\d]{30})'), onMatch: (m) => "${m.group(0)}\n", onNonMatch: (m) => m),
+                                        style: const TextStyle(color: CupertinoColors.inactiveGray, fontSize: 14))
+                                  ]),
+                                )
+                              : const Icon(Icons.loop),
+                        ),
+                      )),
                   TextButton(onPressed: CallEmulatorService().setNextCallState, child: const Text('Emulate call')),
                   // TextButton(
                   //     onPressed: () async =>
@@ -127,18 +150,15 @@ class ProfileScreen extends StatelessWidget {
             ),
             const Spacer(),
             Container(
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+              padding: const EdgeInsets.only(bottom: 10),
               child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 15),
-                  child: Center(
-                      child: TextButton(
-                          child: const Text(
-                            'Delete account',
-                            style: TextStyle(color: CupertinoColors.destructiveRed, fontWeight: FontWeight.normal),
-                          ),
-                          onPressed: () => RouteStateScope.of(context).go('/profile/delete-account'))),
-                ),
+                Center(
+                    child: TextButton(
+                        child: const Text(
+                          'Delete account',
+                          style: TextStyle(color: CupertinoColors.destructiveRed, fontWeight: FontWeight.normal),
+                        ),
+                        onPressed: () => RouteStateScope.of(context).go('/profile/delete-account'))),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   child: CupertinoButton.filled(
