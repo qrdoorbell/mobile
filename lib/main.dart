@@ -37,8 +37,8 @@ Future<void> main() async {
   Logger.root.onRecord.listen((record) {
     print('${format.format(record.time)}: ${record.message}');
 
-    if (USE_CRASHALYTICS_LOGS && record.level >= Level.FINE) {
-      FirebaseCrashlytics.instance.log('[${record.level.toString()}] ${format.format(record.time)}: ${record.message}');
+    if (USE_CRASHALYTICS_LOGS && record.level.value >= CRASHALYTICS_LOG_LEVEL) {
+      FirebaseCrashlytics.instance.log('[${record.level.name}] ${format.format(record.time)}: ${record.message}');
     }
   });
 
@@ -257,45 +257,35 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
   }
 
   Future<void> _handleFcmTokenChanged(String uid, String token) async {
-    await FirebaseDatabase.instance.ref("user-fcms/$uid/$token").set(true);
+    await _dataStore.updateFcmPushToken(token);
   }
 
   Future<void> _updateVoipToken(String uid) async {
-    String token = '';
     try {
-      token = await _callKitService.getVoipPushToken();
+      await _dataStore.updateVoipPushToken(await _callKitService.getVoipPushToken());
     } catch (e) {
       logger.shout('An error occured while getting VoIP token', e);
-    }
-
-    if (token.isEmpty) {
-      logger.warning('Cannot get VoIP token: uid=$uid');
-      return;
-    }
-
-    logger.fine('Device VoIP access token received: uid=$uid, token=$token');
-    try {
-      await FirebaseDatabase.instance.ref("user-voip-tokens/$uid/$token").set(true);
-    } catch (err) {
-      logger.warning('Cannot save VoIP token in the DB', err);
     }
   }
 
   Future<void> _handleAuthStateChanged(User? user) async {
     FirebaseCrashlytics.instance.setUserIdentifier(user?.uid ?? "");
+    if (NEWRELIC_APP_TOKEN.isNotEmpty) NewrelicMobile.instance.setUserId(user?.uid ?? "");
 
     if (user == null) {
       _routeState.go('/login');
       return;
     }
 
-    await _updateVoipToken(user.uid);
+    Future.delayed(const Duration(seconds: 2), () async {
+      await _updateVoipToken(user.uid);
 
-    try {
-      await _handleFcmTokenChanged(user.uid, (await FirebaseMessaging.instance.getToken())!);
-    } catch (e) {
-      logger.shout('An error occured while getting FCM token', e);
-    }
+      try {
+        await _handleFcmTokenChanged(user.uid, (await FirebaseMessaging.instance.getToken())!);
+      } catch (e) {
+        logger.shout('An error occured while getting FCM token', e);
+      }
+    });
   }
 
   Future<void> _handleRemoteMessage(RemoteMessage? message) async {

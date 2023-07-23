@@ -36,20 +36,20 @@ class FirebaseDataStore extends DataStore {
   @override
   Future<void> startTransaction([String? name]) async {
     if (kDebugMode) logger.fine("FirebaseDataStore.startTransaction: Starting transaction #$_transactionCount for '$name'");
-    if (_transactionCount == 0) {
+
+    if (_transactionCount++ == 0) {
       logger.info("FirebaseDataStore.startTransaction: connecting to DB");
       await db.goOnline();
     }
-    _transactionCount++;
   }
 
   @override
   Future<void> endTransaction() async {
-    _transactionCount--;
-    logger.fine("FirebaseDataStore.endTransaction: Ending transaction #$_transactionCount");
-    if (_transactionCount == 0) {
+    logger.fine("FirebaseDataStore.endTransaction: Ending transaction #${--_transactionCount}");
+    if (_transactionCount <= 0) {
       logger.info("FirebaseDataStore.endTransaction: disconnecting from DB");
       await db.goOffline();
+      _transactionCount = 0;
     }
   }
 
@@ -89,8 +89,8 @@ class FirebaseDataStore extends DataStore {
 
   @override
   Future<void> setUid(String? uid) async {
-    logger.info("FirebaseDataStore.setUid: uid=$uid");
     if (_uid != uid) {
+      logger.info("FirebaseDataStore.setUid: uid=$uid");
       await runTransaction(() async {
         if (uid == null) {
           await updateVoipPushToken(null);
@@ -115,56 +115,58 @@ class FirebaseDataStore extends DataStore {
 
   @override
   Future<void> reloadData(bool force) async {
-    logger.fine("FirebaseDataStore.reloadData: force=$force, _uid=$_uid");
-    logger.info("FirebaseDataStore.reloadData: Reloading data for user: userId='$_uid'");
-
     if (_reloadCompleter != null && !_reloadCompleter!.isCompleted) {
-      logger.warning('Reload already in progress!');
       await _reloadCompleter!.future;
       return;
     }
 
-    await runTransaction(() async {
-      if (_currentUser == null || force) {
-        _currentUser = UserAccount.fromSnapshot(await db.ref('users/$_uid').get());
-        if (_currentUser != null) {
-          if (_currentUser!.displayName == null || _currentUser!.displayName == "") {
-            _currentUser!.displayName = _currentUser!.email?.split('@').first;
-            await db.ref('users/$_uid').update({"displayName": _currentUser!.displayName});
+    _reloadCompleter = Completer<DataStore>();
+    logger.info("FirebaseDataStore.reloadData: Reloading data for user: userId='$_uid'");
+
+    try {
+      await runTransaction(() async {
+        if (_currentUser == null || force) {
+          _currentUser = UserAccount.fromSnapshot(await db.ref('users/$_uid').get());
+          if (_currentUser != null) {
+            if (_currentUser!.displayName == null || _currentUser!.displayName == "") {
+              _currentUser!.displayName = _currentUser!.email?.split('@').first;
+              await db.ref('users/$_uid').update({"displayName": _currentUser!.displayName});
+            }
           }
+          force = true;
         }
-        force = true;
-      }
 
-      if (!force) {
-        return;
-      }
+        if (!force) {
+          return;
+        }
 
-      var doorbells = _currentUser?.doorbells ?? [];
-      if (doorbells.isEmpty) return;
+        var doorbells = _currentUser?.doorbells ?? [];
+        if (doorbells.isEmpty) return;
 
-      logger.finest('Doorbells to be loaded: $doorbells');
+        logger.finest('Doorbells to be loaded: $doorbells');
 
-      _reloadCompleter = Completer<DataStore>();
-      notifyListeners();
-      Future.delayed(
-          const Duration(seconds: 30),
-          () => {
-                if (_reloadCompleter != null && !_reloadCompleter!.isCompleted)
-                  _reloadCompleter?.completeError(TimeoutException('Error loading data from DB - timeout'))
-              });
+        notifyListeners();
+        Future.delayed(
+            const Duration(seconds: 30),
+            () => {
+                  if (_reloadCompleter != null && !_reloadCompleter!.isCompleted)
+                    _reloadCompleter?.completeError(TimeoutException('Error loading data from DB - timeout'))
+                });
 
-      Future.wait([
-        _doorbellsRepository.reload().then((_) => Future.wait([
-              _doorbellUsersRepository.reload(),
-              _eventsRepository.reload(),
-            ])),
-      ]).then((_) => _reloadCompleter?.complete(this));
+        Future.wait([
+          _doorbellsRepository.reload().then((_) => Future.wait([
+                _doorbellUsersRepository.reload(),
+                _eventsRepository.reload(),
+              ])),
+        ]).then((_) => _reloadCompleter?.complete(this));
 
-      await _reloadCompleter?.future.timeout(const Duration(seconds: 10));
-    });
+        await _reloadCompleter?.future.timeout(const Duration(seconds: 15));
+      });
 
-    logger.info('Firebase DataStore reload complete!');
+      logger.info('Firebase DataStore reload complete!');
+    } finally {
+      if (_reloadCompleter?.isCompleted == false) _reloadCompleter?.complete(this);
+    }
   }
 
   @override
