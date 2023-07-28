@@ -2,10 +2,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_callkeep/flutter_callkeep.dart';
 import 'package:logging/logging.dart';
-import 'package:newrelic_mobile/newrelic_mobile.dart';
 import 'package:uuid/uuid.dart';
 
-import '../app_options.dart';
 import '../routing/route_state.dart';
 
 class CallKitService extends ChangeNotifier {
@@ -35,11 +33,6 @@ class CallKitService extends ChangeNotifier {
 
     logger.info("Received CallKit event: ${event.toString()}");
     logger.fine(event);
-
-    if (AppSettings.newRelicTransactionsEnabled) {
-      await NewrelicMobile.instance
-          .recordCustomEvent('CallKitEvent', eventName: event.type.name, eventAttributes: _getEventMetadata(event));
-    }
 
     switch (event.type) {
       case CallKeepEventType.callIncoming:

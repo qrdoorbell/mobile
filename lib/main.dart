@@ -16,17 +16,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
-import 'package:newrelic_mobile/newrelic_mobile.dart';
 import 'package:uni_links/uni_links.dart';
 
-// import 'services/newrelic_logger.dart';
 import 'services/db/firebase_data_store.dart';
 import 'services/callkit_service.dart';
 import 'routing.dart';
 import 'routing/navigator.dart';
 import 'app_options.dart';
 import 'data.dart';
-import 'services/newrelic_logger.dart';
 
 bool _initialUriIsHandled = false;
 ParsedRoute signInRoute = ParsedRoute('/login', '/login', {}, {});
@@ -35,28 +32,14 @@ final logger = Logger('main');
 
 Future<void> main() async {
   final format = DateFormat('HH:mm:ss');
-  var crashalyticsLogLevel = AppSettings.crashlyticsEnabled ? AppSettings.crashlyticsLogLevel : 0;
-  var newRelicLogLevel = AppSettings.newRelicLogsEnabled ? AppSettings.newRelicLogLevel : 0;
+  var crashalyticsLogLevel = 0;
 
   Logger.root.level = kDebugMode ? Level.FINE : Level.INFO;
   Logger.root.onRecord.listen((record) {
-    print('[${record.level.name}] ${format.format(record.time)}: ${record.message}');
+    print('(${record.loggerName}) [${record.level.name}] ${format.format(record.time)}: ${record.message}');
 
     if (crashalyticsLogLevel > 0 && record.level.value >= crashalyticsLogLevel) {
-      FirebaseCrashlytics.instance.log('[${record.level.name}] ${format.format(record.time)}: ${record.message}');
-    }
-
-    if (newRelicLogLevel > 0 && record.level.value >= newRelicLogLevel) {
-      if (record.level.value >= 1000) NewrelicMobile.instance.recordError(record.error ?? record.message, record.stackTrace);
-
-      NewrelicMobile.instance.recordCustomEvent('log', eventName: record.level.name, eventAttributes: {
-        'stackTrace': record.stackTrace.toString(),
-        'time': record.time,
-        'zone': record.zone,
-        'loggerName': record.loggerName,
-        'error': record.error,
-        'message': record.message,
-      });
+      FirebaseCrashlytics.instance.log('(${record.loggerName}) ${record.level.name}] ${format.format(record.time)}: ${record.message}');
     }
   });
 
@@ -67,16 +50,16 @@ Future<void> main() async {
   FlutterError.onError = (errorDetails) {
     logger.shout("FlutterError.onError: ${errorDetails.exception.toString()}\nStack trace: ${errorDetails.stack?.toString()}");
     if (AppSettings.crashlyticsEnabled) FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
-    if (AppSettings.newRelicCrashLogsEnabled) NewrelicMobile.instance.recordError(errorDetails, errorDetails.stack);
   };
 
   PlatformDispatcher.instance.onError = (error, stack) {
     logger.shout("PlatformDispatcher.instance.onError:", error, stack);
     if (AppSettings.crashlyticsEnabled) FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-    if (AppSettings.newRelicCrashLogsEnabled) NewrelicMobile.instance.recordError(error, stack);
 
     return true;
   };
+
+  await AppSettings.initialize();
 
   FirebaseUIAuth.configureProviders([
     EmailAuthProvider(),
@@ -86,13 +69,7 @@ Future<void> main() async {
 
   FirebaseDatabase.instance.setPersistenceEnabled(true);
 
-  if (AppSettings.newRelicLogsEnabled) {
-    await NewrelicMobile.instance.start(NewRelicLogger.config, () {
-      runApp(const QRDoorbellApp());
-    });
-  } else {
-    runApp(const QRDoorbellApp());
-  }
+  runApp(const QRDoorbellApp());
 }
 
 @pragma('vm:entry-point')
@@ -269,10 +246,6 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
 
   void _handleConnectionStateChanged(ConnectivityResult state) {
     logger.info("Connection state changed: state=$state");
-
-    if (AppSettings.newRelicEnabled) {
-      NewrelicMobile.instance.recordCustomEvent('ConnectionState', eventName: state.name);
-    }
   }
 
   Future<void> _handleFcmTokenChanged(String uid, String token) async {
@@ -289,7 +262,6 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
 
   Future<void> _handleAuthStateChanged(User? user) async {
     FirebaseCrashlytics.instance.setUserIdentifier(user?.uid ?? "");
-    if (AppSettings.newRelicEnabled) NewrelicMobile.instance.setUserId(user?.uid ?? "");
 
     if (user == null) {
       _routeState.go('/login');
