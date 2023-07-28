@@ -48,8 +48,7 @@ class DoorbellList extends StatelessWidget {
                               announce: x.lastEvent != null
                                   ? "${x.lastEvent!.formattedName} ${x.lastEvent!.formattedDateTimeSingleLine}"
                                   : 'No events',
-                              onTapHandler: (Doorbell doorbell) async =>
-                                  await RouteStateScope.of(context).go('/doorbells/${doorbell.doorbellId}'),
+                              onTapHandler: (Doorbell doorbell) => RouteStateScope.of(context).go('/doorbells/${doorbell.doorbellId}'),
                             ),
                           )
                           .toList()));

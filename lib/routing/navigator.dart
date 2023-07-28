@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
-import 'package:qrdoorbell_mobile/presentation/screens/profile_delete_screen.dart';
 
+import '../presentation/screens/profile_delete_screen.dart';
 import '../presentation/screens/empty_screen.dart';
 import '../presentation/screens/doorbell_edit_screen.dart';
 import '../presentation/screens/doorbell_screen.dart';

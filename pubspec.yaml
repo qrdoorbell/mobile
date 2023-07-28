@@ -28,7 +28,7 @@ dependencies:
   flutter_webrtc: ^0.9.36
   firebase_core: ^2.5.0
   firebase_messaging: ^14.2.1
-  firebase_analytics: ^10.1.6
+  firebase_analytics: ^10.4.4
   firebase_database: ^10.0.9
   firebase_crashlytics: ^3.0.17
   firebase_auth: ^4.2.5
@@ -54,6 +54,7 @@ dependencies:
   loading_animation_widget: ^1.2.0+4
   newrelic_mobile: ^1.0.0
   flutter_html: ^3.0.0-beta.2
+  firebase_remote_config: ^4.2.4
 
 dev_dependencies:
   flutter_test:

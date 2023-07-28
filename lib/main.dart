@@ -11,6 +11,7 @@ import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -25,6 +26,7 @@ import 'routing.dart';
 import 'routing/navigator.dart';
 import 'app_options.dart';
 import 'data.dart';
+import 'services/newrelic_logger.dart';
 
 bool _initialUriIsHandled = false;
 ParsedRoute signInRoute = ParsedRoute('/login', '/login', {}, {});
@@ -33,12 +35,28 @@ final logger = Logger('main');
 
 Future<void> main() async {
   final format = DateFormat('HH:mm:ss');
-  Logger.root.level = Level.FINE;
+  var crashalyticsLogLevel = AppSettings.crashlyticsEnabled ? AppSettings.crashlyticsLogLevel : 0;
+  var newRelicLogLevel = AppSettings.newRelicLogsEnabled ? AppSettings.newRelicLogLevel : 0;
+
+  Logger.root.level = kDebugMode ? Level.FINE : Level.WARNING;
   Logger.root.onRecord.listen((record) {
     print('${format.format(record.time)}: ${record.message}');
 
-    if (USE_CRASHALYTICS_LOGS && record.level.value >= CRASHALYTICS_LOG_LEVEL) {
+    if (crashalyticsLogLevel > 0 && record.level.value >= crashalyticsLogLevel) {
       FirebaseCrashlytics.instance.log('[${record.level.name}] ${format.format(record.time)}: ${record.message}');
+    }
+
+    if (newRelicLogLevel > 0 && record.level.value >= newRelicLogLevel) {
+      if (record.level.value >= 1000) NewrelicMobile.instance.recordError(record.error ?? record.message, record.stackTrace);
+
+      NewrelicMobile.instance.recordCustomEvent('log', eventName: record.level.name, eventAttributes: {
+        'stackTrace': record.stackTrace.toString(),
+        'time': record.time,
+        'zone': record.zone,
+        'loggerName': record.loggerName,
+        'error': record.error,
+        'message': record.message,
+      });
     }
   });
 
@@ -48,15 +66,14 @@ Future<void> main() async {
 
   FlutterError.onError = (errorDetails) {
     logger.shout("FlutterError.onError: ${errorDetails.exception.toString()}\nStack trace: ${errorDetails.stack?.toString()}");
-    if (NEWRELIC_APP_TOKEN.isNotEmpty) NewrelicMobile.instance.recordError(errorDetails, errorDetails.stack);
-    if (USE_CRASHALYTICS == true) FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+    if (AppSettings.crashlyticsEnabled) FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+    if (AppSettings.newRelicCrashLogsEnabled) NewrelicMobile.instance.recordError(errorDetails, errorDetails.stack);
   };
 
   PlatformDispatcher.instance.onError = (error, stack) {
     logger.shout("PlatformDispatcher.instance.onError:", error, stack);
-    if (USE_CRASHALYTICS) FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-
-    if (NEWRELIC_APP_TOKEN.isNotEmpty) NewrelicMobile.instance.recordError(error, stack);
+    if (AppSettings.crashlyticsEnabled) FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    if (AppSettings.newRelicCrashLogsEnabled) NewrelicMobile.instance.recordError(error, stack);
 
     return true;
   };
@@ -64,20 +81,18 @@ Future<void> main() async {
   FirebaseUIAuth.configureProviders([
     EmailAuthProvider(),
     AppleProvider(),
-    GoogleProvider(clientId: GOOGLE_CLIENT_ID),
+    GoogleProvider(clientId: AppSettings.googleClientId),
   ]);
 
   FirebaseDatabase.instance.setPersistenceEnabled(true);
-  // FirebaseDatabase.instance.setLoggingEnabled(true);
 
-  runApp(const QRDoorbellApp());
-
-  // if (NEWRELIC_APP_TOKEN.isNotEmpty)
-  //   NewrelicMobile.instance.start(NewRelicLogger.getConfig(NEWRELIC_APP_TOKEN), () {
-  //     runApp(const QRDoorbellApp());
-  //   });
-  // else
-  //   runApp(const QRDoorbellApp());
+  if (AppSettings.newRelicLogsEnabled) {
+    await NewrelicMobile.instance.start(NewRelicLogger.config, () {
+      runApp(const QRDoorbellApp());
+    });
+  } else {
+    runApp(const QRDoorbellApp());
+  }
 }
 
 @pragma('vm:entry-point')
@@ -270,7 +285,7 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
 
   Future<void> _handleAuthStateChanged(User? user) async {
     FirebaseCrashlytics.instance.setUserIdentifier(user?.uid ?? "");
-    if (NEWRELIC_APP_TOKEN.isNotEmpty) NewrelicMobile.instance.setUserId(user?.uid ?? "");
+    if (AppSettings.newRelicEnabled) NewrelicMobile.instance.setUserId(user?.uid ?? "");
 
     if (user == null) {
       _routeState.go('/login');

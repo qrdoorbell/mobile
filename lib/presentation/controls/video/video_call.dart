@@ -5,8 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:livekit_client/livekit_client.dart';
-import 'package:qrdoorbell_mobile/data.dart';
 
+import '../../../data.dart';
 import '../../../services/callkit_service.dart';
 import '../../../routing.dart';
 import 'remote_participant_widget.dart';
@@ -120,7 +120,7 @@ class _VideoCallState extends State<VideoCall> {
   Future<void> _endCall(BuildContext context) async {
     var router = RouteStateScope.of(context);
     var dataStore = context.dataStore;
-    await CallKitServiceScope.of(context).endCall(widget.doorbellId);
+    await CallKitServiceScope.of(context)?.endCall(widget.doorbellId);
     await dataStore.doorbellEvents.reload();
 
     router.go('/doorbells/${widget.doorbellId}');

@@ -202,7 +202,7 @@ class FirebaseDataStore extends DataStore {
   Future<Doorbell> createDoorbell([String name = '']) async {
     logger.info("Create Doorbell: name='$name'");
 
-    var resp = await HttpUtils.securePost(Uri.parse('$QRDOORBELL_API_URL/api/v1/doorbells/create'), body: {'doorbellName': name});
+    var resp = await HttpUtils.securePost(Uri.parse('${AppSettings.apiUrl}/api/v1/doorbells/create'), body: {'doorbellName': name});
     if (resp.statusCode != 200) {
       logger.warning('Failed to accept Doorbell Invite - API returned an error: ${resp.body}');
       throw AssertionError('Failed to remove Doorbell - API returned an error: ${resp.body}');
@@ -246,7 +246,7 @@ class FirebaseDataStore extends DataStore {
     logger.info("Remove Doorbell: doorbellId='${doorbell.doorbellId}'");
 
     var resp =
-        await HttpUtils.securePost(Uri.parse('$QRDOORBELL_API_URL/api/v1/doorbells/remove'), body: {'doorbellId': doorbell.doorbellId});
+        await HttpUtils.securePost(Uri.parse('${AppSettings.apiUrl}/api/v1/doorbells/remove'), body: {'doorbellId': doorbell.doorbellId});
     if (resp.statusCode != 200) {
       logger.warning('Failed to accept Doorbell Invite - API returned an error: ${resp.body}');
       throw AssertionError('Failed to remove Doorbell - API returned an error: ${resp.body}');
@@ -275,7 +275,7 @@ class FirebaseDataStore extends DataStore {
   Future<String> acceptInvite(String inviteId) async {
     logger.info("Accept Doorbell invite: id='$inviteId'");
 
-    var resp = await HttpUtils.securePost(Uri.parse('$QRDOORBELL_INVITE_API_URL/invite/accept/$inviteId'));
+    var resp = await HttpUtils.securePost(Uri.parse('${AppSettings.inviteApiUrl}/invite/accept/$inviteId'));
     if (resp.statusCode != 200) {
       logger.warning('Failed to accept Doorbell Invite - API returned an error: ${resp.body}');
       throw AssertionError('Failed to accept Doorbell Invite - API returned an error: ${resp.body}');
@@ -287,7 +287,7 @@ class FirebaseDataStore extends DataStore {
 
   @override
   Future<void> saveInvite(Invite invite) async {
-    var resp = await HttpUtils.securePost(Uri.parse('$QRDOORBELL_API_URL/api/v1/doorbells/invite'),
+    var resp = await HttpUtils.securePost(Uri.parse('${AppSettings.apiUrl}/api/v1/doorbells/invite'),
         headers: {'Content-Type': 'application/json'}, body: invite.toJson());
     if (resp.statusCode != 200) {
       logger.warning('Failed to create Doorbell Invite - API returned an error (${resp.statusCode}): ${resp.body}');

@@ -1,38 +1,40 @@
 import 'package:newrelic_mobile/config.dart';
 
+import '../app_options.dart';
+
 class NewRelicLogger {
-  static Config getConfig(String appToken) => Config(
-      accessToken: appToken,
+  static Config get config => Config(
+      accessToken: AppSettings.newRelicAppToken,
 
       //Android Specific
       // Optional: Enable or disable collection of event data.
-      analyticsEventEnabled: true,
+      analyticsEventEnabled: AppSettings.newRelicEnabled,
 
       // Optional: Enable or disable reporting successful HTTP requests to the MobileRequest event type.
-      networkErrorRequestEnabled: true,
+      networkErrorRequestEnabled: AppSettings.newRelicEnabled,
 
       // Optional: Enable or disable reporting network and HTTP request errors to the MobileRequestError event type.
-      networkRequestEnabled: true,
+      networkRequestEnabled: AppSettings.newRelicEnabled,
 
       // Optional: Enable or disable crash reporting.
-      crashReportingEnabled: true,
+      crashReportingEnabled: AppSettings.newRelicCrashLogsEnabled,
 
       // Optional: Enable or disable interaction tracing. Trace instrumentation still occurs, but no traces are harvested. This will disable default and custom interactions.
-      interactionTracingEnabled: true,
+      interactionTracingEnabled: AppSettings.newRelicEnabled,
 
       // Optional: Enable or disable capture of HTTP response bodies for HTTP error traces and MobileRequestError events.
-      httpResponseBodyCaptureEnabled: true,
+      httpResponseBodyCaptureEnabled: AppSettings.newRelicEnabled,
 
       // Optional: Enable or disable agent logging.
-      loggingEnabled: true,
+      loggingEnabled: AppSettings.newRelicLogsEnabled,
 
       // iOS specific
       // Optional: Enable or disable automatic instrumentation of WebViews
-      webViewInstrumentation: true,
+      webViewInstrumentation: AppSettings.newRelicEnabled,
 
       //Optional: Enable or disable Print Statements as Analytics Events
-      printStatementAsEventsEnabled: true,
+      printStatementAsEventsEnabled: AppSettings.newRelicEnabled,
 
       // Optional: Enable or disable automatic instrumentation of HTTP Request
-      httpInstrumentationEnabled: true);
+      httpInstrumentationEnabled: AppSettings.newRelicEnabled);
 }

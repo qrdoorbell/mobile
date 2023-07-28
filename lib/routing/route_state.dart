@@ -39,7 +39,7 @@ class RouteState extends ChangeNotifier {
       });
 
   Future<void> go(String route, {dynamic data}) async {
-    if (NEWRELIC_APP_TOKEN.isNotEmpty) NewrelicMobile.instance.recordBreadcrumb(route);
+    if (AppSettings.newRelicEnabled) NewrelicMobile.instance.recordBreadcrumb(route);
 
     _data = data;
     this.route = await _parser.parseRouteInformation(RouteInformation(location: route));

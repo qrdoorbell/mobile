@@ -64,7 +64,7 @@ class EventCard extends StatelessWidget {
                                 doorbell.name,
                                 style: const TextStyle(fontSize: 14, color: CupertinoColors.activeBlue),
                               ),
-                              onPressed: () async => await RouteStateScope.of(context).go('/doorbells/${event.doorbellId}'),
+                              onPressed: () => RouteStateScope.of(context).go('/doorbells/${event.doorbellId}'),
                             )
                           : const Text(
                               "Doorbell",

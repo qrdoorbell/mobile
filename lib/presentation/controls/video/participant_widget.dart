@@ -6,6 +6,7 @@ import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:livekit_client/livekit_client.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../../app_options.dart';
 import '../../../data.dart';
 import '../../../routing.dart';
 import '../../../services/callkit_service.dart';
@@ -111,7 +112,7 @@ abstract class ParticipantWidgetState<T extends ParticipantWidget> extends State
                       const Spacer(),
                       _incomingCallControls(context),
                     ],
-                    if (_isAnswered && false) ...[
+                    if (_isAnswered && AppSettings.homekitEnabled) ...[
                       const Spacer(),
                       _doorLockControls(context),
                     ],
@@ -338,9 +339,9 @@ abstract class ParticipantWidgetState<T extends ParticipantWidget> extends State
 
   Future<void> _endCall(BuildContext context) async {
     var router = RouteStateScope.of(context);
-    await CallKitServiceScope.of(context).endCall(widget.doorbellId);
+    await CallKitServiceScope.of(context)?.endCall(widget.doorbellId);
     await widget.participant.unpublishAllTracks();
     await widget.participant.dispose();
-    await router.go('/doorbells/${widget.doorbellId}');
+    router.go('/doorbells/${widget.doorbellId}');
   }
 }
