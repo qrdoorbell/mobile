@@ -1,16 +1,24 @@
-# qrdoorbell_mobile
+# QR Doorbell - mobile app (Flutter)
 
-A new Flutter project.
+<div style="width:160px; float:left; margin-right: 30px">
 
-## Getting Started
+![QR Doorbell](assets/logo-app-01_256.png)
 
-This project is a starting point for a Flutter application.
+</div>
 
-A few resources to get you started if this is your first Flutter project:
+<div>
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+This is the mobile app, written in Flutter and Dart, for the QR Doorbell project.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+It allows you to create and manage your virtual doorbells, __receive__ doorbell rings as __video calls__ and __share__ your doorbells with your __friends and family__.
+
+</div>
+
+<div style="clear: both">
+
+### References
+
+- [Flutter](https://flutter.dev/)
+- [Dart](https://dart.dev/)
+- [Firebase](https://firebase.google.com/)
+- [LiveKit](https://livekit.io/)

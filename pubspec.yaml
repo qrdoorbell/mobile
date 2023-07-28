@@ -1,6 +1,6 @@
 name: qrdoorbell_mobile
 description: QR Doorbell Mobile Application
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: 'none'
 version: 0.0.0
 homepage: https://qrdoorbell.io/
 repository: https://github.com/qrdoorbell/mobile
@@ -81,8 +81,5 @@ flutter:
 
 flutter_icons:
   image_path: "assets/logo-app-01_1024.png" 
-  # image_path_ios: "assets/logo-app-01_1024.png" 
-  # android: true
-  # min_sdk_android: 21 # android min sdk min:16, default 21
   ios: true
   remove_alpha_ios: true

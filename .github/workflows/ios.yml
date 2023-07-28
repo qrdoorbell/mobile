@@ -16,6 +16,11 @@ jobs:
           channel: 'stable' # or: 'beta', 'dev' or 'master'      
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Add Google service config bindings
+        shell: bash
+        run: |
+          echo "${{ secrets.GOOGLESERVICE_INFO_PLIST }}" > ios/Runner/GoogleService-Info.plist
+          echo "${{ secrets.FIREBASE_APP_ID_FILE_JSON }}" > ios/firebase_app_id_file.json
       - name: Install the Apple certificate and provisioning profile
         env:
           BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
@@ -50,7 +55,7 @@ jobs:
           if [[ "${GITHUB_REF#refs/*/v}" != "$GITHUB_REF" ]]; then 
             export BUILD_NAME=${GITHUB_REF#refs/*/v} 
           fi
-          flutter build ipa --release --dart-define=USE_CRASHALYTICS=true --dart-define=GOOGLE_CLIENT_ID=AIzaSyBVBruJnxt4zW0Eqlg7JtLVvotnSSiz8UI --dart-define=NEWRELIC_APP_TOKEN=eu01xx79f98fc731cd7778b793ed8af8a632bce3d0-NRMA --build-name=$BUILD_NAME --build-number=$GITHUB_RUN_NUMBER --export-options-plist=exportOptions.plist
+          flutter build ipa --release --dart-define=USE_CRASHALYTICS=true --dart-define=GOOGLE_CLIENT_ID=AIzaSyBVBruJnxt4zW0Eqlg7JtLVvotnSSiz8UI --build-name=$BUILD_NAME --build-number=$GITHUB_RUN_NUMBER --export-options-plist=exportOptions.plist
       # - name: Upload build artifacts
       #   uses: actions/upload-artifact@v2
       #   with:
