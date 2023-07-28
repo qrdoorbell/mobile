@@ -38,9 +38,9 @@ Future<void> main() async {
   var crashalyticsLogLevel = AppSettings.crashlyticsEnabled ? AppSettings.crashlyticsLogLevel : 0;
   var newRelicLogLevel = AppSettings.newRelicLogsEnabled ? AppSettings.newRelicLogLevel : 0;
 
-  Logger.root.level = kDebugMode ? Level.FINE : Level.WARNING;
+  Logger.root.level = kDebugMode ? Level.FINE : Level.INFO;
   Logger.root.onRecord.listen((record) {
-    print('${format.format(record.time)}: ${record.message}');
+    print('[${record.level.name}] ${format.format(record.time)}: ${record.message}');
 
     if (crashalyticsLogLevel > 0 && record.level.value >= crashalyticsLogLevel) {
       FirebaseCrashlytics.instance.log('[${record.level.name}] ${format.format(record.time)}: ${record.message}');
@@ -269,6 +269,10 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
 
   void _handleConnectionStateChanged(ConnectivityResult state) {
     logger.info("Connection state changed: state=$state");
+
+    if (AppSettings.newRelicEnabled) {
+      NewrelicMobile.instance.recordCustomEvent('ConnectionState', eventName: state.name);
+    }
   }
 
   Future<void> _handleFcmTokenChanged(String uid, String token) async {
