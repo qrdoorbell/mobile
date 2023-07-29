@@ -53,6 +53,11 @@ class DoorbellEvent implements Comparable<DoorbellEvent> {
     return "";
   }
 
+  String? get acceptedBy {
+    if (voip?['user']?['sid'] == null || voip?['user']?['answered'] != true) return null;
+    return voip?['user']?['sid'];
+  }
+
   static DoorbellEvent create(int eventType, String doorbellId, String stickerId) {
     return DoorbellEvent._(
         eventId: nanoid(10), stickerId: stickerId, doorbellId: doorbellId, eventType: eventType, dateTime: DateTime.now(), voip: {});

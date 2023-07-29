@@ -15,7 +15,7 @@ class QRCodeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(future: (() async {
-      var imgResp = await HttpUtils.secureGet(Uri.parse('$QRDOORBELL_API_URL/api/v1/doorbells/$doorbellId/qr'));
+      var imgResp = await HttpUtils.secureGet(Uri.parse('${AppSettings.apiUrl}/api/v1/doorbells/$doorbellId/qr'));
       if (imgResp.statusCode != 200) {
         throw FlutterError('ERROR: unable to download image: responseCode=${imgResp.statusCode}');
       }

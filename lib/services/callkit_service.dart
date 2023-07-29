@@ -2,10 +2,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_callkeep/flutter_callkeep.dart';
 import 'package:logging/logging.dart';
-import 'package:newrelic_mobile/newrelic_mobile.dart';
 import 'package:uuid/uuid.dart';
 
-import '../app_options.dart';
 import '../routing/route_state.dart';
 
 class CallKitService extends ChangeNotifier {
@@ -27,22 +25,16 @@ class CallKitService extends ChangeNotifier {
     if (_doorbellCalls.containsKey(doorbellId)) {
       await CallKeep.instance.endCall(_doorbellCalls[doorbellId]!);
       _doorbellCalls.remove(doorbellId);
-
-      if (NEWRELIC_APP_TOKEN.isNotEmpty)
-        NewrelicMobile.instance
-            .recordCustomEvent('EndCall', eventAttributes: {"doorbellId": doorbellId, "callUuid": _doorbellCalls[doorbellId]});
     }
   }
 
   Future<void> _onCallKitEvent(CallKeepEvent? event) async {
-    logger.info("Received CallKit event: ${event?.toString()}");
+    if (event == null) return;
+
+    logger.info("Received CallKit event: ${event.toString()}");
     logger.fine(event);
-    if (event?.type == null) return;
 
-    if (NEWRELIC_APP_TOKEN.isNotEmpty)
-      NewrelicMobile.instance.recordCustomEvent(event!.type.name, eventAttributes: _getEventMetadata(event));
-
-    switch (event!.type) {
+    switch (event.type) {
       case CallKeepEventType.callIncoming:
         // received an incoming call
         break;
@@ -53,23 +45,24 @@ class CallKitService extends ChangeNotifier {
         // show screen calling in Flutter
         var callEvent = event as CallKeepCallEvent;
         if (callEvent.data.extra != null) {
-          var doorbellId = callEvent.data.extra!['doorbellId'];
-          var callToken = callEvent.data.extra!['callToken'];
+          var doorbellId = callEvent.data.extra?['doorbellId'];
+          var callToken = callEvent.data.extra?['callToken'];
           _doorbellCalls.putIfAbsent(doorbellId, () => callEvent.data.uuid);
-          await routeState.go("/doorbells/$doorbellId/join/$callToken", data: callEvent.data.extra!);
+
+          routeState.go("/doorbells/$doorbellId/join/$callToken", data: callEvent.data.extra!);
         }
         break;
       case CallKeepEventType.callDecline:
         // declined an incoming call
         var callEvent = event as CallKeepCallEvent;
         if (callEvent.data.extra != null) {
-          await endCall(callEvent.data.extra!['doorbellId']);
+          await endCall(callEvent.data.extra?['doorbellId']);
         }
         break;
       case CallKeepEventType.callEnded:
         var callEvent = event as CallKeepCallEvent;
         if (callEvent.data.extra != null) {
-          await endCall(callEvent.data.extra!['doorbellId']);
+          await endCall(callEvent.data.extra?['doorbellId']);
         }
         // ended an incoming/outgoing call
         break;
@@ -77,7 +70,7 @@ class CallKitService extends ChangeNotifier {
         // missed an incoming call
         var callEvent = event as CallKeepCallEvent;
         if (callEvent.data.extra != null) {
-          await endCall(callEvent.data.extra!['doorbellId']);
+          await endCall(callEvent.data.extra?['doorbellId']);
         }
         break;
       case CallKeepEventType.missedCallback:
@@ -120,8 +113,6 @@ class CallKitService extends ChangeNotifier {
       message.data['uuid'] = callId;
       _doorbellCalls[message.data['doorbellId']] = callId;
 
-      if (NEWRELIC_APP_TOKEN.isNotEmpty) NewrelicMobile.instance.recordCustomEvent('IncomingCall', eventAttributes: message.data);
-
       await CallKeep.instance.displayIncomingCall(CallKeepIncomingConfig(
           uuid: callId,
           appName: 'QR Doorbell',
@@ -155,15 +146,36 @@ class CallKitService extends ChangeNotifier {
     }
   }
 
-  static Map<String, dynamic> _getEventMetadata(CallKeepEvent event) {
+  static Map<String, dynamic> _getEventMetadata(CallKeepEvent? event) {
+    if (event == null) return {};
+
     if (event is CallKeepHoldEvent)
-      return {"callUuid": event.data.uuid, "isOnHold": event.data.isOnHold};
+      return {
+        "callUuid": event.data.uuid,
+        "isOnHold": event.data.isOnHold,
+        "reason": "hold",
+        "eventType": event.type.name,
+        "data": event.data
+      };
     else if (event is CallKeepMuteEvent)
-      return {"callUuid": event.data.uuid, "isOnHold": event.data.isMuted};
+      return {
+        "callUuid": event.data.uuid,
+        "isOnHold": event.data.isMuted,
+        "reason": "mute",
+        "eventType": event.type.name,
+        "data": event.data
+      };
     else if (event is CallKeepAudioSessionEvent)
-      return {"callUuid": event.data.uuid, "isActivated": event.data.isActivated};
+      return {
+        "callUuid": event.data.uuid,
+        "isActivated": event.data.isActivated,
+        "answerCall": event.data.answerCall?.toMap(),
+        "outgoingCall": event.data.outgoingCall?.toMap(),
+        "eventType": event.type.name,
+        "data": event.data
+      };
     else
-      return {"callUuid": event.data.uuid};
+      return {"callUuid": event.data.uuid, "eventType": event.type.name, "data": event.data.toString()};
   }
 }
 
@@ -174,5 +186,5 @@ class CallKitServiceScope extends InheritedNotifier<CallKitService> {
     super.key,
   });
 
-  static CallKitService of(BuildContext context) => context.dependOnInheritedWidgetOfExactType<CallKitServiceScope>()!.notifier!;
+  static CallKitService? of(BuildContext context) => context.dependOnInheritedWidgetOfExactType<CallKitServiceScope>()?.notifier;
 }

@@ -174,7 +174,7 @@ class DoorbellScreen extends StatelessWidget {
     print('Invite created: inviteId=$invite.id');
 
     try {
-      var message = "$QRDOORBELL_INVITE_API_URL/invite/accept/${invite.id}";
+      var message = "${AppSettings.inviteApiUrl}/invite/accept/${invite.id}";
       var result = await Share.shareWithResult(message, subject: "Share ${doorbell.name}");
 
       if (result.status == ShareResultStatus.success) {
@@ -191,7 +191,7 @@ class DoorbellScreen extends StatelessWidget {
   static Future<void> printSticker(Doorbell doorbell) async {
     print("PRINT DOORBELL STICKER: ${doorbell.doorbellId}");
 
-    var imgResp = await HttpUtils.secureGet(Uri.parse('$QRDOORBELL_API_URL/api/v1/doorbells/${doorbell.doorbellId}/qr/'));
+    var imgResp = await HttpUtils.secureGet(Uri.parse('${AppSettings.apiUrl}/api/v1/doorbells/${doorbell.doorbellId}/qr/'));
     if (imgResp.statusCode != 200) {
       print('ERROR: unable to download image: responseCode=${imgResp.statusCode}');
       return;

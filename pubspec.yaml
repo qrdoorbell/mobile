@@ -1,6 +1,6 @@
 name: qrdoorbell_mobile
 description: QR Doorbell Mobile Application
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: 'none'
 version: 0.0.0
 homepage: https://qrdoorbell.io/
 repository: https://github.com/qrdoorbell/mobile
@@ -28,7 +28,7 @@ dependencies:
   flutter_webrtc: ^0.9.36
   firebase_core: ^2.5.0
   firebase_messaging: ^14.2.1
-  firebase_analytics: ^10.1.6
+  firebase_analytics: ^10.4.4
   firebase_database: ^10.0.9
   firebase_crashlytics: ^3.0.17
   firebase_auth: ^4.2.5
@@ -52,8 +52,8 @@ dependencies:
   uni_links: ^0.5.1
   package_info_plus: ^4.0.1
   loading_animation_widget: ^1.2.0+4
-  newrelic_mobile: ^1.0.0
   flutter_html: ^3.0.0-beta.2
+  firebase_remote_config: ^4.2.4
 
 dev_dependencies:
   flutter_test:
@@ -81,8 +81,5 @@ flutter:
 
 flutter_icons:
   image_path: "assets/logo-app-01_1024.png" 
-  # image_path_ios: "assets/logo-app-01_1024.png" 
-  # android: true
-  # min_sdk_android: 21 # android min sdk min:16, default 21
   ios: true
   remove_alpha_ios: true

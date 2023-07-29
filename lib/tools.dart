@@ -3,22 +3,39 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' show Response, get, post;
+import 'package:logging/logging.dart';
 
 class HttpUtils {
+  static final logger = Logger('HttpUtils');
   HttpUtils._();
 
   static Future<Response> securePost(Uri url, {Map<String, String>? headers, Object? body, Encoding? encoding}) async {
+    logger.finest('Start HTTP POST: $url');
+
+    var startTime = DateTime.now().millisecondsSinceEpoch;
     var jwtToken = await FirebaseAuth.instance.currentUser?.getIdToken();
     if (jwtToken == null) throw AssertionError('Cannot get JWT token');
 
-    return await post(url, body: body, headers: {'Authorization': 'Bearer $jwtToken'});
+    var result = await post(url, body: body, headers: {'Authorization': 'Bearer $jwtToken'});
+    var duration = DateTime.now().millisecondsSinceEpoch - startTime;
+
+    logger.fine('End HTTP POST: $url, status=${result.statusCode}, duration=$duration');
+    return result;
   }
 
   static Future<Response> secureGet(Uri url, {Map<String, String>? headers, Encoding? encoding}) async {
+    logger.finest('Start HTTP GET: $url');
+
+    var startTime = DateTime.now().millisecondsSinceEpoch;
     var jwtToken = await FirebaseAuth.instance.currentUser?.getIdToken();
     if (jwtToken == null) throw AssertionError('Cannot get JWT token');
 
-    return await get(url, headers: {'Authorization': 'Bearer $jwtToken'});
+    var result = await get(url, headers: {'Authorization': 'Bearer $jwtToken'});
+    var duration = DateTime.now().millisecondsSinceEpoch - startTime;
+
+    logger.fine('End HTTP GET: $url, status=${result.statusCode}, duration=$duration');
+
+    return result;
   }
 }
 

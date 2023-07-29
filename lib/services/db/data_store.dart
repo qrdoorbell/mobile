@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import '../../model/doorbell.dart';
 import '../../model/doorbell_event.dart';
@@ -47,6 +48,8 @@ abstract class DataStore extends ChangeNotifier {
 
   Future<void> updateUserAccount(UserAccount user);
   Future<void> updateUserDisplayName(String displayName);
+  Future<void> updateVoipPushToken(String? voipPushToken);
+  Future<void> updateFcmPushToken(String? fcmPushToken);
 
   Future<void> setUid(String? uid);
 
@@ -54,10 +57,18 @@ abstract class DataStore extends ChangeNotifier {
   Future<DataStore> get future;
   Future<void> reloadData(bool force);
 
+  Future<void> startTransaction([String? name]);
+  Future<void> endTransaction();
+
   @override
   Future<void> dispose();
 
   static DataStore of(BuildContext context) => context.dependOnInheritedWidgetOfExactType<DataStoreStateScope>()!.notifier!.dataStore;
+
+  Future<void> signOut() async {
+    await setUid(null);
+    await FirebaseAuth.instance.signOut();
+  }
 }
 
 class DataStoreState extends ChangeNotifier {
@@ -81,25 +92,14 @@ class DataStoreState extends ChangeNotifier {
       await dataStore.setUid(null);
 
       notifyListeners();
-    } else if (dataStore.currentUser == null || dataStore.currentUser!.userId != user!.uid) {
-      try {
-        await dataStore.setUid(user!.uid);
-      } catch (e) {
-        print(e);
-      }
+      return;
+    }
+
+    if (dataStore.currentUser?.userId != user!.uid) {
+      await dataStore.setUid(user.uid);
 
       if (dataStore.currentUser == null) {
-        await dataStore.updateUserAccount(UserAccount.fromUser(user!));
-
-        try {
-          await dataStore.setUid(user.uid);
-        } catch (e) {
-          print(e);
-        }
-
-        if (dataStore.currentUser == null) {
-          await FirebaseAuth.instance.signOut();
-        }
+        await dataStore.updateUserAccount(UserAccount.fromUser(user));
       }
 
       notifyListeners();
@@ -115,4 +115,23 @@ class DataStoreStateScope extends InheritedNotifier<DataStoreState> {
   });
 
   static DataStoreState of(BuildContext context) => context.dependOnInheritedWidgetOfExactType<DataStoreStateScope>()!.notifier!;
+}
+
+extension DataStoreBuildContextExtensions on BuildContext {
+  DataStore get dataStore => DataStore.of(this);
+}
+
+extension DataStoreExtensions on DataStore {
+  Future<void> runTransaction(Future<void> Function() transaction) async {
+    if (kDebugMode)
+      await startTransaction(StackTrace.current.toString().split("\n")[1]);
+    else
+      await startTransaction();
+
+    try {
+      await transaction();
+    } finally {
+      await endTransaction();
+    }
+  }
 }

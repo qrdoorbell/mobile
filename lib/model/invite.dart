@@ -53,7 +53,7 @@ class Invite {
   Map toMap() {
     return {
       'id': id,
-      'doorbell': doorbellId,
+      'doorbellId': doorbellId,
       'role': role,
       'status': status,
       'expires': expires.millisecondsSinceEpoch,
@@ -67,7 +67,7 @@ class Invite {
   factory Invite.fromMap(Map map) {
     return Invite(
       id: map['id'] ?? '',
-      doorbellId: map['doorbell'] ?? '',
+      doorbellId: map['doorbellId'] ?? '',
       role: map['role'] ?? '',
       status: map['status'] ?? '',
       expires: DateTime.fromMillisecondsSinceEpoch(map['expires']?.toInt() ?? 0),
@@ -97,7 +97,7 @@ class Invite {
 
   @override
   String toString() {
-    return 'Invite(id: $id, doorbell: $doorbellId, role: $role, status: $status, expires: $expires, created: $created, updated: $updated, uid: $uid, owner: $owner)';
+    return 'Invite(id: $id, doorbellId: $doorbellId, role: $role, status: $status, expires: $expires, created: $created, updated: $updated, uid: $uid, owner: $owner)';
   }
 
   @override

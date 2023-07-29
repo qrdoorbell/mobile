@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:collection/collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -137,25 +139,22 @@ class _UserAvatarColorScheme {
     if (displayName == null || displayName.isEmpty || displayName.startsWith('-')) return _userAvatarColorSchemes[0];
 
     var h = hashIgnoreAsciiCase(displayName);
-    var i = (h % (_userAvatarColorSchemes.length - 1)) + 1;
+    var i = ((h * pi).round() % (_userAvatarColorSchemes.length - 1)) + 1;
 
     return _userAvatarColorSchemes[i];
   }
 
   static final _userAvatarColorSchemes = <_UserAvatarColorScheme>[
     _UserAvatarColorScheme(Colors.blueGrey.shade100),
-    _UserAvatarColorScheme(Colors.pinkAccent),
-    _UserAvatarColorScheme(Colors.redAccent.shade400),
-    _UserAvatarColorScheme(Colors.deepOrange),
+    _UserAvatarColorScheme(Colors.pinkAccent.shade200),
     _UserAvatarColorScheme(Colors.amberAccent),
-    _UserAvatarColorScheme(Colors.deepPurpleAccent),
-    _UserAvatarColorScheme(Colors.purpleAccent),
-    _UserAvatarColorScheme(Colors.indigoAccent),
     _UserAvatarColorScheme(Colors.blueAccent),
-    _UserAvatarColorScheme(Colors.lightBlueAccent.shade700),
-    _UserAvatarColorScheme(Colors.cyan.shade600),
+    _UserAvatarColorScheme(Colors.purpleAccent),
+    _UserAvatarColorScheme(Colors.redAccent.shade400),
     _UserAvatarColorScheme(Colors.teal.shade400),
-    _UserAvatarColorScheme(Colors.green),
-    _UserAvatarColorScheme(Colors.yellow),
+    _UserAvatarColorScheme(Colors.deepPurpleAccent),
+    _UserAvatarColorScheme(Colors.greenAccent.shade400),
+    _UserAvatarColorScheme(Colors.deepOrange),
+    _UserAvatarColorScheme(Colors.lime),
   ];
 }
