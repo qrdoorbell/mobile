@@ -1,0 +1,85 @@
+name: qrdoorbell_mobile
+description: QR Doorbell Mobile Application
+publish_to: 'none'
+version: 0.0.0
+homepage: https://qrdoorbell.io/
+repository: https://github.com/qrdoorbell/mobile
+issue_tracker: https://github.com/qrdoorbell/mobile/issues
+
+topics:
+  - qr
+  - doorbell
+  - video
+  - livekit
+  - webrtc
+
+platforms:
+  - ios:
+
+environment:
+  sdk: '^3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  provider: ^6.0.2
+  livekit_client: ^1.4.0
+  flutter_webrtc: ^0.9.36
+  firebase_core: ^2.5.0
+  firebase_messaging: ^14.2.1
+  firebase_analytics: ^10.4.4
+  firebase_database: ^10.0.9
+  firebase_crashlytics: ^3.0.17
+  firebase_auth: ^4.2.5
+  firebase_ui_auth: ^1.1.14
+  firebase_ui_oauth_apple: ^1.0.21
+  firebase_ui_oauth_google: ^1.0.21
+  flutter_svg: ^1.1.2
+  flutter_callkeep: ^0.3.1+1
+  shared_preferences: ^2.0.17
+  path_to_regexp: ^0.4.0
+  adaptive_navigation: ^0.0.3
+  collection: ^1.17.1
+  quiver: ^3.2.1
+  nanoid: ^1.0.0
+  connectivity_plus: ^4.0.1
+  share_plus: ^7.0.0
+  http: ^1.1.0
+  logging: ^1.1.1
+  intl: ^0.18.0
+  uuid: ^3.0.6
+  uni_links: ^0.5.1
+  package_info_plus: ^4.0.1
+  loading_animation_widget: ^1.2.0+4
+  flutter_html: ^3.0.0-beta.2
+  firebase_remote_config: ^4.2.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+  flutter_launcher_icons:
+    git:
+      url: https://github.com/fluttercommunity/flutter_launcher_icons.git
+      ref: 26fedcee4b0e6f7a85f65f1fb48834a21f57e970
+
+flutter:
+  uses-material-design: true
+
+  assets:
+  - assets/logo-app-01_256.png
+  - assets/logo-app-01_512.png
+  - assets/logo-app-01_1024.png
+  - assets/logo-embed-01.png
+  - assets/qrcode-blue.svg
+  - assets/logo-app.svg
+  - assets/logo-app-white.svg
+  - assets/video.svg
+  - assets/video.fill.svg
+  - assets/video.slash.fill.svg
+
+flutter_icons:
+  image_path: "assets/logo-app-01_1024.png" 
+  ios: true
+  remove_alpha_ios: true
