@@ -133,3 +133,6 @@ app.*.symbols
 
 .env
 *.env*
+
+ios/Runner/GoogleService-Info.plist
+ios/firebase_app_id_file.json
