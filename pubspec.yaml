@@ -63,6 +63,7 @@ dev_dependencies:
     git:
       url: https://github.com/fluttercommunity/flutter_launcher_icons.git
       ref: 26fedcee4b0e6f7a85f65f1fb48834a21f57e970
+  dart_code_metrics: ^4.19.2
 
 flutter:
   uses-material-design: true
