@@ -145,38 +145,6 @@ class CallKitService extends ChangeNotifier {
       logger.warning("Failed to handle RemoteMessage", error);
     }
   }
-
-  static Map<String, dynamic> _getEventMetadata(CallKeepEvent? event) {
-    if (event == null) return {};
-
-    if (event is CallKeepHoldEvent)
-      return {
-        "callUuid": event.data.uuid,
-        "isOnHold": event.data.isOnHold,
-        "reason": "hold",
-        "eventType": event.type.name,
-        "data": event.data
-      };
-    else if (event is CallKeepMuteEvent)
-      return {
-        "callUuid": event.data.uuid,
-        "isOnHold": event.data.isMuted,
-        "reason": "mute",
-        "eventType": event.type.name,
-        "data": event.data
-      };
-    else if (event is CallKeepAudioSessionEvent)
-      return {
-        "callUuid": event.data.uuid,
-        "isActivated": event.data.isActivated,
-        "answerCall": event.data.answerCall?.toMap(),
-        "outgoingCall": event.data.outgoingCall?.toMap(),
-        "eventType": event.type.name,
-        "data": event.data
-      };
-    else
-      return {"callUuid": event.data.uuid, "eventType": event.type.name, "data": event.data.toString()};
-  }
 }
 
 class CallKitServiceScope extends InheritedNotifier<CallKitService> {
