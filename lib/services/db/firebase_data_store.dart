@@ -160,7 +160,7 @@ class FirebaseDataStore extends DataStore {
               ])),
         ]).then((_) => _reloadCompleter?.complete(this));
 
-        await _reloadCompleter?.future.timeout(const Duration(seconds: 15));
+        await _reloadCompleter?.future.timeout(const Duration(seconds: 30));
       });
 
       logger.info('Firebase DataStore reload complete!');

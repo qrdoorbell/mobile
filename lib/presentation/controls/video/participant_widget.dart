@@ -8,8 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../app_options.dart';
 import '../../../data.dart';
-import '../../../routing.dart';
-import '../../../services/callkit_service.dart';
+import '../../../tools.dart';
 import '../../screens/call_screen.dart';
 import '../../screens/empty_screen.dart';
 
@@ -24,8 +23,10 @@ abstract class ParticipantWidget extends StatefulWidget {
   abstract final VideoTrack? videoTrack;
   abstract final String doorbellId;
   final VideoQuality quality;
+  final BuildContextCallback endCall;
 
-  const ParticipantWidget({
+  const ParticipantWidget(
+    this.endCall, {
     this.quality = VideoQuality.MEDIUM,
     Key? key,
   }) : super(key: key);
@@ -258,9 +259,10 @@ abstract class ParticipantWidgetState<T extends ParticipantWidget> extends State
                   size: 32,
                 ),
               ),
-              onPressed: () => setState(() async {
-                    _endCall(context);
-                  })),
+              onPressed: () async {
+                await widget.endCall(context);
+                setState(() {});
+              }),
         ],
       ),
     );
@@ -283,7 +285,8 @@ abstract class ParticipantWidgetState<T extends ParticipantWidget> extends State
                 size: 42,
               ),
               onPressed: () async {
-                _endCall(context);
+                await widget.endCall(context);
+                setState(() {});
               }),
           const Spacer(),
           const Spacer(),
@@ -335,13 +338,5 @@ abstract class ParticipantWidgetState<T extends ParticipantWidget> extends State
               ),
               const Spacer(),
             ])));
-  }
-
-  Future<void> _endCall(BuildContext context) async {
-    var router = RouteStateScope.of(context);
-    await CallKitServiceScope.of(context)?.endCall(widget.doorbellId);
-    await widget.participant.unpublishAllTracks();
-    await widget.participant.dispose();
-    router.go('/doorbells/${widget.doorbellId}');
   }
 }

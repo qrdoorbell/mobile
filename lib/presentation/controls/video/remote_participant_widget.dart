@@ -14,7 +14,8 @@ class RemoteParticipantWidget extends ParticipantWidget {
   const RemoteParticipantWidget(
     this.participant,
     this.videoTrack,
-    this.doorbellId, {
+    this.doorbellId,
+    super.endCall, {
     Key? key,
   }) : super(key: key);
 

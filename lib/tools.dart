@@ -5,6 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' show Response, get, post;
 import 'package:logging/logging.dart';
 
+typedef BuildContextCallback = FutureOr<void> Function(BuildContext context);
+
 class HttpUtils {
   static final logger = Logger('HttpUtils');
   HttpUtils._();

@@ -99,7 +99,8 @@ class _VideoCallState extends State<VideoCall> {
           participantTrack.videoTracks.isNotEmpty
               ? participantTrack.videoTracks.where((x) => x.participant.identity.startsWith("guest-")).first.track
               : null,
-          widget.doorbellId);
+          widget.doorbellId,
+          _endCall);
 
     return Scaffold(
         backgroundColor: CupertinoColors.darkBackgroundGray,

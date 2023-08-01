@@ -14,7 +14,8 @@ class LocalParticipantWidget extends ParticipantWidget {
   const LocalParticipantWidget(
     this.participant,
     this.videoTrack,
-    this.doorbellId, {
+    this.doorbellId,
+    super.endCall, {
     Key? key,
   }) : super(key: key);
 

@@ -53,6 +53,8 @@
 	<string>Microphone is going to be used for ad-hoc video calls between anonymous clients (effectively guests at a door -- doorbell clients) and doorbell owners (effectively app owners)</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>com.apple.developer.avfoundation.multitasking-camera-access</key>
+	<true/>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
