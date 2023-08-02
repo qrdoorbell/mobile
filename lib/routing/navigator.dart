@@ -14,6 +14,7 @@ import '../presentation/screens/login_screen.dart';
 import '../presentation/screens/main_screen.dart';
 import '../presentation/screens/qrcode_screen.dart';
 import '../presentation/screens/call_screen.dart';
+import '../presentation/screens/sticker_edit_screen.dart';
 import '../routing.dart';
 import '../widgets/fade_transition_page.dart';
 
@@ -109,6 +110,15 @@ class _AppNavigatorState extends State<AppNavigator> {
               MaterialPage(
                 key: _doorbellDetailsEditKey,
                 child: DoorbellUsersScreen(doorbellId: doorbellId),
+              ),
+            if (pathTemplate == '/doorbells/:doorbellId/stickers/templates/:stickerTemplateId' &&
+                routeState.route.parameters['stickerTemplateId'] != null)
+              MaterialPage(
+                key: _doorbellDetailsEditKey,
+                child: StickerEditScreen(
+                  doorbellId: doorbellId,
+                  stickerTemplateId: routeState.route.parameters['stickerTemplateId']!,
+                ),
               ),
           ],
         ],

@@ -98,7 +98,7 @@ class DoorbellScreen extends StatelessWidget {
                           const Padding(padding: EdgeInsets.all(5)),
                           StickerCard(
                               color: Colors.yellow.shade500,
-                              onPressed: () => {},
+                              onPressed: () => RouteStateScope.of(context).go('/doorbells/$doorbellId/stickers/templates/v1_vertical'),
                               child: Container(
                                 decoration: BoxDecoration(
                                     shape: BoxShape.rectangle,
@@ -116,7 +116,7 @@ class DoorbellScreen extends StatelessWidget {
                           const Padding(padding: EdgeInsets.all(5)),
                           StickerCard(
                               color: Colors.yellow.shade500,
-                              onPressed: () => {},
+                              onPressed: () => RouteStateScope.of(context).go('/doorbells/$doorbellId/stickers/templates/v1_horizontal'),
                               child: Container(
                                 decoration: BoxDecoration(
                                     shape: BoxShape.rectangle,

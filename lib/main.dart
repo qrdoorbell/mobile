@@ -118,6 +118,7 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
         '/doorbells/:doorbellId/edit',
         '/doorbells/:doorbellId/stickers',
         '/doorbells/:doorbellId/stickers/:stickerId',
+        '/doorbells/:doorbellId/stickers/templates/:stickerTemplateId',
         '/doorbells/:doorbellId/users',
         '/doorbells/:doorbellId/ring/:accessToken',
         '/doorbells/:doorbellId/join/:accessToken',
