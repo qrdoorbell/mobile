@@ -4,15 +4,17 @@ class StickerCard extends StatelessWidget {
   final Color color;
   final Widget child;
   final VoidCallback? onPressed;
+  final double width;
 
   const StickerCard({
     super.key,
     required this.color,
     required this.child,
+    this.width = 96,
     this.onPressed,
   });
 
-  factory StickerCard.fromIcon(IconData iconData, Color color, VoidCallback? onPressed) {
+  factory StickerCard.fromIconData(IconData iconData, Color color, VoidCallback? onPressed) {
     return StickerCard(
         color: color,
         onPressed: onPressed,
@@ -35,7 +37,7 @@ class StickerCard extends StatelessWidget {
           ),
           child: Container(
             alignment: AlignmentDirectional.center,
-            width: 96,
+            width: width,
             height: 96,
             padding: const EdgeInsets.all(10),
             child: child,

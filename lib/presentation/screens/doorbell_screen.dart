@@ -93,16 +93,371 @@ class DoorbellScreen extends StatelessWidget {
                       child: ListView(
                         scrollDirection: Axis.horizontal,
                         children: <Widget>[
-                          StickerCard.fromIcon(CupertinoIcons.qrcode, Colors.lightBlueAccent,
+                          StickerCard.fromIconData(CupertinoIcons.qrcode, Colors.grey.shade700,
                               () => RouteStateScope.of(context).go('/doorbells/$doorbellId/qr')),
                           const Padding(padding: EdgeInsets.all(5)),
-                          StickerCard.fromIcon(CupertinoIcons.hexagon, Colors.cyan, () => {}),
+                          StickerCard(
+                              color: Colors.yellow.shade500,
+                              onPressed: () => {},
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    color: Colors.white,
+                                    border: Border.all(width: 3, color: Colors.white),
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Icon(CupertinoIcons.textformat_abc_dottedunderline, color: Colors.yellow.shade700, size: 28),
+                                    Icon(CupertinoIcons.qrcode, color: Colors.yellow.shade700, size: 32),
+                                  ],
+                                ),
+                              )),
                           const Padding(padding: EdgeInsets.all(5)),
-                          StickerCard.fromIcon(CupertinoIcons.rectangle, Colors.green, () => {}),
+                          StickerCard(
+                              color: Colors.yellow.shade500,
+                              onPressed: () => {},
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    color: Colors.white,
+                                    border: Border.all(width: 3, color: Colors.white),
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Icon(CupertinoIcons.textformat_abc_dottedunderline, color: Colors.yellow.shade700, size: 28),
+                                    Icon(CupertinoIcons.qrcode, color: Colors.yellow.shade700, size: 32),
+                                  ],
+                                ),
+                              )),
                           const Padding(padding: EdgeInsets.all(5)),
-                          StickerCard.fromIcon(CupertinoIcons.rectangle_expand_vertical, Colors.yellow, () => {}),
+                          StickerCard(
+                              color: Colors.yellow.shade500,
+                              onPressed: () => {},
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    color: Colors.white,
+                                    border: Border.all(width: 3, color: Colors.white),
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Icon(CupertinoIcons.textformat_alt, color: Colors.yellow.shade700, size: 28),
+                                    Icon(CupertinoIcons.qrcode, color: Colors.yellow.shade700, size: 32),
+                                  ],
+                                ),
+                              )),
                           const Padding(padding: EdgeInsets.all(5)),
-                          StickerCard.fromIcon(CupertinoIcons.doc_append, Colors.orange, () => {}),
+                          StickerCard(
+                              color: Colors.yellow.shade500,
+                              onPressed: () => {},
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    color: Colors.white,
+                                    border: Border.all(width: 3, color: Colors.white),
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Icon(CupertinoIcons.textbox, color: Colors.yellow.shade700, size: 28),
+                                    Icon(CupertinoIcons.qrcode, color: Colors.yellow.shade700, size: 32),
+                                  ],
+                                ),
+                              )),
+                          const Padding(padding: EdgeInsets.all(5)),
+                          StickerCard(
+                              color: Colors.yellow.shade500,
+                              onPressed: () => {},
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    color: Colors.white,
+                                    border: Border.all(width: 3, color: Colors.white),
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Icon(CupertinoIcons.signature, color: Colors.yellow.shade700, size: 28),
+                                    Icon(CupertinoIcons.qrcode, color: Colors.yellow.shade700, size: 32),
+                                  ],
+                                ),
+                              )),
+                          const Padding(padding: EdgeInsets.all(5)),
+                          StickerCard(
+                              color: Colors.yellow.shade500,
+                              onPressed: () => {},
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    color: Colors.white,
+                                    border: Border.all(width: 3, color: Colors.white),
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Icon(CupertinoIcons.signature, color: Colors.yellow.shade700, size: 28),
+                                    Icon(CupertinoIcons.qrcode, color: Colors.yellow.shade700, size: 32),
+                                  ],
+                                ),
+                              )),
+                          const Padding(padding: EdgeInsets.all(5)),
+                          StickerCard(
+                              color: Colors.yellow.shade500,
+                              onPressed: () => {},
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    color: Colors.white,
+                                    border: Border.all(width: 3, color: Colors.white),
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Icon(CupertinoIcons.textformat_abc, color: Colors.yellow.shade700, size: 28),
+                                    Icon(CupertinoIcons.qrcode, color: Colors.yellow.shade700, size: 32),
+                                  ],
+                                ),
+                              )),
+                          const Padding(padding: EdgeInsets.all(5)),
+                          StickerCard(
+                              color: Colors.yellow.shade500,
+                              onPressed: () => {},
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    color: Colors.white,
+                                    border: Border.all(width: 3, color: Colors.white),
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Icon(CupertinoIcons.textformat_abc, color: Colors.yellow.shade700, size: 28),
+                                    Icon(CupertinoIcons.qrcode, color: Colors.yellow.shade700, size: 32),
+                                  ],
+                                ),
+                              )),
+                          const Padding(padding: EdgeInsets.all(5)),
+                          StickerCard(
+                              color: Colors.yellow.shade500,
+                              onPressed: () => {},
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    color: Colors.white,
+                                    border: Border.all(width: 3, color: Colors.white),
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Icon(CupertinoIcons.equal_square_fill, color: Colors.yellow.shade600, size: 32),
+                                    Icon(CupertinoIcons.qrcode, color: Colors.yellow.shade700, size: 32),
+                                  ],
+                                ),
+                              )),
+                          const Padding(padding: EdgeInsets.all(5)),
+                          StickerCard(
+                              color: Colors.yellow.shade500,
+                              onPressed: () => {},
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    color: Colors.white,
+                                    border: Border.all(width: 3, color: Colors.white),
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Icon(CupertinoIcons.equal_square_fill, color: Colors.yellow.shade600, size: 32),
+                                    Icon(CupertinoIcons.qrcode, color: Colors.yellow.shade700, size: 32),
+                                  ],
+                                ),
+                              )),
+                          const Padding(padding: EdgeInsets.all(5)),
+                          StickerCard(
+                              color: Colors.yellow.shade500,
+                              onPressed: () => {},
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    color: Colors.white,
+                                    border: Border.all(width: 3, color: Colors.white),
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Icon(CupertinoIcons.quote_bubble_fill, color: Colors.yellow.shade600, size: 28),
+                                    Icon(CupertinoIcons.qrcode, color: Colors.yellow.shade700, size: 32),
+                                  ],
+                                ),
+                              )),
+                          const Padding(padding: EdgeInsets.all(5)),
+                          StickerCard(
+                              color: Colors.yellow.shade500,
+                              onPressed: () => {},
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    color: Colors.white,
+                                    border: Border.all(width: 3, color: Colors.white),
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Icon(CupertinoIcons.ellipses_bubble_fill, color: Colors.yellow.shade600, size: 28),
+                                    Icon(CupertinoIcons.qrcode, color: Colors.yellow.shade700, size: 32),
+                                  ],
+                                ),
+                              )),
+                          const Padding(padding: EdgeInsets.all(5)),
+                          StickerCard(
+                              color: Colors.yellow.shade500,
+                              onPressed: () => {},
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    color: Colors.white,
+                                    border: Border.all(width: 3, color: Colors.white),
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Icon(CupertinoIcons.ellipses_bubble_fill, color: Colors.yellow.shade600, size: 28),
+                                    Icon(CupertinoIcons.qrcode, color: Colors.yellow.shade700, size: 32),
+                                  ],
+                                ),
+                              )),
+                          const Padding(padding: EdgeInsets.all(5)),
+                          StickerCard(
+                              color: Colors.pink.shade500,
+                              onPressed: () => {},
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    color: Colors.white,
+                                    border: Border.all(width: 3, color: Colors.white),
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Icon(CupertinoIcons.heart_circle_fill, color: Colors.pink.shade600, size: 28),
+                                    Icon(CupertinoIcons.qrcode, color: Colors.pink.shade700, size: 32),
+                                  ],
+                                ),
+                              )),
+                          const Padding(padding: EdgeInsets.all(5)),
+                          StickerCard(
+                              color: Colors.pink.shade500,
+                              onPressed: () => {},
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    color: Colors.white,
+                                    border: Border.all(width: 3, color: Colors.white),
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Icon(CupertinoIcons.hand_point_right_fill, color: Colors.pink.shade600, size: 28),
+                                    Icon(CupertinoIcons.qrcode, color: Colors.pink.shade700, size: 32),
+                                  ],
+                                ),
+                              )),
+                          const Padding(padding: EdgeInsets.all(5)),
+                          StickerCard(
+                              color: Colors.pink.shade500,
+                              onPressed: () => {},
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    color: Colors.white,
+                                    border: Border.all(width: 3, color: Colors.white),
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Icon(CupertinoIcons.rectangle_grid_1x2_fill, color: Colors.pink.shade600, size: 28),
+                                    Icon(CupertinoIcons.qrcode, color: Colors.pink.shade700, size: 32),
+                                  ],
+                                ),
+                              )),
+                          const Padding(padding: EdgeInsets.all(5)),
+                          StickerCard(
+                              color: Colors.yellow.shade500,
+                              onPressed: () => {},
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    border: Border.all(width: 3, color: Colors.white),
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: const Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Icon(CupertinoIcons.pencil, color: Colors.white, size: 28),
+                                    Icon(CupertinoIcons.qrcode, color: Colors.white, size: 32),
+                                  ],
+                                ),
+                              )),
+                          const Padding(padding: EdgeInsets.all(5)),
+                          StickerCard(
+                              color: Colors.yellow.shade500,
+                              onPressed: () => {},
+                              child: const Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Icon(CupertinoIcons.pencil, color: Colors.white, size: 32),
+                                  // Icon(CupertinoIcons.square_favorites_fill, color: Colors.white, size: 48),
+                                  // Text("A", style: TextStyle(color: Colors.white, fontSize: 48)),
+                                  Icon(CupertinoIcons.qrcode, color: Colors.white, size: 42),
+                                  // Icon(CupertinoIcons.dot_square_fill, color: Colors.white, size: 32),
+                                ],
+                              )),
+                          const Padding(padding: EdgeInsets.all(5)),
+                          StickerCard(
+                              color: Colors.yellow.shade500,
+                              width: 192,
+                              onPressed: () => {},
+                              child: const Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Icon(CupertinoIcons.arrow_left, color: Colors.white, size: 32),
+                                  Icon(CupertinoIcons.qrcode_viewfinder, color: Colors.white, size: 64),
+                                  Icon(CupertinoIcons.arrow_right, color: Colors.white, size: 32),
+                                ],
+                              )),
+                          const Padding(padding: EdgeInsets.all(5)),
+                          StickerCard(
+                              color: Colors.yellow.shade500,
+                              onPressed: () => {},
+                              child: const Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Icon(CupertinoIcons.arrow_down, color: Colors.white, size: 16),
+                                  Icon(CupertinoIcons.qrcode_viewfinder, color: Colors.white, size: 32),
+                                  Icon(CupertinoIcons.arrow_up, color: Colors.white, size: 16),
+                                ],
+                              )),
+                          const Padding(padding: EdgeInsets.all(5)),
+                          StickerCard(
+                              color: Colors.yellow.shade500,
+                              width: 192,
+                              onPressed: () => {},
+                              child: const Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Icon(CupertinoIcons.arrow_right, color: Colors.white, size: 32),
+                                  Icon(CupertinoIcons.qrcode_viewfinder, color: Colors.white, size: 64),
+                                  Icon(CupertinoIcons.arrow_left, color: Colors.white, size: 32),
+                                ],
+                              )),
+                          const Padding(padding: EdgeInsets.all(5)),
+                          StickerCard.fromIconData(CupertinoIcons.rectangle, Colors.green, () => {}),
+                          const Padding(padding: EdgeInsets.all(5)),
+                          StickerCard.fromIconData(CupertinoIcons.rectangle_expand_vertical, Colors.yellow, () => {}),
+                          const Padding(padding: EdgeInsets.all(5)),
+                          StickerCard.fromIconData(CupertinoIcons.doc_append, Colors.orange, () => {}),
                           const Padding(padding: EdgeInsets.all(5)),
                         ],
                       ))),
