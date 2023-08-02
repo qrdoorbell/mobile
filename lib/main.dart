@@ -45,6 +45,8 @@ Future<void> main() async {
 
   await Firebase.initializeApp();
 
+  await AppSettings.initialize();
+
   FlutterError.onError = (errorDetails) {
     logger.shout("FlutterError.onError: ${errorDetails.exception.toString()}\nStack trace: ${errorDetails.stack?.toString()}");
     if (AppSettings.crashlyticsEnabled == true) FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
@@ -316,12 +318,9 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
   Future<void> _handleInitialUri() async {
     if (!_initialUriIsHandled) {
       _initialUriIsHandled = true;
-      logger.info('Got incoming link during startup!');
       try {
         final uri = await getInitialUri();
-        if (uri == null) {
-          logger.fine('No initial uri');
-        } else {
+        if (uri != null) {
           logger.fine('Got initial uri: $uri');
           await _routeState.go(uri.path);
         }

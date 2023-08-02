@@ -26,7 +26,7 @@ class RouteState extends ChangeNotifier {
           {Function(dynamic)? destinationRouteFunc,
           String? destinationRoute,
           String? errorRoute,
-          Duration timeout = const Duration(seconds: 10)}) =>
+          Duration timeout = const Duration(seconds: 30)}) =>
       go("/_wait", data: {
         "future": future,
         "destinationRouteFunc": destinationRouteFunc,
