@@ -80,6 +80,9 @@ flutter:
   - assets/video.fill.svg
   - assets/video.slash.fill.svg
 
+  - assets/sticker_yellow_vert/qrdoorbell-sticker-5@1x.png
+  - assets/sticker_yellow_hor/qrdoorbell-sticker-5_horizontal@1x.png
+
 flutter_icons:
   image_path: "assets/logo-app-01_1024.png" 
   ios: true

@@ -1,62 +1,57 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class StickerV1Vertical extends StatelessWidget {
+import 'sticker_template.dart';
+
+class StickerV1Vertical extends StickerTemplateWidget {
+  const StickerV1Vertical({required super.controller});
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const Padding(padding: EdgeInsets.only(top: 20)),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: 130,
-              child: Container(
-                decoration: BoxDecoration(
-                    boxShadow: [BoxShadow(color: Colors.grey.shade400, blurRadius: 20, spreadRadius: 0)],
-                    color: Colors.white,
-                    border: Border.all(color: Colors.yellow.shade600, style: BorderStyle.solid, width: 8),
-                    borderRadius: BorderRadius.circular(10)),
-                child: Container(
-                  decoration: BoxDecoration(border: Border.all(color: Colors.black, style: BorderStyle.solid, width: 2)),
-                  child: Center(
-                      child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, mainAxisSize: MainAxisSize.max, children: [
-                    SizedBox(height: 100, child: Center(child: Text("69", style: const TextStyle(fontSize: 42)))),
-                    Padding(
-                      padding: const EdgeInsets.all(2),
-                      child: Container(
-                        width: 110,
-                        decoration: BoxDecoration(border: Border.all(color: Colors.black, style: BorderStyle.solid, width: 2)),
-                        child: const Icon(
-                          CupertinoIcons.qrcode,
-                          color: Colors.black,
-                          size: 100,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: 130,
-                      height: 101,
-                      decoration:
-                          BoxDecoration(color: Colors.black, border: Border.all(color: Colors.black, style: BorderStyle.solid, width: 2)),
-                      child: Center(
-                        child: Icon(
-                          CupertinoIcons.bell_fill,
-                          color: Colors.yellow.shade600,
-                          size: 80,
-                        ),
-                      ),
-                    ),
-                  ])),
-                ),
+    return SizedBox(
+      height: 130,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Center(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: const [
+                  BoxShadow(
+                    color: CupertinoColors.systemGrey2,
+                    blurRadius: 15,
+                  ),
+                ],
               ),
-            )
-          ],
-        )
-      ],
+              child: Stack(
+                clipBehavior: Clip.hardEdge,
+                children: [
+                  Image.asset('assets/sticker_yellow_vert/qrdoorbell-sticker-5@1x.png', width: 130),
+                  const Positioned(
+                      left: 15,
+                      top: 130,
+                      child: Icon(
+                        CupertinoIcons.qrcode,
+                        color: Colors.black,
+                        size: 100,
+                      )),
+                  const Positioned(
+                      width: 135,
+                      top: 75,
+                      left: 0,
+                      child: Text('206',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 38,
+                          ))),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

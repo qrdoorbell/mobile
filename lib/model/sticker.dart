@@ -3,7 +3,7 @@ import 'dart:convert';
 class StickerTemplateInfo {
   final String id;
   final String name;
-  final StickerTemplate template;
+  final StickerTemplateData template;
   final bool enabled;
   final DateTime created;
   final String owner;
@@ -20,7 +20,7 @@ class StickerTemplateInfo {
   StickerTemplateInfo copyWith({
     String? id,
     String? name,
-    StickerTemplate? template,
+    StickerTemplateData? template,
     bool? enabled,
     DateTime? created,
     String? owner,
@@ -50,7 +50,7 @@ class StickerTemplateInfo {
     return StickerTemplateInfo(
       id: map['id'] ?? '',
       name: map['name'] ?? '',
-      template: StickerTemplate.fromMap(Map.from(map['template'])),
+      template: StickerTemplateData.fromMap(Map.from(map['template'])),
       enabled: map['enabled'] ?? false,
       created: DateTime.fromMillisecondsSinceEpoch(map['created']?.toInt() ?? DateTime.now().millisecondsSinceEpoch),
       owner: map['owner'] ?? '',
@@ -85,22 +85,22 @@ class StickerTemplateInfo {
   }
 }
 
-class StickerTemplate {
+class StickerTemplateData {
   final String handler;
   final Map data;
   final Map params;
-  StickerTemplate({
+  StickerTemplateData({
     required this.handler,
     required this.data,
     required this.params,
   });
 
-  StickerTemplate copyWith({
+  StickerTemplateData copyWith({
     String? handler,
     Map? data,
     Map? params,
   }) {
-    return StickerTemplate(
+    return StickerTemplateData(
       handler: handler ?? this.handler,
       data: data ?? this.data,
       params: params ?? this.params,
@@ -115,8 +115,8 @@ class StickerTemplate {
     };
   }
 
-  factory StickerTemplate.fromMap(Map<String, dynamic> map) {
-    return StickerTemplate(
+  factory StickerTemplateData.fromMap(Map<String, dynamic> map) {
+    return StickerTemplateData(
       handler: map['handler'] ?? '',
       data: map['data'] != null ? Map.from(map['data']) : {},
       params: map['params'] != null ? Map.from(map['params']) : {},
@@ -125,7 +125,7 @@ class StickerTemplate {
 
   String toJson() => json.encode(toMap());
 
-  factory StickerTemplate.fromJson(String source) => StickerTemplate.fromMap(json.decode(source));
+  factory StickerTemplateData.fromJson(String source) => StickerTemplateData.fromMap(json.decode(source));
 
   @override
   String toString() => 'StickerTemplate(handler: $handler, data: $data, params: $params)';
@@ -134,24 +134,24 @@ class StickerTemplate {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is StickerTemplate && other.handler == handler && other.data == data && other.params == params;
+    return other is StickerTemplateData && other.handler == handler && other.data == data && other.params == params;
   }
 
   @override
   int get hashCode => handler.hashCode ^ data.hashCode ^ params.hashCode;
 }
 
-class DoorbellSticker {
+class DoorbellStickerData {
   final String stickerId;
   final DateTime created;
-  final StickerTemplate template;
+  final StickerTemplateData template;
   final Map params;
   final String? lang;
   final String? pageTitle;
   final String? pageText;
   final String? pageButtonText;
 
-  DoorbellSticker({
+  DoorbellStickerData({
     required this.stickerId,
     required this.created,
     required this.template,
@@ -162,17 +162,17 @@ class DoorbellSticker {
     this.pageButtonText,
   });
 
-  DoorbellSticker copyWith({
+  DoorbellStickerData copyWith({
     String? stickerId,
     DateTime? created,
-    StickerTemplate? template,
+    StickerTemplateData? template,
     Map? params,
     String? lang,
     String? pageTitle,
     String? pageText,
     String? pageButtonText,
   }) {
-    return DoorbellSticker(
+    return DoorbellStickerData(
       stickerId: stickerId ?? this.stickerId,
       created: created ?? this.created,
       template: template ?? this.template,
@@ -197,11 +197,11 @@ class DoorbellSticker {
     };
   }
 
-  factory DoorbellSticker.fromMapAndId(String stickerId, Map map) {
-    return DoorbellSticker(
+  factory DoorbellStickerData.fromMapAndId(String stickerId, Map map) {
+    return DoorbellStickerData(
       stickerId: stickerId,
       created: DateTime.fromMillisecondsSinceEpoch(map['created']),
-      template: StickerTemplate.fromMap(Map.from(map['template'])),
+      template: StickerTemplateData.fromMap(Map.from(map['template'])),
       params: map['params'] != null ? Map.from(map['params']) : {},
       lang: map['lang'],
       pageTitle: map['pageTitle'],
@@ -210,11 +210,11 @@ class DoorbellSticker {
     );
   }
 
-  factory DoorbellSticker.fromMap(Map map) {
-    return DoorbellSticker(
+  factory DoorbellStickerData.fromMap(Map map) {
+    return DoorbellStickerData(
       stickerId: map['id'],
       created: DateTime.fromMillisecondsSinceEpoch(map['created']),
-      template: StickerTemplate.fromMap(Map.from(map['template'])),
+      template: StickerTemplateData.fromMap(Map.from(map['template'])),
       params: map['params'] != null ? Map.from(map['params']) : {},
       lang: map['lang'],
       pageTitle: map['pageTitle'],
@@ -225,7 +225,7 @@ class DoorbellSticker {
 
   String toJson() => json.encode(toMap());
 
-  factory DoorbellSticker.fromJson(String source) => DoorbellSticker.fromMap(json.decode(source));
+  factory DoorbellStickerData.fromJson(String source) => DoorbellStickerData.fromMap(json.decode(source));
 
   @override
   String toString() => 'DoorbellSticker(stickerId: $stickerId, created: $created, template: $template, params: $params)';
@@ -234,9 +234,19 @@ class DoorbellSticker {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is DoorbellSticker && other.created == created && other.template == template && other.params == params;
+    return other is DoorbellStickerData && other.created == created && other.template == template && other.params == params;
   }
 
   @override
   int get hashCode => stickerId.hashCode ^ created.hashCode ^ template.hashCode ^ params.hashCode;
+}
+
+extension StickerTemplateDataExtension on StickerTemplateData {
+  T get<T>(String key, T defaultValue) {
+    return data[key] ?? params[key] ?? defaultValue;
+  }
+
+  void set(String key, Object? value) {
+    data[key] = value;
+  }
 }

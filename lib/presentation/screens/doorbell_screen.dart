@@ -123,46 +123,10 @@ class DoorbellScreen extends StatelessWidget {
                                     color: Colors.white,
                                     border: Border.all(width: 3, color: Colors.white),
                                     borderRadius: BorderRadius.circular(8)),
-                                child: Row(
+                                child: Column(
                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Icon(CupertinoIcons.textformat_abc_dottedunderline, color: Colors.yellow.shade700, size: 28),
-                                    Icon(CupertinoIcons.qrcode, color: Colors.yellow.shade700, size: 32),
-                                  ],
-                                ),
-                              )),
-                          const Padding(padding: EdgeInsets.all(5)),
-                          StickerCard(
-                              color: Colors.yellow.shade500,
-                              onPressed: () => {},
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.rectangle,
-                                    color: Colors.white,
-                                    border: Border.all(width: 3, color: Colors.white),
-                                    borderRadius: BorderRadius.circular(8)),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Icon(CupertinoIcons.textformat_alt, color: Colors.yellow.shade700, size: 28),
-                                    Icon(CupertinoIcons.qrcode, color: Colors.yellow.shade700, size: 32),
-                                  ],
-                                ),
-                              )),
-                          const Padding(padding: EdgeInsets.all(5)),
-                          StickerCard(
-                              color: Colors.yellow.shade500,
-                              onPressed: () => {},
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.rectangle,
-                                    color: Colors.white,
-                                    border: Border.all(width: 3, color: Colors.white),
-                                    borderRadius: BorderRadius.circular(8)),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Icon(CupertinoIcons.textbox, color: Colors.yellow.shade700, size: 28),
                                     Icon(CupertinoIcons.qrcode, color: Colors.yellow.shade700, size: 32),
                                   ],
                                 ),
