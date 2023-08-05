@@ -242,11 +242,11 @@ class DoorbellStickerData {
 }
 
 extension StickerTemplateDataExtension on StickerTemplateData {
-  T get<T>(String key, T defaultValue) {
+  T? get<T>(String key, T? defaultValue) {
     return data[key] ?? params[key] ?? defaultValue;
   }
 
-  void set(String key, Object? value) {
+  void set<T>(String key, T? value) {
     data[key] = value;
   }
 }

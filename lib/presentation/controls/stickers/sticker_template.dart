@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 
 import '../../../data.dart';
 import 'sticker_v1_horizontal.dart';
@@ -57,11 +58,12 @@ class BaseStickerEditController extends StickerEditController {
 }
 
 class StickerV1EditController extends BaseStickerEditController {
-  StickerV1EditController._(super.settings, super.previewWidgetFactory, super.settingsWidgetFactory);
+  final TextEditingController aptNumberController;
+
+  StickerV1EditController._(super.settings, super.previewWidgetFactory, super.settingsWidgetFactory)
+      : aptNumberController = TextEditingController(text: settings.get('apt', ''));
 
   factory StickerV1EditController.create(StickerTemplateData settings) {
-    var displayNameController = TextEditingController(text: aptNumberController);
-
     return StickerV1EditController._(
         settings,
         (controller) => controller.settings.data['vertical'] == false
@@ -76,31 +78,26 @@ class StickerV1EditController extends BaseStickerEditController {
               ),
               children: [
                 CupertinoListTile(
-                    title: const Text('Vertical orientation'),
+                    title: CupertinoTextField(
+                  controller: (controller as StickerV1EditController).aptNumberController,
+                  decoration: const BoxDecoration(),
+                  textAlign: TextAlign.right,
+                  prefix: const Text('Apartment / House'),
+                  placeholder: 'number / code',
+                  maxLength: 4,
+                  maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                  onEditingComplete: () => controller.setValue('apt', controller.aptNumberController.text),
+                  onTapOutside: (event) => controller.setValue('apt', controller.aptNumberController.text),
+                )),
+                CupertinoListTile(
+                    title: const Text('Vertical layout'),
                     trailing: CupertinoSwitch(
                       onChanged: (bool value) => controller.setValue('vertical', value),
-                      value: controller.getValue('vertical', true),
-                    )),
-                CupertinoListTile(
-                    title: const Text('APT. number'),
-                    trailing: CupertinoTextField(
-                      controller: displayNameController,
-                      prefix: const Text('####'),
-                      decoration: const BoxDecoration(),
-                      textAlign: TextAlign.right,
-                      onTapOutside: (event) async {
-                        if (userName != displayNameController.text) {
-                          await RouteStateScope.of(context)
-                              .wait(DataStore.of(context).updateUserDisplayName(displayNameController.text), destinationRoute: "/profile");
-                        }
-                      },
-                      onChanged: (value) => controller.setValue('apt', value),
+                      value: controller.getValue('vertical', defaultValue: true)!,
                     )),
               ],
             ));
   }
-
-  static 
 }
 
 class StickerEditControllers {
@@ -108,24 +105,19 @@ class StickerEditControllers {
 
   static StickerEditController create(String stickerTemplateId, {StickerTemplateData? settings}) {
     return StickerV1EditController.create(settings ?? StickerTemplateData(handler: stickerTemplateId, data: {}, params: {}));
-    // switch (stickerTemplateId) {
-    //   case 'v1_vertical':
-    //     return StickerV1EditController.create(settings);
-    //   case 'v1_horizontal':
-    //     return StickerV1Horizontal();
-    //   default:
-    //     return StickerV1Vertical();
-    // }
   }
 }
 
 extension StickerEditControllerExtension on StickerEditController {
-  StickerEditController setValue<T>(String key, T value) {
-    updateSettings((data) => data[key] = value);
+  StickerEditController setValue<T>(String key, T? value) {
+    if (getValue(key) != value) {
+      updateSettings((data) => data[key] = value);
+    }
+
     return this;
   }
 
-  T getValue<T>(String key, T defaultValue) {
+  T? getValue<T>(String key, {T? defaultValue}) {
     return settings.get(key, defaultValue);
   }
 }

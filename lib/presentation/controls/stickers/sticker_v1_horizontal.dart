@@ -8,6 +8,7 @@ class StickerV1Horizontal extends StickerTemplateWidget {
 
   @override
   Widget build(BuildContext context) {
+    var text = controller.getValue<String>('apt') ?? '';
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -36,13 +37,19 @@ class StickerV1Horizontal extends StickerTemplateWidget {
                         color: Colors.black,
                         size: 100,
                       )),
-                  const Positioned(
+                  Positioned(
                     width: 120,
                     top: 40,
                     left: 0,
-                    child: Text('206',
+                    child: Text(text,
+                        overflow: TextOverflow.fade,
+                        textScaleFactor: text.length > 3
+                            ? 0.8
+                            : text.length < 3
+                                ? 1.2
+                                : 1,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 38,
                         )),
                   ),
