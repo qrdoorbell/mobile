@@ -1,19 +1,19 @@
 import 'package:flutter/cupertino.dart';
 
 import '../../../data.dart';
-import 'sticker_v1.dart';
 
-abstract class StickerEditController extends ChangeNotifier {
-  StickerTemplateData _settings;
+abstract class StickerEditController<TData extends StickerTemplateData> extends ChangeNotifier {
+  final TData _settings;
+
   Widget? _previewWidget;
   Widget? _settingsWidget;
 
   Widget get previewWidget => _previewWidget ??= createPreviewWidget();
   Widget get settingsWidget => _settingsWidget ??= createSettingsWidget();
 
-  StickerTemplateData get settings => _settings;
+  TData get settings => _settings;
 
-  StickerEditController(StickerTemplateData settings) : _settings = settings;
+  StickerEditController(TData settings) : _settings = settings;
 
   @protected
   Widget createPreviewWidget();
@@ -23,10 +23,8 @@ abstract class StickerEditController extends ChangeNotifier {
 
   @protected
   void updateSettings(void Function(Map data) updateFunc) {
-    final newSettings = _settings.copyWith();
-    updateFunc(newSettings.data);
+    updateFunc(_settings.data);
 
-    _settings = newSettings;
     _previewWidget = null;
     _settingsWidget = null;
 
@@ -49,11 +47,26 @@ class BaseStickerEditController extends StickerEditController {
   Widget createSettingsWidget() => settingsWidgetFactory(this);
 }
 
-class StickerEditControllers {
-  StickerEditControllers._();
+class StickersService {
+  static final StickersService _instance = StickersService._();
 
-  static StickerEditController create(String stickerTemplateId, {StickerTemplateData? settings}) {
-    return StickerV1EditController.create(settings ?? StickerTemplateData(handler: stickerTemplateId, data: {}, params: {}));
+  final Map<String, StickerEditController Function(StickerTemplateData?)> _controllerFactories = {};
+
+  factory StickersService() => _instance;
+
+  StickersService._();
+
+  StickersService register<T extends StickerEditController>(String stickerTemplateId, T Function(StickerTemplateData?) controllerFactory) {
+    _controllerFactories[stickerTemplateId] = controllerFactory;
+    return this;
+  }
+
+  T create<T extends StickerEditController>(String stickerTemplateId, {StickerTemplateData? settings}) {
+    if (_controllerFactories.containsKey(stickerTemplateId)) {
+      return _controllerFactories[stickerTemplateId]?.call(settings) as T;
+    }
+
+    throw Exception("Unknown sticker template id: $stickerTemplateId");
   }
 }
 

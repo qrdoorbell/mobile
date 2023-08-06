@@ -9,7 +9,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
-import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,6 +17,7 @@ import 'package:logging/logging.dart';
 import 'package:uni_links/uni_links.dart';
 
 // import 'services/newrelic_logger.dart';
+import 'presentation/controls/stickers/sticker_v1.dart';
 import 'services/db/firebase_data_store.dart';
 import 'services/callkit_service.dart';
 import 'routing.dart';
@@ -44,7 +44,6 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
-
   await AppSettings.initialize();
 
   FlutterError.onError = (errorDetails) {
@@ -62,20 +61,14 @@ Future<void> main() async {
   FirebaseUIAuth.configureProviders([
     EmailAuthProvider(),
     AppleProvider(),
-    // GoogleProvider(clientId: GOOGLE_CLIENT_ID),
   ]);
 
   FirebaseDatabase.instance.setPersistenceEnabled(true);
-  // FirebaseDatabase.instance.setLoggingEnabled(true);
+
+  // Stickers registration
+  StickerV1Controller.register();
 
   runApp(const QRDoorbellApp());
-
-  // if (NEWRELIC_APP_TOKEN.isNotEmpty)
-  //   NewrelicMobile.instance.start(NewRelicLogger.getConfig(NEWRELIC_APP_TOKEN), () {
-  //     runApp(const QRDoorbellApp());
-  //   });
-  // else
-  //   runApp(const QRDoorbellApp());
 }
 
 @pragma('vm:entry-point')

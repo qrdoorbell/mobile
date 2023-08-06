@@ -16,6 +16,12 @@ class StickerV1Preview extends StatefulWidget {
 
   factory StickerV1Preview._horizontal({required StickerEditController controller}) {
     final text = controller.getValue<String>('apt') ?? '';
+    final double scaleFactor = text.length > 3
+        ? 0.75
+        : text.length < 3
+            ? 1.25
+            : 1;
+
     return StickerV1Preview._(
       controller: controller,
       templateImageWidget: Image.asset('assets/sticker_yellow_hor/qrdoorbell-sticker-5_horizontal@1x.png', width: 330),
@@ -29,15 +35,11 @@ class StickerV1Preview extends StatefulWidget {
           )),
       textWidget: Positioned(
           width: 120,
-          top: 40,
-          left: 0,
+          top: 40 + 20 * (1 - scaleFactor),
+          left: -2,
           child: Text(text,
               overflow: TextOverflow.fade,
-              textScaleFactor: text.length > 3
-                  ? 0.8
-                  : text.length < 3
-                      ? 1.2
-                      : 1,
+              textScaleFactor: scaleFactor,
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 38,
@@ -47,6 +49,12 @@ class StickerV1Preview extends StatefulWidget {
 
   factory StickerV1Preview._vertical({required StickerEditController controller}) {
     final text = controller.getValue<String>('apt') ?? '';
+    final double scaleFactor = text.length > 3
+        ? 0.75
+        : text.length < 3
+            ? 1.25
+            : 1;
+
     return StickerV1Preview._(
       controller: controller,
       templateImageWidget: Image.asset('assets/sticker_yellow_vert/qrdoorbell-sticker-5@1x.png', width: 130),
@@ -60,15 +68,11 @@ class StickerV1Preview extends StatefulWidget {
           )),
       textWidget: Positioned(
           width: 135,
-          top: 75,
-          left: 0,
+          top: 74 + 20 * (1 - scaleFactor),
+          left: -2,
           child: Text(text,
-              overflow: TextOverflow.fade,
-              textScaleFactor: text.length > 3
-                  ? 0.8
-                  : text.length < 3
-                      ? 1.2
-                      : 1,
+              overflow: TextOverflow.clip,
+              textScaleFactor: scaleFactor,
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 38,
@@ -194,11 +198,42 @@ class _StickerV1SettingsWidgetState extends State<StickerV1SettingsWidget> {
   }
 }
 
-class StickerV1EditController extends BaseStickerEditController {
-  StickerV1EditController._(super.settings, super.previewWidgetFactory, super.settingsWidgetFactory);
-
-  factory StickerV1EditController.create(StickerTemplateData settings) {
-    return StickerV1EditController._(settings, (controller) => StickerV1Preview.create(controller: controller),
-        (controller) => StickerV1SettingsWidget(controller: controller));
+class StickerV1Controller extends StickerEditController<StickerV1SettingsData> {
+  static void register() {
+    StickersService()
+      ..register<StickerV1Controller>('sticker_v1', (data) => StickerV1Controller(StickerV1SettingsData.fromData(data)))
+      ..register<StickerV1Controller>('v1_vertical', (data) => StickerV1Controller(StickerV1SettingsData.fromData(data)))
+      ..register<StickerV1Controller>('v1_horizontal', (data) => StickerV1Controller(StickerV1SettingsData.fromData(data)));
   }
+
+  StickerV1Controller(super.settings);
+
+  @override
+  Widget createPreviewWidget() => StickerV1Preview.create(controller: this);
+
+  @override
+  Widget createSettingsWidget() => StickerV1SettingsWidget(controller: this);
+}
+
+mixin _StickerV1SettingsData on StickerTemplateData {
+  String get text => get('apt', '')!;
+  set text(value) => set('apt', value);
+
+  bool get isVertical => get('vertical', true)!;
+  set isVertical(value) => set('vertical', value);
+}
+
+class StickerV1SettingsData extends StickerTemplateData with _StickerV1SettingsData {
+  StickerV1SettingsData._({required String handler, required Map data, required Map params})
+      : super(handler: handler, data: data, params: params);
+
+  StickerV1SettingsData() : super(handler: 'sticker_v1', data: {}, params: {'vertical': true});
+
+  factory StickerV1SettingsData.fromData(StickerTemplateData? data) => data != null
+      ? StickerV1SettingsData._(
+          handler: 'sticker_v1',
+          data: data.data,
+          params: data.params,
+        )
+      : StickerV1SettingsData();
 }

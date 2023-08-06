@@ -19,7 +19,7 @@ class _StickerEditScreenState extends State<StickerEditScreen> {
   @override
   void initState() {
     super.initState();
-    _stickerEditController = StickerEditControllers.create(widget.stickerTemplateId);
+    _stickerEditController = StickersService().create(widget.stickerTemplateId);
     _stickerEditController.addListener(_stickerEditControllerListener);
   }
 
