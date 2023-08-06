@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
 
 import '../../../data.dart';
-import 'sticker_v1_horizontal.dart';
-import 'sticker_v1_vertical.dart';
+import 'sticker_v1.dart';
 
 abstract class StickerEditController extends ChangeNotifier {
   StickerTemplateData _settings;
@@ -36,12 +34,6 @@ abstract class StickerEditController extends ChangeNotifier {
   }
 }
 
-abstract class StickerTemplateWidget extends StatelessWidget {
-  final StickerEditController controller;
-
-  const StickerTemplateWidget({Key? key, required this.controller}) : super(key: key);
-}
-
 class BaseStickerEditController extends StickerEditController {
   @protected
   Widget Function(StickerEditController) previewWidgetFactory;
@@ -55,49 +47,6 @@ class BaseStickerEditController extends StickerEditController {
 
   @override
   Widget createSettingsWidget() => settingsWidgetFactory(this);
-}
-
-class StickerV1EditController extends BaseStickerEditController {
-  final TextEditingController aptNumberController;
-
-  StickerV1EditController._(super.settings, super.previewWidgetFactory, super.settingsWidgetFactory)
-      : aptNumberController = TextEditingController(text: settings.get('apt', ''));
-
-  factory StickerV1EditController.create(StickerTemplateData settings) {
-    return StickerV1EditController._(
-        settings,
-        (controller) => controller.settings.data['vertical'] == false
-            ? StickerV1Horizontal(controller: controller)
-            : StickerV1Vertical(controller: controller),
-        (controller) => CupertinoListSection(
-              backgroundColor: CupertinoColors.white,
-              additionalDividerMargin: 6,
-              header: const Text(
-                'SETTINGS',
-                style: TextStyle(fontSize: 13.0, color: CupertinoColors.inactiveGray, fontWeight: FontWeight.normal),
-              ),
-              children: [
-                CupertinoListTile(
-                    title: CupertinoTextField(
-                  controller: (controller as StickerV1EditController).aptNumberController,
-                  decoration: const BoxDecoration(),
-                  textAlign: TextAlign.right,
-                  prefix: const Text('Apartment / House'),
-                  placeholder: 'number / code',
-                  maxLength: 4,
-                  maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                  onEditingComplete: () => controller.setValue('apt', controller.aptNumberController.text),
-                  onTapOutside: (event) => controller.setValue('apt', controller.aptNumberController.text),
-                )),
-                CupertinoListTile(
-                    title: const Text('Vertical layout'),
-                    trailing: CupertinoSwitch(
-                      onChanged: (bool value) => controller.setValue('vertical', value),
-                      value: controller.getValue('vertical', defaultValue: true)!,
-                    )),
-              ],
-            ));
-  }
 }
 
 class StickerEditControllers {

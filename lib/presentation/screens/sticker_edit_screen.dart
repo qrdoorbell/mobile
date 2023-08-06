@@ -20,11 +20,12 @@ class _StickerEditScreenState extends State<StickerEditScreen> {
   void initState() {
     super.initState();
     _stickerEditController = StickerEditControllers.create(widget.stickerTemplateId);
-    _stickerEditController.addListener(() => setState(() {}));
+    _stickerEditController.addListener(_stickerEditControllerListener);
   }
 
   @override
   void dispose() {
+    _stickerEditController.removeListener(_stickerEditControllerListener);
     _stickerEditController.dispose();
     super.dispose();
   }
@@ -40,35 +41,66 @@ class _StickerEditScreenState extends State<StickerEditScreen> {
             onPressed: () => RouteStateScope.of(context).go('/doorbells/${widget.doorbellId}'),
             color: CupertinoColors.activeBlue,
           ),
+          middle: const Text("New Sticker"),
         ),
         child: Container(
             color: CupertinoColors.white,
             child: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-              Container(
-                padding: const EdgeInsets.all(20),
-                color: CupertinoColors.systemGroupedBackground,
-                child: SizedBox(height: 380, child: _stickerEditController.previewWidget),
+              Flexible(
+                fit: FlexFit.tight,
+                flex: 5,
+                child: Container(
+                  color: CupertinoColors.systemGroupedBackground,
+                  child: Container(
+                    height: 400,
+                    clipBehavior: Clip.hardEdge,
+                    padding: const EdgeInsets.all(20),
+                    decoration: const BoxDecoration(
+                      color: CupertinoColors.systemGroupedBackground,
+                      border: Border.symmetric(vertical: BorderSide(color: CupertinoColors.systemGrey3, width: 1)),
+                    ),
+                    child: Wrap(
+                      alignment: WrapAlignment.center,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      runAlignment: WrapAlignment.center,
+                      children: [
+                        _stickerEditController.previewWidget,
+                      ],
+                    ),
+                  ),
+                ),
               ),
               _stickerEditController.settingsWidget,
               const Spacer(),
-              Padding(
-                padding: const EdgeInsets.only(left: 40, right: 40, top: 20, bottom: 0),
-                child: CupertinoButton.filled(
-                    onPressed: () {
-                      // RouteStateScope.of(context).wait(context.dataStore.signOut(), destinationRoute: "/login");
-                    },
-                    child: const Text(
-                      "Print Sticker",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    )),
-              ),
-              const Padding(padding: EdgeInsets.all(5)),
-              const Text(
-                'You can print your sticker or save to photos.',
-                style: TextStyle(color: CupertinoColors.inactiveGray, fontSize: 14),
-                textAlign: TextAlign.center,
-              ),
-              const Padding(padding: EdgeInsets.only(bottom: 30)),
+              Flexible(
+                  flex: 0,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 40, right: 40, top: 0, bottom: 0),
+                        child: CupertinoButton.filled(
+                            onPressed: () {
+                              // RouteStateScope.of(context).wait(context.dataStore.signOut(), destinationRoute: "/login");
+                            },
+                            child: const Text(
+                              "Save Sticker",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            )),
+                      ),
+                      const Padding(padding: EdgeInsets.all(5)),
+                      const Text(
+                        'You can print your sticker or save to photos.',
+                        style: TextStyle(color: CupertinoColors.inactiveGray, fontSize: 14),
+                        textAlign: TextAlign.center,
+                      ),
+                      const Padding(padding: EdgeInsets.only(bottom: 20)),
+                    ],
+                  ))
             ])));
+  }
+
+  void _stickerEditControllerListener() {
+    setState(() {});
   }
 }
