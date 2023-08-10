@@ -10,6 +10,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -32,7 +33,7 @@ final logger = Logger('main');
 
 Future<void> main() async {
   final format = DateFormat('HH:mm:ss');
-  Logger.root.level = Level.FINE;
+  Logger.root.level = kDebugMode ? Level.FINEST : Level.FINE;
   Logger.root.onRecord.listen((record) {
     print('${format.format(record.time)}: ${record.message}');
 
@@ -107,6 +108,7 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
         '/doorbells/new',
         '/sticker-templates/popular',
         '/sticker-templates/all',
+        '/sticker-templates/:stickerTemplateId',
         '/doorbells/:doorbellId/qr',
         '/doorbells/:doorbellId/edit',
         '/doorbells/:doorbellId/stickers',

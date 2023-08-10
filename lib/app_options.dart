@@ -54,8 +54,9 @@ class AppSettings extends ChangeNotifier {
   static int get crashlyticsLogLevel => FirebaseRemoteConfig.instance.getInt('CRASHALYTICS_LOG_LEVEL');
 
   // QRDoorbell
-  static String get apiUrl => FirebaseRemoteConfig.instance.getString('QRDOORBELL_API_URL');
-  static String get inviteApiUrl => FirebaseRemoteConfig.instance.getString('QRDOORBELL_INVITE_API_URL');
+  static String get apiUrl => FirebaseRemoteConfig.instance.getString('QRDOORBELL_API_URL').defaultIfEmpty('https://api.qrdoorbell.io');
+  static String get inviteApiUrl =>
+      FirebaseRemoteConfig.instance.getString('QRDOORBELL_INVITE_API_URL').defaultIfEmpty('https://j.qrdoorbell.io');
 
   // Feature toggles
   static bool get homekitEnabled => FirebaseRemoteConfig.instance.getBool('HOMEKIT_ENABLED');
@@ -69,4 +70,8 @@ class AppSettingsScope extends InheritedNotifier<AppSettings> {
   });
 
   static AppSettings? of(BuildContext context) => context.dependOnInheritedWidgetOfExactType<AppSettingsScope>()?.notifier;
+}
+
+extension StringExtensions on String {
+  String defaultIfEmpty(String defaultValue) => isEmpty ? defaultValue : this;
 }

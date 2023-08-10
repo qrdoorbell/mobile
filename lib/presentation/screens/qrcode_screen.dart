@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
+import 'package:logging/logging.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../app_options.dart';
 import '../../tools.dart';
@@ -8,6 +9,8 @@ import '../../routing.dart';
 import '../screens/empty_screen.dart';
 
 class QRCodeScreen extends StatelessWidget {
+  static final logger = Logger('HttpUtils');
+
   final String doorbellId;
 
   const QRCodeScreen({super.key, required this.doorbellId});
@@ -17,6 +20,7 @@ class QRCodeScreen extends StatelessWidget {
     return FutureBuilder(future: (() async {
       var imgResp = await HttpUtils.secureGet(Uri.parse('${AppSettings.apiUrl}/api/v1/doorbells/$doorbellId/qr'));
       if (imgResp.statusCode != 200) {
+        logger.warning('ERROR: unable to download image: responseCode=${imgResp.statusCode}');
         throw FlutterError('ERROR: unable to download image: responseCode=${imgResp.statusCode}');
       }
 
@@ -25,6 +29,8 @@ class QRCodeScreen extends StatelessWidget {
       Widget child;
       bool showSaveButton = true;
       if (snapshot.hasError) {
+        logger.warning('ERROR - unable to get QR code image: ${snapshot.error}');
+
         showSaveButton = false;
         child = Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
           const Padding(padding: EdgeInsets.all(8)),

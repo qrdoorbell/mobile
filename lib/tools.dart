@@ -16,7 +16,10 @@ class HttpUtils {
 
     var startTime = DateTime.now().millisecondsSinceEpoch;
     var jwtToken = await FirebaseAuth.instance.currentUser?.getIdToken();
-    if (jwtToken == null) throw AssertionError('Cannot get JWT token');
+    if (jwtToken == null) {
+      logger.warning('Cannot get JWT token');
+      throw AssertionError('Cannot get JWT token');
+    }
 
     var result = await post(url, body: body, headers: {'Authorization': 'Bearer $jwtToken'});
     var duration = DateTime.now().millisecondsSinceEpoch - startTime;
@@ -30,7 +33,10 @@ class HttpUtils {
 
     var startTime = DateTime.now().millisecondsSinceEpoch;
     var jwtToken = await FirebaseAuth.instance.currentUser?.getIdToken();
-    if (jwtToken == null) throw AssertionError('Cannot get JWT token');
+    if (jwtToken == null) {
+      logger.warning('Cannot get JWT token');
+      throw AssertionError('Cannot get JWT token');
+    }
 
     var result = await get(url, headers: {'Authorization': 'Bearer $jwtToken'});
     var duration = DateTime.now().millisecondsSinceEpoch - startTime;
