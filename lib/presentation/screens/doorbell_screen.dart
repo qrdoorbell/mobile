@@ -1,3 +1,5 @@
+import 'package:collection/collection.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,24 +11,67 @@ import '../../data.dart';
 import '../../routing.dart';
 import '../../tools.dart';
 import '../controls/event_list.dart';
-import '../controls/sticker_card.dart';
+import '../controls/stickers/sticker_card.dart';
+import '../controls/stickers/v1/sticker_icon.dart';
 import 'empty_screen.dart';
+import 'sticker_edit_screen.dart';
 
-class DoorbellScreen extends StatelessWidget {
+class DoorbellScreen extends StatefulWidget {
   static final logger = Logger('DoorbellScreen');
 
   final String doorbellId;
-  final User user = FirebaseAuth.instance.currentUser!;
 
-  DoorbellScreen({
+  const DoorbellScreen({
     Key? key,
     required this.doorbellId,
   }) : super(key: key);
 
   @override
+  State<DoorbellScreen> createState() => _DoorbellScreenState();
+
+  static Future<void> shareDoorbell(BuildContext context, Doorbell doorbell) async {
+    print("SHARE DOORBELL: ${doorbell.doorbellId}");
+
+    var dataStore = DataStore.of(context);
+    var route = RouteStateScope.of(context);
+    var invite = Invite.create(doorbell.doorbellId);
+    print('Invite created: inviteId=$invite.id');
+
+    try {
+      var message = "${AppSettings.inviteApiUrl}/invite/accept/${invite.id}";
+      var result = await Share.shareWithResult(message, subject: "Share ${doorbell.name}");
+
+      if (result.status == ShareResultStatus.success) {
+        route.wait((() async {
+          await dataStore.saveInvite(invite);
+          await dataStore.reloadData(false);
+        })(), destinationRoute: "/doorbells/${doorbell.doorbellId}");
+      }
+    } catch (error) {
+      DoorbellScreen.logger.shout('Share doorbell failed!', error);
+    }
+  }
+
+  static Future<void> printSticker(Doorbell doorbell) async {
+    print("PRINT DOORBELL STICKER: ${doorbell.doorbellId}");
+
+    var imgResp = await HttpUtils.secureGet(Uri.parse('${AppSettings.apiUrl}/api/v1/doorbells/${doorbell.doorbellId}/qr/'));
+    if (imgResp.statusCode != 200) {
+      print('ERROR: unable to download image: responseCode=${imgResp.statusCode}');
+      return;
+    }
+
+    Share.shareXFiles([XFile.fromData(imgResp.bodyBytes, mimeType: 'image/png')], subject: doorbell.name);
+  }
+}
+
+class _DoorbellScreenState extends State<DoorbellScreen> {
+  final User user = FirebaseAuth.instance.currentUser!;
+
+  @override
   Widget build(BuildContext context) {
     final dataStore = DataStore.of(context);
-    final doorbell = dataStore.getDoorbellById(doorbellId);
+    final doorbell = dataStore.getDoorbellById(widget.doorbellId);
 
     if (doorbell == null) {
       return FutureBuilder(
@@ -35,11 +80,12 @@ class DoorbellScreen extends StatelessWidget {
 
     FloatingActionButton? floatButton;
 
-    if (dataStore.doorbellEvents.items.any((x) => x.doorbellId == doorbellId)) {
-      floatButton = FloatingActionButton(onPressed: () => shareDoorbell(context, doorbell), child: const Icon(CupertinoIcons.share));
+    if (dataStore.doorbellEvents.items.any((x) => x.doorbellId == widget.doorbellId)) {
+      floatButton =
+          FloatingActionButton(onPressed: () => DoorbellScreen.shareDoorbell(context, doorbell), child: const Icon(CupertinoIcons.share));
     }
 
-    var avatars = dataStore.getDoorbellUsers(doorbellId);
+    var avatars = dataStore.getDoorbellUsers(widget.doorbellId);
     var nonEmptyAvatars = avatars.where((x) => x.userShortName != "--").toList();
     var emptyAvatarsCount = avatars.where((x) => x.userShortName == null || x.userShortName == "--").length;
 
@@ -64,7 +110,7 @@ class DoorbellScreen extends StatelessWidget {
                   "Edit",
                   style: TextStyle(color: CupertinoColors.activeBlue),
                 ),
-                onPressed: () => RouteStateScope.of(context).go('/doorbells/$doorbellId/edit'),
+                onPressed: () => RouteStateScope.of(context).go('/doorbells/${widget.doorbellId}/edit'),
               ),
               middle: Text(doorbell.name),
               largeTitle: Padding(padding: const EdgeInsets.only(left: 0), child: Text(doorbell.name)),
@@ -93,336 +139,67 @@ class DoorbellScreen extends StatelessWidget {
                       child: ListView(
                         scrollDirection: Axis.horizontal,
                         children: <Widget>[
-                          StickerCard.fromIconData(CupertinoIcons.qrcode, Colors.grey.shade700,
-                              () => RouteStateScope.of(context).go('/doorbells/$doorbellId/qr')),
-                          const Padding(padding: EdgeInsets.all(5)),
-                          StickerCard(
-                              color: Colors.yellow.shade500,
-                              onPressed: () => RouteStateScope.of(context).go('/doorbells/$doorbellId/stickers/templates/v1_vertical'),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.rectangle,
-                                    color: Colors.white,
-                                    border: Border.all(width: 3, color: Colors.white),
-                                    borderRadius: BorderRadius.circular(8)),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Icon(CupertinoIcons.textformat_abc_dottedunderline, color: Colors.yellow.shade700, size: 28),
-                                    Icon(CupertinoIcons.qrcode, color: Colors.yellow.shade700, size: 32),
-                                  ],
-                                ),
-                              )),
-                          const Padding(padding: EdgeInsets.all(5)),
-                          StickerCard(
-                              color: Colors.yellow.shade500,
-                              onPressed: () => RouteStateScope.of(context).go('/doorbells/$doorbellId/stickers/templates/v1_horizontal'),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.rectangle,
-                                    color: Colors.white,
-                                    border: Border.all(width: 3, color: Colors.white),
-                                    borderRadius: BorderRadius.circular(8)),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Icon(CupertinoIcons.textformat_abc_dottedunderline, color: Colors.yellow.shade700, size: 28),
-                                    Icon(CupertinoIcons.qrcode, color: Colors.yellow.shade700, size: 32),
-                                  ],
-                                ),
-                              )),
-                          const Padding(padding: EdgeInsets.all(5)),
-                          StickerCard(
-                              color: Colors.yellow.shade500,
-                              onPressed: () => {},
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.rectangle,
-                                    color: Colors.white,
-                                    border: Border.all(width: 3, color: Colors.white),
-                                    borderRadius: BorderRadius.circular(8)),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Icon(CupertinoIcons.signature, color: Colors.yellow.shade700, size: 28),
-                                    Icon(CupertinoIcons.qrcode, color: Colors.yellow.shade700, size: 32),
-                                  ],
-                                ),
-                              )),
-                          const Padding(padding: EdgeInsets.all(5)),
-                          StickerCard(
-                              color: Colors.yellow.shade500,
-                              onPressed: () => {},
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.rectangle,
-                                    color: Colors.white,
-                                    border: Border.all(width: 3, color: Colors.white),
-                                    borderRadius: BorderRadius.circular(8)),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Icon(CupertinoIcons.signature, color: Colors.yellow.shade700, size: 28),
-                                    Icon(CupertinoIcons.qrcode, color: Colors.yellow.shade700, size: 32),
-                                  ],
-                                ),
-                              )),
-                          const Padding(padding: EdgeInsets.all(5)),
-                          StickerCard(
-                              color: Colors.yellow.shade500,
-                              onPressed: () => {},
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.rectangle,
-                                    color: Colors.white,
-                                    border: Border.all(width: 3, color: Colors.white),
-                                    borderRadius: BorderRadius.circular(8)),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Icon(CupertinoIcons.textformat_abc, color: Colors.yellow.shade700, size: 28),
-                                    Icon(CupertinoIcons.qrcode, color: Colors.yellow.shade700, size: 32),
-                                  ],
-                                ),
-                              )),
-                          const Padding(padding: EdgeInsets.all(5)),
-                          StickerCard(
-                              color: Colors.yellow.shade500,
-                              onPressed: () => {},
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.rectangle,
-                                    color: Colors.white,
-                                    border: Border.all(width: 3, color: Colors.white),
-                                    borderRadius: BorderRadius.circular(8)),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Icon(CupertinoIcons.textformat_abc, color: Colors.yellow.shade700, size: 28),
-                                    Icon(CupertinoIcons.qrcode, color: Colors.yellow.shade700, size: 32),
-                                  ],
-                                ),
-                              )),
-                          const Padding(padding: EdgeInsets.all(5)),
-                          StickerCard(
-                              color: Colors.yellow.shade500,
-                              onPressed: () => {},
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.rectangle,
-                                    color: Colors.white,
-                                    border: Border.all(width: 3, color: Colors.white),
-                                    borderRadius: BorderRadius.circular(8)),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Icon(CupertinoIcons.equal_square_fill, color: Colors.yellow.shade600, size: 32),
-                                    Icon(CupertinoIcons.qrcode, color: Colors.yellow.shade700, size: 32),
-                                  ],
-                                ),
-                              )),
-                          const Padding(padding: EdgeInsets.all(5)),
-                          StickerCard(
-                              color: Colors.yellow.shade500,
-                              onPressed: () => {},
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.rectangle,
-                                    color: Colors.white,
-                                    border: Border.all(width: 3, color: Colors.white),
-                                    borderRadius: BorderRadius.circular(8)),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Icon(CupertinoIcons.equal_square_fill, color: Colors.yellow.shade600, size: 32),
-                                    Icon(CupertinoIcons.qrcode, color: Colors.yellow.shade700, size: 32),
-                                  ],
-                                ),
-                              )),
-                          const Padding(padding: EdgeInsets.all(5)),
-                          StickerCard(
-                              color: Colors.yellow.shade500,
-                              onPressed: () => {},
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.rectangle,
-                                    color: Colors.white,
-                                    border: Border.all(width: 3, color: Colors.white),
-                                    borderRadius: BorderRadius.circular(8)),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Icon(CupertinoIcons.quote_bubble_fill, color: Colors.yellow.shade600, size: 28),
-                                    Icon(CupertinoIcons.qrcode, color: Colors.yellow.shade700, size: 32),
-                                  ],
-                                ),
-                              )),
-                          const Padding(padding: EdgeInsets.all(5)),
-                          StickerCard(
-                              color: Colors.yellow.shade500,
-                              onPressed: () => {},
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.rectangle,
-                                    color: Colors.white,
-                                    border: Border.all(width: 3, color: Colors.white),
-                                    borderRadius: BorderRadius.circular(8)),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Icon(CupertinoIcons.ellipses_bubble_fill, color: Colors.yellow.shade600, size: 28),
-                                    Icon(CupertinoIcons.qrcode, color: Colors.yellow.shade700, size: 32),
-                                  ],
-                                ),
-                              )),
-                          const Padding(padding: EdgeInsets.all(5)),
-                          StickerCard(
-                              color: Colors.yellow.shade500,
-                              onPressed: () => {},
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.rectangle,
-                                    color: Colors.white,
-                                    border: Border.all(width: 3, color: Colors.white),
-                                    borderRadius: BorderRadius.circular(8)),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Icon(CupertinoIcons.ellipses_bubble_fill, color: Colors.yellow.shade600, size: 28),
-                                    Icon(CupertinoIcons.qrcode, color: Colors.yellow.shade700, size: 32),
-                                  ],
-                                ),
-                              )),
-                          const Padding(padding: EdgeInsets.all(5)),
-                          StickerCard(
-                              color: Colors.pink.shade500,
-                              onPressed: () => {},
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.rectangle,
-                                    color: Colors.white,
-                                    border: Border.all(width: 3, color: Colors.white),
-                                    borderRadius: BorderRadius.circular(8)),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Icon(CupertinoIcons.heart_circle_fill, color: Colors.pink.shade600, size: 28),
-                                    Icon(CupertinoIcons.qrcode, color: Colors.pink.shade700, size: 32),
-                                  ],
-                                ),
-                              )),
-                          const Padding(padding: EdgeInsets.all(5)),
-                          StickerCard(
-                              color: Colors.pink.shade500,
-                              onPressed: () => {},
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.rectangle,
-                                    color: Colors.white,
-                                    border: Border.all(width: 3, color: Colors.white),
-                                    borderRadius: BorderRadius.circular(8)),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Icon(CupertinoIcons.hand_point_right_fill, color: Colors.pink.shade600, size: 28),
-                                    Icon(CupertinoIcons.qrcode, color: Colors.pink.shade700, size: 32),
-                                  ],
-                                ),
-                              )),
-                          const Padding(padding: EdgeInsets.all(5)),
-                          StickerCard(
-                              color: Colors.pink.shade500,
-                              onPressed: () => {},
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.rectangle,
-                                    color: Colors.white,
-                                    border: Border.all(width: 3, color: Colors.white),
-                                    borderRadius: BorderRadius.circular(8)),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Icon(CupertinoIcons.rectangle_grid_1x2_fill, color: Colors.pink.shade600, size: 28),
-                                    Icon(CupertinoIcons.qrcode, color: Colors.pink.shade700, size: 32),
-                                  ],
-                                ),
-                              )),
-                          const Padding(padding: EdgeInsets.all(5)),
-                          StickerCard(
-                              color: Colors.yellow.shade500,
-                              onPressed: () => {},
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.rectangle,
-                                    border: Border.all(width: 3, color: Colors.white),
-                                    borderRadius: BorderRadius.circular(8)),
-                                child: const Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Icon(CupertinoIcons.pencil, color: Colors.white, size: 28),
-                                    Icon(CupertinoIcons.qrcode, color: Colors.white, size: 32),
-                                  ],
-                                ),
-                              )),
-                          const Padding(padding: EdgeInsets.all(5)),
-                          StickerCard(
-                              color: Colors.yellow.shade500,
-                              onPressed: () => {},
-                              child: const Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Icon(CupertinoIcons.pencil, color: Colors.white, size: 32),
-                                  // Icon(CupertinoIcons.square_favorites_fill, color: Colors.white, size: 48),
-                                  // Text("A", style: TextStyle(color: Colors.white, fontSize: 48)),
-                                  Icon(CupertinoIcons.qrcode, color: Colors.white, size: 42),
-                                  // Icon(CupertinoIcons.dot_square_fill, color: Colors.white, size: 32),
-                                ],
-                              )),
-                          const Padding(padding: EdgeInsets.all(5)),
-                          StickerCard(
-                              color: Colors.yellow.shade500,
-                              width: 192,
-                              onPressed: () => {},
-                              child: const Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Icon(CupertinoIcons.arrow_left, color: Colors.white, size: 32),
-                                  Icon(CupertinoIcons.qrcode_viewfinder, color: Colors.white, size: 64),
-                                  Icon(CupertinoIcons.arrow_right, color: Colors.white, size: 32),
-                                ],
-                              )),
-                          const Padding(padding: EdgeInsets.all(5)),
-                          StickerCard(
-                              color: Colors.yellow.shade500,
-                              onPressed: () => {},
-                              child: const Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Icon(CupertinoIcons.arrow_down, color: Colors.white, size: 16),
-                                  Icon(CupertinoIcons.qrcode_viewfinder, color: Colors.white, size: 32),
-                                  Icon(CupertinoIcons.arrow_up, color: Colors.white, size: 16),
-                                ],
-                              )),
-                          const Padding(padding: EdgeInsets.all(5)),
-                          StickerCard(
-                              color: Colors.yellow.shade500,
-                              width: 192,
-                              onPressed: () => {},
-                              child: const Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Icon(CupertinoIcons.arrow_right, color: Colors.white, size: 32),
-                                  Icon(CupertinoIcons.qrcode_viewfinder, color: Colors.white, size: 64),
-                                  Icon(CupertinoIcons.arrow_left, color: Colors.white, size: 32),
-                                ],
-                              )),
-                          const Padding(padding: EdgeInsets.all(5)),
-                          StickerCard.fromIconData(CupertinoIcons.rectangle, Colors.green, () => {}),
-                          const Padding(padding: EdgeInsets.all(5)),
-                          StickerCard.fromIconData(CupertinoIcons.rectangle_expand_vertical, Colors.yellow, () => {}),
-                          const Padding(padding: EdgeInsets.all(5)),
-                          StickerCard.fromIconData(CupertinoIcons.doc_append, Colors.orange, () => {}),
-                          const Padding(padding: EdgeInsets.all(5)),
+                          // DOORBELL QR CODE
+                          StickerCard.fromIconData(CupertinoIcons.qrcode, Colors.grey,
+                              () => RouteStateScope.of(context).go('/doorbells/${widget.doorbellId}/qr')),
+
+                          // STICKERS
+                          for (var sticker in doorbell.stickers.sortedBy((element) => element.updated ?? element.created).reversed) ...[
+                            const Padding(padding: EdgeInsets.all(5)),
+                            StickerCard(
+                                color: Colors.yellow,
+                                onPressed: () async {
+                                  var updatedSticker = await Navigator.of(context).push(CupertinoDialogRoute(
+                                      context: context,
+                                      builder: (context) {
+                                        return StickerEditScreen(handler: sticker.handler, doorbellId: widget.doorbellId, sticker: sticker);
+                                      }));
+
+                                  setState(() {
+                                    doorbell.stickers.removeWhere((x) => x.stickerId == updatedSticker.stickerId);
+                                    doorbell.stickers.add(updatedSticker);
+                                  });
+                                },
+                                child: StickerV1Icon(sticker: sticker)),
+                          ],
+
+                          // ADD STICKER (+)
+                          const Padding(padding: EdgeInsets.all(15)),
+                          Padding(
+                            padding: const EdgeInsets.all(2),
+                            child: DottedBorder(
+                              borderPadding: const EdgeInsets.all(2),
+                              borderType: BorderType.RRect,
+                              radius: const Radius.circular(30),
+                              color: Colors.grey.shade300,
+                              dashPattern: const [8, 4],
+                              strokeWidth: 2,
+                              child: MaterialButton(
+                                  padding: EdgeInsets.zero,
+                                  minWidth: 96,
+                                  onPressed: () async {
+                                    var newSticker = await Navigator.of(context).push(CupertinoDialogRoute(
+                                        context: context,
+                                        builder: (context) {
+                                          return StickerEditScreen(
+                                              handler: 'sticker_v1', templateId: 'sticker_v1_horizontal', doorbellId: widget.doorbellId);
+                                        }));
+
+                                    if (newSticker != null) {
+                                      setState(() {
+                                        doorbell.stickers.add(newSticker);
+                                      });
+                                    }
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(2),
+                                    child: Center(
+                                      child: Text('+',
+                                          style: TextStyle(color: Colors.grey.shade400, fontSize: 40, fontWeight: FontWeight.w200)),
+                                    ),
+                                  )),
+                            ),
+                          ),
                         ],
                       ))),
             ])),
@@ -435,7 +212,7 @@ class DoorbellScreen extends StatelessWidget {
                 const Text('Shared with', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400)),
                 const Spacer(),
                 CupertinoButton(
-                    child: const Text('Manage'), onPressed: () => {RouteStateScope.of(context).go('/doorbells/$doorbellId/users')})
+                    child: const Text('Manage'), onPressed: () => {RouteStateScope.of(context).go('/doorbells/${widget.doorbellId}/users')})
               ]),
               Padding(
                   padding: const EdgeInsets.only(left: 18),
@@ -475,47 +252,12 @@ class DoorbellScreen extends StatelessWidget {
               },
             ),
             EventList(
-              doorbellId: doorbellId,
-              onShareDoorbellCallback: () => shareDoorbell(context, doorbell),
+              doorbellId: widget.doorbellId,
+              onShareDoorbellCallback: () => DoorbellScreen.shareDoorbell(context, doorbell),
               // onPrintStickerCallback: () => _printSticker(doorbell),
-              onPrintStickerCallback: () => RouteStateScope.of(context).go('/doorbells/$doorbellId/qr'),
+              onPrintStickerCallback: () => RouteStateScope.of(context).go('/doorbells/${widget.doorbellId}/qr'),
             ),
           ])),
     ));
-  }
-
-  static Future<void> shareDoorbell(BuildContext context, Doorbell doorbell) async {
-    print("SHARE DOORBELL: ${doorbell.doorbellId}");
-
-    var dataStore = DataStore.of(context);
-    var route = RouteStateScope.of(context);
-    var invite = Invite.create(doorbell.doorbellId);
-    print('Invite created: inviteId=$invite.id');
-
-    try {
-      var message = "${AppSettings.inviteApiUrl}/invite/accept/${invite.id}";
-      var result = await Share.shareWithResult(message, subject: "Share ${doorbell.name}");
-
-      if (result.status == ShareResultStatus.success) {
-        route.wait((() async {
-          await dataStore.saveInvite(invite);
-          await dataStore.reloadData(false);
-        })(), destinationRoute: "/doorbells/${doorbell.doorbellId}");
-      }
-    } catch (error) {
-      DoorbellScreen.logger.shout('Share doorbell failed!', error);
-    }
-  }
-
-  static Future<void> printSticker(Doorbell doorbell) async {
-    print("PRINT DOORBELL STICKER: ${doorbell.doorbellId}");
-
-    var imgResp = await HttpUtils.secureGet(Uri.parse('${AppSettings.apiUrl}/api/v1/doorbells/${doorbell.doorbellId}/qr/'));
-    if (imgResp.statusCode != 200) {
-      print('ERROR: unable to download image: responseCode=${imgResp.statusCode}');
-      return;
-    }
-
-    Share.shareXFiles([XFile.fromData(imgResp.bodyBytes, mimeType: 'image/png')], subject: doorbell.name);
   }
 }

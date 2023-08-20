@@ -1,15 +1,15 @@
 import 'dart:convert';
 
 class StickerTemplateInfo {
-  final String id;
+  final String templateId;
   final String name;
-  final StickerTemplateData template;
+  final StickerInfo template;
   final bool enabled;
   final DateTime created;
   final String owner;
 
   StickerTemplateInfo({
-    required this.id,
+    required this.templateId,
     required this.name,
     required this.template,
     required this.enabled,
@@ -18,15 +18,15 @@ class StickerTemplateInfo {
   });
 
   StickerTemplateInfo copyWith({
-    String? id,
+    String? templateId,
     String? name,
-    StickerTemplateData? template,
+    StickerInfo? template,
     bool? enabled,
     DateTime? created,
     String? owner,
   }) {
     return StickerTemplateInfo(
-      id: id ?? this.id,
+      templateId: templateId ?? this.templateId,
       name: name ?? this.name,
       template: template ?? this.template,
       enabled: enabled ?? this.enabled,
@@ -37,9 +37,9 @@ class StickerTemplateInfo {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      'id': templateId,
       'name': name,
-      'template': template.toMap(),
+      'template': template.dataSnapshot(),
       'enabled': enabled,
       'created': created.millisecondsSinceEpoch,
       'owner': owner,
@@ -48,22 +48,20 @@ class StickerTemplateInfo {
 
   factory StickerTemplateInfo.fromMap(Map<String, dynamic> map) {
     return StickerTemplateInfo(
-      id: map['id'] ?? '',
+      templateId: map['id'] ?? '',
       name: map['name'] ?? '',
-      template: StickerTemplateData.fromMap(Map.from(map['template'])),
+      template: StickerInfo(Map.from(map['template'])),
       enabled: map['enabled'] ?? false,
       created: DateTime.fromMillisecondsSinceEpoch(map['created']?.toInt() ?? DateTime.now().millisecondsSinceEpoch),
       owner: map['owner'] ?? '',
     );
   }
 
-  String toJson() => json.encode(toMap());
-
   factory StickerTemplateInfo.fromJson(String source) => StickerTemplateInfo.fromMap(json.decode(source));
 
   @override
   String toString() {
-    return 'StickerTemplateInfo(id: $id, name: $name, template: $template, enabled: $enabled, created: $created, owner: $owner)';
+    return 'StickerTemplateInfo(id: $templateId, name: $name, template: $template, enabled: $enabled, created: $created, owner: $owner)';
   }
 
   @override
@@ -71,7 +69,7 @@ class StickerTemplateInfo {
     if (identical(this, other)) return true;
 
     return other is StickerTemplateInfo &&
-        other.id == id &&
+        other.templateId == templateId &&
         other.name == name &&
         other.template == template &&
         other.enabled == enabled &&
@@ -80,173 +78,79 @@ class StickerTemplateInfo {
   }
 
   @override
-  int get hashCode {
-    return id.hashCode ^ name.hashCode ^ template.hashCode ^ enabled.hashCode ^ created.hashCode ^ owner.hashCode;
-  }
+  int get hashCode => templateId.hashCode ^ name.hashCode ^ template.hashCode ^ enabled.hashCode ^ created.hashCode ^ owner.hashCode;
 }
 
-class StickerTemplateData {
-  final String handler;
-  final Map data;
-  final Map params;
-  StickerTemplateData({
-    required this.handler,
-    required this.data,
-    required this.params,
-  });
+final class StickerInfo {
+  final Map _info;
 
-  StickerTemplateData copyWith({
-    String? handler,
-    Map? data,
-    Map? params,
-  }) {
-    return StickerTemplateData(
-      handler: handler ?? this.handler,
-      data: data ?? this.data,
-      params: params ?? this.params,
-    );
-  }
+  String get doorbellId => _info['doorbellId'];
+  String get stickerId => _info['stickerId'];
+  String get handler => _info['handler'];
+  DateTime get created => DateTime.fromMillisecondsSinceEpoch(_info['created']?.toInt() ?? DateTime.now().millisecondsSinceEpoch);
+  DateTime? get updated => _info['updated'] != null ? DateTime.fromMillisecondsSinceEpoch(_info['updated']?.toInt()) : null;
 
-  Map<String, dynamic> toMap() {
-    return {
-      'handler': handler,
-      'data': data,
-      'params': params,
-    };
-  }
+  StickerInfo(Map info) : _info = info;
 
-  factory StickerTemplateData.fromMap(Map<String, dynamic> map) {
-    return StickerTemplateData(
-      handler: map['handler'] ?? '',
-      data: map['data'] != null ? Map.from(map['data']) : {},
-      params: map['params'] != null ? Map.from(map['params']) : {},
-    );
-  }
+  T? get<T>(String key) => _info['data'][key] as T?;
+  T getOrDefault<T>(String key, T defaultValue) => get(key) ?? defaultValue;
+  void set<T>(String key, T? value) => _info['data'][key] = value;
 
-  String toJson() => json.encode(toMap());
+  Map dataSnapshot() => _info.containsKey('data') ? {..._info['data']} : {};
+  Map toMap() => _info;
 
-  factory StickerTemplateData.fromJson(String source) => StickerTemplateData.fromMap(json.decode(source));
-
-  @override
-  String toString() => 'StickerTemplate(handler: $handler, data: $data, params: $params)';
+  String get displayName => get('displayName') ?? 'default';
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is StickerTemplateData && other.handler == handler && other.data == data && other.params == params;
+    return other is StickerInfo &&
+        other.doorbellId == doorbellId &&
+        other.stickerId == stickerId &&
+        other.handler == handler &&
+        other.created == created &&
+        other.updated == updated &&
+        other._info == _info;
   }
 
   @override
-  int get hashCode => handler.hashCode ^ data.hashCode ^ params.hashCode;
+  int get hashCode => doorbellId.hashCode ^ stickerId.hashCode ^ handler.hashCode ^ created.hashCode ^ updated.hashCode ^ _info.hashCode;
+
+  @override
+  String toString() => 'StickerTemplate(doorbellId: $doorbellId, stickerId: $stickerId, handler: $handler, data: $_info)';
 }
 
-class DoorbellStickerData {
-  final String stickerId;
-  final DateTime created;
-  final StickerTemplateData template;
-  final Map params;
-  final String? lang;
-  final String? pageTitle;
-  final String? pageText;
-  final String? pageButtonText;
+abstract class StickerData {
+  final Map _data;
 
-  DoorbellStickerData({
-    required this.stickerId,
-    required this.created,
-    required this.template,
-    required this.params,
-    this.lang,
-    this.pageTitle,
-    this.pageText,
-    this.pageButtonText,
-  });
+  Map toMap() => _data;
 
-  DoorbellStickerData copyWith({
-    String? stickerId,
-    DateTime? created,
-    StickerTemplateData? template,
-    Map? params,
-    String? lang,
-    String? pageTitle,
-    String? pageText,
-    String? pageButtonText,
-  }) {
-    return DoorbellStickerData(
-      stickerId: stickerId ?? this.stickerId,
-      created: created ?? this.created,
-      template: template ?? this.template,
-      params: params ?? this.params,
-      lang: lang ?? this.lang,
-      pageTitle: pageTitle ?? this.pageTitle,
-      pageText: pageText ?? this.pageText,
-      pageButtonText: pageButtonText ?? this.pageButtonText,
-    );
-  }
+  StickerData(Map data) : _data = data;
 
-  Map toMap() {
-    return {
-      'id': stickerId,
-      'created': created.millisecondsSinceEpoch,
-      'template': template.toMap(),
-      'params': params,
-      'lang': lang,
-      'pageTitle': pageTitle,
-      'pageText': pageText,
-      'pageButtonText': pageButtonText,
-    };
-  }
+  T? get<T>(String key) => _data[key] as T?;
+  T getOrDefault<T>(String key, T defaultValue) => get(key) ?? defaultValue;
+  void set<T>(String key, T? value) => _data[key] = value;
 
-  factory DoorbellStickerData.fromMapAndId(String stickerId, Map map) {
-    return DoorbellStickerData(
-      stickerId: stickerId,
-      created: DateTime.fromMillisecondsSinceEpoch(map['created']),
-      template: StickerTemplateData.fromMap(Map.from(map['template'])),
-      params: map['params'] != null ? Map.from(map['params']) : {},
-      lang: map['lang'],
-      pageTitle: map['pageTitle'],
-      pageText: map['pageText'],
-      pageButtonText: map['pageButtonText'],
-    );
-  }
-
-  factory DoorbellStickerData.fromMap(Map map) {
-    return DoorbellStickerData(
-      stickerId: map['id'],
-      created: DateTime.fromMillisecondsSinceEpoch(map['created']),
-      template: StickerTemplateData.fromMap(Map.from(map['template'])),
-      params: map['params'] != null ? Map.from(map['params']) : {},
-      lang: map['lang'],
-      pageTitle: map['pageTitle'],
-      pageText: map['pageText'],
-      pageButtonText: map['pageButtonText'],
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory DoorbellStickerData.fromJson(String source) => DoorbellStickerData.fromMap(json.decode(source));
-
-  @override
-  String toString() => 'DoorbellSticker(stickerId: $stickerId, created: $created, template: $template, params: $params)';
+  String? get displayName;
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is DoorbellStickerData && other.created == created && other.template == template && other.params == params;
+    return other is StickerData && !other._data.entries.any((e) => e.value != _data[e.key]);
   }
 
   @override
-  int get hashCode => stickerId.hashCode ^ created.hashCode ^ template.hashCode ^ params.hashCode;
+  int get hashCode => _data.hashCode;
+
+  @override
+  String toString() => 'StickerData(data: $_data)';
 }
 
-extension StickerTemplateDataExtension on StickerTemplateData {
-  T? get<T>(String key, T? defaultValue) {
-    return data[key] ?? params[key] ?? defaultValue;
-  }
+class EmptyStickerData extends StickerData {
+  EmptyStickerData(Map data) : super({data: data});
 
-  void set<T>(String key, T? value) {
-    data[key] = value;
-  }
+  @override
+  String? get displayName => null;
 }

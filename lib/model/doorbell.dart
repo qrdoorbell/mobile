@@ -8,7 +8,7 @@ class Doorbell implements Comparable<Doorbell> {
   bool enabled = true;
   DoorbellEvent? lastEvent;
   late DoorbellSettings settings;
-  List<DoorbellStickerData> stickers = <DoorbellStickerData>[];
+  List<StickerInfo> stickers = <StickerInfo>[];
 
   Doorbell(this.doorbellId, [this.name = '', DoorbellSettings? settings]) : settings = settings ?? DoorbellSettings();
 
@@ -28,9 +28,7 @@ class Doorbell implements Comparable<Doorbell> {
     }
 
     if (s['stickers']?.entries != null) {
-      stickers.addAll(List.from(s['stickers'].entries).map((v) {
-        return DoorbellStickerData.fromMapAndId(v.key, v.value);
-      }).toList());
+      stickers.addAll(List.from(s['stickers'].entries).map((v) => StickerInfo(v.value)));
     }
   }
 

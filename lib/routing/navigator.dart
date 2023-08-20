@@ -111,25 +111,33 @@ class _AppNavigatorState extends State<AppNavigator> {
                 key: _doorbellDetailsEditKey,
                 child: DoorbellUsersScreen(doorbellId: doorbellId),
               ),
-            if (pathTemplate == '/sticker-templates/:stickerTemplateId' &&
-                routeState.route.queryParameters['doorbellId'] != null &&
-                routeState.route.parameters['stickerTemplateId'] != null)
-              MaterialPage(
-                key: _doorbellDetailsEditKey,
-                child: StickerEditScreen(
-                  doorbellId: routeState.route.queryParameters['doorbellId']!,
-                  stickerTemplateId: routeState.route.parameters['stickerTemplateId']!,
-                ),
-              )
-            else if (pathTemplate == '/doorbells/:doorbellId/stickers/templates/:stickerTemplateId' &&
-                routeState.route.parameters['stickerTemplateId'] != null)
-              MaterialPage(
-                key: _doorbellDetailsEditKey,
-                child: StickerEditScreen(
-                  doorbellId: doorbellId,
-                  stickerTemplateId: routeState.route.parameters['stickerTemplateId']!,
-                ),
-              )
+            // if (pathTemplate == '/sticker-templates/:stickerTemplateId' &&
+            //     routeState.route.queryParameters['doorbellId'] != null &&
+            //     routeState.route.parameters['stickerTemplateId'] != null)
+            //   MaterialPage(
+            //     key: _doorbellDetailsEditKey,
+            //     child: StickerEditScreen(
+            //       doorbellId: routeState.route.queryParameters['doorbellId']!,
+            //       stickerTemplateId: routeState.route.parameters['stickerTemplateId']!,
+            //     ),
+            //   )
+            // else if (pathTemplate == '/doorbells/:doorbellId/stickers/templates/:stickerTemplateId' &&
+            //     routeState.route.parameters['stickerTemplateId'] != null)
+            //   MaterialPage(
+            //     key: _doorbellDetailsEditKey,
+            //     child: StickerEditScreen(
+            //       doorbellId: doorbellId,
+            //       stickerTemplateId: routeState.route.parameters['stickerTemplateId']!,
+            //     ),
+            //   )
+            // else if (pathTemplate == '/doorbells/:doorbellId/stickers/:stickerId' && routeState.route.parameters['stickerId'] != null)
+            //   MaterialPage(
+            //     key: _doorbellDetailsEditKey,
+            //     child: StickerEditScreen(
+            //       doorbellId: doorbellId,
+            //       stickerTemplateId: routeState.route.parameters['stickerId']!,
+            //     ),
+            //   )
           ],
         ],
         if (pathTemplate.endsWith('/_wait'))

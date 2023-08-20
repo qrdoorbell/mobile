@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class StickerCard extends StatelessWidget {
-  final Color color;
+  final MaterialColor color;
   final Widget child;
   final VoidCallback? onPressed;
   final double width;
@@ -14,9 +14,9 @@ class StickerCard extends StatelessWidget {
     this.onPressed,
   });
 
-  factory StickerCard.fromIconData(IconData iconData, Color color, VoidCallback? onPressed) {
+  factory StickerCard.fromIconData(IconData iconData, MaterialColor? color, VoidCallback? onPressed) {
     return StickerCard(
-        color: color,
+        color: color ?? Colors.yellow,
         onPressed: onPressed,
         child: Icon(
           size: 64,
@@ -31,7 +31,7 @@ class StickerCard extends StatelessWidget {
         padding: EdgeInsets.zero,
         onPressed: onPressed,
         child: Card(
-          color: color,
+          color: color.shade600,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(24),
           ),

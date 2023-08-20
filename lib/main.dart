@@ -18,7 +18,7 @@ import 'package:logging/logging.dart';
 import 'package:uni_links/uni_links.dart';
 
 // import 'services/newrelic_logger.dart';
-import 'presentation/controls/stickers/sticker_v1.dart';
+import 'presentation/controls/stickers/v1/sticker_editor.dart';
 import 'services/db/firebase_data_store.dart';
 import 'services/callkit_service.dart';
 import 'routing.dart';
