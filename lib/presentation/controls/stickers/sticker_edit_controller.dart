@@ -19,7 +19,13 @@ abstract class StickerEditController<TData extends StickerData> extends ChangeNo
     _stickerData = createStickerData(info.dataSnapshot());
   }
 
-  StickerInfo get stickerInfo => StickerInfo({..._stickerInfo.toMap(), 'data': _stickerData.toMap()});
+  StickerInfo get stickerInfo {
+    var info = _stickerInfo.toMap();
+    info['data'] = _stickerInfo.dataSnapshot();
+    info['displayName'] = info['data']['displayName'] = _stickerData.displayName;
+
+    return StickerInfo(info);
+  }
 
   @protected
   TData createStickerData(Map? data);

@@ -103,8 +103,7 @@ class PeriodicChangeNotifier extends ChangeNotifier {
 }
 
 extension NavigatorExtensions on NavigatorState {
-  FutureOr<T?> waitWithScreenThenPop<T extends Object?>(FutureOr<T?> Function() func) async =>
-      await waitFutureWithScreenThenPop<T>(await func());
+  FutureOr<T?> waitWithScreenThenPop<T extends Object?>(FutureOr<T?> Function() func) => waitFutureWithScreenThenPop<T>(func());
 
   FutureOr<T?> waitFutureWithScreenThenPop<T extends Object?>(FutureOr<T?> futureToWait) async {
     T? result;

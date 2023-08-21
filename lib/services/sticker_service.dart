@@ -42,9 +42,18 @@ class StickerService {
         Uri.parse('${AppSettings.apiUrl}/api/v1/doorbells/${stickerInfo.doorbellId}/stickers/${stickerInfo.stickerId}'));
   }
 
-  Future<Uint8List> getStickerImage(String doorbellId, String stickerId) async {
-    var response = await HttpUtils.secureGet(Uri.parse('${AppSettings.apiUrl}/api/v1/doorbells/$doorbellId/stickers/$stickerId/print'));
+  Future<Uint8List> getStickerImage(String doorbellId, String stickerId, [bool preview = false]) async {
+    var response = await HttpUtils.secureGet(
+        Uri.parse('${AppSettings.apiUrl}/api/v1/doorbells/$doorbellId/stickers/$stickerId/print${preview ? '?preview=true' : ''}'));
     if (response.statusCode != 200) throw Exception('ERROR: unable to download image: responseCode=${response.statusCode}');
+
+    return response.bodyBytes;
+  }
+
+  Future<Uint8List> getStickerPdf(String doorbellId, String stickerId) async {
+    var response =
+        await HttpUtils.secureGet(Uri.parse('${AppSettings.apiUrl}/api/v1/doorbells/$doorbellId/stickers/$stickerId/print?pdf=true'));
+    if (response.statusCode != 200) throw Exception('ERROR: unable to download PDF: responseCode=${response.statusCode}');
 
     return response.bodyBytes;
   }

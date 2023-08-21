@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -84,7 +86,7 @@ class _StickerEditScreenState extends State<StickerEditScreen> {
                         padding: const EdgeInsets.only(left: 40, right: 40, top: 0, bottom: 0),
                         child: CupertinoButton.filled(
                             onPressed: () async {
-                              await Navigator.of(context).waitWithScreenThenPop<StickerInfo>(() async {
+                              Navigator.of(context).waitWithScreenThenPop<StickerInfo>(() async {
                                 var stickerInfo = _stickerEditController.stickerInfo;
                                 if (widget.sticker == null) {
                                   var newSticker = await StickerService()
@@ -116,7 +118,15 @@ class _StickerEditScreenState extends State<StickerEditScreen> {
   Future<void> _updateSticker(StickerInfo stickerInfo) async => await StickerService().updateSticker(stickerInfo);
 
   static Future<void> _printHandler(StickerInfo stickerInfo) async {
-    var stickerImage = await StickerService().getStickerImage(stickerInfo.doorbellId, stickerInfo.stickerId);
-    await Share.shareXFiles([XFile.fromData(stickerImage, mimeType: 'image/png')], subject: 'Stricker - ${stickerInfo.displayName}');
+    var stickerPrint = await StickerService().getStickerPdf(stickerInfo.doorbellId, stickerInfo.stickerId);
+    var tempDir = await Directory.systemTemp.createTemp();
+    try {
+      var stickerFile = await File('${tempDir.path}/sticker_${stickerInfo.displayName}.pdf').writeAsBytes(stickerPrint);
+      await Share.shareXFiles([
+        XFile(stickerFile.path),
+      ], subject: '[QR Doorbell] Stricker - ${stickerInfo.displayName}');
+    } finally {
+      await tempDir.delete(recursive: true);
+    }
   }
 }
