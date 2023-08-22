@@ -5,6 +5,7 @@ import '../../../data.dart';
 abstract class StickerEditController<TData extends StickerData> extends ChangeNotifier {
   late final StickerInfo _stickerInfo;
   late final TData _stickerData;
+  bool _isSettingsChanged = false;
 
   Widget? _previewWidget;
   Widget? _settingsWidget;
@@ -13,7 +14,7 @@ abstract class StickerEditController<TData extends StickerData> extends ChangeNo
   Widget get settingsWidget => _settingsWidget ??= createSettingsWidget();
 
   TData get settings => _stickerData;
-  bool get isSettingsChanged => true;
+  bool get isSettingsChanged => _isSettingsChanged;
 
   StickerEditController(StickerInfo info) : _stickerInfo = info {
     _stickerData = createStickerData(info.dataSnapshot());
@@ -21,8 +22,8 @@ abstract class StickerEditController<TData extends StickerData> extends ChangeNo
 
   StickerInfo get stickerInfo {
     var info = _stickerInfo.toMap();
-    info['data'] = _stickerInfo.dataSnapshot();
-    info['displayName'] = info['data']['displayName'] = _stickerData.displayName;
+    info['data'] = _stickerData.toMap();
+    info['displayName'] = _stickerData.displayName;
 
     return StickerInfo(info);
   }
@@ -40,6 +41,7 @@ abstract class StickerEditController<TData extends StickerData> extends ChangeNo
   void updateSettings(void Function(TData data) updateFunc) {
     updateFunc(settings);
 
+    _isSettingsChanged = true;
     _previewWidget = null;
     _settingsWidget = null;
 
@@ -49,6 +51,7 @@ abstract class StickerEditController<TData extends StickerData> extends ChangeNo
   void set(void Function(TData) updateFunc) {
     updateFunc(_stickerData);
 
+    _isSettingsChanged = true;
     _previewWidget = null;
     _settingsWidget = null;
 

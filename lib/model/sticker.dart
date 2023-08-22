@@ -94,7 +94,11 @@ final class StickerInfo {
 
   T? get<T>(String key) => _info['data'][key] as T?;
   T getOrDefault<T>(String key, T defaultValue) => get(key) ?? defaultValue;
-  void set<T>(String key, T? value) => _info['data'][key] = value;
+
+  void set<T>(String key, T? value) {
+    _info['data'][key] = value;
+    _info['updated'] = DateTime.now().millisecondsSinceEpoch;
+  }
 
   Map dataSnapshot() => _info.containsKey('data') ? {..._info['data']} : {};
   Map toMap() => _info;
