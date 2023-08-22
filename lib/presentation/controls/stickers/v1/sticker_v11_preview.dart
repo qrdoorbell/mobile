@@ -27,7 +27,6 @@ class StickerV11Preview extends StatefulWidget {
               fit: BoxFit.none,
               alignment: Alignment.center,
               child: Icon(CupertinoIcons.qrcode, color: Colors.black, size: 140))),
-      // child: Icon(CupertinoIcons.qrcode, color: Colors.black, size: 140)),
       Positioned(
           left: 5,
           top: 260,
@@ -60,8 +59,34 @@ class StickerV11Preview extends StatefulWidget {
 
   factory StickerV11Preview._horizontal({required StickerEditController<StickerV1Data> controller}) {
     return StickerV11Preview._(controller: controller, children: [
-      Image.asset('assets/sticker_yellow_hor/qrdoorbell-sticker-5_horizontal@1x.png', width: 330),
-      const Positioned(top: 8, left: 115, child: Icon(CupertinoIcons.qrcode, color: Colors.black, size: 100)),
+      Image.asset('assets/sticker_v1.1/template_1.1_horizontal.png', width: 330),
+      const Positioned(
+          left: 107,
+          top: -6,
+          width: 120,
+          height: 120,
+          child: FittedBox(
+              clipBehavior: Clip.none,
+              fit: BoxFit.none,
+              alignment: Alignment.center,
+              child: Icon(CupertinoIcons.qrcode, color: Colors.black, size: 120))),
+      Positioned(
+          left: 224,
+          top: 5,
+          child: Container(
+              alignment: Alignment.center,
+              decoration: const BoxDecoration(color: Colors.black),
+              width: 100,
+              height: 90,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                child: FittedBox(
+                    alignment: Alignment.center,
+                    fit: BoxFit.contain,
+                    child:
+                        Icon(CupertinoIcons.bell_fill, color: (controller.sticker.data.accentColor ?? Colors.yellow).shade500, size: 110)),
+              ))),
+      Positioned(left: 5, top: 3, child: Image.asset('assets/sticker_v1.1/text_scan_doorbell.png', width: 105)),
       Positioned(
           width: 90,
           height: 45,

@@ -84,6 +84,7 @@ flutter:
   - assets/sticker_yellow_hor/qrdoorbell-sticker-5_horizontal@1x.png
 
   - assets/sticker_v1.1/template_1.1_vertical.png
+  - assets/sticker_v1.1/template_1.1_horizontal.png
   - assets/sticker_v1.1/text_scan_doorbell.png
 
 flutter_icons:
