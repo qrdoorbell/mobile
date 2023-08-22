@@ -34,7 +34,7 @@ class StickerService {
   Future<void> updateSticker(StickerInfo stickerInfo) async {
     await HttpUtils.securePut(
         Uri.parse('${AppSettings.apiUrl}/api/v1/doorbells/${stickerInfo.doorbellId}/stickers/${stickerInfo.stickerId}'),
-        body: jsonEncode({'data': stickerInfo.dataSnapshot()}));
+        body: jsonEncode({'data': stickerInfo.data.toMap()}));
   }
 
   Future<void> deleteSticker(StickerInfo stickerInfo) async {

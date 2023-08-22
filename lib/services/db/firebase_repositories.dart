@@ -39,7 +39,7 @@ class DoorbellsRepository extends FirebaseRepository<Doorbell> {
 
   Future<void> update(Doorbell doorbell) async {
     await dataStore.runTransaction(() async {
-      await db.ref('doorbells/${doorbell.doorbellId}').set(doorbell.toMap());
+      await db.ref('doorbells/${doorbell.doorbellId}').update(doorbell.toMap());
     });
     notifyListeners();
   }

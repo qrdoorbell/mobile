@@ -1,22 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../model/sticker.dart';
+import '../sticker_card.dart';
+import 'sticker_data.dart';
 
 class StickerV1Icon extends StatelessWidget {
-  final StickerInfo sticker;
-  final MaterialColor color;
+  final StickerV1Data stickerData;
   final Widget? topChild;
+  final void Function()? onPressed;
+
+  MaterialColor get color => stickerData.accentColor ?? Colors.yellow;
 
   const StickerV1Icon({
     super.key,
-    required this.sticker,
-    this.color = Colors.yellow,
+    required this.stickerData,
+    required this.onPressed,
     this.topChild,
   });
 
   Widget? _getTextIcon() {
-    var text = sticker.getOrDefault('apt', '').trim();
+    var text = stickerData.apt;
     if (text.isEmpty) return null;
 
     return Text(
@@ -30,10 +33,14 @@ class StickerV1Icon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return StickerCard(color: color, onPressed: onPressed, child: buildIcon(context));
+  }
+
+  Widget buildIcon(BuildContext context) {
     var icon = topChild ?? _getTextIcon() ?? Icon(CupertinoIcons.signature, color: color.shade700, size: 32);
 
     // HORIZONTAL
-    if (sticker.getOrDefault('vertical', true) == false) {
+    if (stickerData.vertical == false) {
       return Container(
         decoration: BoxDecoration(shape: BoxShape.rectangle, color: Colors.white, borderRadius: BorderRadius.circular(8)),
         padding: const EdgeInsets.all(3),

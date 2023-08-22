@@ -9,6 +9,7 @@ import 'package:share_plus/share_plus.dart';
 import '../../app_options.dart';
 import '../../data.dart';
 import '../../routing.dart';
+import '../../services/sticker_handler_factory.dart';
 import '../../tools.dart';
 import '../controls/event_list.dart';
 import '../controls/stickers/sticker_card.dart';
@@ -146,21 +147,19 @@ class _DoorbellScreenState extends State<DoorbellScreen> {
                           // STICKERS
                           for (var sticker in doorbell.stickers.sortedBy((element) => element.updated ?? element.created).reversed) ...[
                             const Padding(padding: EdgeInsets.all(5)),
-                            StickerCard(
-                                color: Colors.yellow,
-                                onPressed: () async {
-                                  var updatedSticker = await Navigator.of(context).push(CupertinoDialogRoute(
-                                      context: context,
-                                      builder: (context) {
-                                        return StickerEditScreen(handler: sticker.handler, doorbellId: widget.doorbellId, sticker: sticker);
-                                      }));
+                            StickerHandlerFactory.getStickerIconWidget(sticker, () async {
+                              var updatedSticker = await _showStickerEditScreenModal(
+                                  context: context,
+                                  builder: (context) =>
+                                      StickerEditScreen(handler: sticker.handler, doorbellId: widget.doorbellId, sticker: sticker));
 
-                                  setState(() {
-                                    doorbell.stickers.removeWhere((x) => x.stickerId == updatedSticker.stickerId);
-                                    doorbell.stickers.add(updatedSticker);
-                                  });
-                                },
-                                child: StickerV1Icon(sticker: sticker)),
+                              if (updatedSticker != null) {
+                                setState(() {
+                                  doorbell.stickers.removeWhere((x) => x.stickerId == updatedSticker.stickerId);
+                                  doorbell.stickers.insert(0, updatedSticker);
+                                });
+                              }
+                            }),
                           ],
 
                           // ADD STICKER (+)
@@ -178,12 +177,10 @@ class _DoorbellScreenState extends State<DoorbellScreen> {
                                   padding: EdgeInsets.zero,
                                   minWidth: 96,
                                   onPressed: () async {
-                                    var newSticker = await Navigator.of(context).push(CupertinoDialogRoute(
+                                    var newSticker = await _showStickerEditScreenModal(
                                         context: context,
-                                        builder: (context) {
-                                          return StickerEditScreen(
-                                              handler: 'sticker_v1', templateId: 'sticker_v1_horizontal', doorbellId: widget.doorbellId);
-                                        }));
+                                        builder: (context) => StickerEditScreen(
+                                            handler: 'sticker_v1', templateId: 'sticker_v1_vertical', doorbellId: widget.doorbellId));
 
                                     if (newSticker != null) {
                                       setState(() {
@@ -194,9 +191,10 @@ class _DoorbellScreenState extends State<DoorbellScreen> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(2),
                                     child: Center(
-                                      child: Text('+',
-                                          style: TextStyle(color: Colors.grey.shade400, fontSize: 40, fontWeight: FontWeight.w200)),
-                                    ),
+                                        child: Text(
+                                      '+',
+                                      style: TextStyle(color: Colors.grey.shade400, fontSize: 40, fontWeight: FontWeight.w200),
+                                    )),
                                   )),
                             ),
                           ),
@@ -259,5 +257,17 @@ class _DoorbellScreenState extends State<DoorbellScreen> {
             ),
           ])),
     ));
+  }
+
+  static Future<T?> _showStickerEditScreenModal<T>({required BuildContext context, required WidgetBuilder builder}) async {
+    return await showModalBottomSheet<T>(
+        enableDrag: false,
+        isScrollControlled: true,
+        showDragHandle: false,
+        useSafeArea: true,
+        clipBehavior: Clip.hardEdge,
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12))),
+        context: context,
+        builder: builder);
   }
 }

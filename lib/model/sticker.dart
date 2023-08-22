@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import '../services/sticker_handler_factory.dart';
+
 class StickerTemplateInfo {
   final String templateId;
   final String name;
@@ -39,7 +41,7 @@ class StickerTemplateInfo {
     return {
       'id': templateId,
       'name': name,
-      'template': template.dataSnapshot(),
+      'template': template.raw,
       'enabled': enabled,
       'created': created.millisecondsSinceEpoch,
       'owner': owner,
@@ -81,8 +83,9 @@ class StickerTemplateInfo {
   int get hashCode => templateId.hashCode ^ name.hashCode ^ template.hashCode ^ enabled.hashCode ^ created.hashCode ^ owner.hashCode;
 }
 
-final class StickerInfo {
+final class StickerInfo<TData extends StickerData> {
   final Map _info;
+  late final TData data;
 
   String get doorbellId => _info['doorbellId'];
   String get stickerId => _info['stickerId'];
@@ -90,20 +93,13 @@ final class StickerInfo {
   DateTime get created => DateTime.fromMillisecondsSinceEpoch(_info['created']?.toInt() ?? DateTime.now().millisecondsSinceEpoch);
   DateTime? get updated => _info['updated'] != null ? DateTime.fromMillisecondsSinceEpoch(_info['updated']?.toInt()) : null;
 
-  StickerInfo(Map info) : _info = info;
+  String? get displayName => data.displayName;
 
-  T? get<T>(String key) => _info['data'][key] as T?;
-  T getOrDefault<T>(String key, T defaultValue) => get(key) ?? defaultValue;
+  Map get raw => _info;
 
-  void set<T>(String key, T? value) {
-    _info['data'][key] = value;
-    _info['updated'] = DateTime.now().millisecondsSinceEpoch;
+  StickerInfo(Map info) : _info = info {
+    data = StickerHandlerFactory.getStickerData(this) as TData;
   }
-
-  Map dataSnapshot() => _info.containsKey('data') ? {..._info['data']} : {};
-  Map toMap() => _info;
-
-  String get displayName => get('displayName') ?? 'default';
 
   @override
   bool operator ==(Object other) {
@@ -115,46 +111,50 @@ final class StickerInfo {
         other.handler == handler &&
         other.created == created &&
         other.updated == updated &&
-        other._info == _info;
+        other.data == data;
   }
 
   @override
-  int get hashCode => doorbellId.hashCode ^ stickerId.hashCode ^ handler.hashCode ^ created.hashCode ^ updated.hashCode ^ _info.hashCode;
+  int get hashCode => doorbellId.hashCode ^ stickerId.hashCode ^ handler.hashCode ^ created.hashCode ^ updated.hashCode ^ data.hashCode;
 
   @override
-  String toString() => 'StickerTemplate(doorbellId: $doorbellId, stickerId: $stickerId, handler: $handler, data: $_info)';
+  String toString() => 'StickerTemplate(doorbellId: $doorbellId, stickerId: $stickerId, handler: $handler, data: $data)';
 }
 
 abstract class StickerData {
   final Map _data;
+  DateTime? _updated;
+  bool _isChanged = false;
 
-  Map toMap() => _data;
+  String? get displayName => null;
+  DateTime? get updated => _updated;
+  bool get isChanged => _isChanged;
 
   StickerData(Map data) : _data = data;
 
   T? get<T>(String key) => _data[key] as T?;
   T getOrDefault<T>(String key, T defaultValue) => get(key) ?? defaultValue;
-  void set<T>(String key, T? value) => _data[key] = value;
 
-  String? get displayName;
+  void set(String key, dynamic value) {
+    if (_data[key] != value) {
+      _data[key] = value;
+      _updated = DateTime.now();
+      _isChanged = true;
+    }
+  }
+
+  Map toMap() => _data;
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is StickerData && !other._data.entries.any((e) => e.value != _data[e.key]);
+    return other.hashCode == hashCode && other is StickerData; // && other._data.entries.every((e) => e.value == _data[e.key]);
   }
 
   @override
-  int get hashCode => _data.hashCode;
+  int get hashCode => _data.values.reduce((value, element) => value.hashCode ^ element.hashCode);
 
   @override
   String toString() => 'StickerData(data: $_data)';
-}
-
-class EmptyStickerData extends StickerData {
-  EmptyStickerData(Map data) : super({data: data});
-
-  @override
-  String? get displayName => null;
 }

@@ -1,19 +1,31 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../services/sticker_handler_factory.dart';
 import '../../../../model/sticker.dart';
 import '../sticker_edit_controller.dart';
-import '../../../../services/sticker_handler_factory.dart';
 import 'sticker_data.dart';
+import 'sticker_icon.dart';
 
 class StickerV1Service extends StickerHandlerService<StickerV1Data> {
   StickerV1Service() : super(handler: 'sticker_v1', templateIds: ['sticker_v1_vertical', 'sticker_v1_horizontal']);
 
   @override
-  StickerV1Data? parseStickerData(Map? data) => StickerV1Data(data);
+  StickerV1Data getStickerData(StickerInfo sticker) {
+    sticker.raw['data'] ??= StickerV1Data.defaultData;
+    return StickerV1Data(sticker.raw['data']);
+  }
 
   @override
-  StickerEditController<StickerV1Data> createEditController(Map? data) => StickerV1Controller(StickerInfo(data ?? {}));
+  StickerEditController<StickerV1Data> createEditController(StickerInfo<StickerV1Data>? sticker) =>
+      StickerV1Controller(sticker ?? StickerInfo<StickerV1Data>({'handler': 'sticker_v1', 'data': StickerV1Data.defaultData}));
+
+  @override
+  Widget getStickerIconWidget(StickerInfo sticker, void Function()? onPressed) =>
+      StickerV1Icon(stickerData: sticker.data as StickerV1Data, onPressed: onPressed);
+
+  @override
+  StickerInfo<StickerV1Data> createStickerInfo(Map data) => StickerInfo<StickerV1Data>(data);
 }
 
 class StickerV1Controller extends StickerEditController<StickerV1Data> {
@@ -21,16 +33,13 @@ class StickerV1Controller extends StickerEditController<StickerV1Data> {
     StickerHandlerFactory.register<StickerV1Service, StickerV1Data>(StickerV1Service());
   }
 
-  StickerV1Controller(super.settings);
+  StickerV1Controller(super.sticker);
 
   @override
   Widget createPreviewWidget() => StickerV1Preview.create(controller: this);
 
   @override
   Widget createSettingsWidget() => StickerV1SettingsWidget(controller: this);
-
-  @override
-  StickerV1Data createStickerData(Map? data) => StickerV1Data(data);
 }
 
 class StickerV1Preview extends StatefulWidget {
@@ -39,7 +48,7 @@ class StickerV1Preview extends StatefulWidget {
   final Widget qrcodeWidget;
   final Widget textWidget;
 
-  factory StickerV1Preview.create({required StickerEditController<StickerV1Data> controller}) => controller.settings.vertical != false
+  factory StickerV1Preview.create({required StickerEditController<StickerV1Data> controller}) => controller.sticker.data.vertical != false
       ? StickerV1Preview._vertical(controller: controller)
       : StickerV1Preview._horizontal(controller: controller);
 
@@ -56,7 +65,7 @@ class StickerV1Preview extends StatefulWidget {
             child: FittedBox(
                 alignment: Alignment.center,
                 fit: BoxFit.contain,
-                child: Text(controller.settings.apt,
+                child: Text(controller.sticker.data.apt,
                     overflow: TextOverflow.visible, textAlign: TextAlign.center, style: const TextStyle(fontSize: 42)))));
   }
 
@@ -73,7 +82,7 @@ class StickerV1Preview extends StatefulWidget {
             child: FittedBox(
                 alignment: Alignment.center,
                 fit: BoxFit.contain,
-                child: Text(controller.settings.apt,
+                child: Text(controller.sticker.data.apt,
                     overflow: TextOverflow.visible, textAlign: TextAlign.center, style: const TextStyle(fontSize: 42)))));
   }
 
@@ -126,11 +135,12 @@ class StickerV1SettingsWidget extends StatefulWidget {
 
 class _StickerV1SettingsWidgetState extends State<StickerV1SettingsWidget> {
   final _aptNumberController = TextEditingController();
+  bool _showColorPicker = false;
 
   @override
   void initState() {
     super.initState();
-    _aptNumberController.text = widget.controller.settings.apt;
+    _aptNumberController.text = widget.controller.sticker.data.apt;
     _aptNumberController.addListener(_aptNumberControllerListener);
   }
 
@@ -141,7 +151,7 @@ class _StickerV1SettingsWidgetState extends State<StickerV1SettingsWidget> {
         additionalDividerMargin: 6,
         header: const Text(
           'SETTINGS',
-          style: TextStyle(fontSize: 13.0, color: CupertinoColors.inactiveGray, fontWeight: FontWeight.normal),
+          style: TextStyle(fontSize: 15.0, color: CupertinoColors.inactiveGray, fontWeight: FontWeight.normal),
         ),
         children: [
           CupertinoListTile(
@@ -149,8 +159,14 @@ class _StickerV1SettingsWidgetState extends State<StickerV1SettingsWidget> {
             controller: _aptNumberController,
             decoration: const BoxDecoration(),
             textAlign: TextAlign.right,
-            prefix: const Text('Apartment / House'),
-            placeholder: 'number / code',
+            prefix: const Row(
+              children: [
+                Text('Text'),
+                SizedBox(width: 10),
+                Text('(apt. / building / etc.)', style: TextStyle(color: CupertinoColors.systemGrey3)),
+              ],
+            ),
+            placeholder: '4 chars max',
             placeholderStyle: const TextStyle(color: CupertinoColors.systemGrey3),
             maxLength: 4,
             onTapOutside: (event) {
@@ -160,16 +176,51 @@ class _StickerV1SettingsWidgetState extends State<StickerV1SettingsWidget> {
               FocusManager.instance.primaryFocus?.unfocus();
             },
           )),
+          if (!_showColorPicker)
+            CupertinoListTile(
+              title: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('Accent color'),
+                  const SizedBox(width: 10),
+                  _singleColorButton(widget.controller.sticker.data.accentColor ?? Colors.yellow, () {}),
+                ],
+              ),
+              additionalInfo: const Text('more colors', style: TextStyle(color: CupertinoColors.systemGrey3)),
+              trailing: const CupertinoListTileChevron(),
+              onTap: () => setState(() => _showColorPicker = !_showColorPicker),
+            ),
+          if (_showColorPicker)
+            SizedBox(
+              height: 44,
+              child: ListView(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                physics: const BouncingScrollPhysics(),
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                children: Colors.primaries
+                    .map((c) => Padding(
+                        padding: const EdgeInsets.all(5),
+                        child: _singleColorButton(
+                          c,
+                          () => setState(() {
+                            _showColorPicker = false;
+                            widget.controller.set((data) => data.accentColor = c);
+                          }),
+                        )))
+                    .toList(),
+              ),
+            ),
           CupertinoListTile(
               title: const Text('Layout'),
               trailing: Row(mainAxisSize: MainAxisSize.min, children: [
                 Padding(
                     padding: const EdgeInsets.only(left: 5),
-                    child: Text(widget.controller.settings.vertical ? 'vertical' : 'horizontal',
+                    child: Text(widget.controller.sticker.data.vertical ? 'vertical' : 'horizontal',
                         style: const TextStyle(color: CupertinoColors.systemGrey3))),
                 CupertinoSwitch(
                     onChanged: (bool value) => widget.controller.set((settings) => settings.vertical = value),
-                    value: widget.controller.settings.vertical,
+                    value: widget.controller.sticker.data.vertical,
                     trackColor: CupertinoColors.activeGreen)
               ]))
         ]);
@@ -183,4 +234,19 @@ class _StickerV1SettingsWidgetState extends State<StickerV1SettingsWidget> {
   }
 
   void _aptNumberControllerListener() => widget.controller.set((settings) => settings.apt = _aptNumberController.value.text.trim());
+
+  static Widget _singleColorButton(MaterialColor color, void Function()? onTap) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(width: 1, color: CupertinoColors.systemGrey3),
+          color: color.shade500,
+        ),
+        width: 26,
+        height: 26,
+      ),
+    );
+  }
 }

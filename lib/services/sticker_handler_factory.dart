@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 import '../model/sticker.dart';
 import '../presentation/controls/stickers/sticker_edit_controller.dart';
 
@@ -11,9 +13,10 @@ abstract class StickerHandlerService<TData extends StickerData> {
     if (templateIds != null) this.templateIds.addAll(templateIds);
   }
 
-  StickerEditController<TData> createEditController(Map? data);
-
-  TData? parseStickerData(Map? data);
+  StickerEditController<TData> createEditController(StickerInfo<TData>? sticker);
+  StickerInfo<TData> createStickerInfo(Map data);
+  TData getStickerData(StickerInfo sticker);
+  Widget getStickerIconWidget(StickerInfo sticker, void Function()? onPressed);
 }
 
 class StickerHandlerFactory {
@@ -25,12 +28,33 @@ class StickerHandlerFactory {
     _handlers.add(handler);
   }
 
-  static StickerHandlerService? getHandler(String handler) => _handlers.where((x) => x.canHandle(handler)).firstOrNull;
-
-  static TData? parseStickerData<TData extends StickerData>(StickerInfo stickerInfo) {
-    var handler = getHandler(stickerInfo.handler!) as StickerHandlerService<TData>?;
+  static StickerInfo? createStickerInfo(Map data) {
+    var handler = _getStickerHandlerService(data['handler']);
     if (handler == null) return null;
 
-    return handler.parseStickerData(stickerInfo.dataSnapshot());
+    return handler.createStickerInfo(data);
   }
+
+  static Widget getStickerIconWidget(StickerInfo sticker, void Function()? onPressed) {
+    var handler = _getStickerHandlerService(sticker.handler);
+    if (handler == null) throw Exception('Sticker handler not found: ${sticker.handler}');
+
+    return handler.getStickerIconWidget(sticker, onPressed);
+  }
+
+  static StickerEditController createEditController(String handler, StickerInfo? stickerInfo) {
+    var svc = _getStickerHandlerService(handler);
+    if (svc == null) throw Exception('Sticker handler not found: $handler');
+
+    return svc.createEditController(stickerInfo);
+  }
+
+  static StickerData getStickerData(StickerInfo sticker) {
+    var handler = _getStickerHandlerService(sticker.handler);
+    if (handler == null) throw Exception('Sticker handler not found: ${sticker.handler}');
+
+    return handler.getStickerData(sticker);
+  }
+
+  static StickerHandlerService? _getStickerHandlerService(String handler) => _handlers.where((x) => x.canHandle(handler)).firstOrNull;
 }

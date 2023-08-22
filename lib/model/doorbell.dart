@@ -1,6 +1,8 @@
+import 'package:collection/collection.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import '../data.dart';
+import '../services/sticker_handler_factory.dart';
 
 class Doorbell implements Comparable<Doorbell> {
   late final String doorbellId;
@@ -28,20 +30,19 @@ class Doorbell implements Comparable<Doorbell> {
     }
 
     if (s['stickers']?.entries != null) {
-      stickers.addAll(List.from(s['stickers'].entries).map((v) => StickerInfo(v.value)));
+      stickers.addAll(List.from(s['stickers'].entries).map((v) => StickerHandlerFactory.createStickerInfo(v.value)).whereNotNull());
     }
   }
 
   static Doorbell fromMap(Map s) => Doorbell._(s);
   static Doorbell fromSnapshot(DataSnapshot snapshot) => Doorbell._(Map.of(snapshot.value as dynamic));
 
-  Map toMap() => {
+  Map<String, Object?> toMap() => {
         'id': doorbellId,
         'enabled': enabled,
         'name': name,
         'lastEvent': lastEvent?.toMap(),
         'settings': settings.toMap(),
-        'stickers': stickers.map((e) => e.toMap()).toList(growable: false),
       };
 
   @override

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:logging/logging.dart';
 
 import '../presentation/screens/profile_delete_screen.dart';
@@ -14,9 +14,7 @@ import '../presentation/screens/login_screen.dart';
 import '../presentation/screens/main_screen.dart';
 import '../presentation/screens/qrcode_screen.dart';
 import '../presentation/screens/call_screen.dart';
-import '../presentation/screens/sticker_edit_screen.dart';
 import '../routing.dart';
-import '../widgets/fade_transition_page.dart';
 
 class AppNavigator extends StatefulWidget {
   final GlobalKey<NavigatorState> navigatorKey;
@@ -58,57 +56,75 @@ class _AppNavigatorState extends State<AppNavigator> {
       },
       pages: [
         if (routeState.route.pathTemplate.startsWith('/login')) ...[
-          FadeTransitionPage<void>(key: _signInKey, child: LoginScreen()),
+          CupertinoPage(
+            key: _signInKey,
+            title: 'Sign in',
+            child: LoginScreen(),
+          ),
           if (pathTemplate == '/login/forgot-password')
-            MaterialPage(child: ForgotPasswordScreen(key: _forgotPasswordKey, email: routeState.data['email'])),
+            CupertinoPage(
+              title: 'Forgot password',
+              child: ForgotPasswordScreen(
+                key: _forgotPasswordKey,
+                email: routeState.data['email'],
+              ),
+            ),
         ] else if (pathTemplate == '/invite/accept/:inviteId' && inviteId != null)
-          MaterialPage(
+          CupertinoPage(
             key: _inviteScreenKey,
             fullscreenDialog: true,
             child: InviteAcceptedScreen(inviteId: inviteId),
           )
         else ...[
           // path: /doorbells
-          FadeTransitionPage<void>(
+          CupertinoPage(
             key: _mainScreenKey,
+            title: 'Doorbells',
             child: const MainScreen(),
           ),
 
           if (pathTemplate == '/profile/delete-account')
-            MaterialPage(
+            CupertinoPage(
               key: _inviteScreenKey,
+              title: 'Delete account',
               child: ProfileDeleteScreen(),
             ),
 
           // path: /doorbells/:doorbellId
           if (pathTemplate.startsWith('/doorbells/:doorbellId') && doorbellId != null) ...[
-            MaterialPage(
+            CupertinoPage(
               key: _doorbellDetailsKey,
+              title: 'Doorbell details',
               child: DoorbellScreen(doorbellId: doorbellId),
             ),
             if (pathTemplate == '/doorbells/:doorbellId/qr')
-              MaterialPage(
+              CupertinoPage(
                 key: _doorbellDetailsEditKey,
+                title: 'Doorbell QR code',
                 child: QRCodeScreen(doorbellId: doorbellId),
               ),
             if (pathTemplate == '/doorbells/:doorbellId/edit')
-              MaterialPage(
+              CupertinoPage(
                 key: _doorbellDetailsEditKey,
+                title: 'Doorbell edit',
                 child: DoorbellEditScreen(doorbellId: doorbellId),
               ),
             if (pathTemplate == '/doorbells/:doorbellId/ring/:accessToken' && callAccessToken != null)
-              MaterialPage(
+              CupertinoPage(
                 key: _doorbellDetailsEditKey,
+                title: 'Incoming call',
                 child: CallScreen(accessToken: callAccessToken, doorbellId: doorbellId),
               ),
             if (pathTemplate == '/doorbells/:doorbellId/join/:accessToken' && callAccessToken != null)
-              MaterialPage(
+              CupertinoPage(
                 key: _doorbellDetailsEditKey,
+                title: 'Join call',
                 child: CallScreen(accessToken: callAccessToken, doorbellId: doorbellId),
               ),
             if (pathTemplate == '/doorbells/:doorbellId/users')
-              MaterialPage(
+              CupertinoPage(
                 key: _doorbellDetailsEditKey,
+                title: 'Manage users',
                 child: DoorbellUsersScreen(doorbellId: doorbellId),
               ),
             // if (pathTemplate == '/sticker-templates/:stickerTemplateId' &&
@@ -141,7 +157,7 @@ class _AppNavigatorState extends State<AppNavigator> {
           ],
         ],
         if (pathTemplate.endsWith('/_wait'))
-          FadeTransitionPage<void>(
+          CupertinoPage(
               key: _waitScreenKey,
               child: FutureBuilder(
                 future: Future.any(<Future>[
