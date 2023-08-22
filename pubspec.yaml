@@ -83,6 +83,9 @@ flutter:
   - assets/sticker_yellow_vert/qrdoorbell-sticker-5@1x.png
   - assets/sticker_yellow_hor/qrdoorbell-sticker-5_horizontal@1x.png
 
+  - assets/sticker_v1.1/template_1.1_vertical.png
+  - assets/sticker_v1.1/text_scan_doorbell.png
+
 flutter_icons:
   image_path: "assets/logo-app-01_1024.png" 
   ios: true

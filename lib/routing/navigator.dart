@@ -72,7 +72,6 @@ class _AppNavigatorState extends State<AppNavigator> {
         ] else if (pathTemplate == '/invite/accept/:inviteId' && inviteId != null)
           CupertinoPage(
             key: _inviteScreenKey,
-            fullscreenDialog: true,
             child: InviteAcceptedScreen(inviteId: inviteId),
           )
         else ...[

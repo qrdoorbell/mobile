@@ -102,11 +102,11 @@ class _StickerEditScreenState extends State<StickerEditScreen> {
             child: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
               Flexible(
                   fit: FlexFit.tight,
-                  flex: 5,
+                  flex: 10,
                   child: Container(
                       color: CupertinoColors.systemGroupedBackground,
                       child: Container(
-                          height: 400,
+                          height: 600,
                           clipBehavior: Clip.hardEdge,
                           padding: const EdgeInsets.all(20),
                           decoration: const BoxDecoration(
@@ -117,38 +117,59 @@ class _StickerEditScreenState extends State<StickerEditScreen> {
                               crossAxisAlignment: WrapCrossAlignment.center,
                               runAlignment: WrapAlignment.center,
                               children: [_stickerEditController.previewWidget])))),
-              _stickerEditController.settingsWidget,
-              const Spacer(),
-              Flexible(
-                  flex: 0,
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                    Padding(
-                        padding: const EdgeInsets.only(left: 40, right: 40, top: 0, bottom: 0),
-                        child: CupertinoButton.filled(
-                            onPressed: () async {
-                              Navigator.of(context).waitWithScreenThenPop<StickerInfo>(() async {
-                                var stickerInfo = _stickerEditController.sticker;
-                                if (widget.sticker == null) {
-                                  var newSticker = await StickerService()
-                                      .createSticker(widget.handler, widget.templateId, widget.doorbellId, stickerInfo.data.toMap());
-
-                                  if (newSticker == null) return null;
-
-                                  await _printHandler(newSticker);
-                                  return newSticker;
-                                } else if (_stickerEditController.isSettingsChanged) await _updateSticker(stickerInfo);
-
-                                await _printHandler(stickerInfo);
-                                return stickerInfo;
-                              });
-                            },
-                            child: const Text('Print Sticker', style: TextStyle(fontWeight: FontWeight.bold)))),
-                    const Padding(padding: EdgeInsets.all(5)),
-                    const Text('You can print your sticker or save to photos.',
-                        style: TextStyle(color: CupertinoColors.inactiveGray, fontSize: 14), textAlign: TextAlign.center),
-                    const Padding(padding: EdgeInsets.only(bottom: 20))
-                  ]))
+              BottomSheet(
+                enableDrag: false,
+                clipBehavior: Clip.hardEdge,
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12))),
+                onClosing: () {},
+                builder: _buildSettingsSection,
+              )
+              // _buildSettingsSection(context),
             ])));
+  }
+
+  Widget _buildSettingsSection(BuildContext context) {
+    return Wrap(
+      children: [
+        _stickerEditController.settingsWidget,
+        const Spacer(),
+        Flexible(
+          flex: 0,
+          child: _buildBottomButtonsSection(context),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBottomButtonsSection(BuildContext context) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      Padding(
+          padding: const EdgeInsets.only(left: 40, right: 40, top: 0, bottom: 0),
+          child: CupertinoButton.filled(
+              onPressed: () async {
+                Navigator.of(context).waitWithScreenThenPop<StickerInfo>(() async {
+                  var stickerInfo = _stickerEditController.sticker;
+                  if (widget.sticker == null) {
+                    var newSticker = await StickerService()
+                        .createSticker(widget.handler, widget.templateId, widget.doorbellId, stickerInfo.data.toMap());
+
+                    if (newSticker == null) return null;
+
+                    await _printHandler(newSticker);
+                    return newSticker;
+                  } else if (_stickerEditController.isSettingsChanged) await _updateSticker(stickerInfo);
+
+                  await _printHandler(stickerInfo);
+                  return stickerInfo;
+                });
+              },
+              child: const Text('Print Sticker', style: TextStyle(fontWeight: FontWeight.bold)))),
+      const Padding(padding: EdgeInsets.all(5)),
+      const Text('You can print your sticker or save to photos.',
+          style: TextStyle(color: CupertinoColors.inactiveGray, fontSize: 14), textAlign: TextAlign.center),
+      const Padding(padding: EdgeInsets.only(bottom: 20))
+    ]);
   }
 
   void _stickerEditControllerListener() {
