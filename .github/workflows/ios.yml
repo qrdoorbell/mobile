@@ -55,7 +55,7 @@ jobs:
           if [[ "${GITHUB_REF#refs/*/v}" != "$GITHUB_REF" ]]; then 
             export BUILD_NAME=${GITHUB_REF#refs/*/v} 
           fi
-          flutter build ipa --release --dart-define=USE_CRASHALYTICS=true --dart-define=GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID --build-name=$BUILD_NAME --build-number=$GITHUB_RUN_NUMBER --export-options-plist=exportOptions.plist
+          flutter build ipa --release --no-tree-shake-icons --dart-define=USE_CRASHALYTICS=true --dart-define=GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID --build-name=$BUILD_NAME --build-number=$GITHUB_RUN_NUMBER --export-options-plist=exportOptions.plist
       - name: Run Code Analysis
         run: |
           dart run dart_code_metrics:metrics --reporter=github lib
