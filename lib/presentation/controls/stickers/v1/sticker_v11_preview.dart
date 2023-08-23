@@ -83,8 +83,11 @@ class StickerV11Preview extends StatefulWidget {
                 child: FittedBox(
                     alignment: Alignment.center,
                     fit: BoxFit.contain,
-                    child:
-                        Icon(CupertinoIcons.bell_fill, color: (controller.sticker.data.accentColor ?? Colors.yellow).shade500, size: 110)),
+                    child: Text(
+                      'A',
+                      style: TextStyle(fontFamily: 'SF Pro', color: Colors.white),
+                    )),
+                // Icon(CupertinoIcons.bell_fill, color: (controller.sticker.data.accentColor ?? Colors.yellow).shade500, size: 110)),
               ))),
       Positioned(left: 5, top: 3, child: Image.asset('assets/sticker_v1.1/text_scan_doorbell.png', width: 105)),
       Positioned(
