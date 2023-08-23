@@ -40,8 +40,8 @@ class StickerV11Preview extends StatefulWidget {
                 child: FittedBox(
                     alignment: Alignment.center,
                     fit: BoxFit.contain,
-                    child:
-                        Icon(CupertinoIcons.bell_fill, color: (controller.sticker.data.accentColor ?? Colors.yellow).shade500, size: 140)),
+                    child: Icon(controller.sticker.data.icon ?? CupertinoIcons.bell_fill,
+                        size: 180, color: (controller.sticker.data.accentColor ?? Colors.yellow).shade600)),
               ))),
       Positioned(left: 5, top: 35, child: Image.asset('assets/sticker_v1.1/text_scan_doorbell.png', width: 120)),
       Positioned(
@@ -83,11 +83,8 @@ class StickerV11Preview extends StatefulWidget {
                 child: FittedBox(
                     alignment: Alignment.center,
                     fit: BoxFit.contain,
-                    child: Text(
-                      'A',
-                      style: TextStyle(fontFamily: 'SF Pro', color: Colors.white),
-                    )),
-                // Icon(CupertinoIcons.bell_fill, color: (controller.sticker.data.accentColor ?? Colors.yellow).shade500, size: 110)),
+                    child: Icon(controller.sticker.data.icon ?? CupertinoIcons.bell_fill,
+                        size: 180, color: (controller.sticker.data.accentColor ?? Colors.yellow).shade600)),
               ))),
       Positioned(left: 5, top: 3, child: Image.asset('assets/sticker_v1.1/text_scan_doorbell.png', width: 105)),
       Positioned(

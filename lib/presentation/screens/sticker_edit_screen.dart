@@ -108,7 +108,7 @@ class _StickerEditScreenState extends State<StickerEditScreen> {
                       color: CupertinoColors.systemGroupedBackground,
                       border: Border.symmetric(vertical: BorderSide(color: CupertinoColors.systemGrey3, width: 1))),
                   child: _stickerEditController.previewWidget)),
-          const Spacer(),
+          // const Spacer(),
           _stickerEditController.settingsWidget,
           // _buildSettingsSection(context),
           // IntrinsicHeight(
@@ -123,7 +123,7 @@ class _StickerEditScreenState extends State<StickerEditScreen> {
           //     builder: _buildSettingsSection,
           //   ),
           // )
-          const Spacer(),
+          // const Spacer(),
           Padding(
               padding: const EdgeInsets.only(left: 40, right: 40, top: 0, bottom: 0),
               child: CupertinoButton.filled(

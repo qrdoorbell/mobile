@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 
 import '../../../../services/sticker_handler_factory.dart';
 import '../../../../model/sticker.dart';
@@ -55,6 +56,19 @@ class StickerV1SettingsWidget extends StatefulWidget {
 class _StickerV1SettingsWidgetState extends State<StickerV1SettingsWidget> {
   final _aptNumberController = TextEditingController();
   bool _showColorPicker = false;
+
+  _pickIcon() async {
+    IconData? iconData = await FlutterIconPicker.showIconPicker(
+      context,
+      iconPackModes: [IconPack.cupertino],
+      adaptiveDialog: true,
+      iconSize: 32,
+      showSearchBar: false,
+      iconColor: (widget.controller.sticker.data.accentColor ?? Colors.yellow).shade700,
+    );
+
+    if (iconData != null) setState(() => widget.controller.set((data) => data.icon = iconData));
+  }
 
   @override
   void initState() {
@@ -130,6 +144,21 @@ class _StickerV1SettingsWidgetState extends State<StickerV1SettingsWidget> {
                     .toList(),
               ),
             ),
+          CupertinoListTile(
+              title: Row(mainAxisSize: MainAxisSize.min, children: [
+                const Text('Icon'),
+                const SizedBox(width: 10),
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  child: Icon(
+                    widget.controller.sticker.data.icon ?? CupertinoIcons.bell_fill,
+                    color: (widget.controller.sticker.data.accentColor ?? Colors.yellow).shade600,
+                  ),
+                )
+              ]),
+              additionalInfo: const Text('more icons', style: TextStyle(color: CupertinoColors.systemGrey3)),
+              trailing: const CupertinoListTileChevron(),
+              onTap: _pickIcon),
           CupertinoListTile(
               title: const Text('Layout'),
               trailing: Row(mainAxisSize: MainAxisSize.min, children: [

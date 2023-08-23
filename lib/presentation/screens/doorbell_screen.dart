@@ -13,7 +13,6 @@ import '../../services/sticker_handler_factory.dart';
 import '../../tools.dart';
 import '../controls/event_list.dart';
 import '../controls/stickers/sticker_card.dart';
-import '../controls/stickers/v1/sticker_icon.dart';
 import 'empty_screen.dart';
 import 'sticker_edit_screen.dart';
 
@@ -261,13 +260,15 @@ class _DoorbellScreenState extends State<DoorbellScreen> {
 
   static Future<T?> _showStickerEditScreenModal<T>({required BuildContext context, required WidgetBuilder builder}) async {
     return await showModalBottomSheet<T>(
-        enableDrag: false,
-        isScrollControlled: true,
-        showDragHandle: false,
-        useSafeArea: true,
-        clipBehavior: Clip.hardEdge,
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12))),
-        context: context,
-        builder: builder);
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12))),
+      enableDrag: false,
+      showDragHandle: false,
+      isScrollControlled: true,
+      useSafeArea: true,
+      useRootNavigator: false,
+      clipBehavior: Clip.hardEdge,
+      context: context,
+      builder: builder,
+    );
   }
 }
