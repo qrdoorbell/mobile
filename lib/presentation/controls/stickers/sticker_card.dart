@@ -28,6 +28,7 @@ class StickerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
+        height: 104,
         padding: EdgeInsets.zero,
         onPressed: onPressed,
         child: Card(

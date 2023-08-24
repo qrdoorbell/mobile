@@ -42,62 +42,18 @@ class _StickerEditScreenState extends State<StickerEditScreen> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-        backgroundColor: CupertinoColors.systemGroupedBackground,
+        backgroundColor: Colors.white,
         navigationBar: CupertinoNavigationBar(
             backgroundColor: CupertinoColors.white,
             padding: const EdgeInsetsDirectional.only(start: 5, end: 10),
-            leading: CupertinoNavigationBarBackButton(
-                onPressed: () async {
-                  var nav = Navigator.of(context);
-                  if (widget.sticker == null && _stickerEditController.isSettingsChanged) {
-                    var saveChanges = await showDialog<bool>(
-                        context: context,
-                        builder: (context) => CupertinoAlertDialog(
-                                title: const Text('There are unsaved changes that will be lost.\nDo you want to save them?'),
-                                actions: [
-                                  CupertinoDialogAction(
-                                      child: const Text('Save', style: TextStyle(fontWeight: FontWeight.bold)),
-                                      onPressed: () => Navigator.of(context).pop(true)),
-                                  CupertinoDialogAction(child: const Text('Discard'), onPressed: () => Navigator.of(context).pop(false)),
-                                ]));
-                    if (saveChanges == false) {
-                      return nav.pop(null);
-                    }
-
-                    var newSticker = await StickerService()
-                        .createSticker(widget.handler, widget.templateId, widget.doorbellId, _stickerEditController.sticker.data.toMap());
-                    return nav.pop(newSticker);
-                  }
-
-                  var stickerInfo = _stickerEditController.sticker;
-                  nav.pop(stickerInfo);
-
-                  if (widget.sticker != null && _stickerEditController.isSettingsChanged) await onUpdateSticker(stickerInfo);
-                },
-                color: CupertinoColors.activeBlue),
+            leading: CupertinoNavigationBarBackButton(onPressed: onBackButtonTap, color: CupertinoColors.activeBlue),
             trailing: CupertinoButton(
               padding: EdgeInsets.zero,
-              onPressed: () async {
-                var nav = Navigator.of(context);
-                var shouldDelete = await showDialog<bool>(
-                    context: context,
-                    builder: (context) =>
-                        CupertinoAlertDialog(title: const Text('Are you sure you want to delete this sticker?'), actions: [
-                          CupertinoDialogAction(child: const Text('Yes'), onPressed: () => Navigator.of(context).pop(true)),
-                          CupertinoDialogAction(
-                              child: const Text('No', style: TextStyle(fontWeight: FontWeight.bold)),
-                              onPressed: () => Navigator.of(context).pop(false)),
-                        ]));
-
-                if (shouldDelete == true) {
-                  nav.waitWithScreenThenPop(() async => await StickerService().deleteSticker(_stickerEditController.sticker));
-                }
-              },
+              onPressed: onDeleteButtonTap,
               child: const Text('Delete', style: TextStyle(color: CupertinoColors.destructiveRed)),
             ),
             middle: Text(
                 "Sticker: ${_stickerEditController.sticker.displayName?.isEmpty == true ? 'new' : _stickerEditController.sticker.displayName}")),
-        // child: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         child: ListView(children: [
           Container(
               color: CupertinoColors.systemGroupedBackground,
@@ -108,86 +64,18 @@ class _StickerEditScreenState extends State<StickerEditScreen> {
                       color: CupertinoColors.systemGroupedBackground,
                       border: Border.symmetric(vertical: BorderSide(color: CupertinoColors.systemGrey3, width: 1))),
                   child: _stickerEditController.previewWidget)),
-          // const Spacer(),
           _stickerEditController.settingsWidget,
-          // _buildSettingsSection(context),
-          // IntrinsicHeight(
-          //   child: BottomSheet(
-          //     elevation: 10,
-          //     enableDrag: false,
-          //     clipBehavior: Clip.hardEdge,
-          //     // constraints: const BoxConstraints(maxHeight: 500),
-          //     shape: const RoundedRectangleBorder(
-          //         borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12))),
-          //     onClosing: () {},
-          //     builder: _buildSettingsSection,
-          //   ),
-          // )
-          // const Spacer(),
-          Padding(
-              padding: const EdgeInsets.only(left: 40, right: 40, top: 0, bottom: 0),
+          Container(
+              color: Colors.white,
+              padding: const EdgeInsets.only(left: 40, right: 40, top: 20, bottom: 10),
               child: CupertinoButton.filled(
-                  onPressed: () async {
-                    Navigator.of(context).waitWithScreenThenPop<StickerInfo>(() async {
-                      var stickerInfo = _stickerEditController.sticker;
-                      if (widget.sticker == null) {
-                        var newSticker = await StickerService()
-                            .createSticker(widget.handler, widget.templateId, widget.doorbellId, stickerInfo.data.toMap());
-
-                        if (newSticker == null) return null;
-
-                        await printSticker(newSticker);
-                        return newSticker;
-                      } else if (_stickerEditController.isSettingsChanged) await onUpdateSticker(stickerInfo);
-
-                      await printSticker(stickerInfo);
-                      return stickerInfo;
-                    });
-                  },
+                  onPressed: () => Navigator.of(context).waitWithScreenThenPop<StickerInfo>(onPrintButtonTap),
                   child: const Text('Print Sticker', style: TextStyle(fontWeight: FontWeight.bold)))),
-          const Padding(padding: EdgeInsets.all(5)),
-          const Text('You can print your sticker or save to photos.',
-              style: TextStyle(color: CupertinoColors.inactiveGray, fontSize: 14), textAlign: TextAlign.center),
-          const Padding(padding: EdgeInsets.only(bottom: 20)),
-        ]));
-  }
-
-  Widget _buildSettingsSection(BuildContext context) {
-    return Container(
-        // width: double.infinity,
-        // alignment: Alignment.topCenter,
-        child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-          _stickerEditController.settingsWidget,
-          const Spacer(),
-          Padding(
-              padding: const EdgeInsets.only(left: 40, right: 40, top: 0, bottom: 0),
-              child: CupertinoButton.filled(
-                  onPressed: () async {
-                    Navigator.of(context).waitWithScreenThenPop<StickerInfo>(() async {
-                      var stickerInfo = _stickerEditController.sticker;
-                      if (widget.sticker == null) {
-                        var newSticker = await StickerService()
-                            .createSticker(widget.handler, widget.templateId, widget.doorbellId, stickerInfo.data.toMap());
-
-                        if (newSticker == null) return null;
-
-                        await printSticker(newSticker);
-                        return newSticker;
-                      } else if (_stickerEditController.isSettingsChanged) await onUpdateSticker(stickerInfo);
-
-                      await printSticker(stickerInfo);
-                      return stickerInfo;
-                    });
-                  },
-                  child: const Text('Print Sticker', style: TextStyle(fontWeight: FontWeight.bold)))),
-          const Padding(padding: EdgeInsets.all(5)),
-          const Text('You can print your sticker or save to photos.',
-              style: TextStyle(color: CupertinoColors.inactiveGray, fontSize: 14), textAlign: TextAlign.center),
-          const Padding(padding: EdgeInsets.only(bottom: 20)),
+          Container(
+              color: Colors.white,
+              padding: const EdgeInsets.only(left: 40, right: 40),
+              child: const Text('You can print your sticker or save to photos.',
+                  style: TextStyle(color: CupertinoColors.inactiveGray, fontSize: 14), textAlign: TextAlign.center)),
         ]));
   }
 
@@ -197,7 +85,7 @@ class _StickerEditScreenState extends State<StickerEditScreen> {
 
   Future<void> onUpdateSticker(StickerInfo stickerInfo) async => await StickerService().updateSticker(stickerInfo);
 
-  static Future<void> printSticker(StickerInfo stickerInfo) async {
+  Future<void> printSticker(StickerInfo stickerInfo) async {
     var stickerPrint = await StickerService().getStickerPdf(stickerInfo.doorbellId, stickerInfo.stickerId);
     var tempDir = await Directory.systemTemp.createTemp();
     try {
@@ -207,6 +95,86 @@ class _StickerEditScreenState extends State<StickerEditScreen> {
       ], subject: '[QR Doorbell] Stricker - ${stickerInfo.displayName}');
     } finally {
       await tempDir.delete(recursive: true);
+    }
+  }
+
+  Future<StickerInfo?> onCreateSticker() async {
+    var stickerInfo = _stickerEditController.sticker;
+    if (widget.sticker == null) {
+      var newSticker = await StickerService().createSticker(widget.handler, widget.templateId, widget.doorbellId, stickerInfo.data.toMap());
+
+      if (newSticker == null) return null;
+
+      await printSticker(newSticker);
+      return newSticker;
+    } else if (_stickerEditController.isSettingsChanged) await onUpdateSticker(stickerInfo);
+
+    await printSticker(stickerInfo);
+    return stickerInfo;
+  }
+
+  Future<StickerInfo?> onPrintButtonTap() async {
+    var stickerInfo = _stickerEditController.sticker;
+    if (widget.sticker == null) {
+      var newSticker = await StickerService().createSticker(widget.handler, widget.templateId, widget.doorbellId, stickerInfo.data.toMap());
+      if (newSticker == null) return null;
+
+      await printSticker(newSticker);
+
+      return newSticker;
+    } else if (_stickerEditController.isSettingsChanged) {
+      await onUpdateSticker(stickerInfo);
+      await printSticker(stickerInfo);
+
+      return stickerInfo;
+    }
+
+    return null;
+  }
+
+  Future<void> onBackButtonTap() async {
+    var nav = Navigator.of(context);
+    if (widget.sticker == null && _stickerEditController.isSettingsChanged) {
+      var saveChanges = await showDialog<bool>(
+          context: context,
+          builder: (context) =>
+              CupertinoAlertDialog(title: const Text('There are unsaved changes that will be lost.\nDo you want to save them?'), actions: [
+                CupertinoDialogAction(
+                    child: const Text('Save', style: TextStyle(fontWeight: FontWeight.bold)),
+                    onPressed: () => Navigator.of(context).pop(true)),
+                CupertinoDialogAction(child: const Text('Discard'), onPressed: () => Navigator.of(context).pop(false)),
+              ]));
+      if (saveChanges == false) {
+        return nav.pop(null);
+      }
+
+      var newSticker = await StickerService()
+          .createSticker(widget.handler, widget.templateId, widget.doorbellId, _stickerEditController.sticker.data.toMap());
+      return nav.pop(newSticker);
+    }
+
+    var stickerInfo = _stickerEditController.sticker;
+    if (widget.sticker != null && _stickerEditController.isSettingsChanged) {
+      await onUpdateSticker(stickerInfo);
+      return nav.pop(stickerInfo);
+    }
+
+    return nav.pop(null);
+  }
+
+  Future<void> onDeleteButtonTap() async {
+    var nav = Navigator.of(context);
+    var shouldDelete = await showDialog<bool>(
+        context: context,
+        builder: (context) => CupertinoAlertDialog(title: const Text('Are you sure you want to delete this sticker?'), actions: [
+              CupertinoDialogAction(child: const Text('Yes'), onPressed: () => Navigator.of(context).pop(true)),
+              CupertinoDialogAction(
+                  child: const Text('No', style: TextStyle(fontWeight: FontWeight.bold)),
+                  onPressed: () => Navigator.of(context).pop(false)),
+            ]));
+
+    if (shouldDelete == true) {
+      nav.waitWithScreenThenPop(() async => await StickerService().deleteSticker(_stickerEditController.sticker));
     }
   }
 }

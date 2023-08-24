@@ -9,13 +9,13 @@ import 'event_card.dart';
 class EventList extends StatefulWidget {
   final String? doorbellId;
   final VoidCallback? onShareDoorbellCallback;
-  final VoidCallback? onPrintStickerCallback;
+  final VoidCallback? onCreateStickerCallback;
 
   const EventList({
     super.key,
     this.doorbellId,
     this.onShareDoorbellCallback,
-    this.onPrintStickerCallback,
+    this.onCreateStickerCallback,
   });
 
   @override
@@ -51,16 +51,15 @@ class _EventListState extends State<EventList> {
             children: [
               const Text("No events", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 24)),
               const Padding(padding: EdgeInsets.all(5)),
-              if (widget.doorbellId != null)
-                Column(children: [
-                  const Padding(padding: EdgeInsets.all(20)),
-                  CupertinoButton.filled(
-                      onPressed: widget.onPrintStickerCallback,
-                      child: const Text(
-                        "Print Sticker",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      )),
-                ]),
+              if (widget.doorbellId != null && dataStore.getDoorbellById(widget.doorbellId!)?.stickers.isEmpty == true) ...[
+                const Padding(padding: EdgeInsets.all(20)),
+                CupertinoButton.filled(
+                    onPressed: widget.onCreateStickerCallback,
+                    child: const Text(
+                      "Create Sticker",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    )),
+              ],
               const Padding(padding: EdgeInsets.all(50)),
             ],
           ));

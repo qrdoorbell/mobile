@@ -94,167 +94,135 @@ class _DoorbellScreenState extends State<DoorbellScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: floatButton,
       backgroundColor: Colors.white,
-      body: Padding(
-          padding: const EdgeInsets.only(left: 0, top: 10, right: 5),
-          child: CustomScrollView(slivers: <Widget>[
-            CupertinoSliverNavigationBar(
-              padding: const EdgeInsetsDirectional.only(start: 5, end: 10),
-              backgroundColor: Colors.white,
-              leading: CupertinoNavigationBarBackButton(
-                onPressed: () => Navigator.pop(context),
-                color: CupertinoColors.activeBlue,
-              ),
-              trailing: CupertinoButton(
-                padding: EdgeInsets.zero,
-                child: const Text(
-                  "Edit",
-                  style: TextStyle(color: CupertinoColors.activeBlue),
-                ),
-                onPressed: () => RouteStateScope.of(context).go('/doorbells/${widget.doorbellId}/edit'),
-              ),
-              middle: Text(doorbell.name),
-              largeTitle: Padding(padding: const EdgeInsets.only(left: 0), child: Text(doorbell.name)),
-              previousPageTitle: "Back",
-              border: Border.all(width: 0, color: Colors.white),
-              alwaysShowMiddle: false,
+      body: CustomScrollView(slivers: <Widget>[
+        CupertinoSliverNavigationBar(
+          padding: const EdgeInsetsDirectional.only(start: 5, end: 10),
+          backgroundColor: Colors.white,
+          leading: CupertinoNavigationBarBackButton(
+            onPressed: () => Navigator.pop(context),
+            color: CupertinoColors.activeBlue,
+          ),
+          trailing: CupertinoButton(
+            padding: EdgeInsets.zero,
+            child: const Text(
+              "Edit",
+              style: TextStyle(color: CupertinoColors.activeBlue),
             ),
+            onPressed: () => RouteStateScope.of(context).go('/doorbells/${widget.doorbellId}/edit'),
+          ),
+          middle: Text(doorbell.name),
+          largeTitle: Padding(padding: const EdgeInsets.only(left: 0), child: Text(doorbell.name)),
+          previousPageTitle: "Back",
+          border: Border.all(width: 0, color: Colors.white),
+          alwaysShowMiddle: false,
+        ),
 
-            // STICKERS
-            SliverList(
-                delegate: SliverChildListDelegate.fixed(<Widget>[
-              Row(children: [
-                const Padding(padding: EdgeInsets.only(left: 18, top: 10)),
-                const Text('Stickers for print', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400)),
-                const Spacer(),
-                CupertinoButton(
-                    child: const Text('See all'),
-                    onPressed: () async => {
-                          // TODO: #12 implement me
-                        })
-              ]),
-              Padding(
-                  padding: const EdgeInsets.only(left: 18),
-                  child: SizedBox(
-                      height: 105,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: <Widget>[
-                          // DOORBELL QR CODE
-                          StickerCard.fromIconData(CupertinoIcons.qrcode, Colors.grey,
-                              () => RouteStateScope.of(context).go('/doorbells/${widget.doorbellId}/qr')),
+        // STICKERS
+        SliverList(
+            delegate: SliverChildListDelegate.fixed(<Widget>[
+          const Padding(
+              padding: EdgeInsets.only(left: 18, top: 10, bottom: 10),
+              child: Text('Stickers for print', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400))),
+          SizedBox(
+              width: double.infinity,
+              height: 104,
+              child: ListView(scrollDirection: Axis.horizontal, children: <Widget>[
+                const Padding(padding: EdgeInsets.only(left: 15)),
 
-                          // STICKERS
-                          for (var sticker in doorbell.stickers.sortedBy((element) => element.updated ?? element.created).reversed) ...[
-                            const Padding(padding: EdgeInsets.all(5)),
-                            StickerHandlerFactory.getStickerIconWidget(sticker, () async {
-                              var updatedSticker = await _showStickerEditScreenModal(
-                                  context: context,
-                                  builder: (context) =>
-                                      StickerEditScreen(handler: sticker.handler, doorbellId: widget.doorbellId, sticker: sticker));
+                // DOORBELL QR CODE
+                StickerCard.fromIconData(
+                    CupertinoIcons.qrcode, Colors.grey, () => RouteStateScope.of(context).go('/doorbells/${widget.doorbellId}/qr')),
 
-                              if (updatedSticker != null) {
-                                setState(() {
-                                  doorbell.stickers.removeWhere((x) => x.stickerId == updatedSticker.stickerId);
-                                  doorbell.stickers.insert(0, updatedSticker);
-                                });
-                              }
-                            }),
-                          ],
+                // STICKERS
+                const Padding(padding: EdgeInsets.only(left: 15)),
+                for (var sticker in doorbell.stickers.sortedBy((element) => element.updated ?? element.created).reversed) ...[
+                  Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: StickerHandlerFactory.getStickerIconWidget(sticker, () async => await onStickerIconTap(doorbell, sticker))),
+                ],
 
-                          // ADD STICKER (+)
-                          const Padding(padding: EdgeInsets.all(15)),
-                          Padding(
-                            padding: const EdgeInsets.all(2),
-                            child: DottedBorder(
-                              borderPadding: const EdgeInsets.all(2),
-                              borderType: BorderType.RRect,
-                              radius: const Radius.circular(30),
-                              color: Colors.grey.shade300,
-                              dashPattern: const [8, 4],
-                              strokeWidth: 2,
-                              child: MaterialButton(
-                                  padding: EdgeInsets.zero,
-                                  minWidth: 96,
-                                  onPressed: () async {
-                                    var newSticker = await _showStickerEditScreenModal(
-                                        context: context,
-                                        builder: (context) => StickerEditScreen(
-                                            handler: 'sticker_v1', templateId: 'sticker_v1_vertical', doorbellId: widget.doorbellId));
+                // ADD STICKER (+)
+                const Padding(padding: EdgeInsets.only(left: 15)),
+                Padding(
+                    padding: const EdgeInsets.all(2),
+                    child: DottedBorder(
+                        borderPadding: const EdgeInsets.all(2),
+                        borderType: BorderType.RRect,
+                        radius: const Radius.circular(30),
+                        color: Colors.grey.shade300,
+                        dashPattern: const [8, 4],
+                        strokeWidth: 2,
+                        child: MaterialButton(
+                            padding: EdgeInsets.zero,
+                            minWidth: 96,
+                            onPressed: () async => await onStickerAddTap(doorbell),
+                            child: Padding(
+                                padding: const EdgeInsets.all(2),
+                                child: Center(
+                                    child: Text('+',
+                                        style: TextStyle(
+                                          color: Colors.grey.shade400,
+                                          fontSize: 40,
+                                          fontWeight: FontWeight.w200,
+                                        ))))))),
+                const Padding(padding: EdgeInsets.only(left: 15)),
+              ])),
+        ])),
 
-                                    if (newSticker != null) {
-                                      setState(() {
-                                        doorbell.stickers.add(newSticker);
-                                      });
-                                    }
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(2),
-                                    child: Center(
-                                        child: Text(
-                                      '+',
-                                      style: TextStyle(color: Colors.grey.shade400, fontSize: 40, fontWeight: FontWeight.w200),
-                                    )),
-                                  )),
-                            ),
-                          ),
-                        ],
-                      ))),
-            ])),
+        // USERS
+        SliverList(
+            delegate: SliverChildListDelegate.fixed(<Widget>[
+          const Padding(padding: EdgeInsets.only(top: 15)),
+          Row(children: [
+            const Padding(padding: EdgeInsets.only(left: 18)),
+            const Text('Shared with', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400)),
+            const Spacer(),
+            CupertinoButton(
+                child: const Text('Manage'), onPressed: () => {RouteStateScope.of(context).go('/doorbells/${widget.doorbellId}/users')})
+          ]),
+          Padding(
+              padding: const EdgeInsets.only(left: 18),
+              child: SizedBox(
+                  height: 45,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: <Widget>[
+                      for (var user in nonEmptyAvatars)
+                        Padding(
+                            padding: const EdgeInsets.only(right: 4),
+                            child: CircleAvatar(
+                                backgroundColor: user.userColor,
+                                minRadius: 20,
+                                child: Text(user.userShortName ?? "--",
+                                    textScaleFactor: 1, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)))),
+                      if (nonEmptyAvatars.isNotEmpty && emptyAvatarsCount > 0)
+                        Padding(
+                            padding: const EdgeInsets.only(left: 8, top: 15),
+                            child: Text("+$emptyAvatarsCount",
+                                textScaleFactor: 1, style: const TextStyle(color: CupertinoColors.inactiveGray))),
+                    ],
+                  )))
+        ])),
 
-            // USERS
-            SliverList(
-                delegate: SliverChildListDelegate.fixed(<Widget>[
-              Row(children: [
-                const Padding(padding: EdgeInsets.only(left: 18, top: 30)),
-                const Text('Shared with', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400)),
-                const Spacer(),
-                CupertinoButton(
-                    child: const Text('Manage'), onPressed: () => {RouteStateScope.of(context).go('/doorbells/${widget.doorbellId}/users')})
-              ]),
-              Padding(
-                  padding: const EdgeInsets.only(left: 18),
-                  child: SizedBox(
-                      height: 45,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: <Widget>[
-                          for (var user in nonEmptyAvatars)
-                            Padding(
-                                padding: const EdgeInsets.only(right: 4),
-                                child: CircleAvatar(
-                                    backgroundColor: user.userColor,
-                                    minRadius: 20,
-                                    child: Text(user.userShortName ?? "--",
-                                        textScaleFactor: 1, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)))),
-                          if (nonEmptyAvatars.isNotEmpty && emptyAvatarsCount > 0)
-                            Padding(
-                                padding: const EdgeInsets.only(left: 8, top: 15),
-                                child: Text("+$emptyAvatarsCount",
-                                    textScaleFactor: 1, style: const TextStyle(color: CupertinoColors.inactiveGray))),
-                        ],
-                      )))
-            ])),
+        // EVENTS
+        const SliverList(
+            delegate: SliverChildListDelegate.fixed(<Widget>[
+          Padding(
+              padding: EdgeInsets.only(left: 20, top: 30, right: 5),
+              child: Text('Events', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400))),
+        ])),
 
-            // EVENTS
-            const SliverList(
-                delegate: SliverChildListDelegate.fixed(<Widget>[
-              Padding(
-                  padding: EdgeInsets.only(left: 20, top: 30, right: 5),
-                  child: Text('Events', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400))),
-            ])),
-
-            CupertinoSliverRefreshControl(
-              onRefresh: () async {
-                await RouteStateScope.of(context).wait(dataStore.reloadData(false));
-              },
-            ),
-            EventList(
-              doorbellId: widget.doorbellId,
-              onShareDoorbellCallback: () => DoorbellScreen.shareDoorbell(context, doorbell),
-              // onPrintStickerCallback: () => _printSticker(doorbell),
-              onPrintStickerCallback: () => RouteStateScope.of(context).go('/doorbells/${widget.doorbellId}/qr'),
-            ),
-          ])),
+        CupertinoSliverRefreshControl(
+          onRefresh: () async {
+            await RouteStateScope.of(context).wait(dataStore.reloadData(false));
+          },
+        ),
+        EventList(
+          doorbellId: widget.doorbellId,
+          onShareDoorbellCallback: () => DoorbellScreen.shareDoorbell(context, doorbell),
+          onCreateStickerCallback: () => onStickerAddTap(doorbell),
+        ),
+      ]),
     ));
   }
 
@@ -267,8 +235,35 @@ class _DoorbellScreenState extends State<DoorbellScreen> {
       useSafeArea: true,
       useRootNavigator: false,
       clipBehavior: Clip.hardEdge,
+      isDismissible: false,
+      elevation: 10,
       context: context,
       builder: builder,
     );
+  }
+
+  Future<void> onStickerIconTap(Doorbell doorbell, StickerInfo sticker) async {
+    var updatedSticker = await _showStickerEditScreenModal(
+        context: context,
+        builder: (context) => StickerEditScreen(handler: sticker.handler, doorbellId: widget.doorbellId, sticker: sticker));
+
+    if (updatedSticker != null) {
+      setState(() {
+        doorbell.stickers.removeWhere((x) => x.stickerId == updatedSticker.stickerId);
+        doorbell.stickers.insert(0, updatedSticker);
+      });
+    }
+  }
+
+  Future<void> onStickerAddTap(Doorbell doorbell) async {
+    var newSticker = await _showStickerEditScreenModal(
+        context: context,
+        builder: (context) => StickerEditScreen(handler: 'sticker_v1', templateId: 'sticker_v1_vertical', doorbellId: widget.doorbellId));
+
+    if (newSticker != null) {
+      setState(() {
+        doorbell.stickers.add(newSticker);
+      });
+    }
   }
 }

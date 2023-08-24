@@ -87,8 +87,8 @@ final class StickerInfo<TData extends StickerData> {
   final Map _info;
   late final TData data;
 
-  String get doorbellId => _info['doorbellId'];
-  String get stickerId => _info['stickerId'];
+  String get doorbellId => _info['doorbellId'] ?? '';
+  String get stickerId => _info['stickerId'] ?? '';
   String get handler => _info['handler'];
   DateTime get created => DateTime.fromMillisecondsSinceEpoch(_info['created']?.toInt() ?? DateTime.now().millisecondsSinceEpoch);
   DateTime? get updated => _info['updated'] != null ? DateTime.fromMillisecondsSinceEpoch(_info['updated']?.toInt()) : null;

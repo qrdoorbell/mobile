@@ -40,7 +40,8 @@ class HttpUtils {
       throw AssertionError('Cannot get JWT token');
     }
 
-    var result = await post(url, body: body, headers: {'Authorization': 'Bearer $jwtToken', 'Content-Type': 'application/json'});
+    var data = body is List<int> ? body : utf8.encode(body is String ? body : jsonEncode(body));
+    var result = await post(url, body: data, headers: {'Authorization': 'Bearer $jwtToken', 'Content-Type': 'application/json'});
     var duration = DateTime.now().millisecondsSinceEpoch - startTime;
 
     logger.fine('End HTTP POST: $url, status=${result.statusCode}, duration=$duration');
