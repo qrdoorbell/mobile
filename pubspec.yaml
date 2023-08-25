@@ -17,15 +17,16 @@ platforms:
   - ios:
 
 environment:
-  sdk: '^3.0.0'
+  flutter: ^3.13.1
+  sdk: ^3.1.0
 
 dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
   provider: ^6.0.2
-  livekit_client: ^1.4.1
-  flutter_webrtc: ^0.9.37
+  livekit_client: ^1.4.3
+  flutter_webrtc: ^0.9.40
   firebase_core: ^2.5.0
   firebase_messaging: ^14.2.1
   firebase_analytics: ^10.4.4

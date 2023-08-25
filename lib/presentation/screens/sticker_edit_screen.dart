@@ -46,7 +46,10 @@ class _StickerEditScreenState extends State<StickerEditScreen> {
         navigationBar: CupertinoNavigationBar(
             backgroundColor: CupertinoColors.white,
             padding: const EdgeInsetsDirectional.only(start: 5, end: 10),
-            leading: CupertinoNavigationBarBackButton(onPressed: onBackButtonTap, color: CupertinoColors.activeBlue),
+            leading: IconButton(
+              onPressed: onBackButtonTap,
+              icon: const Icon(CupertinoIcons.chevron_back, color: CupertinoColors.activeBlue),
+            ),
             trailing: CupertinoButton(
               padding: EdgeInsets.zero,
               onPressed: onDeleteButtonTap,
@@ -83,7 +86,9 @@ class _StickerEditScreenState extends State<StickerEditScreen> {
     if (mounted) setState(() {});
   }
 
-  Future<void> onUpdateSticker(StickerInfo stickerInfo) async => await StickerService().updateSticker(stickerInfo);
+  Future<void> onUpdateSticker(StickerInfo stickerInfo) async {
+    await StickerService().updateSticker(stickerInfo);
+  }
 
   Future<void> printSticker(StickerInfo stickerInfo) async {
     var stickerPrint = await StickerService().getStickerPdf(stickerInfo.doorbellId, stickerInfo.stickerId);
@@ -98,21 +103,6 @@ class _StickerEditScreenState extends State<StickerEditScreen> {
     }
   }
 
-  Future<StickerInfo?> onCreateSticker() async {
-    var stickerInfo = _stickerEditController.sticker;
-    if (widget.sticker == null) {
-      var newSticker = await StickerService().createSticker(widget.handler, widget.templateId, widget.doorbellId, stickerInfo.data.toMap());
-
-      if (newSticker == null) return null;
-
-      await printSticker(newSticker);
-      return newSticker;
-    } else if (_stickerEditController.isSettingsChanged) await onUpdateSticker(stickerInfo);
-
-    await printSticker(stickerInfo);
-    return stickerInfo;
-  }
-
   Future<StickerInfo?> onPrintButtonTap() async {
     var stickerInfo = _stickerEditController.sticker;
     if (widget.sticker == null) {
@@ -120,12 +110,12 @@ class _StickerEditScreenState extends State<StickerEditScreen> {
       if (newSticker == null) return null;
 
       await printSticker(newSticker);
-
       return newSticker;
     } else if (_stickerEditController.isSettingsChanged) {
       await onUpdateSticker(stickerInfo);
-      await printSticker(stickerInfo);
+      stickerInfo.data.acceptChanges();
 
+      await printSticker(stickerInfo);
       return stickerInfo;
     }
 
@@ -144,19 +134,32 @@ class _StickerEditScreenState extends State<StickerEditScreen> {
                     onPressed: () => Navigator.of(context).pop(true)),
                 CupertinoDialogAction(child: const Text('Discard'), onPressed: () => Navigator.of(context).pop(false)),
               ]));
+
       if (saveChanges == false) {
         return nav.pop(null);
       }
 
-      var newSticker = await StickerService()
-          .createSticker(widget.handler, widget.templateId, widget.doorbellId, _stickerEditController.sticker.data.toMap());
-      return nav.pop(newSticker);
+      var s = await nav.waitWithScreenThenPop<StickerInfo>(() async {
+        var newSticker = await StickerService()
+            .createSticker(widget.handler, widget.templateId, widget.doorbellId, _stickerEditController.sticker.data.toMap());
+
+        _stickerEditController.sticker.data.clear();
+        return newSticker;
+      }, false);
+
+      nav.pop(s);
+      return;
     }
 
-    var stickerInfo = _stickerEditController.sticker;
     if (widget.sticker != null && _stickerEditController.isSettingsChanged) {
-      await onUpdateSticker(stickerInfo);
-      return nav.pop(stickerInfo);
+      await nav.waitWithScreenThenPop<StickerInfo>(() async {
+        await onUpdateSticker(_stickerEditController.sticker);
+        _stickerEditController.sticker.data.acceptChanges();
+
+        return _stickerEditController.sticker;
+      });
+
+      return;
     }
 
     return nav.pop(null);

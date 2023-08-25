@@ -145,6 +145,9 @@ abstract class StickerData {
 
   Map toMap() => _data;
 
+  void acceptChanges() => _isChanged = false;
+  void clear() => _data.clear();
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;

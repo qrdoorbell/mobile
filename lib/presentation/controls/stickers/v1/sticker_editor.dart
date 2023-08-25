@@ -57,24 +57,11 @@ class _StickerV1SettingsWidgetState extends State<StickerV1SettingsWidget> {
   final _aptNumberController = TextEditingController();
   bool _showColorPicker = false;
 
-  _pickIcon() async {
-    IconData? iconData = await FlutterIconPicker.showIconPicker(
-      context,
-      iconPackModes: [IconPack.cupertino],
-      adaptiveDialog: true,
-      iconSize: 32,
-      showSearchBar: false,
-      iconColor: (widget.controller.sticker.data.accentColor ?? Colors.yellow).shade700,
-    );
-
-    if (iconData != null) setState(() => widget.controller.set((data) => data.icon = iconData));
-  }
-
   @override
   void initState() {
     super.initState();
     _aptNumberController.text = widget.controller.sticker.data.apt;
-    _aptNumberController.addListener(_aptNumberControllerListener);
+    _aptNumberController.addListener(onTextChanged);
   }
 
   @override
@@ -99,14 +86,16 @@ class _StickerV1SettingsWidgetState extends State<StickerV1SettingsWidget> {
                 Text('(apt. / building / etc.)', style: TextStyle(color: CupertinoColors.systemGrey3)),
               ],
             ),
-            placeholder: '4 chars max',
+            placeholder: '12 chars max',
             placeholderStyle: const TextStyle(color: CupertinoColors.systemGrey3),
-            maxLength: 4,
+            maxLength: 12,
             onTapOutside: (event) {
               FocusManager.instance.primaryFocus?.unfocus();
+              onTextChanged();
             },
             onEditingComplete: () {
               FocusManager.instance.primaryFocus?.unfocus();
+              onTextChanged();
             },
           )),
           if (!_showColorPicker)
@@ -158,7 +147,7 @@ class _StickerV1SettingsWidgetState extends State<StickerV1SettingsWidget> {
               ]),
               additionalInfo: const Text('more icons', style: TextStyle(color: CupertinoColors.systemGrey3)),
               trailing: const CupertinoListTileChevron(),
-              onTap: _pickIcon),
+              onTap: onPickIconTap),
           CupertinoListTile(
               title: const Text('Layout'),
               trailing: Row(mainAxisSize: MainAxisSize.min, children: [
@@ -176,12 +165,27 @@ class _StickerV1SettingsWidgetState extends State<StickerV1SettingsWidget> {
 
   @override
   void dispose() {
-    _aptNumberController.removeListener(_aptNumberControllerListener);
+    _aptNumberController.removeListener(onTextChanged);
     _aptNumberController.dispose();
     super.dispose();
   }
 
-  void _aptNumberControllerListener() => widget.controller.set((settings) => settings.apt = _aptNumberController.value.text.trim());
+  onPickIconTap() async {
+    IconData? iconData = await FlutterIconPicker.showIconPicker(
+      context,
+      iconPackModes: [IconPack.cupertino],
+      adaptiveDialog: true,
+      iconSize: 32,
+      showSearchBar: false,
+      iconColor: (widget.controller.sticker.data.accentColor ?? Colors.yellow).shade700,
+    );
+
+    if (iconData != null) setState(() => widget.controller.set((data) => data.icon = iconData));
+  }
+
+  void onTextChanged() {
+    widget.controller.set((settings) => settings.apt = _aptNumberController.value.text.trim());
+  }
 
   static Widget _singleColorButton(MaterialColor color, void Function()? onTap) {
     return InkWell(

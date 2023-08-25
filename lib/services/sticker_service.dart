@@ -5,6 +5,7 @@ import '../app_options.dart';
 import '../data.dart';
 import '../model/sticker.dart';
 import '../tools.dart';
+import 'sticker_handler_factory.dart';
 
 class StickerService {
   static final StickerService _instance = StickerService._internal();
@@ -31,7 +32,7 @@ class StickerService {
         body: jsonEncode({'handler': handler, 'templateId': templateId, 'data': data}));
 
     if (response.statusCode != 200) throw Exception('ERROR: unable to create sticker: responseCode=${response.statusCode}');
-    return StickerInfo(Map.from(json.decode(response.body)));
+    return StickerHandlerFactory.createStickerInfo(jsonDecode(response.body));
   }
 
   Future<void> updateSticker(StickerInfo stickerInfo) async {
@@ -40,6 +41,8 @@ class StickerService {
         body: jsonEncode({'data': stickerInfo.data.toMap()}));
 
     if (response.statusCode != 200) throw Exception('ERROR: unable to update sticker: responseCode=${response.statusCode}');
+
+    stickerInfo.data.acceptChanges();
   }
 
   Future<void> deleteSticker(StickerInfo stickerInfo) async {

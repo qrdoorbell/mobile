@@ -243,14 +243,14 @@ class _DoorbellScreenState extends State<DoorbellScreen> {
   }
 
   Future<void> onStickerIconTap(Doorbell doorbell, StickerInfo sticker) async {
-    var updatedSticker = await _showStickerEditScreenModal(
+    await _showStickerEditScreenModal(
         context: context,
         builder: (context) => StickerEditScreen(handler: sticker.handler, doorbellId: widget.doorbellId, sticker: sticker));
 
-    if (updatedSticker != null) {
+    if (sticker.data.isChanged) {
       setState(() {
-        doorbell.stickers.removeWhere((x) => x.stickerId == updatedSticker.stickerId);
-        doorbell.stickers.insert(0, updatedSticker);
+        doorbell.stickers.removeWhere((x) => x.stickerId == sticker.stickerId);
+        doorbell.stickers.insert(0, sticker);
       });
     }
   }

@@ -104,13 +104,18 @@ class PeriodicChangeNotifier extends ChangeNotifier {
 }
 
 extension NavigatorExtensions on NavigatorState {
-  FutureOr<T?> waitWithScreenThenPop<T extends Object?>(FutureOr<T?> Function() func) => waitFutureWithScreenThenPop<T>(func());
+  FutureOr<T?> waitWithScreenThenPop<T extends Object?>(FutureOr<T?> Function() func, [bool? replaceRoute = true]) =>
+      waitFutureWithScreenThenPop<T>(func(), replaceRoute);
 
-  FutureOr<T?> waitFutureWithScreenThenPop<T extends Object?>(FutureOr<T?> futureToWait) async {
+  FutureOr<T?> waitFutureWithScreenThenPop<T extends Object?>(FutureOr<T?> futureToWait, [bool? replaceRoute = true]) async {
     T? result;
     var route = MaterialPageRoute(builder: (context) => EmptyScreen.white().withWaitingIndicator());
     try {
-      pushReplacement(route);
+      if (replaceRoute == false)
+        push(route);
+      else
+        pushReplacement(route);
+
       result = await futureToWait;
     } finally {
       route.navigator?.pop(result);
