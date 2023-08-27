@@ -37,7 +37,6 @@ dependencies:
   firebase_ui_oauth_apple: ^1.0.21
   firebase_ui_oauth_google: ^1.0.21
   firebase_remote_config: ^4.2.4
-  flutter_callkeep: ^0.3.2
   shared_preferences: ^2.0.17
   path_to_regexp: ^0.4.0
   adaptive_navigation: ^0.0.3
@@ -56,7 +55,15 @@ dependencies:
   flutter_html: ^3.0.0-beta.2
   flutter_svg: ^2.0.7
   dotted_border: ^2.0.0+3
-  flutter_iconpicker: ^3.2.4
+  bottom_sheet: ^4.0.0
+  flutter_iconpicker:
+    git:
+      url: https://github.com/qrdoorbell/FlutterIconPicker.git
+      ref: master
+  flutter_callkeep:
+    git:
+      url: https://github.com/qrdoorbell/flutter_callkeep.git
+      ref: master
 
 dev_dependencies:
   flutter_lints: ^2.0.0
@@ -64,7 +71,6 @@ dev_dependencies:
     git:
       url: https://github.com/fluttercommunity/flutter_launcher_icons.git
       ref: 26fedcee4b0e6f7a85f65f1fb48834a21f57e970
-  dart_code_metrics: ^4.19.2
 
 flutter:
   uses-material-design: true

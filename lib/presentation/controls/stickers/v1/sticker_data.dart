@@ -54,7 +54,8 @@ class StickerV1Data extends StickerData {
     }
 
     try {
-      set('icon', jsonEncode(serializeIcon(value, iconPack: IconPack.cupertino)));
+      var iconData = serializeIcon(value, iconPack: IconPack.cupertino)?..['codePoint'] = value.codePoint;
+      set('icon', jsonEncode(iconData));
     } catch (e) {
       logger.warning('Cannot serialize icon: error=$e');
       set('icon', null);

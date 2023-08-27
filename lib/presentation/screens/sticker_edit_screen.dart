@@ -114,12 +114,10 @@ class _StickerEditScreenState extends State<StickerEditScreen> {
     } else if (_stickerEditController.isSettingsChanged) {
       await onUpdateSticker(stickerInfo);
       stickerInfo.data.acceptChanges();
-
-      await printSticker(stickerInfo);
-      return stickerInfo;
     }
 
-    return null;
+    await printSticker(stickerInfo);
+    return stickerInfo;
   }
 
   Future<void> onBackButtonTap() async {

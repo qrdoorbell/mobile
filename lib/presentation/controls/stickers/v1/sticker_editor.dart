@@ -175,9 +175,10 @@ class _StickerV1SettingsWidgetState extends State<StickerV1SettingsWidget> {
       context,
       iconPackModes: [IconPack.cupertino],
       adaptiveDialog: true,
-      iconSize: 32,
+      iconSize: 40,
       showSearchBar: false,
       iconColor: (widget.controller.sticker.data.accentColor ?? Colors.yellow).shade700,
+      selectedIcon: widget.controller.sticker.data.icon,
     );
 
     if (iconData != null) setState(() => widget.controller.set((data) => data.icon = iconData));
