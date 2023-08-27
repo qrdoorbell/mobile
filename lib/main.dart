@@ -18,7 +18,7 @@ import 'package:logging/logging.dart';
 import 'package:uni_links/uni_links.dart';
 
 // import 'services/newrelic_logger.dart';
-import 'presentation/controls/stickers/v1/sticker_editor.dart';
+import 'presentation/controls/stickers/v1/sticker_v11_controller.dart';
 import 'services/db/firebase_data_store.dart';
 import 'services/callkit_service.dart';
 import 'routing.dart';
@@ -67,7 +67,7 @@ Future<void> main() async {
   FirebaseDatabase.instance.setPersistenceEnabled(true);
 
   // Stickers registration
-  StickerV1Controller.register();
+  StickerV11Controller.register();
 
   runApp(const QRDoorbellApp());
 }

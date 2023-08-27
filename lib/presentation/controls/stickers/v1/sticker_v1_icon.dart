@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../sticker_card.dart';
-import 'sticker_data.dart';
+import 'sticker_v1_data.dart';
 
 class StickerV1Icon extends StatelessWidget {
   final StickerV1Data stickerData;

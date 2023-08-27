@@ -57,29 +57,47 @@ class _StickerEditScreenState extends State<StickerEditScreen> {
             ),
             middle: Text(
                 "Sticker: ${_stickerEditController.sticker.displayName?.isEmpty == true ? 'new' : _stickerEditController.sticker.displayName}")),
-        child: ListView(children: [
-          Container(
-              color: CupertinoColors.systemGroupedBackground,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
               child: Container(
-                  clipBehavior: Clip.hardEdge,
-                  padding: const EdgeInsets.all(20),
+                  clipBehavior: Clip.none,
+                  alignment: Alignment.center,
                   decoration: const BoxDecoration(
                       color: CupertinoColors.systemGroupedBackground,
-                      border: Border.symmetric(vertical: BorderSide(color: CupertinoColors.systemGrey3, width: 1))),
-                  child: _stickerEditController.previewWidget)),
-          _stickerEditController.settingsWidget,
-          Container(
-              color: Colors.white,
-              padding: const EdgeInsets.only(left: 40, right: 40, top: 20, bottom: 10),
-              child: CupertinoButton.filled(
-                  onPressed: () => Navigator.of(context).waitWithScreenThenPop<StickerInfo>(onPrintButtonTap),
-                  child: const Text('Print Sticker', style: TextStyle(fontWeight: FontWeight.bold)))),
-          Container(
-              color: Colors.white,
-              padding: const EdgeInsets.only(left: 40, right: 40),
-              child: const Text('You can print your sticker or save to photos.',
-                  style: TextStyle(color: CupertinoColors.inactiveGray, fontSize: 14), textAlign: TextAlign.center)),
-        ]));
+                      border: Border.symmetric(vertical: BorderSide(color: CupertinoColors.systemGrey2, width: 1))),
+                  child: _stickerEditController.previewWidget),
+            ),
+            Flexible(
+              fit: FlexFit.loose,
+              flex: 0,
+              child: Container(
+                clipBehavior: Clip.hardEdge,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: CupertinoColors.systemBackground,
+                ),
+                child: Column(
+                  children: [
+                    _stickerEditController.settingsWidget,
+                    Container(
+                        color: Colors.white,
+                        padding: const EdgeInsets.only(left: 40, right: 40, top: 20, bottom: 10),
+                        child: CupertinoButton.filled(
+                            onPressed: () => Navigator.of(context).waitWithScreenThenPop<StickerInfo>(onPrintButtonTap),
+                            child: const Text('Print Sticker', style: TextStyle(fontWeight: FontWeight.bold)))),
+                    Container(
+                        color: Colors.white,
+                        padding: const EdgeInsets.only(left: 40, right: 40, bottom: 20),
+                        child: const Text('You can print your sticker or save to photos.',
+                            style: TextStyle(color: CupertinoColors.inactiveGray, fontSize: 14), textAlign: TextAlign.center)),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ));
   }
 
   void _stickerEditControllerListener() {

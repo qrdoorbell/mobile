@@ -1,67 +1,28 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
+import 'sticker_v11_controller.dart';
 
-import '../../../../services/sticker_handler_factory.dart';
-import '../../../../model/sticker.dart';
-import '../sticker_edit_controller.dart';
-import 'sticker_data.dart';
-import 'sticker_icon.dart';
-import 'sticker_v11_preview.dart';
+class StickerV11SettingsWidget extends StatefulWidget {
+  final StickerV11Controller controller;
 
-class StickerV1Service extends StickerHandlerService<StickerV1Data> {
-  StickerV1Service() : super(handler: 'sticker_v1', templateIds: ['sticker_v1_vertical', 'sticker_v1_horizontal']);
+  const StickerV11SettingsWidget({super.key, required this.controller});
 
   @override
-  StickerV1Data getStickerData(StickerInfo sticker) {
-    sticker.raw['data'] ??= StickerV1Data.defaultData;
-    return StickerV1Data(sticker.raw['data']);
-  }
-
-  @override
-  StickerEditController<StickerV1Data> createEditController(StickerInfo<StickerV1Data>? sticker) =>
-      StickerV1Controller(sticker ?? StickerInfo<StickerV1Data>({'handler': 'sticker_v1', 'data': StickerV1Data.defaultData}));
-
-  @override
-  Widget getStickerIconWidget(StickerInfo sticker, void Function()? onPressed) =>
-      StickerV1Icon(stickerData: sticker.data as StickerV1Data, onPressed: onPressed);
-
-  @override
-  StickerInfo<StickerV1Data> createStickerInfo(Map data) => StickerInfo<StickerV1Data>(data);
+  State<StickerV11SettingsWidget> createState() => _StickerV11SettingsWidgetState();
 }
 
-class StickerV1Controller extends StickerEditController<StickerV1Data> {
-  static void register() {
-    StickerHandlerFactory.register<StickerV1Service, StickerV1Data>(StickerV1Service());
-  }
-
-  StickerV1Controller(super.sticker);
-
-  @override
-  Widget createPreviewWidget() => StickerV11Preview.create(controller: this);
-
-  @override
-  Widget createSettingsWidget() => StickerV1SettingsWidget(controller: this);
-}
-
-class StickerV1SettingsWidget extends StatefulWidget {
-  final StickerEditController<StickerV1Data> controller;
-
-  const StickerV1SettingsWidget({super.key, required this.controller});
-
-  @override
-  State<StickerV1SettingsWidget> createState() => _StickerV1SettingsWidgetState();
-}
-
-class _StickerV1SettingsWidgetState extends State<StickerV1SettingsWidget> {
+class _StickerV11SettingsWidgetState extends State<StickerV11SettingsWidget> {
   final _aptNumberController = TextEditingController();
-  bool _showColorPicker = false;
+
+  MaterialColor get accentColor => widget.controller.sticker.data.accentColor ?? Colors.yellow;
 
   @override
   void initState() {
     super.initState();
     _aptNumberController.text = widget.controller.sticker.data.apt;
     _aptNumberController.addListener(onTextChanged);
+    widget.controller.addListener(onControllerDataChanged);
   }
 
   @override
@@ -79,6 +40,7 @@ class _StickerV1SettingsWidgetState extends State<StickerV1SettingsWidget> {
             controller: _aptNumberController,
             decoration: const BoxDecoration(),
             textAlign: TextAlign.right,
+            focusNode: widget.controller.aptTextFocusNode,
             prefix: const Row(
               children: [
                 Text('Text'),
@@ -98,39 +60,52 @@ class _StickerV1SettingsWidgetState extends State<StickerV1SettingsWidget> {
               onTextChanged();
             },
           )),
-          if (!_showColorPicker)
+          if (!widget.controller.isColorPickerVisible)
             CupertinoListTile(
               title: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Text('Accent color'),
                   const SizedBox(width: 10),
-                  _singleColorButton(widget.controller.sticker.data.accentColor ?? Colors.yellow, () {}),
+                  _singleColorButton(accentColor, () => setState(() => widget.controller.isColorPickerVisible = true)),
                 ],
               ),
               additionalInfo: const Text('more colors', style: TextStyle(color: CupertinoColors.systemGrey3)),
               trailing: const CupertinoListTileChevron(),
-              onTap: () => setState(() => _showColorPicker = !_showColorPicker),
+              onTap: () => setState(() => widget.controller.isColorPickerVisible = true),
             ),
-          if (_showColorPicker)
+          if (widget.controller.isColorPickerVisible)
             SizedBox(
               height: 44,
               child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
+                padding: const EdgeInsets.symmetric(horizontal: 0),
                 physics: const BouncingScrollPhysics(),
                 shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
                 children: Colors.primaries
+                    .where((c) => c != accentColor)
                     .map((c) => Padding(
                         padding: const EdgeInsets.all(5),
                         child: _singleColorButton(
                           c,
                           () => setState(() {
-                            _showColorPicker = false;
+                            widget.controller.isColorPickerVisible = false;
                             widget.controller.set((data) => data.accentColor = c);
                           }),
                         )))
-                    .toList(),
+                    .toList()
+                  ..insertAll(0, [
+                    Padding(
+                        padding: const EdgeInsets.only(top: 3, bottom: 5, left: 0, right: 0),
+                        child: IconButton(
+                          alignment: Alignment.topLeft,
+                          onPressed: () => setState(() => widget.controller.isColorPickerVisible = false),
+                          icon: const Icon(CupertinoIcons.chevron_back, color: CupertinoColors.systemGrey3),
+                        )),
+                    Padding(
+                        padding: const EdgeInsets.only(top: 5, bottom: 5, left: 0, right: 20),
+                        child: _singleColorButton(accentColor, () => setState(() => widget.controller.isColorPickerVisible = false))),
+                  ]),
               ),
             ),
           CupertinoListTile(
@@ -141,7 +116,7 @@ class _StickerV1SettingsWidgetState extends State<StickerV1SettingsWidget> {
                   duration: const Duration(milliseconds: 300),
                   child: Icon(
                     widget.controller.sticker.data.icon ?? CupertinoIcons.bell_fill,
-                    color: (widget.controller.sticker.data.accentColor ?? Colors.yellow).shade600,
+                    color: accentColor.shade600,
                   ),
                 )
               ]),
@@ -165,6 +140,7 @@ class _StickerV1SettingsWidgetState extends State<StickerV1SettingsWidget> {
 
   @override
   void dispose() {
+    widget.controller.removeListener(onControllerDataChanged);
     _aptNumberController.removeListener(onTextChanged);
     _aptNumberController.dispose();
     super.dispose();
@@ -175,13 +151,21 @@ class _StickerV1SettingsWidgetState extends State<StickerV1SettingsWidget> {
       context,
       iconPackModes: [IconPack.cupertino],
       adaptiveDialog: true,
-      iconSize: 40,
+      iconSize: 42,
       showSearchBar: false,
-      iconColor: (widget.controller.sticker.data.accentColor ?? Colors.yellow).shade700,
+      iconColor: accentColor.shade700,
       selectedIcon: widget.controller.sticker.data.icon,
     );
 
     if (iconData != null) setState(() => widget.controller.set((data) => data.icon = iconData));
+  }
+
+  void onControllerDataChanged() {
+    if (widget.controller.isEditingText)
+      widget.controller.aptTextFocusNode.requestFocus();
+    else if (widget.controller.isIconPickerVisible) onPickIconTap();
+
+    widget.controller.resetFlags();
   }
 
   void onTextChanged() {

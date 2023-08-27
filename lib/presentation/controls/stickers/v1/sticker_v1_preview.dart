@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../sticker_edit_controller.dart';
-import 'sticker_data.dart';
+import 'sticker_v1_data.dart';
 
 class StickerV1Preview extends StatefulWidget {
   final StickerEditController<StickerV1Data> controller;

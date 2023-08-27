@@ -55,7 +55,6 @@ dependencies:
   flutter_html: ^3.0.0-beta.2
   flutter_svg: ^2.0.7
   dotted_border: ^2.0.0+3
-  bottom_sheet: ^4.0.0
   flutter_iconpicker:
     git:
       url: https://github.com/qrdoorbell/FlutterIconPicker.git
