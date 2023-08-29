@@ -7,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
 import 'package:flutter/cupertino.dart';
@@ -47,6 +48,16 @@ Future<void> main() async {
   await Firebase.initializeApp();
   await AppSettings.initialize();
 
+  await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(AppSettings.crashlyticsEnabled);
+
+  bool lastCrashlyticsEnabled = AppSettings.crashlyticsEnabled;
+  AppSettings().addListener(() async {
+    if (lastCrashlyticsEnabled != AppSettings.crashlyticsEnabled) {
+      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(AppSettings.crashlyticsEnabled);
+      lastCrashlyticsEnabled = AppSettings.crashlyticsEnabled;
+    }
+  });
+
   FlutterError.onError = (errorDetails) {
     logger.shout("FlutterError.onError: ${errorDetails.exception.toString()}\nStack trace: ${errorDetails.stack?.toString()}");
     if (AppSettings.crashlyticsEnabled == true) FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
@@ -58,6 +69,10 @@ Future<void> main() async {
 
     return true;
   };
+
+  FirebaseRemoteConfig.instance.onConfigUpdated.listen((event) async {
+    logger.info('Remote config settings updated: $event');
+  });
 
   FirebaseUIAuth.configureProviders([
     EmailAuthProvider(),

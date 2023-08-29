@@ -13,8 +13,8 @@ class AppSettings extends ChangeNotifier {
     FirebaseRemoteConfig.instance.setDefaults({
       'GOOGLE_CLIENT_ID': const String.fromEnvironment('GOOGLE_CLIENT_ID', defaultValue: ''),
       'USE_GOOGLE_ANALYTICS': const bool.fromEnvironment('USE_GOOGLE_ANALYTICS', defaultValue: false),
-      'USE_CRASHALYTICS': const bool.fromEnvironment('USE_CRASHALYTICS', defaultValue: false),
-      'USE_CRASHALYTICS_LOGS': const bool.fromEnvironment('USE_CRASHALYTICS_LOGS', defaultValue: false),
+      'USE_CRASHALYTICS': const bool.fromEnvironment('USE_CRASHALYTICS', defaultValue: true),
+      'USE_CRASHALYTICS_LOGS': const bool.fromEnvironment('USE_CRASHALYTICS_LOGS', defaultValue: true),
       'CRASHALYTICS_LOG_LEVEL': const int.fromEnvironment('CRASHALYTICS_LOG_LEVEL', defaultValue: 900),
       'QRDOORBELL_INVITE_API_URL': const String.fromEnvironment('QRDOORBELL_INVITE_API_URL', defaultValue: 'https://j.qrdoorbell.io'),
       'QRDOORBELL_API_URL': const String.fromEnvironment('QRDOORBELL_API_URL', defaultValue: 'https://api.qrdoorbell.io'),

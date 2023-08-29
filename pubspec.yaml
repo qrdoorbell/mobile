@@ -29,7 +29,6 @@ dependencies:
   flutter_webrtc: ^0.9.40
   firebase_core: ^2.5.0
   firebase_messaging: ^14.2.1
-  firebase_analytics: ^10.4.4
   firebase_database: ^10.0.9
   firebase_crashlytics: ^3.0.17
   firebase_auth: ^4.2.5
@@ -37,7 +36,6 @@ dependencies:
   firebase_ui_oauth_apple: ^1.0.21
   firebase_ui_oauth_google: ^1.0.21
   firebase_remote_config: ^4.2.4
-  shared_preferences: ^2.0.17
   path_to_regexp: ^0.4.0
   adaptive_navigation: ^0.0.3
   collection: ^1.17.1
