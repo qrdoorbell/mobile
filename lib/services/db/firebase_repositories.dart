@@ -69,10 +69,15 @@ class DoorbellsRepository extends FirebaseRepository<Doorbell> {
   }
 
   Future<Doorbell?> _loadOne(Future<DataSnapshot> snapshotLoader) async {
-    var snapshot = await snapshotLoader;
-    if (!snapshot.exists) return null;
+    try {
+      var snapshot = await snapshotLoader;
+      if (!snapshot.exists) return null;
 
-    return Doorbell.fromSnapshot(snapshot);
+      return Doorbell.fromSnapshot(snapshot);
+    } catch (e) {
+      logger.warning('Cannot load doorbell from snapshot', e);
+      return null;
+    }
   }
 }
 
@@ -95,7 +100,14 @@ class DoorbellEventsRepository extends FirebaseRepository<DoorbellEvent> {
     await dataStore.runTransaction(() async {
       for (var doorbell in doorbellsRepository.items) {
         var events = await db.ref('doorbell-events/${doorbell.doorbellId}').get();
-        _items.addAll(events.children.map((x) => DoorbellEvent.fromMap(x.value as Map)).whereNotNull());
+        _items.addAll(events.children.map((x) {
+          try {
+            return DoorbellEvent.fromMap(x.value as Map);
+          } catch (e) {
+            logger.warning('Cannot parse event: $x', e);
+            return null;
+          }
+        }).whereNotNull());
       }
 
       _items.sortByCompare((x) => x.dateTime, (a, b) => a.isBefore(b) ? 1 : -1);
@@ -164,11 +176,15 @@ class DoorbellUsersRepository extends FirebaseRepository<DoorbellUser> {
   }
 
   Future<void> _loadOne(String doorbellId, Future<DataSnapshot> snapshotLoader) async {
-    var snapshot = await snapshotLoader;
-    if (!snapshot.exists || snapshot.key == null || snapshot.value == null) return;
+    try {
+      var snapshot = await snapshotLoader;
+      if (!snapshot.exists || snapshot.key == null || snapshot.value == null) return;
 
-    (snapshot.value! as Map).forEach((key, value) {
-      if (value?['role'] != null) _items.add(DoorbellUser(doorbellId: doorbellId, userId: key, role: value['role']));
-    });
+      (snapshot.value! as Map).forEach((key, value) {
+        if (value?['role'] != null) _items.add(DoorbellUser(doorbellId: doorbellId, userId: key, role: value['role']));
+      });
+    } catch (e) {
+      logger.warning('Cannot load doorbell user: doorbellId=$doorbellId', e);
+    }
   }
 }

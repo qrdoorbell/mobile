@@ -64,7 +64,7 @@ class DoorbellEvent implements Comparable<DoorbellEvent> {
   }
 
   static DoorbellEvent? fromMap(Map s) {
-    if (s['t'] != null) return DoorbellEvent.fromMapAndId(s['d'], s['i'], s);
+    if (s['t'] != null && s['d'] != null && s['i'] != null) return DoorbellEvent.fromMapAndId(s['d'], s['i'], s);
     return null;
   }
 

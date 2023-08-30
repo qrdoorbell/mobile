@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +24,11 @@ class _DoorbellUsersListState extends State<DoorbellUsersList> {
   @override
   Widget build(BuildContext context) {
     var dataStore = DataStore.of(context);
+    var canEdit = dataStore.doorbellUsers.items
+            .firstWhereOrNull((x) => x.doorbellId == widget.doorbellId && x.userId == dataStore.currentUser?.userId)
+            ?.role ==
+        'owner';
+
     return ChangeNotifierProvider.value(
         value: dataStore.doorbellUsers as DoorbellUsersRepository,
         builder: (context, child) => CupertinoPageScaffold(
@@ -33,7 +39,7 @@ class _DoorbellUsersListState extends State<DoorbellUsersList> {
                 onPressed: () => {RouteStateScope.of(context).go("/doorbells/${widget.doorbellId}")},
                 color: CupertinoColors.activeBlue,
               ),
-              middle: const Text('Manage users'),
+              middle: Text(canEdit ? 'Manage users' : 'View users'),
             ),
             child: Container(
                 color: CupertinoColors.systemGroupedBackground,
@@ -68,14 +74,15 @@ class _DoorbellUsersListState extends State<DoorbellUsersList> {
                                       ),
                                     )
                                     .toList()),
-                            CupertinoButton(
-                              padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 5),
-                              alignment: Alignment.topCenter,
-                              onPressed: () async {
-                                DoorbellScreen.shareDoorbell(context, dataStore.getDoorbellById(widget.doorbellId)!);
-                              },
-                              child: const Text('+ Invite user'),
-                            )
+                            if (canEdit)
+                              CupertinoButton(
+                                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 5),
+                                alignment: Alignment.topCenter,
+                                onPressed: () async {
+                                  DoorbellScreen.shareDoorbell(context, dataStore.getDoorbellById(widget.doorbellId)!);
+                                },
+                                child: const Text('+ Invite user'),
+                              )
                           ]))
                 ]))));
   }

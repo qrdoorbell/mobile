@@ -72,6 +72,10 @@ class _DoorbellScreenState extends State<DoorbellScreen> {
   Widget build(BuildContext context) {
     final dataStore = DataStore.of(context);
     final doorbell = dataStore.getDoorbellById(widget.doorbellId);
+    final canEdit = dataStore.doorbellUsers.items
+            .firstWhereOrNull((x) => x.doorbellId == widget.doorbellId && x.userId == dataStore.currentUser?.userId)
+            ?.role ==
+        'owner';
 
     if (doorbell == null) {
       return FutureBuilder(
@@ -102,19 +106,53 @@ class _DoorbellScreenState extends State<DoorbellScreen> {
             onPressed: () => Navigator.pop(context),
             color: CupertinoColors.activeBlue,
           ),
-          trailing: CupertinoButton(
-            padding: EdgeInsets.zero,
-            child: const Text(
-              "Edit",
-              style: TextStyle(color: CupertinoColors.activeBlue),
-            ),
-            onPressed: () => RouteStateScope.of(context).go('/doorbells/${widget.doorbellId}/edit'),
-          ),
+          trailing: canEdit
+              ? CupertinoButton(
+                  padding: EdgeInsets.zero,
+                  child: const Text(
+                    "Edit",
+                    style: TextStyle(color: CupertinoColors.activeBlue),
+                  ),
+                  onPressed: () => RouteStateScope.of(context).go('/doorbells/${widget.doorbellId}/edit'),
+                )
+              : CupertinoButton(
+                  padding: EdgeInsets.zero,
+                  child: const Text(
+                    "Delete",
+                    style: TextStyle(color: CupertinoColors.destructiveRed),
+                  ),
+                  onPressed: () async {
+                    var route = RouteStateScope.of(context);
+                    var shouldDelete = await showDialog<bool>(
+                        context: context,
+                        builder: (context) => CupertinoAlertDialog(
+                                title: Text("Are you sure you want to delete '${doorbell.name}' from your account?"),
+                                actions: [
+                                  CupertinoDialogAction(child: const Text('Yes'), onPressed: () => Navigator.of(context).pop(true)),
+                                  CupertinoDialogAction(
+                                      child: const Text('No', style: TextStyle(fontWeight: FontWeight.bold)),
+                                      onPressed: () => Navigator.of(context).pop(false)),
+                                ]));
+
+                    if (shouldDelete == true) {
+                      route.wait((() async {
+                        await dataStore.removeDoorbell(doorbell);
+                        await dataStore.reloadData(true);
+                      })(), destinationRoute: "/doorbells");
+                    }
+                  },
+                ),
           middle: Text(doorbell.name),
           largeTitle: Padding(padding: const EdgeInsets.only(left: 0), child: Text(doorbell.name)),
           previousPageTitle: "Back",
           border: Border.all(width: 0, color: Colors.white),
           alwaysShowMiddle: false,
+        ),
+
+        CupertinoSliverRefreshControl(
+          onRefresh: () async {
+            await dataStore.reloadData(true);
+          },
         ),
 
         // STICKERS
@@ -142,29 +180,31 @@ class _DoorbellScreenState extends State<DoorbellScreen> {
                 ],
 
                 // ADD STICKER (+)
-                const Padding(padding: EdgeInsets.only(left: 15)),
-                Padding(
-                    padding: const EdgeInsets.all(2),
-                    child: DottedBorder(
-                        borderPadding: const EdgeInsets.all(2),
-                        borderType: BorderType.RRect,
-                        radius: const Radius.circular(30),
-                        color: Colors.grey.shade300,
-                        dashPattern: const [8, 4],
-                        strokeWidth: 2,
-                        child: MaterialButton(
-                            padding: EdgeInsets.zero,
-                            minWidth: 96,
-                            onPressed: () async => await onStickerAddTap(doorbell),
-                            child: Padding(
-                                padding: const EdgeInsets.all(2),
-                                child: Center(
-                                    child: Text('+',
-                                        style: TextStyle(
-                                          color: Colors.grey.shade400,
-                                          fontSize: 40,
-                                          fontWeight: FontWeight.w200,
-                                        ))))))),
+                if (canEdit) ...[
+                  const Padding(padding: EdgeInsets.only(left: 15)),
+                  Padding(
+                      padding: const EdgeInsets.all(2),
+                      child: DottedBorder(
+                          borderPadding: const EdgeInsets.all(2),
+                          borderType: BorderType.RRect,
+                          radius: const Radius.circular(30),
+                          color: Colors.grey.shade300,
+                          dashPattern: const [8, 4],
+                          strokeWidth: 2,
+                          child: MaterialButton(
+                              padding: EdgeInsets.zero,
+                              minWidth: 96,
+                              onPressed: () async => await onStickerAddTap(doorbell),
+                              child: Padding(
+                                  padding: const EdgeInsets.all(2),
+                                  child: Center(
+                                      child: Text('+',
+                                          style: TextStyle(
+                                            color: Colors.grey.shade400,
+                                            fontSize: 40,
+                                            fontWeight: FontWeight.w200,
+                                          ))))))),
+                ],
                 const Padding(padding: EdgeInsets.only(left: 15)),
               ])),
         ])),
@@ -178,7 +218,8 @@ class _DoorbellScreenState extends State<DoorbellScreen> {
             const Text('Shared with', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400)),
             const Spacer(),
             CupertinoButton(
-                child: const Text('Manage'), onPressed: () => {RouteStateScope.of(context).go('/doorbells/${widget.doorbellId}/users')})
+                child: Text(canEdit ? 'Manage' : 'View'),
+                onPressed: () => {RouteStateScope.of(context).go('/doorbells/${widget.doorbellId}/users')})
           ]),
           Padding(
               padding: const EdgeInsets.only(left: 18),
@@ -211,12 +252,6 @@ class _DoorbellScreenState extends State<DoorbellScreen> {
               padding: EdgeInsets.only(left: 20, top: 30, right: 5),
               child: Text('Events', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400))),
         ])),
-
-        CupertinoSliverRefreshControl(
-          onRefresh: () async {
-            await RouteStateScope.of(context).wait(dataStore.reloadData(false));
-          },
-        ),
         EventList(
           doorbellId: widget.doorbellId,
           onShareDoorbellCallback: () => DoorbellScreen.shareDoorbell(context, doorbell),

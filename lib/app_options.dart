@@ -1,5 +1,6 @@
 // ignore_for_file: constant_identifier_names
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 
@@ -49,7 +50,7 @@ class AppSettings extends ChangeNotifier {
   static bool get googleAnalyticsEnabled => FirebaseRemoteConfig.instance.getBool('USE_GOOGLE_ANALYTICS');
 
   // Google Crashalytics
-  static bool get crashlyticsEnabled => FirebaseRemoteConfig.instance.getBool('USE_CRASHALYTICS');
+  static bool get crashlyticsEnabled => FirebaseRemoteConfig.instance.getBool('USE_CRASHALYTICS') && !kDebugMode;
   static bool get crashlyticsLogsEnabled => FirebaseRemoteConfig.instance.getBool('USE_CRASHALYTICS_LOGS');
   static int get crashlyticsLogLevel => FirebaseRemoteConfig.instance.getInt('CRASHALYTICS_LOG_LEVEL');
 

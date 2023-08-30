@@ -1,7 +1,8 @@
 import 'package:collection/collection.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:quiver/core.dart';
 
-class ParsedRoute {
+class ParsedRoute extends Route<dynamic> {
   final String path;
   final String pathTemplate;
   final Map<String, String> parameters;
@@ -10,6 +11,8 @@ class ParsedRoute {
   static const _mapEquality = MapEquality<String, String>();
 
   ParsedRoute(this.path, this.pathTemplate, this.parameters, this.queryParameters);
+
+  Uri toUri() => Uri(path: path, queryParameters: queryParameters);
 
   @override
   bool operator ==(Object other) =>

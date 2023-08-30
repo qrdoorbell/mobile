@@ -19,7 +19,7 @@ class ProfileDeleteScreen extends StatelessWidget {
           middle: const Text("Delete account", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: CupertinoColors.white)),
           leading: CupertinoNavigationBarBackButton(
             onPressed: () => RouteStateScope.of(context).go("/profile"),
-            color: CupertinoColors.black,
+            color: CupertinoColors.white,
             previousPageTitle: "Profile",
           ),
         ),

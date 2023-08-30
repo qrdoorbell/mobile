@@ -249,7 +249,7 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
     super.dispose();
   }
 
-  Future<ParsedRoute> _guard(ParsedRoute from) async {
+  ParsedRoute _guard(ParsedRoute from) {
     final signedIn = FirebaseAuth.instance.currentUser?.uid != null;
 
     if (!signedIn && from != signInRoute && from.pathTemplate != '/login/forgot-password')

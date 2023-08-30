@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
@@ -41,6 +42,11 @@ class _StickerEditScreenState extends State<StickerEditScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final dataStore = DataStore.of(context);
+    final canEdit = dataStore.doorbellUsers.items
+            .firstWhereOrNull((x) => x.doorbellId == widget.doorbellId && x.userId == dataStore.currentUser?.userId)
+            ?.role ==
+        'owner';
     return CupertinoPageScaffold(
         backgroundColor: Colors.white,
         navigationBar: CupertinoNavigationBar(
@@ -50,11 +56,13 @@ class _StickerEditScreenState extends State<StickerEditScreen> {
               onPressed: onBackButtonTap,
               icon: const Icon(CupertinoIcons.chevron_back, color: CupertinoColors.activeBlue),
             ),
-            trailing: CupertinoButton(
-              padding: EdgeInsets.zero,
-              onPressed: onDeleteButtonTap,
-              child: const Text('Delete', style: TextStyle(color: CupertinoColors.destructiveRed)),
-            ),
+            trailing: canEdit
+                ? CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: onDeleteButtonTap,
+                    child: const Text('Delete', style: TextStyle(color: CupertinoColors.destructiveRed)),
+                  )
+                : null,
             middle: Text(
                 "Sticker: ${_stickerEditController.sticker.displayName?.isEmpty == true ? 'new' : _stickerEditController.sticker.displayName}")),
         child: Column(
@@ -80,7 +88,7 @@ class _StickerEditScreenState extends State<StickerEditScreen> {
                 ),
                 child: Column(
                   children: [
-                    _stickerEditController.settingsWidget,
+                    if (canEdit) _stickerEditController.settingsWidget,
                     Container(
                         color: Colors.white,
                         padding: const EdgeInsets.only(left: 40, right: 40, top: 20, bottom: 10),

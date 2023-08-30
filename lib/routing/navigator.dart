@@ -46,6 +46,7 @@ class _AppNavigatorState extends State<AppNavigator> {
 
     return Navigator(
       key: widget.navigatorKey,
+      onGenerateRoute: (settings) => routeState.parseRouteSync(settings.name!),
       onPopPage: (route, dynamic result) {
         // When a page that is stacked on top of the scaffold is popped, display the /doorbells on a back
         if (route.settings is Page && (route.settings as Page).key == _doorbellDetailsKey) {
@@ -69,18 +70,20 @@ class _AppNavigatorState extends State<AppNavigator> {
                 email: routeState.data['email'],
               ),
             ),
-        ] else if (pathTemplate == '/invite/accept/:inviteId' && inviteId != null)
-          CupertinoPage(
-            key: _inviteScreenKey,
-            child: InviteAcceptedScreen(inviteId: inviteId),
-          )
-        else ...[
+        ] else ...[
           // path: /doorbells
           CupertinoPage(
             key: _mainScreenKey,
             title: 'Doorbells',
             child: const MainScreen(),
           ),
+
+          // path: /invite/accept/:inviteId
+          if (pathTemplate == '/invite/accept/:inviteId' && inviteId != null)
+            CupertinoPage(
+              key: _inviteScreenKey,
+              child: InviteAcceptedScreen(inviteId: inviteId),
+            ),
 
           if (pathTemplate == '/profile/delete-account')
             CupertinoPage(
@@ -162,28 +165,29 @@ class _AppNavigatorState extends State<AppNavigator> {
                 future: Future.any(<Future>[
                   routeState.data["future"],
                   Future.delayed(routeState.data["timeout"], () {
-                    logger.warning('Wait timed out');
                     throw TimeoutException('Wait timed out');
                   })
                 ]),
                 builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done && routeState.data != null) {
-                    if (snapshot.hasError) {
-                      logger.shout('An async error occured!', snapshot.error);
-                      RouteStateScope.of(context).go(routeState.data["errorRoute"] ?? "/doorbells");
-                    } else {
-                      var route = (routeState.data["destinationRouteFunc"] != null
-                              ? routeState.data["destinationRouteFunc"](snapshot.data)
-                              : null) ??
-                          routeState.data["destinationRoute"] ??
-                          routeState.data["errorRoute"] ??
-                          routeState.route.path ??
-                          "/doorbells";
-
-                      logger.fine('Redirecting to: $route');
-                      RouteStateScope.of(context).go(route);
-                    }
+                  if (snapshot.hasError) {
+                    logger.shout('An async error occured!', snapshot.error);
+                    return EmptyScreen.white().withButton('Back to Home', () => RouteStateScope.of(context).go('/doorbells'));
                   }
+
+                  if (snapshot.connectionState == ConnectionState.done && routeState.data != null) {
+                    var route =
+                        (routeState.data["destinationRouteFunc"] != null ? routeState.data["destinationRouteFunc"](snapshot.data) : null) ??
+                            routeState.data["destinationRoute"] ??
+                            routeState.data["errorRoute"] ??
+                            routeState.route.path ??
+                            "/doorbells";
+
+                    logger.fine('Redirecting to: $route');
+
+                    Future.delayed(Duration.zero, () => RouteStateScope.of(context).go(route));
+                    return EmptyScreen.white().withChild(const Text('Redirecting...'));
+                  }
+
                   return EmptyScreen.white().withWaitingIndicator();
                 },
               ))
