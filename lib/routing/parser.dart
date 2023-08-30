@@ -1,10 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:path_to_regexp/path_to_regexp.dart';
 
 import 'parsed_route.dart';
 
 /// Used by [TemplateRouteParser] to guard access to routes.
-typedef RouteGuard<T> = Future<T> Function(T from);
+typedef RouteGuard<T> = T Function(T from);
 
 /// Parses the URI path into a [ParsedRoute].
 class TemplateRouteParser extends RouteInformationParser<ParsedRoute> {
@@ -24,12 +25,9 @@ class TemplateRouteParser extends RouteInformationParser<ParsedRoute> {
         ],
         assert(allowedPaths.contains(initialRoute));
 
-  @override
-  Future<ParsedRoute> parseRouteInformation(
-    RouteInformation routeInformation,
-  ) async {
-    final path = routeInformation.location!;
-    final queryParams = Uri.parse(path).queryParameters;
+  ParsedRoute parseRouteInformationSync(RouteInformation routeInformation) {
+    final path = routeInformation.uri.path;
+    final queryParams = routeInformation.uri.queryParameters;
     var parsedRoute = initialRoute;
 
     for (var pathTemplate in _pathTemplates) {
@@ -38,8 +36,10 @@ class TemplateRouteParser extends RouteInformationParser<ParsedRoute> {
       if (pathRegExp.hasMatch(path)) {
         final match = pathRegExp.matchAsPrefix(path);
         if (match == null) continue;
+
         final params = extract(parameters, match);
         parsedRoute = ParsedRoute(path, pathTemplate, params, queryParams);
+        break;
       }
     }
 
@@ -52,5 +52,9 @@ class TemplateRouteParser extends RouteInformationParser<ParsedRoute> {
   }
 
   @override
-  RouteInformation restoreRouteInformation(ParsedRoute configuration) => RouteInformation(location: configuration.path);
+  SynchronousFuture<ParsedRoute> parseRouteInformation(RouteInformation routeInformation) =>
+      SynchronousFuture(parseRouteInformationSync(routeInformation));
+
+  @override
+  RouteInformation restoreRouteInformation(ParsedRoute configuration) => RouteInformation(uri: configuration.toUri());
 }

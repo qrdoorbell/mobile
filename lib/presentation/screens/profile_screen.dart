@@ -36,7 +36,6 @@ class ProfileScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 18, right: 18, top: 90, bottom: 15),
                 title: Row(
                   children: [
-                    // UserAccountAvatar(name: shortName, size: 60),
                     CircleAvatar(
                       radius: 30,
                       backgroundColor: avatarColor,

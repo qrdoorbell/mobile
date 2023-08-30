@@ -28,7 +28,6 @@ class VideoCall extends StatefulWidget {
 }
 
 class _VideoCallState extends State<VideoCall> {
-  EventsListener<RoomEvent> get _listener => widget.listener;
   bool _isLocalAnswered = false;
 
   @override
@@ -39,56 +38,58 @@ class _VideoCallState extends State<VideoCall> {
 
   @override
   void dispose() {
-    (() async {
-      await _listener.dispose();
-      await widget.room.disconnect();
-    })();
+    // (() async {
+    //   await _listener.dispose();
+    //   await widget.room.disconnect();
+    // })();
     super.dispose();
   }
 
-  void _setUpListeners() => _listener
-    ..on<RoomDisconnectedEvent>((event) async {
-      logger.info('Room disconnected event: doorbellId=${widget.doorbellId}');
-      if (event.reason != null) {
-        logger.info('Room disconnected: reason => ${event.reason}');
-      }
-      await _endCall(context);
-    })
-    ..on<TrackPublishedEvent>((remoteParty) async {
-      if (!_isLocalAnswered && remoteParty.participant.identity.startsWith('user-'))
-        setState(() async {
-          await _endCall(context);
-        });
-    })
-    ..on<TrackUnpublishedEvent>((remoteParty) async {
-      if (!_isLocalAnswered && remoteParty.participant.identity.startsWith('guest-')) await _endCall(context);
-    })
-    ..on<LocalTrackPublishedEvent>((remoteParty) async {
-      setState(() {
-        _isLocalAnswered = true;
-      });
-    })
-    ..on<LocalTrackUnpublishedEvent>((localParty) async {
-      if (_isLocalAnswered) {
+  void _setUpListeners() {
+    widget.listener
+      ..on<RoomDisconnectedEvent>((event) async {
+        logger.info('Room disconnected event: doorbellId=${widget.doorbellId}');
+        if (event.reason != null) {
+          logger.info('Room disconnected: reason => ${event.reason}');
+        }
         await _endCall(context);
-      } else {
-        await _endCallIfAlone(context);
-      }
-    })
-    ..on<TrackMutedEvent>((mutedEvent) async {
-      setState(() {});
-    })
-    ..on<TrackUnmutedEvent>((mutedEvent) async {
-      setState(() {});
-    })
-    ..on<DataReceivedEvent>((event) {
-      try {
-        var decoded = utf8.decode(event.data);
-        logger.info('Received the data: $decoded');
-      } catch (_) {
-        print('Failed to decode: $_');
-      }
-    });
+      })
+      ..on<TrackPublishedEvent>((remoteParty) async {
+        if (!_isLocalAnswered && remoteParty.participant.identity.startsWith('user-'))
+          setState(() async {
+            await _endCall(context);
+          });
+      })
+      ..on<TrackUnpublishedEvent>((remoteParty) async {
+        if (!_isLocalAnswered && remoteParty.participant.identity.startsWith('guest-')) await _endCall(context);
+      })
+      ..on<LocalTrackPublishedEvent>((remoteParty) async {
+        setState(() {
+          _isLocalAnswered = true;
+        });
+      })
+      ..on<LocalTrackUnpublishedEvent>((localParty) async {
+        if (_isLocalAnswered) {
+          await _endCall(context);
+        } else {
+          await _endCallIfAlone(context);
+        }
+      })
+      ..on<TrackMutedEvent>((mutedEvent) async {
+        setState(() {});
+      })
+      ..on<TrackUnmutedEvent>((mutedEvent) async {
+        setState(() {});
+      })
+      ..on<DataReceivedEvent>((event) {
+        try {
+          var decoded = utf8.decode(event.data);
+          logger.info('Received the data: $decoded');
+        } catch (_) {
+          print('Failed to decode: $_');
+        }
+      });
+  }
 
   @override
   Widget build(BuildContext context) {

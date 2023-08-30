@@ -47,6 +47,7 @@ class MainScreenState extends State<MainScreen> {
     return CupertinoTabScaffold(
       controller: _tabController,
       backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: true,
       tabBar: CupertinoTabBar(
         items: const [
           BottomNavigationBarItem(

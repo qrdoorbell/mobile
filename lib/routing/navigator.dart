@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:logging/logging.dart';
 
 import '../presentation/screens/profile_delete_screen.dart';
@@ -15,7 +15,6 @@ import '../presentation/screens/main_screen.dart';
 import '../presentation/screens/qrcode_screen.dart';
 import '../presentation/screens/call_screen.dart';
 import '../routing.dart';
-import '../widgets/fade_transition_page.dart';
 
 class AppNavigator extends StatefulWidget {
   final GlobalKey<NavigatorState> navigatorKey;
@@ -47,6 +46,7 @@ class _AppNavigatorState extends State<AppNavigator> {
 
     return Navigator(
       key: widget.navigatorKey,
+      onGenerateRoute: (settings) => routeState.parseRouteSync(settings.name!),
       onPopPage: (route, dynamic result) {
         // When a page that is stacked on top of the scaffold is popped, display the /doorbells on a back
         if (route.settings is Page && (route.settings as Page).key == _doorbellDetailsKey) {
@@ -57,90 +57,137 @@ class _AppNavigatorState extends State<AppNavigator> {
       },
       pages: [
         if (routeState.route.pathTemplate.startsWith('/login')) ...[
-          FadeTransitionPage<void>(key: _signInKey, child: LoginScreen()),
+          CupertinoPage(
+            key: _signInKey,
+            title: 'Sign in',
+            child: LoginScreen(),
+          ),
           if (pathTemplate == '/login/forgot-password')
-            MaterialPage(child: ForgotPasswordScreen(key: _forgotPasswordKey, email: routeState.data['email'])),
-        ] else if (pathTemplate == '/invite/accept/:inviteId' && inviteId != null)
-          MaterialPage(
-            key: _inviteScreenKey,
-            fullscreenDialog: true,
-            child: InviteAcceptedScreen(inviteId: inviteId),
-          )
-        else ...[
+            CupertinoPage(
+              title: 'Forgot password',
+              child: ForgotPasswordScreen(
+                key: _forgotPasswordKey,
+                email: routeState.data['email'],
+              ),
+            ),
+        ] else ...[
           // path: /doorbells
-          FadeTransitionPage<void>(
+          CupertinoPage(
             key: _mainScreenKey,
+            title: 'Doorbells',
             child: const MainScreen(),
           ),
 
-          if (pathTemplate == '/profile/delete-account')
-            MaterialPage(
+          // path: /invite/accept/:inviteId
+          if (pathTemplate == '/invite/accept/:inviteId' && inviteId != null)
+            CupertinoPage(
               key: _inviteScreenKey,
+              child: InviteAcceptedScreen(inviteId: inviteId),
+            ),
+
+          if (pathTemplate == '/profile/delete-account')
+            CupertinoPage(
+              key: _inviteScreenKey,
+              title: 'Delete account',
               child: ProfileDeleteScreen(),
             ),
 
           // path: /doorbells/:doorbellId
           if (pathTemplate.startsWith('/doorbells/:doorbellId') && doorbellId != null) ...[
-            MaterialPage(
+            CupertinoPage(
               key: _doorbellDetailsKey,
+              title: 'Doorbell details',
               child: DoorbellScreen(doorbellId: doorbellId),
             ),
             if (pathTemplate == '/doorbells/:doorbellId/qr')
-              MaterialPage(
+              CupertinoPage(
                 key: _doorbellDetailsEditKey,
+                title: 'Doorbell QR code',
                 child: QRCodeScreen(doorbellId: doorbellId),
               ),
             if (pathTemplate == '/doorbells/:doorbellId/edit')
-              MaterialPage(
+              CupertinoPage(
                 key: _doorbellDetailsEditKey,
+                title: 'Doorbell edit',
                 child: DoorbellEditScreen(doorbellId: doorbellId),
               ),
             if (pathTemplate == '/doorbells/:doorbellId/ring/:accessToken' && callAccessToken != null)
-              MaterialPage(
+              CupertinoPage(
                 key: _doorbellDetailsEditKey,
+                title: 'Incoming call',
                 child: CallScreen(accessToken: callAccessToken, doorbellId: doorbellId),
               ),
             if (pathTemplate == '/doorbells/:doorbellId/join/:accessToken' && callAccessToken != null)
-              MaterialPage(
+              CupertinoPage(
                 key: _doorbellDetailsEditKey,
+                title: 'Join call',
                 child: CallScreen(accessToken: callAccessToken, doorbellId: doorbellId),
               ),
             if (pathTemplate == '/doorbells/:doorbellId/users')
-              MaterialPage(
+              CupertinoPage(
                 key: _doorbellDetailsEditKey,
+                title: 'Manage users',
                 child: DoorbellUsersScreen(doorbellId: doorbellId),
               ),
+            // if (pathTemplate == '/sticker-templates/:stickerTemplateId' &&
+            //     routeState.route.queryParameters['doorbellId'] != null &&
+            //     routeState.route.parameters['stickerTemplateId'] != null)
+            //   MaterialPage(
+            //     key: _doorbellDetailsEditKey,
+            //     child: StickerEditScreen(
+            //       doorbellId: routeState.route.queryParameters['doorbellId']!,
+            //       stickerTemplateId: routeState.route.parameters['stickerTemplateId']!,
+            //     ),
+            //   )
+            // else if (pathTemplate == '/doorbells/:doorbellId/stickers/templates/:stickerTemplateId' &&
+            //     routeState.route.parameters['stickerTemplateId'] != null)
+            //   MaterialPage(
+            //     key: _doorbellDetailsEditKey,
+            //     child: StickerEditScreen(
+            //       doorbellId: doorbellId,
+            //       stickerTemplateId: routeState.route.parameters['stickerTemplateId']!,
+            //     ),
+            //   )
+            // else if (pathTemplate == '/doorbells/:doorbellId/stickers/:stickerId' && routeState.route.parameters['stickerId'] != null)
+            //   MaterialPage(
+            //     key: _doorbellDetailsEditKey,
+            //     child: StickerEditScreen(
+            //       doorbellId: doorbellId,
+            //       stickerTemplateId: routeState.route.parameters['stickerId']!,
+            //     ),
+            //   )
           ],
         ],
         if (pathTemplate.endsWith('/_wait'))
-          FadeTransitionPage<void>(
+          CupertinoPage(
               key: _waitScreenKey,
               child: FutureBuilder(
                 future: Future.any(<Future>[
                   routeState.data["future"],
                   Future.delayed(routeState.data["timeout"], () {
-                    logger.warning('Wait timed out');
                     throw TimeoutException('Wait timed out');
                   })
                 ]),
                 builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done && routeState.data != null) {
-                    if (snapshot.hasError) {
-                      logger.shout('An async error occured!', snapshot.error);
-                      RouteStateScope.of(context).go(routeState.data["errorRoute"] ?? "/doorbells");
-                    } else {
-                      var route = (routeState.data["destinationRouteFunc"] != null
-                              ? routeState.data["destinationRouteFunc"](snapshot.data)
-                              : null) ??
-                          routeState.data["destinationRoute"] ??
-                          routeState.data["errorRoute"] ??
-                          routeState.route.path ??
-                          "/doorbells";
-
-                      logger.fine('Redirecting to: $route');
-                      RouteStateScope.of(context).go(route);
-                    }
+                  if (snapshot.hasError) {
+                    logger.shout('An async error occured!', snapshot.error);
+                    return EmptyScreen.white().withButton('Back to Home', () => RouteStateScope.of(context).go('/doorbells'));
                   }
+
+                  if (snapshot.connectionState == ConnectionState.done && routeState.data != null) {
+                    var route =
+                        (routeState.data["destinationRouteFunc"] != null ? routeState.data["destinationRouteFunc"](snapshot.data) : null) ??
+                            routeState.data["destinationRoute"] ??
+                            routeState.data["errorRoute"] ??
+                            routeState.route.path ??
+                            "/doorbells";
+
+                    logger.fine('Redirecting to: $route');
+
+                    Future.delayed(Duration.zero, () => RouteStateScope.of(context).go(route));
+                    return EmptyScreen.white().withChild(const Text('Redirecting...'));
+                  }
+
                   return EmptyScreen.white().withWaitingIndicator();
                 },
               ))

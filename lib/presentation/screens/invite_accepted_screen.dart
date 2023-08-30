@@ -15,8 +15,24 @@ class InviteAcceptedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    RouteStateScope.of(context)
-        .wait(DataStore.of(context).acceptInvite(inviteId), destinationRouteFunc: (doorbellId) => '/doorbells/$doorbellId');
-    return EmptyScreen.white().withWaitingIndicator();
+    return FutureBuilder(
+        future: DataStore.of(context).acceptInvite(inviteId),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            logger.warning('Failed to accept invite: ${snapshot.error}');
+            return EmptyScreen.white()
+                .withText('Failed to accept invite')
+                .withButton('Back', () => RouteStateScope.of(context).go('/doorbells'));
+          }
+
+          if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data is String) {
+            Future.delayed(Duration.zero, () => RouteStateScope.of(context).go('/doorbells/${snapshot.data}'));
+            return EmptyScreen.white()
+                .withChild(const Text('Invite accepted'))
+                .withButton('Back', () => RouteStateScope.of(context).go('/doorbells'));
+          }
+
+          return EmptyScreen.white().withWaitingIndicator();
+        });
   }
 }

@@ -7,10 +7,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
-import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -18,6 +19,7 @@ import 'package:logging/logging.dart';
 import 'package:uni_links/uni_links.dart';
 
 // import 'services/newrelic_logger.dart';
+import 'presentation/controls/stickers/v1/sticker_v11_controller.dart';
 import 'services/db/firebase_data_store.dart';
 import 'services/callkit_service.dart';
 import 'routing.dart';
@@ -32,7 +34,7 @@ final logger = Logger('main');
 
 Future<void> main() async {
   final format = DateFormat('HH:mm:ss');
-  Logger.root.level = Level.FINE;
+  Logger.root.level = kDebugMode ? Level.FINEST : Level.FINE;
   Logger.root.onRecord.listen((record) {
     print('${format.format(record.time)}: ${record.message}');
 
@@ -44,8 +46,17 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
-
   await AppSettings.initialize();
+
+  await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(AppSettings.crashlyticsEnabled);
+
+  bool lastCrashlyticsEnabled = AppSettings.crashlyticsEnabled;
+  AppSettings().addListener(() async {
+    if (lastCrashlyticsEnabled != AppSettings.crashlyticsEnabled) {
+      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(AppSettings.crashlyticsEnabled);
+      lastCrashlyticsEnabled = AppSettings.crashlyticsEnabled;
+    }
+  });
 
   FlutterError.onError = (errorDetails) {
     logger.shout("FlutterError.onError: ${errorDetails.exception.toString()}\nStack trace: ${errorDetails.stack?.toString()}");
@@ -59,23 +70,21 @@ Future<void> main() async {
     return true;
   };
 
+  FirebaseRemoteConfig.instance.onConfigUpdated.listen((event) async {
+    logger.info('Remote config settings updated: $event');
+  });
+
   FirebaseUIAuth.configureProviders([
     EmailAuthProvider(),
     AppleProvider(),
-    // GoogleProvider(clientId: GOOGLE_CLIENT_ID),
   ]);
 
   FirebaseDatabase.instance.setPersistenceEnabled(true);
-  // FirebaseDatabase.instance.setLoggingEnabled(true);
+
+  // Stickers registration
+  StickerV11Controller.register();
 
   runApp(const QRDoorbellApp());
-
-  // if (NEWRELIC_APP_TOKEN.isNotEmpty)
-  //   NewrelicMobile.instance.start(NewRelicLogger.getConfig(NEWRELIC_APP_TOKEN), () {
-  //     runApp(const QRDoorbellApp());
-  //   });
-  // else
-  //   runApp(const QRDoorbellApp());
 }
 
 @pragma('vm:entry-point')
@@ -114,10 +123,12 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
         '/doorbells/new',
         '/sticker-templates/popular',
         '/sticker-templates/all',
+        '/sticker-templates/:stickerTemplateId',
         '/doorbells/:doorbellId/qr',
         '/doorbells/:doorbellId/edit',
         '/doorbells/:doorbellId/stickers',
         '/doorbells/:doorbellId/stickers/:stickerId',
+        '/doorbells/:doorbellId/stickers/templates/:stickerTemplateId',
         '/doorbells/:doorbellId/users',
         '/doorbells/:doorbellId/ring/:accessToken',
         '/doorbells/:doorbellId/join/:accessToken',
@@ -238,7 +249,7 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
     super.dispose();
   }
 
-  Future<ParsedRoute> _guard(ParsedRoute from) async {
+  ParsedRoute _guard(ParsedRoute from) {
     final signedIn = FirebaseAuth.instance.currentUser?.uid != null;
 
     if (!signedIn && from != signInRoute && from.pathTemplate != '/login/forgot-password')

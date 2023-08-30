@@ -17,34 +17,32 @@ platforms:
   - ios:
 
 environment:
-  sdk: '^3.0.0'
+  flutter: ^3.13.1
+  sdk: ^3.1.0
 
 dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
   provider: ^6.0.2
-  livekit_client: ^1.4.0
-  flutter_webrtc: ^0.9.36
+  livekit_client: ^1.4.3
+  flutter_webrtc: ^0.9.40
   firebase_core: ^2.5.0
   firebase_messaging: ^14.2.1
-  firebase_analytics: ^10.4.4
   firebase_database: ^10.0.9
   firebase_crashlytics: ^3.0.17
   firebase_auth: ^4.2.5
   firebase_ui_auth: ^1.1.14
   firebase_ui_oauth_apple: ^1.0.21
   firebase_ui_oauth_google: ^1.0.21
-  flutter_svg: ^1.1.2
-  flutter_callkeep: ^0.3.1+1
-  shared_preferences: ^2.0.17
+  firebase_remote_config: ^4.2.4
   path_to_regexp: ^0.4.0
   adaptive_navigation: ^0.0.3
   collection: ^1.17.1
   quiver: ^3.2.1
   nanoid: ^1.0.0
-  connectivity_plus: ^4.0.1
-  share_plus: ^7.0.0
+  connectivity_plus: ^4.0.2
+  share_plus: ^7.1.0
   http: ^1.1.0
   logging: ^1.1.1
   intl: ^0.18.0
@@ -53,17 +51,24 @@ dependencies:
   package_info_plus: ^4.0.1
   loading_animation_widget: ^1.2.0+4
   flutter_html: ^3.0.0-beta.2
-  firebase_remote_config: ^4.2.4
+  flutter_svg: ^2.0.7
+  dotted_border: ^2.0.0+3
+  flutter_iconpicker:
+    git:
+      url: https://github.com/qrdoorbell/FlutterIconPicker.git
+      ref: master
+  flutter_callkeep:
+    git:
+      url: https://github.com/qrdoorbell/flutter_callkeep.git
+      ref: master
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
   flutter_lints: ^2.0.0
+  dart_code_metrics: ^4.19.2
   flutter_launcher_icons:
     git:
       url: https://github.com/fluttercommunity/flutter_launcher_icons.git
       ref: 26fedcee4b0e6f7a85f65f1fb48834a21f57e970
-  dart_code_metrics: ^4.19.2
 
 flutter:
   uses-material-design: true
@@ -79,6 +84,13 @@ flutter:
   - assets/video.svg
   - assets/video.fill.svg
   - assets/video.slash.fill.svg
+
+  - assets/sticker_yellow_vert/qrdoorbell-sticker-5@1x.png
+  - assets/sticker_yellow_hor/qrdoorbell-sticker-5_horizontal@1x.png
+
+  - assets/sticker_v1.1/template_1.1_vertical.png
+  - assets/sticker_v1.1/template_1.1_horizontal.png
+  - assets/sticker_v1.1/text_scan_doorbell.png
 
 flutter_icons:
   image_path: "assets/logo-app-01_1024.png" 

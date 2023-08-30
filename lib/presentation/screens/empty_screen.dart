@@ -6,16 +6,20 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 class EmptyScreen extends StatelessWidget {
   final bool isBlack;
   final Widget child;
+  final Widget? button;
 
   const EmptyScreen({
     required this.child,
+    this.button,
     this.isBlack = true,
   });
 
-  EmptyScreen withChild(Widget child) => EmptyScreen(isBlack: isBlack, child: child);
-  EmptyScreen withBlackBackground() => isBlack ? this : EmptyScreen(isBlack: true, child: child);
-  EmptyScreen withWhiteBackground() => !isBlack ? this : EmptyScreen(isBlack: false, child: child);
+  EmptyScreen withChild(Widget child) => EmptyScreen(isBlack: isBlack, button: button, child: child);
+  EmptyScreen withBlackBackground() => isBlack ? this : EmptyScreen(isBlack: true, button: button, child: child);
+  EmptyScreen withWhiteBackground() => !isBlack ? this : EmptyScreen(isBlack: false, button: button, child: child);
   EmptyScreen withText(String text) => withChild(Text(text));
+  EmptyScreen withButton(String text, void Function() onPressed) =>
+      EmptyScreen(button: CupertinoButton.filled(onPressed: onPressed, child: Text(text)), isBlack: isBlack, child: child);
   EmptyScreen withWaitingIndicator() =>
       withChild(LoadingAnimationWidget.staggeredDotsWave(color: isBlack ? Colors.white : CupertinoColors.darkBackgroundGray, size: 120));
 
@@ -31,6 +35,7 @@ class EmptyScreen extends StatelessWidget {
             height: 120,
           ),
           Padding(padding: const EdgeInsets.all(20), child: child),
+          Padding(padding: const EdgeInsets.all(20), child: button),
         ])));
   }
 
