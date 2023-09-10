@@ -2,11 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:logging/logging.dart';
 
 import 'parsed_route.dart';
 import 'route_state.dart';
 
 class SimpleRouterDelegate extends RouterDelegate<ParsedRoute> with ChangeNotifier, PopNavigatorRouterDelegateMixin<ParsedRoute> {
+  static final logger = Logger('SimpleRouterDelegate');
+
   final RouteState routeState;
   final WidgetBuilder builder;
 
@@ -26,6 +29,7 @@ class SimpleRouterDelegate extends RouterDelegate<ParsedRoute> with ChangeNotifi
 
   @override
   Future<void> setNewRoutePath(ParsedRoute configuration) async {
+    logger.info('setNewRoutePath: path=${configuration.path} configuration=$configuration');
     routeState.route = configuration;
     return SynchronousFuture(null);
   }

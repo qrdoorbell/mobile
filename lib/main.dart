@@ -14,12 +14,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_callkeep/flutter_callkeep.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:uni_links/uni_links.dart';
 
 // import 'services/newrelic_logger.dart';
 import 'presentation/controls/stickers/v1/sticker_v11_controller.dart';
+import 'routing/navigation_service.dart';
 import 'services/db/firebase_data_store.dart';
 import 'services/callkit_service.dart';
 import 'routing.dart';
@@ -59,12 +61,16 @@ Future<void> main() async {
   });
 
   FlutterError.onError = (errorDetails) {
-    logger.shout("FlutterError.onError: ${errorDetails.exception.toString()}\nStack trace: ${errorDetails.stack?.toString()}");
+    logger.shout("FlutterError.onError: ${errorDetails.exceptionAsString()}\nStack trace: ${errorDetails.stack?.toString()}",
+        errorDetails.exception, errorDetails.stack);
     if (AppSettings.crashlyticsEnabled == true) FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
   };
 
   PlatformDispatcher.instance.onError = (error, stack) {
-    logger.shout("PlatformDispatcher.instance.onError:", error, stack);
+    logger.shout(
+        "PlatformDispatcher.instance.onError: ${(error is Error) ? error.toString() : (error is Exception) ? error.toString() : Error.safeToString(error)}\nStack trace: ${stack.toString()}",
+        error,
+        stack);
     if (AppSettings.crashlyticsEnabled) FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
 
     return true;
@@ -84,7 +90,7 @@ Future<void> main() async {
   // Stickers registration
   StickerV11Controller.register();
 
-  runApp(const QRDoorbellApp());
+  runApp(const RootRestorationScope(restorationId: 'qrdoorbell', child: QRDoorbellApp()));
 }
 
 @pragma('vm:entry-point')
@@ -95,17 +101,19 @@ Future<void> _handleBackgroundMessage(RemoteMessage message) async {
   logger.fine(message);
 }
 
-class QRDoorbellApp extends StatefulWidget {
+class QRDoorbellApp extends CupertinoApp {
   const QRDoorbellApp({super.key});
 
   @override
-  State<StatefulWidget> createState() => _QRDoorbellAppState();
+  GlobalKey<NavigatorState>? get navigatorKey => NavigationService().navigationKey;
+
+  @override
+  State<CupertinoApp> createState() => _QRDoorbellAppState();
 }
 
-class _QRDoorbellAppState extends State<QRDoorbellApp> {
-  final _navigatorKey = GlobalKey<NavigatorState>();
+class _QRDoorbellAppState extends State<QRDoorbellApp> with WidgetsBindingObserver {
+  final NavigationService _navigationService = NavigationService();
   late final RouteState _routeState;
-  late final SimpleRouterDelegate _routerDelegate;
   late final TemplateRouteParser _routeParser;
   late final CallKitService _callKitService;
   late final DataStore _dataStore;
@@ -124,14 +132,13 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
         '/sticker-templates/popular',
         '/sticker-templates/all',
         '/sticker-templates/:stickerTemplateId',
+        '/doorbells/voip_session',
         '/doorbells/:doorbellId/qr',
         '/doorbells/:doorbellId/edit',
         '/doorbells/:doorbellId/stickers',
         '/doorbells/:doorbellId/stickers/:stickerId',
         '/doorbells/:doorbellId/stickers/templates/:stickerTemplateId',
         '/doorbells/:doorbellId/users',
-        '/doorbells/:doorbellId/ring/:accessToken',
-        '/doorbells/:doorbellId/join/:accessToken',
         '/doorbells/:doorbellId',
         '/invite/accept/:inviteId',
         '/profile',
@@ -143,15 +150,7 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
 
     _routeState = RouteState(_routeParser);
 
-    _routerDelegate = SimpleRouterDelegate(
-      routeState: _routeState,
-      navigatorKey: _navigatorKey,
-      builder: (context) => AppNavigator(
-        navigatorKey: _navigatorKey,
-      ),
-    );
-
-    _callKitService = CallKitService(routeState: _routeState);
+    _callKitService = CallKitService(showCallScreenDelegate: _navigateToCallScreen);
 
     FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) async {
       var uid = FirebaseAuth.instance.currentUser?.uid;
@@ -207,6 +206,12 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
       _handleInitialUri();
     }
 
+    WidgetsBinding.instance.addObserver(this);
+
+    Future.delayed(Duration.zero, () async {
+      await _handleActiveCallScreen();
+    });
+
     super.initState();
   }
 
@@ -218,35 +223,63 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
             notifier: _routeState,
             child: CallKitServiceScope(
                 notifier: _callKitService,
-                child: CupertinoApp.router(
+                child: MaterialApp.router(
                   debugShowCheckedModeBanner: false,
                   localizationsDelegates: const [
                     DefaultCupertinoLocalizations.delegate,
                     DefaultMaterialLocalizations.delegate,
                     DefaultWidgetsLocalizations.delegate,
                   ],
+                  restorationScopeId: 'qrdoorbell',
                   supportedLocales: const [
                     Locale('en', 'US'),
                     // Locale('uk', 'UA'),
                   ],
-                  routerDelegate: _routerDelegate,
-                  routeInformationParser: _routeParser,
-                  theme: const CupertinoThemeData(
-                    brightness: Brightness.light,
-                    scaffoldBackgroundColor: Colors.white,
-                    barBackgroundColor: Colors.white,
-                    textTheme: CupertinoTextThemeData(
-                        navLargeTitleTextStyle: TextStyle(fontWeight: FontWeight.w500, color: Colors.black, fontSize: 34)),
+                  routerDelegate: SimpleRouterDelegate(
+                    routeState: _routeState,
+                    navigatorKey: _navigationService.navigationKey,
+                    builder: (context) => AppNavigator(
+                      navigatorKey: _navigationService.navigationKey,
+                    ),
                   ),
+                  routeInformationParser: _routeParser,
+                  // theme: const CupertinoThemeData(
+                  //   brightness: Brightness.light,
+                  //   scaffoldBackgroundColor: Colors.white,
+                  //   barBackgroundColor: Colors.white,
+                  //   textTheme: CupertinoTextThemeData(
+                  //       navLargeTitleTextStyle: TextStyle(fontWeight: FontWeight.w500, color: Colors.black, fontSize: 34)),
+                  // ),
                 ))));
+  }
+
+  @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    logger.info('didChangeAppLifecycleState: state=${state.name}');
+    if (state == AppLifecycleState.resumed) {
+      _handleActiveCallScreen();
+    }
   }
 
   @override
   void dispose() {
     _uriLinkStreamSubscription?.cancel();
     _routeState.dispose();
-    _routerDelegate.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  Future<void> _handleActiveCallScreen() async {
+    var activeCall = await _callKitService.getActiveCall();
+    if (activeCall != null) {
+      _navigateToCallScreen(activeCall);
+      // _navigationService.pushNamedIfNotCurrent('/doorbells/voip_session', args: activeCall);
+      // _navigationService.push(_callKitService.createCallScreenRoute(activeCall));
+    }
+  }
+
+  void _navigateToCallScreen(CallKeepCallData call) {
+    _routeState.goUri(Uri(path: '/doorbells/voip_session', queryParameters: {'callToken': call.extra?['callToken']}), args: call.toMap());
   }
 
   ParsedRoute _guard(ParsedRoute from) {
@@ -281,7 +314,7 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
     FirebaseCrashlytics.instance.setUserIdentifier(user?.uid ?? "");
 
     if (user == null) {
-      _routeState.go('/login');
+      _routeState.goUri(Uri(path: '/login'));
       return;
     }
 
@@ -310,7 +343,7 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> {
         message.data['doorbellId'] != null) {
       await _callKitService.handleCallMessage(message);
     } else if (message.data['doorbellId'] != null) {
-      await _routeState.go('/doorbells/${message.data['doorbellId']}');
+      await _routeState.goUri(Uri(path: '/doorbells/${message.data['doorbellId']}'));
     }
   }
 

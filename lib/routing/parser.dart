@@ -38,7 +38,8 @@ class TemplateRouteParser extends RouteInformationParser<ParsedRoute> {
         if (match == null) continue;
 
         final params = extract(parameters, match);
-        parsedRoute = ParsedRoute(path, pathTemplate, params, queryParams);
+        parsedRoute = ParsedRoute(path, pathTemplate, params, queryParams,
+            settings: RouteSettings(name: pathTemplate, arguments: routeInformation.state));
         break;
       }
     }
@@ -56,5 +57,6 @@ class TemplateRouteParser extends RouteInformationParser<ParsedRoute> {
       SynchronousFuture(parseRouteInformationSync(routeInformation));
 
   @override
-  RouteInformation restoreRouteInformation(ParsedRoute configuration) => RouteInformation(uri: configuration.toUri());
+  RouteInformation restoreRouteInformation(ParsedRoute configuration) =>
+      RouteInformation(uri: configuration.toUri(), state: configuration.settings.arguments);
 }

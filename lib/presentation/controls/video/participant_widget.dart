@@ -9,7 +9,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../app_options.dart';
 import '../../../data.dart';
 import '../../../tools.dart';
-import '../../screens/call_screen.dart';
 import '../../screens/empty_screen.dart';
 
 class ParticipantTrack {
@@ -20,13 +19,16 @@ class ParticipantTrack {
 
 abstract class ParticipantWidget extends StatefulWidget {
   abstract final Participant participant;
-  abstract final VideoTrack? videoTrack;
   abstract final String doorbellId;
+  final Room room;
   final VideoQuality quality;
   final BuildContextCallback endCall;
+  final bool isAnswered;
 
   const ParticipantWidget(
+    this.room,
     this.endCall, {
+    this.isAnswered = false,
     this.quality = VideoQuality.MEDIUM,
     Key? key,
   }) : super(key: key);
@@ -36,25 +38,27 @@ abstract class ParticipantWidgetState<T extends ParticipantWidget> extends State
   Timer? timer;
   bool _visible = true;
   bool _isAnswered = false;
-  VideoTrack? get activeVideoTrack;
+  Duration _callDuration = Duration.zero;
+
   TrackPublication? get videoPublication;
   TrackPublication? get firstAudioPublication;
-  Duration callDuration = Duration.zero;
 
-  Room? get room => context.findAncestorStateOfType<CallScreenState>()?.room;
-  bool get isMicEnabled => room?.localParticipant?.isMicrophoneEnabled() ?? false;
-  bool get isCamEnabled => room?.localParticipant?.isCameraEnabled() ?? false;
-  bool get isSpeakerOn => room?.speakerOn ?? true;
+  bool get isMicEnabled => widget.room.localParticipant?.isMicrophoneEnabled() ?? false;
+  bool get isCamEnabled => widget.room.localParticipant?.isCameraEnabled() ?? false;
+  bool get isSpeakerOn => widget.room.speakerOn ?? true;
 
   @override
   void initState() {
+    _isAnswered = widget.isAnswered;
+    _callDuration = Duration(milliseconds: DateTime.now().millisecond - widget.participant.joinedAt.millisecond);
     timer = Timer.periodic(const Duration(seconds: 1), (t) {
       setState(() {
-        callDuration += const Duration(seconds: 1);
+        _callDuration += const Duration(seconds: 1);
       });
     });
 
     super.initState();
+
     widget.participant.addListener(_onParticipantChanged);
     _onParticipantChanged();
   }
@@ -78,49 +82,49 @@ abstract class ParticipantWidgetState<T extends ParticipantWidget> extends State
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: CupertinoColors.darkBackgroundGray,
-        body: SizedBox(
-            width: double.infinity,
-            height: double.infinity,
-            child: Stack(
-              fit: StackFit.expand,
-              alignment: Alignment.topCenter,
+    return Container(
+        width: double.infinity,
+        height: double.infinity,
+        color: CupertinoColors.darkBackgroundGray,
+        child: Stack(
+          fit: StackFit.expand,
+          alignment: Alignment.topCenter,
+          children: [
+            InkWell(
+              onTap: () => setState(() => _visible = !_visible),
+              child: videoPublication != null && videoPublication!.track != null && videoPublication!.track is VideoTrack
+                  ? VideoTrackRenderer(
+                      videoPublication!.track as VideoTrack,
+                      fit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+                    )
+                  : EmptyScreen.black().withText('No Video'),
+            ),
+            Column(
               children: [
-                InkWell(
-                  onTap: () => setState(() => _visible = !_visible),
-                  child: activeVideoTrack != null
-                      ? VideoTrackRenderer(
-                          activeVideoTrack!,
-                          fit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
-                        )
-                      : EmptyScreen.black().withText('No Video'),
-                ),
-                Column(
-                  children: [
-                    _topCallControls(context),
-                    if (_isAnswered) _answeredCallControls(context),
-                    if (!_isAnswered) ...[
-                      Text(
-                        DataStore.of(context).getDoorbellById(widget.doorbellId)?.name ?? "Doorbell",
-                        style: const TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.w500),
-                      ),
-                      const Padding(padding: EdgeInsets.only(top: 5)),
-                      Text(
-                        "Doorbell Video",
-                        style: TextStyle(color: Colors.white.withAlpha(200), fontSize: 21),
-                      ),
-                      const Spacer(),
-                      _incomingCallControls(context),
-                    ],
-                    if (_isAnswered && AppSettings.homekitEnabled) ...[
-                      const Spacer(),
-                      _doorLockControls(context),
-                    ],
-                  ],
-                ),
+                _topCallControls(context),
+                if (_isAnswered)
+                  _answeredCallControls(context)
+                else ...[
+                  Text(
+                    DataStore.of(context).getDoorbellById(widget.doorbellId)?.name ?? "Doorbell",
+                    style: const TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.w500),
+                  ),
+                  const Padding(padding: EdgeInsets.only(top: 5)),
+                  Text(
+                    "Doorbell Video",
+                    style: TextStyle(color: Colors.white.withAlpha(200), fontSize: 21),
+                  ),
+                  const Spacer(),
+                  _incomingCallControls(context),
+                ],
+                if (_isAnswered && AppSettings.homekitEnabled) ...[
+                  const Spacer(),
+                  _doorLockControls(context),
+                ],
               ],
-            )));
+            ),
+          ],
+        ));
   }
 
   String _printDuration(Duration duration) {
@@ -130,9 +134,9 @@ abstract class ParticipantWidgetState<T extends ParticipantWidget> extends State
     return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
   }
 
-  String _getStateText(Room? room) {
-    var audioTracksCount = room?.participants.values.where((p) => p.audioTracks.isNotEmpty).length ?? 0;
-    var localAudioTracksCount = room?.localParticipant?.audioTracks.length ?? 0;
+  String _getStateText(Room room) {
+    var audioTracksCount = room.participants.values.where((p) => p.audioTracks.isNotEmpty).length ?? 0;
+    var localAudioTracksCount = room.localParticipant?.audioTracks.length ?? 0;
     if (audioTracksCount == 0) return "Connecting...";
     if (localAudioTracksCount == 0) return "Preview";
     if (audioTracksCount > 0) return "Active";
@@ -146,7 +150,7 @@ abstract class ParticipantWidgetState<T extends ParticipantWidget> extends State
       padding: const EdgeInsets.only(top: 48, left: 25, right: 25, bottom: 8),
       child: Row(children: [
         const Spacer(),
-        if (this._isAnswered)
+        if (_isAnswered)
           Chip(
             avatar: CircleAvatar(
                 backgroundColor: user.getAvatarColor(),
@@ -163,9 +167,9 @@ abstract class ParticipantWidgetState<T extends ParticipantWidget> extends State
             label: Container(
                 width: 76,
                 alignment: AlignmentDirectional.center,
-                child: Text(_printDuration(callDuration), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w300))),
-          ),
-        if (!_isAnswered)
+                child: Text(_printDuration(_callDuration), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w300))),
+          )
+        else
           Chip(
               backgroundColor: Colors.grey.shade600,
               label: Container(
@@ -177,7 +181,7 @@ abstract class ParticipantWidgetState<T extends ParticipantWidget> extends State
                         padding: EdgeInsets.only(right: 8),
                         child: Icon(CupertinoIcons.eye_fill, color: Colors.white, size: 16),
                       ),
-                      Text(_getStateText(room), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                      Text(_getStateText(widget.room), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                     ],
                   ))),
         const Spacer(),
@@ -206,7 +210,7 @@ abstract class ParticipantWidgetState<T extends ParticipantWidget> extends State
                   ),
                 ),
                 onPressed: () => setState(() {
-                      room?.localParticipant?.setMicrophoneEnabled(!isMicEnabled);
+                      widget.room.localParticipant?.setMicrophoneEnabled(!isMicEnabled);
                     })),
           ),
           Padding(
@@ -217,7 +221,7 @@ abstract class ParticipantWidgetState<T extends ParticipantWidget> extends State
                 padding: const EdgeInsets.all(10),
                 minSize: 58,
                 onPressed: () => setState(() {
-                      room?.localParticipant?.setCameraEnabled(!isCamEnabled);
+                      widget.room.localParticipant?.setCameraEnabled(!isCamEnabled);
                     }),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 3.0),
@@ -242,7 +246,7 @@ abstract class ParticipantWidgetState<T extends ParticipantWidget> extends State
                   ),
                 ),
                 onPressed: () => setState(() async {
-                      await room?.setSpeakerOn(!isSpeakerOn);
+                      await widget.room.setSpeakerOn(!isSpeakerOn);
                     })),
           ),
           const Spacer(),
@@ -261,7 +265,7 @@ abstract class ParticipantWidgetState<T extends ParticipantWidget> extends State
               ),
               onPressed: () async {
                 await widget.endCall(context);
-                setState(() {});
+                if (mounted) setState(() {});
               }),
         ],
       ),
@@ -303,8 +307,8 @@ abstract class ParticipantWidgetState<T extends ParticipantWidget> extends State
               ),
               onPressed: () => setState(() {
                     _isAnswered = true;
-                    room?.localParticipant?.setMicrophoneEnabled(true);
-                    room?.localParticipant?.setCameraEnabled(true);
+                    widget.room.localParticipant?.setMicrophoneEnabled(true);
+                    widget.room.localParticipant?.setCameraEnabled(true);
                   })),
           const Spacer(),
         ],

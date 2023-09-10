@@ -10,7 +10,7 @@ class ParsedRoute extends Route<dynamic> {
 
   static const _mapEquality = MapEquality<String, String>();
 
-  ParsedRoute(this.path, this.pathTemplate, this.parameters, this.queryParameters);
+  ParsedRoute(this.path, this.pathTemplate, this.parameters, this.queryParameters, {RouteSettings? settings}) : super(settings: settings);
 
   Uri toUri() => Uri(path: path, queryParameters: queryParameters);
 

@@ -1,0 +1,36 @@
+name: pip
+description: QR Doorbell iOS PiP integration plugin.
+publish_to: 'none'
+version: 0.0.0
+homepage: https://qrdoorbell.io/
+repository: https://github.com/qrdoorbell/mobile
+issue_tracker: https://github.com/qrdoorbell/mobile/issues
+
+topics:
+  - video
+  - livekit
+  - webrtc
+
+platforms:
+  - ios: '16.0'
+
+environment:
+  sdk: '>=3.1.0 <4.0.0'
+  flutter: '>=3.3.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  plugin_platform_interface: ^2.0.2
+  flutter_webrtc: ^0.9.40
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  plugin:
+    platforms:
+      ios:
+        pluginClass: PipPlugin

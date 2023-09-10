@@ -12,5 +12,9 @@
 	<array>
 		<string>applinks:j.qrdoorbell.io</string>
 	</array>
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.io.qrdoorbell.app-broadcast</string>
+	</array>
 </dict>
 </plist>

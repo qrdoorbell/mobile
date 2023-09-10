@@ -6,23 +6,22 @@ import '../../routing.dart';
 import '../controls/video/video_call.dart';
 import 'empty_screen.dart';
 
-extension VideoScreenExtensions on BuildContext {}
-
 class CallScreen extends StatefulWidget {
-  final String accessToken;
-  final String doorbellId;
+  final Map<String, dynamic> callEventData;
 
-  const CallScreen({super.key, required this.accessToken, required this.doorbellId});
+  const CallScreen({super.key, required this.callEventData});
 
   @override
   State<CallScreen> createState() => CallScreenState();
 }
 
-class CallScreenState extends State<CallScreen> {
+class CallScreenState extends State<CallScreen> with RestorationMixin {
   static final logger = Logger('CallScreenState');
 
-  Room? room;
-  EventsListener<RoomEvent>? listener;
+  final RestorableString callToken = RestorableString('');
+  final RestorableString doorbellId = RestorableString('');
+  final RestorableString livekitServer = RestorableString('qrdoorbell.livekit.cloud');
+  final RestorableBool wasAnswered = RestorableBool(false);
 
   @override
   void initState() {
@@ -30,46 +29,61 @@ class CallScreenState extends State<CallScreen> {
   }
 
   @override
-  void dispose() {
-    listener?.dispose();
-    room?.dispose();
-    super.dispose();
+  String? get restorationId => 'call_screen';
+
+  @override
+  void restoreState(RestorationBucket? oldBucket, bool initialRestore) {
+    registerForRestoration(callToken, 'callToken');
+    registerForRestoration(doorbellId, 'doorbellId');
+    registerForRestoration(livekitServer, 'livekitServer');
+    registerForRestoration(wasAnswered, 'wasAnswered');
+
+    if (oldBucket == null) {
+      callToken.value = widget.callEventData['callToken']!;
+      doorbellId.value = widget.callEventData['doorbellId']!;
+      livekitServer.value = widget.callEventData['livekitServer'] ?? 'qrdoorbell.livekit.cloud';
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    dynamic routeData = RouteStateScope.of(context).data;
-    return FutureBuilder(
-        future: _connectToRoom(routeData?['livekitServer'], widget.accessToken),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            logger.shout('An error ocured while CallScreen setup', snapshot.error, snapshot.stackTrace);
-            RouteStateScope.of(context).go('/doorbells/${widget.doorbellId}');
-            return EmptyScreen.black();
-          } else if (!snapshot.hasData) {
-            return EmptyScreen.black().withWaitingIndicator();
-          } else {
-            listener = room!.createListener();
-            return VideoCall(room!, listener!, widget.doorbellId);
-          }
-        });
+    return Scaffold(
+      body: FutureBuilder(
+          future: _connectToRoom(livekitServer.value, callToken.value),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              logger.shout('An error ocured while CallScreen setup', snapshot.error, snapshot.stackTrace);
+              return EmptyScreen.black()
+                  .withText('Failed to connect to the call')
+                  .withButton('Back', () => RouteStateScope.of(context).goUri(Uri(path: '/doorbells/${doorbellId.value}')));
+            }
+
+            if (!snapshot.hasData) {
+              return EmptyScreen.black().withWaitingIndicator();
+            }
+
+            if (snapshot.data == null) {
+              RouteStateScope.of(context).goUri(Uri(path: '/doorbells/${doorbellId.value}'));
+            }
+
+            return VideoCall(snapshot.data!, doorbellId.value, isAnswered: wasAnswered.value);
+          }),
+    );
   }
 
   Future<Room> _connectToRoom(String? livekitServer, String accessToken) async {
-    room = Room();
-
-    await room!.connect('https://${livekitServer ?? 'qrdoorbell.livekit.cloud'}/', accessToken,
+    var room = Room();
+    await room.connect('https://${livekitServer ?? 'qrdoorbell.livekit.cloud'}/', accessToken,
         roomOptions: const RoomOptions(
           adaptiveStream: true,
-          defaultVideoPublishOptions: VideoPublishOptions(
-            simulcast: false,
-          ),
+          dynacast: true,
         ),
         fastConnectOptions: FastConnectOptions(
           microphone: const TrackOption(enabled: false),
           camera: const TrackOption(enabled: false),
+          screen: const TrackOption(enabled: false),
         ));
 
-    return room!;
+    return room;
   }
 }

@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_callkeep/flutter_callkeep.dart';
 import 'package:logging/logging.dart';
 
 import '../presentation/screens/profile_delete_screen.dart';
@@ -31,6 +33,7 @@ class _AppNavigatorState extends State<AppNavigator> {
   final _forgotPasswordKey = const ValueKey('Forgot password');
   final _waitScreenKey = const ValueKey('Wait screen');
   final _mainScreenKey = const ValueKey('Main screen');
+  final _callScreenKey = const ValueKey('Call screen');
   final _inviteScreenKey = const ValueKey('Invite screen');
   final _doorbellDetailsKey = const ValueKey('Doorbell details screen');
   final _doorbellDetailsEditKey = const ValueKey('Doorbell details editor screen');
@@ -41,7 +44,6 @@ class _AppNavigatorState extends State<AppNavigator> {
     final pathTemplate = routeState.route.pathTemplate;
 
     var doorbellId = routeState.route.parameters['doorbellId'];
-    var callAccessToken = routeState.route.parameters['accessToken'];
     var inviteId = routeState.route.parameters['inviteId'];
 
     return Navigator(
@@ -50,13 +52,22 @@ class _AppNavigatorState extends State<AppNavigator> {
       onPopPage: (route, dynamic result) {
         // When a page that is stacked on top of the scaffold is popped, display the /doorbells on a back
         if (route.settings is Page && (route.settings as Page).key == _doorbellDetailsKey) {
-          routeState.go('/doorbells');
+          routeState.goUri(Uri(path: '/doorbells'));
         }
 
         return route.didPop(result);
       },
       pages: [
-        if (routeState.route.pathTemplate.startsWith('/login')) ...[
+        // path: /doorbells/voip_session
+        if (routeState.route.pathTemplate == '/doorbells/voip_session' && routeState.route.settings.arguments != null)
+          MaterialPage(
+            key: _callScreenKey,
+            fullscreenDialog: true,
+            restorationId: 'voip_session',
+            name: 'QR Doorbell Call',
+            child: CallScreen(callEventData: CallKeepCallData.fromMap(routeState.route.settings.arguments! as Map<String, dynamic>).extra!),
+          )
+        else if (routeState.route.pathTemplate.startsWith('/login')) ...[
           CupertinoPage(
             key: _signInKey,
             title: 'Sign in',
@@ -110,18 +121,6 @@ class _AppNavigatorState extends State<AppNavigator> {
                 key: _doorbellDetailsEditKey,
                 title: 'Doorbell edit',
                 child: DoorbellEditScreen(doorbellId: doorbellId),
-              ),
-            if (pathTemplate == '/doorbells/:doorbellId/ring/:accessToken' && callAccessToken != null)
-              CupertinoPage(
-                key: _doorbellDetailsEditKey,
-                title: 'Incoming call',
-                child: CallScreen(accessToken: callAccessToken, doorbellId: doorbellId),
-              ),
-            if (pathTemplate == '/doorbells/:doorbellId/join/:accessToken' && callAccessToken != null)
-              CupertinoPage(
-                key: _doorbellDetailsEditKey,
-                title: 'Join call',
-                child: CallScreen(accessToken: callAccessToken, doorbellId: doorbellId),
               ),
             if (pathTemplate == '/doorbells/:doorbellId/users')
               CupertinoPage(

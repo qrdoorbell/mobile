@@ -17,16 +17,17 @@ class EmptyScreen extends StatelessWidget {
   EmptyScreen withChild(Widget child) => EmptyScreen(isBlack: isBlack, button: button, child: child);
   EmptyScreen withBlackBackground() => isBlack ? this : EmptyScreen(isBlack: true, button: button, child: child);
   EmptyScreen withWhiteBackground() => !isBlack ? this : EmptyScreen(isBlack: false, button: button, child: child);
-  EmptyScreen withText(String text) => withChild(Text(text));
+  EmptyScreen withText(String text, {TextStyle? textStyle}) => withChild(
+      Text(text, style: textStyle ?? TextStyle(color: isBlack ? CupertinoColors.white : CupertinoColors.darkBackgroundGray, fontSize: 20)));
   EmptyScreen withButton(String text, void Function() onPressed) =>
       EmptyScreen(button: CupertinoButton.filled(onPressed: onPressed, child: Text(text)), isBlack: isBlack, child: child);
-  EmptyScreen withWaitingIndicator() =>
-      withChild(LoadingAnimationWidget.staggeredDotsWave(color: isBlack ? Colors.white : CupertinoColors.darkBackgroundGray, size: 120));
+  EmptyScreen withWaitingIndicator() => withChild(
+      LoadingAnimationWidget.staggeredDotsWave(color: isBlack ? CupertinoColors.white : CupertinoColors.darkBackgroundGray, size: 120));
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: isBlack ? CupertinoColors.darkBackgroundGray : Colors.white,
+        backgroundColor: isBlack ? CupertinoColors.darkBackgroundGray : CupertinoColors.white,
         body: Center(
             child: Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
           SvgPicture.asset(
@@ -39,6 +40,6 @@ class EmptyScreen extends StatelessWidget {
         ])));
   }
 
-  factory EmptyScreen.black() => const EmptyScreen(isBlack: true, child: Padding(padding: EdgeInsets.zero));
-  factory EmptyScreen.white() => const EmptyScreen(isBlack: false, child: Padding(padding: EdgeInsets.zero));
+  factory EmptyScreen.black() => EmptyScreen(isBlack: true, child: Container());
+  factory EmptyScreen.white() => EmptyScreen(isBlack: false, child: Container());
 }

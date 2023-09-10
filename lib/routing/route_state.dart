@@ -16,7 +16,7 @@ class RouteState extends ChangeNotifier {
   dynamic get data => _data;
 
   set route(ParsedRoute route) {
-    // if (_route == route) return;
+    if (_route == route) return;
 
     _route = route;
     notifyListeners();
@@ -35,9 +35,14 @@ class RouteState extends ChangeNotifier {
         "timeout": timeout
       });
 
-  Future<void> go(String route, {dynamic data}) async {
+  @Deprecated('Use goUri instead')
+  Future<void> go(String uri, {dynamic data}) async {
     _data = data;
-    this.route = _parser.parseRouteInformationSync(RouteInformation(uri: Uri.parse(route)));
+    route = _parser.parseRouteInformationSync(RouteInformation(uri: Uri.parse(uri)));
+  }
+
+  Future<void> goUri(Uri uri, {Object? args}) async {
+    route = _parser.parseRouteInformationSync(RouteInformation(uri: uri, state: args));
   }
 
   Route parseRouteSync(String route) {

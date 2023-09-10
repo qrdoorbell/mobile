@@ -7,17 +7,9 @@ class RemoteParticipantWidget extends ParticipantWidget {
   @override
   final RemoteParticipant participant;
   @override
-  final VideoTrack? videoTrack;
-  @override
   final String doorbellId;
 
-  const RemoteParticipantWidget(
-    this.participant,
-    this.videoTrack,
-    this.doorbellId,
-    super.endCall, {
-    Key? key,
-  }) : super(key: key);
+  const RemoteParticipantWidget(super.room, this.participant, this.doorbellId, super.endCall, {super.key, super.isAnswered, super.quality});
 
   @override
   State<StatefulWidget> createState() => RemoteParticipantWidgetState();
@@ -25,12 +17,8 @@ class RemoteParticipantWidget extends ParticipantWidget {
 
 class RemoteParticipantWidgetState extends ParticipantWidgetState<RemoteParticipantWidget> {
   @override
-  RemoteTrackPublication<RemoteVideoTrack>? get videoPublication =>
-      widget.participant.videoTracks.where((element) => element.sid == widget.videoTrack?.sid).firstOrNull;
+  RemoteTrackPublication<RemoteVideoTrack>? get videoPublication => widget.participant.videoTracks.firstOrNull;
 
   @override
   RemoteTrackPublication<RemoteAudioTrack>? get firstAudioPublication => widget.participant.audioTracks.firstOrNull;
-
-  @override
-  VideoTrack? get activeVideoTrack => widget.participant.videoTracks.firstOrNull?.track;
 }

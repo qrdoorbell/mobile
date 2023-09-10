@@ -2,9 +2,11 @@ import UIKit
 import Flutter
 import PushKit
 import flutter_callkeep
+import AVFoundation
+import AVKit
 
 @UIApplicationMain
-@objc class AppDelegate: FlutterAppDelegate, PKPushRegistryDelegate {
+@objc class AppDelegate: FlutterAppDelegate, PKPushRegistryDelegate, AVPictureInPictureControllerDelegate {
     override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
@@ -14,7 +16,7 @@ import flutter_callkeep
         let voipRegistry: PKPushRegistry = PKPushRegistry(queue: DispatchQueue.main)
         voipRegistry.delegate = self
         voipRegistry.desiredPushTypes = [PKPushType.voIP]
-        
+
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
@@ -52,6 +54,7 @@ import flutter_callkeep
         data.appName = "QR Doorbell"
         data.iconName = "CallKitLogo"
         data.handle = doorbellName
+        data.audioSessionMode = "videoChat"
         data.extra = [
             "userId": userId, 
             "platform": "ios", 
@@ -65,5 +68,17 @@ import flutter_callkeep
         ]
 
         SwiftCallKeepPlugin.sharedInstance?.displayIncomingCall(data, fromPushKit: true)
+    }
+    
+    func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        print("pictureInPictureControllerWillStartPictureInPicture: \(pictureInPictureController)")
+    }
+
+    func pictureInPictureControllerDidStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        print("pictureInPictureControllerDidStartPictureInPicture: \(pictureInPictureController)")
+    }
+
+    func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, failedToStartPictureInPictureWithError error: Error) {
+        print("failedToStartPictureInPictureWithError: \(error)")
     }
 }

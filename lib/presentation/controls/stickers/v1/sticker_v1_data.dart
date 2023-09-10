@@ -10,7 +10,7 @@ import '../../../../model/sticker.dart';
 class StickerV1Data extends StickerData {
   static final logger = Logger('StickerV1Data');
 
-  static final defaultData = {'apt': '', 'vertical': true, 'icon': null, 'accentColor': Colors.yellow.value};
+  static final defaultData = {'apt': '', 'vertical': true, 'icon': null, 'accentColor': Colors.yellow.shade600.value};
 
   MaterialColor? _accentColor;
   IconData? _iconData;

@@ -4,16 +4,29 @@ import 'package:flutter_callkeep/flutter_callkeep.dart';
 import 'package:logging/logging.dart';
 import 'package:uuid/uuid.dart';
 
-import '../routing/route_state.dart';
-
 class CallKitService extends ChangeNotifier {
   static final logger = Logger('CallKitService');
 
-  final RouteState routeState;
+  final void Function(CallKeepCallData call) showCallScreenDelegate;
   final Map<String, String> _doorbellCalls = {}; // CallToken -> CallKit UUID
 
-  CallKitService({required this.routeState}) {
+  CallKitService({required this.showCallScreenDelegate}) {
     CallKeep.instance.onEvent.listen(_onCallKitEvent);
+  }
+
+  Future<CallKeepCallData?> getActiveCall() async {
+    var calls = await CallKeep.instance.activeCalls();
+
+    CallKeepCallData? activeCall;
+    for (var call in calls) {
+      if (call.extra != null && call.extra!['doorbellId'] != null) {
+        _doorbellCalls.putIfAbsent(call.extra!['doorbellId'], () => call.uuid);
+
+        if (call.isAccepted) activeCall = call;
+      }
+    }
+
+    return activeCall;
   }
 
   Future<String> getVoipPushToken() async {
@@ -23,17 +36,26 @@ class CallKitService extends ChangeNotifier {
   Future<void> endCall(doorbellId) async {
     logger.info('End Call: doorbellId=$doorbellId; callId=${_doorbellCalls[doorbellId]}');
     if (_doorbellCalls.containsKey(doorbellId)) {
-      await CallKeep.instance.endCall(_doorbellCalls[doorbellId]!);
+      try {
+        await CallKeep.instance.endCall(_doorbellCalls[doorbellId]!);
+      } catch (e) {
+        logger.warning('Failed to end call', e);
+      }
       _doorbellCalls.remove(doorbellId);
     }
   }
 
+  // PageRoute createCallScreenRoute(CallKeepCallData call) {
+  //   return CupertinoPageRoute(
+  //       settings: RouteSettings(name: '/voip_session', arguments: call.extra!),
+  //       builder: (context) => CallScreen(
+  //           callEventData: Map.fromEntries(call.extra!.entries.map((e) => MapEntry<String, String>(e.key, e.value?.toString() ?? '')))));
+  // }
+
   Future<void> _onCallKitEvent(CallKeepEvent? event) async {
     if (event == null) return;
 
-    logger.info("Received CallKit event: ${event.toString()}");
-    logger.fine(event);
-
+    logger.info("Received CallKit event: type=${event.type.toString()}, event=${event.data.toString()}");
     switch (event.type) {
       case CallKeepEventType.callIncoming:
         // received an incoming call
@@ -47,9 +69,15 @@ class CallKitService extends ChangeNotifier {
         if (callEvent.data.extra != null) {
           var doorbellId = callEvent.data.extra?['doorbellId'];
           var callToken = callEvent.data.extra?['callToken'];
-          _doorbellCalls.putIfAbsent(doorbellId, () => callEvent.data.uuid);
 
-          routeState.go("/doorbells/$doorbellId/join/$callToken", data: callEvent.data.extra!);
+          if (doorbellId == null || callToken == null) {
+            logger.warning('Cannot find doorbellId or callToken in CallKit extra data');
+            return;
+          }
+
+          _doorbellCalls.putIfAbsent(doorbellId, () => callEvent.data.uuid);
+          showCallScreenDelegate(callEvent.data);
+          // navigationService.pushNamedIfNotCurrent('/doorbells/voip_session', args: callEvent.data);
         }
         break;
       case CallKeepEventType.callDecline:
@@ -93,10 +121,9 @@ class CallKitService extends ChangeNotifier {
         break;
       case CallKeepEventType.devicePushTokenUpdated:
         // only iOS
-        logger.log(Level.INFO, 'Got VoIP device token event: $event');
         break;
       default:
-        logger.warning('CallKit event is null');
+        logger.warning('Unknown CallKit event type: ${event.type}');
         break;
     }
   }
@@ -128,17 +155,16 @@ class CallKitService extends ChangeNotifier {
           androidConfig: CallKeepAndroidConfig(),
           iosConfig: CallKeepIosConfig(
               audioSessionActive: true,
-              audioSessionMode: AvAudioSessionMode.videoChat,
               audioSessionPreferredIOBufferDuration: 0.05,
               audioSessionPreferredSampleRate: 44100,
               supportsDTMF: false,
               supportsGrouping: false,
-              supportsHolding: false,
+              supportsHolding: true,
               supportsUngrouping: false,
               iconName: 'CallKitLogo',
               handleType: CallKitHandleType.generic,
               isVideoSupported: true,
-              maximumCallGroups: 1,
+              maximumCallGroups: 2,
               maximumCallsPerCallGroup: 1,
               ringtoneFileName: 'system_ringtone_default')));
     } catch (error) {

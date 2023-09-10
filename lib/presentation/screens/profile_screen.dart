@@ -4,10 +4,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_callkeep/flutter_callkeep.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:pip/pip.dart';
 
 import '../../data.dart';
 import '../../routing/route_state.dart';
-import '../../services/call_emulator_service.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({
@@ -139,7 +139,17 @@ class ProfileScreen extends StatelessWidget {
                               : const Icon(Icons.loop),
                         ),
                       )),
-                  TextButton(onPressed: CallEmulatorService().setNextCallState, child: const Text('Emulate call')),
+                  TextButton(
+                      onPressed: () {
+                        Pip.createPipVideoCall(remoteStreamId: "remoteStreamId", peerConnectionId: "peerConnectionId");
+                      },
+                      // onPressed: () => NavigationService().pushNamedIfNotCurrent('/doorbells/voip_session',
+                      //     args: CallKeepCallData.fromMap(
+                      //         {'id': 'dummy', 'callerName': 'me', 'handle': 'me', 'hasVideo': true, 'isAccepted': false})),
+                      // onPressed: () => RouteStateScope.of(context).goUri(Uri(path: '/doorbells/voip_session'),
+                      //     args: CallKeepCallData.fromMap(
+                      //         {'id': 'dummy', 'callerName': 'me', 'handle': 'me', 'hasVideo': true, 'isAccepted': false})),
+                      child: const Text('Emulate call')),
                   // TextButton(
                   //     onPressed: () async =>
                   //         await FirebaseAuth.instance.currentUser?.updatePhotoURL('https://avatars.githubusercontent.com/u/2341158?v=4'),

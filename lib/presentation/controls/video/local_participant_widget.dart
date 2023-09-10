@@ -7,17 +7,9 @@ class LocalParticipantWidget extends ParticipantWidget {
   @override
   final LocalParticipant participant;
   @override
-  final VideoTrack? videoTrack;
-  @override
   final String doorbellId;
 
-  const LocalParticipantWidget(
-    this.participant,
-    this.videoTrack,
-    this.doorbellId,
-    super.endCall, {
-    Key? key,
-  }) : super(key: key);
+  const LocalParticipantWidget(super.room, this.participant, this.doorbellId, super.endCall, {super.key, super.isAnswered, super.quality});
 
   @override
   State<StatefulWidget> createState() => LocalParticipantWidgetState();
@@ -25,12 +17,8 @@ class LocalParticipantWidget extends ParticipantWidget {
 
 class LocalParticipantWidgetState extends ParticipantWidgetState<LocalParticipantWidget> {
   @override
-  LocalTrackPublication<LocalVideoTrack>? get videoPublication =>
-      widget.participant.videoTracks.where((element) => element.sid == widget.videoTrack?.sid).firstOrNull;
+  LocalTrackPublication<LocalVideoTrack>? get videoPublication => widget.participant.videoTracks.firstOrNull;
 
   @override
   LocalTrackPublication<LocalAudioTrack>? get firstAudioPublication => widget.participant.audioTracks.firstOrNull;
-
-  @override
-  VideoTrack? get activeVideoTrack => widget.videoTrack;
 }
