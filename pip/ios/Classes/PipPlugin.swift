@@ -14,7 +14,7 @@ public class PipPlugin: NSObject, FlutterPlugin {
         let peerConnectionId = arguments["peerConnectionId"] as? String ?? ""
         let isRemoteCameraEnable = arguments["isRemoteCameraEnable"] as? Bool ?? false
 
-        PipViewController.shared!.configurationPictureInPicture(
+        PipViewController.shared.configurationPictureInPicture(
             result: result,
             peerConnectionId: peerConnectionId,
             remoteStreamId: remoteStreamId,
@@ -24,7 +24,7 @@ public class PipPlugin: NSObject, FlutterPlugin {
         result(true)
         break
     case "disposePiP":
-        PipViewController.shared!.disposePictureInPicture()
+        PipViewController.shared.disposePictureInPicture()
         
         result(true)
         break

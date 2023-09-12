@@ -1,0 +1,1605 @@
+2023-09-12 21:07:12.710215+0300 QR Doorbell App[22053:1631971] Metal API Validation Enabled
+2023-09-12 21:07:12.959103+0300 QR Doorbell App[22053:1631971] [VERBOSE-2:FlutterDarwinContextMetalImpeller.mm(37)] Using the Impeller rendering backend.
+2023-09-12 21:07:13.034541+0300 QR Doorbell App[22053:1632197] 10.12.0 - [FirebaseCore][I-COR000005] No app has been configured yet.
+2023-09-12 21:07:13.089123+0300 QR Doorbell App[22053:1631971] [Firebase/Crashlytics] Version 10.12.0
+2023-09-12 21:07:13.113394+0300 QR Doorbell App[22053:1632202] 10.12.0 - [GoogleUtilities/AppDelegateSwizzler][I-SWZ001011] App Delegate Proxy is disabled.
+"PipPlugin.registering: registrar=<FlutterEngineRegistrar: 0x2813c5ec0>"
+"PipPlugin.registered: registrar=<FlutterEngineRegistrar: 0x2813c5ec0> channel=<FlutterMethodChannel: 0x281d23360> instance=<pip.PipPlugin: 0x281199990>"
+"PipViewController.viewDidLoad"
+32 bytes
+3cc4805506d412e0799439f7dfa2b820f12605aba6a1311e22de19b633bea9af
+2023-09-12 21:07:13.143181+0300 QR Doorbell App[22053:1632228] flutter: The Dart VM service is listening on http://127.0.0.1:51142/xrJmB3ZVI3s=/
+2023-09-12 21:07:14.313513+0300 QR Doorbell App[22053:1632210] flutter: 21:07:14: Remote config fetched and activated
+2023-09-12 21:07:14.441925+0300 QR Doorbell App[22053:1632210] flutter: 21:07:14: setNewRoutePath: path=/doorbells configuration=<ParsedRoute template: /doorbells path: /doorbells parameters: {} query parameters: {}>
+2023-09-12 21:07:14.569884+0300 QR Doorbell App[22053:1632210] flutter: DataStore: FirebaseAuth.onAuthStateChanged: user=User(displayName: null, email: a@qx.zone, isEmailVerified: true, isAnonymous: false, metadata: UserMetadata(creationTime: 2023-02-15 19:23:19.169Z, lastSignInTime: 2023-07-30 14:13:02.778Z), phoneNumber: null, photoURL: null, providerData, [UserInfo(displayName: null, email: a@qx.zone, phoneNumber: null, photoURL: null, providerId: apple.com, uid: 001105.b3d903dab939443b923abcbc9b7dc0a9.1733), UserInfo(displayName: null, email: a@qx.zone, phoneNumber: null, photoURL: null, providerId: password, uid: a@qx.zone)], refreshToken: AMf-vByMcZzZkbNN2nizUlvCmb2QMXqxkY5GfQ_TuM6EDW-iyxyI0aGfqi-t5lrxOBz-RqQytPRYkCOCVKEqX-nh1GFse-ecR7syLyWu6LfOIM33w1JGOQm6l83ONZuF9hI9PGNmLhoeIkLgg1FgGKtUI_lDqyo_vdputWDJZUwGkd48cbQtDmN9DayYusbb5WlyymKC8GRXsOVGQjQxL3hp1hv_F5lLLJCwPHTTJhl_C7aducQwh_VViaglFGBVa_qxLGFUTh1_rrrDw9fRY_NZojqKdmKO7g, tenantId: null, uid: 7S7mXJoRUUQw7wCHG27wFEzepi13)
+2023-09-12 21:07:14.570080+0300 QR Doorbell App[22053:1632210] flutter: DataStore: FirebaseAuth.onUserChanges: user=7S7mXJoRUUQw7wCHG27wFEzepi13, dataStore.currentUser=null
+2023-09-12 21:07:14.570313+0300 QR Doorbell App[22053:1632210] flutter: 21:07:14: FirebaseDataStore.setUid: uid=7S7mXJoRUUQw7wCHG27wFEzepi13
+2023-09-12 21:07:14.570743+0300 QR Doorbell App[22053:1632210] flutter: 21:07:14: FirebaseDataStore.startTransaction: Starting transaction #0 for '#1      FirebaseDataStore.setUid (package:qrdoorbell_mobile/services/db/firebase_data_store.dart:94:13)'
+2023-09-12 21:07:14.570801+0300 QR Doorbell App[22053:1632210] flutter: 21:07:14: FirebaseDataStore.startTransaction: connecting to DB
+2023-09-12 21:07:14.575925+0300 QR Doorbell App[22053:1632210] flutter: 21:07:14: Connection state changed: state=ConnectivityResult.wifi
+2023-09-12 21:07:14.577554+0300 QR Doorbell App[22053:1632210] flutter: 21:07:14: User granted permission: AuthorizationStatus.authorized
+2023-09-12 21:07:14.657608+0300 QR Doorbell App[22053:1632210] flutter: 21:07:14: FirebaseDataStore.reloadData: Reloading data for user: userId='7S7mXJoRUUQw7wCHG27wFEzepi13'
+2023-09-12 21:07:14.657770+0300 QR Doorbell App[22053:1632210] flutter: 21:07:14: FirebaseDataStore.startTransaction: Starting transaction #1 for '#1      FirebaseDataStore.reloadData (package:qrdoorbell_mobile/services/db/firebase_data_store.dart:127:13)'
+2023-09-12 21:07:15.508334+0300 QR Doorbell App[22053:1632210] flutter: 21:07:15: Doorbells to be loaded: [doorbell2_id, 44n1LhkB_I, 42idKoN6pm, doorbell1_id, d9VBVkuYmu]
+2023-09-12 21:07:15.508793+0300 QR Doorbell App[22053:1632210] flutter: 21:07:15: FirebaseDataStore.startTransaction: Starting transaction #2 for '#1      DoorbellsRepository.reload (package:qrdoorbell_mobile/services/db/firebase_repositories.dart:51:21)'
+2023-09-12 21:07:15.592189+0300 QR Doorbell App[22053:1632210] flutter: 21:07:15: FirebaseDataStore.endTransaction: Ending transaction #2
+2023-09-12 21:07:15.592808+0300 QR Doorbell App[22053:1632210] flutter: 21:07:15: Reload DoorbellUsers
+2023-09-12 21:07:15.592945+0300 QR Doorbell App[22053:1632210] flutter: 21:07:15: FirebaseDataStore.startTransaction: Starting transaction #2 for '#1      DoorbellUsersRepository.reload (package:qrdoorbell_mobile/services/db/firebase_repositories.dart:139:21)'
+2023-09-12 21:07:15.593158+0300 QR Doorbell App[22053:1632210] flutter: 21:07:15: FirebaseDataStore.startTransaction: Starting transaction #3 for '#1      DoorbellEventsRepository.reload (package:qrdoorbell_mobile/services/db/firebase_repositories.dart:100:21)'
+2023-09-12 21:07:15.655919+0300 QR Doorbell App[22053:1632210] flutter: 21:07:15: Loading user display names from DB
+2023-09-12 21:07:15.657016+0300 QR Doorbell App[22053:1632210] flutter: 21:07:15: User ids: {FZ0yS0wTKNcykP7jeY3AO1S7GYx1, 1odRFCNLjUQ718GlI3FBhasizxWD, ga6feMtrMYezTzVfr2X5VMKxSy82, 0oTfTIWTGHbBROWez3wMXvppg0I2, 7S7mXJoRUUQw7wCHG27wFEzepi13, vLTssWEApMVlqpKfGtuxxivbiET2, Z9AWz0iTBje3Qx5EXB4URC8pNVC3}
+2023-09-12 21:07:15.719364+0300 QR Doorbell App[22053:1632210] flutter: 21:07:15: Update DoorbellUsers cache
+2023-09-12 21:07:15.720888+0300 QR Doorbell App[22053:1632210] flutter: 21:07:15: FirebaseDataStore.endTransaction: Ending transaction #3
+2023-09-12 21:07:15.720977+0300 QR Doorbell App[22053:1632210] flutter: 21:07:15: DoorbellUsers cache reload complete!
+2023-09-12 21:07:16.242105+0300 QR Doorbell App[22053:1632210] flutter: 21:07:16: FirebaseDataStore.endTransaction: Ending transaction #2
+2023-09-12 21:07:16.242918+0300 QR Doorbell App[22053:1632210] flutter: 21:07:16: FirebaseDataStore.endTransaction: Ending transaction #1
+2023-09-12 21:07:16.242966+0300 QR Doorbell App[22053:1632210] flutter: 21:07:16: Firebase DataStore reload complete!
+2023-09-12 21:07:16.243004+0300 QR Doorbell App[22053:1632210] flutter: 21:07:16: FirebaseDataStore.endTransaction: Ending transaction #0
+2023-09-12 21:07:16.243038+0300 QR Doorbell App[22053:1632210] flutter: 21:07:16: FirebaseDataStore.endTransaction: disconnecting from DB
+2023-09-12 21:07:16.557798+0300 QR Doorbell App[22053:1632210] flutter: 21:07:16: FirebaseDataStore.updateVoipPushToken: voipPushToken=3cc4805506d412e0799439f7dfa2b820f12605aba6a1311e22de19b633bea9af
+2023-09-12 21:07:16.557915+0300 QR Doorbell App[22053:1632210] flutter: 21:07:16: FirebaseDataStore.startTransaction: Starting transaction #0 for '#1      FirebaseDataStore.updateVoipPushToken (package:qrdoorbell_mobile/services/db/firebase_data_store.dart:61:11)'
+2023-09-12 21:07:16.557954+0300 QR Doorbell App[22053:1632210] flutter: 21:07:16: FirebaseDataStore.startTransaction: connecting to DB
+2023-09-12 21:07:16.917363+0300 QR Doorbell App[22053:1632210] flutter: 21:07:16: FirebaseDataStore.endTransaction: Ending transaction #0
+2023-09-12 21:07:16.917717+0300 QR Doorbell App[22053:1632210] flutter: 21:07:16: FirebaseDataStore.endTransaction: disconnecting from DB
+2023-09-12 21:07:16.926989+0300 QR Doorbell App[22053:1632210] flutter: 21:07:16: FirebaseDataStore.updateFcmPushToken: fcmPushToken=eDOmf7ZeDUrjkQV0WkyQk9:APA91bEBApnQ7SdiKtnOD9kCwRCapuEgOXRQq-10BiBVd1xrm1Zho6ztsSG2yOYHydZbSjqTYGHBDQ6fxrMptiJkCZJdbNRmZPwANIkdRD5YGor_RI0PTdIBolka6cI3NVnl5454vYL5
+2023-09-12 21:07:16.927291+0300 QR Doorbell App[22053:1632210] flutter: 21:07:16: FirebaseDataStore.startTransaction: Starting transaction #0 for '#1      FirebaseDataStore.updateFcmPushToken (package:qrdoorbell_mobile/services/db/firebase_data_store.dart:78:11)'
+2023-09-12 21:07:16.927389+0300 QR Doorbell App[22053:1632210] flutter: 21:07:16: FirebaseDataStore.startTransaction: connecting to DB
+2023-09-12 21:07:17.207153+0300 QR Doorbell App[22053:1632210] flutter: 21:07:17: FirebaseDataStore.endTransaction: Ending transaction #0
+2023-09-12 21:07:17.207615+0300 QR Doorbell App[22053:1632210] flutter: 21:07:17: FirebaseDataStore.endTransaction: disconnecting from DB
+didReceiveIncomingPushWith PKPushType(_rawValue: PKPushTypeVoIP): [AnyHashable("stickerId"): P0r6MijWpZ, AnyHashable("id"): a625fe5f-b7ca-5be9-9c9a-40e2d2841f23, AnyHashable("callerId"): doorbell1_id, AnyHashable("callerName"): Doorbell_1, AnyHashable("handle"): Doorbell_1, AnyHashable("aps"): {
+    alert = "Somebody rangs the 'Doorbell_1'";
+    badge = 1;
+    sound = "ping.aiff";
+}, AnyHashable("title"): QR Doorbell, AnyHashable("doorbellEnabled"): 1, AnyHashable("callType"): incoming, AnyHashable("eventType"): call, AnyHashable("livekitServer"): qrdoorbell.livekit.cloud, AnyHashable("callToken"): eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWxleCBZZXZ0dXNoZW5rbyIsInZpZGVvIjp7InJvb21Kb2luIjp0cnVlLCJyb29tIjoiRG9vcmJlbGxfMTogTllQbTVzUmNJNSIsInJvb21BZG1pbiI6dHJ1ZSwiaGlkZGVuIjpmYWxzZSwiY2FuVXBkYXRlT3duTWV0YWRhdGEiOnRydWV9LCJpYXQiOjE2OTQ1NDIwNDAsIm5iZiI6MTY5NDU0MjA0MCwiZXhwIjoxNjk0NTQyMTYwLCJpc3MiOiJBUElEUHV6amVGeVZXRTciLCJzdWIiOiJ1c2VyLTdTN21YSm9SVVVRdzd3Q0hHMjd3RkV6ZXBpMTMiLCJqdGkiOiJ1c2VyLTdTN21YSm9SVVVRdzd3Q0hHMjd3RkV6ZXBpMTMifQ.uJj4HHldDVpLq6ntT5EOPEwQ0wB3EHcpOCGNu9vUJm4, AnyHashable("doorbellName"): Doorbell_1, AnyHashable("isVideo"): 1, AnyHashable("eventId"): NYPm5sRcI5, AnyHashable("serverTimestampMs"): 1694542040782, AnyHashable("doorbellId"): doorbell1_id]
+2023-09-12 21:07:21.466998+0300 QR Doorbell App[22053:1632210] flutter: 21:07:21: Received CallKit event: type=CallKeepEventType.callIncoming, event=CallKeepCallData(uuid: a625fe5f-b7ca-5be9-9c9a-40e2d2841f23, callerName: Doorbell_1, handle: Doorbell_1, hasVideo: true, duration: 30000.0, extra: {userId: doorbell1_id, doorbellId: doorbell1_id, doorbellName: Doorbell_1, platform: ios, callToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWxleCBZZXZ0dXNoZW5rbyIsInZpZGVvIjp7InJvb21Kb2luIjp0cnVlLCJyb29tIjoiRG9vcmJlbGxfMTogTllQbTVzUmNJNSIsInJvb21BZG1pbiI6dHJ1ZSwiaGlkZGVuIjpmYWxzZSwiY2FuVXBkYXRlT3duTWV0YWRhdGEiOnRydWV9LCJpYXQiOjE2OTQ1NDIwNDAsIm5iZiI6MTY5NDU0MjA0MCwiZXhwIjoxNjk0NTQyMTYwLCJpc3MiOiJBUElEUHV6amVGeVZXRTciLCJzdWIiOiJ1c2VyLTdTN21YSm9SVVVRdzd3Q0hHMjd3RkV6ZXBpMTMiLCJqdGkiOiJ1c2VyLTdTN21YSm9SVVVRdzd3Q0hHMjd3RkV6ZXBpMTMifQ.uJj4HHldDVpLq6ntT5EOPEwQ0wB3EHcpOCGNu9vUJm4, livekitServer: qrdoorbell.livekit.cloud, stickerId: P0r6MijWpZ, doorbellEnabled: true, serverTimestampMs: 1694542040782}, isAccepted: false)
+2023-09-12 21:07:21.653092+0300 QR Doorbell App[22053:1632210] flutter: 21:07:21: didChangeAppLifecycleState: state=inactive
+2023-09-12 21:07:22.177159+0300 QR Doorbell App[22053:1632210] flutter: 21:07:22: didChangeAppLifecycleState: state=hidden
+2023-09-12 21:07:22.177281+0300 QR Doorbell App[22053:1632210] flutter: 21:07:22: didChangeAppLifecycleState: state=paused
+2023-09-12 21:07:25.390579+0300 QR Doorbell App[22053:1632210] flutter: 21:07:25: Received CallKit event: type=CallKeepEventType.callAccept, event=CallKeepCallData(uuid: a625fe5f-b7ca-5be9-9c9a-40e2d2841f23, callerName: Doorbell_1, handle: Doorbell_1, hasVideo: true, duration: 30000.0, extra: {userId: doorbell1_id, doorbellId: doorbell1_id, doorbellName: Doorbell_1, platform: ios, callToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWxleCBZZXZ0dXNoZW5rbyIsInZpZGVvIjp7InJvb21Kb2luIjp0cnVlLCJyb29tIjoiRG9vcmJlbGxfMTogTllQbTVzUmNJNSIsInJvb21BZG1pbiI6dHJ1ZSwiaGlkZGVuIjpmYWxzZSwiY2FuVXBkYXRlT3duTWV0YWRhdGEiOnRydWV9LCJpYXQiOjE2OTQ1NDIwNDAsIm5iZiI6MTY5NDU0MjA0MCwiZXhwIjoxNjk0NTQyMTYwLCJpc3MiOiJBUElEUHV6amVGeVZXRTciLCJzdWIiOiJ1c2VyLTdTN21YSm9SVVVRdzd3Q0hHMjd3RkV6ZXBpMTMiLCJqdGkiOiJ1c2VyLTdTN21YSm9SVVVRdzd3Q0hHMjd3RkV6ZXBpMTMifQ.uJj4HHldDVpLq6ntT5EOPEwQ0wB3EHcpOCGNu9vUJm4, livekitServer: qrdoorbell.livekit.cloud, stickerId: P0r6MijWpZ, doorbellEnabled: true, serverTimestampMs: 1694542040782}, isAccepted: true)
+
+2023-09-12 21:07:25.548265+0300 QR Doorbell App[22053:1632210] flutter: 21:07:25: Received CallKit event: type=CallKeepEventType.audioSessionToggled, event=Instance of 'AudioSessionToggleData'
+2023-09-12 21:07:25.697647+0300 QR Doorbell App[22053:1632210] flutter: 21:07:25: didChangeAppLifecycleState: state=hidden
+2023-09-12 21:07:25.697741+0300 QR Doorbell App[22053:1632210] flutter: 21:07:25: didChangeAppLifecycleState: state=inactive
+2023-09-12 21:07:25.728135+0300 QR Doorbell App[22053:1632210] flutter: 21:07:25: Engine ConnectionState disconnected -> connecting
+2023-09-12 21:07:25.740863+0300 QR Doorbell App[22053:1632210] flutter: 21:07:25: [EngineEvent] Engine#176336443 EngineConnectionStateUpdatedEvent(newState: connecting, didReconnect: false, disconnectReason: null)
+2023-09-12 21:07:25.751903+0300 QR Doorbell App[22053:1632210] flutter: 21:07:25: SignalClient connecting with url: wss://qrdoorbell.livekit.cloud/rtc?access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWxleCBZZXZ0dXNoZW5rbyIsInZpZGVvIjp7InJvb21Kb2luIjp0cnVlLCJyb29tIjoiRG9vcmJlbGxfMTogTllQbTVzUmNJNSIsInJvb21BZG1pbiI6dHJ1ZSwiaGlkZGVuIjpmYWxzZSwiY2FuVXBkYXRlT3duTWV0YWRhdGEiOnRydWV9LCJpYXQiOjE2OTQ1NDIwNDAsIm5iZiI6MTY5NDU0MjA0MCwiZXhwIjoxNjk0NTQyMTYwLCJpc3MiOiJBUElEUHV6amVGeVZXRTciLCJzdWIiOiJ1c2VyLTdTN21YSm9SVVVRdzd3Q0hHMjd3RkV6ZXBpMTMiLCJqdGkiOiJ1c2VyLTdTN21YSm9SVVVRdzd3Q0hHMjd3RkV6ZXBpMTMifQ.uJj4HHldDVpLq6ntT5EOPEwQ0wB3EHcpOCGNu9vUJm4&auto_subscribe=1&adaptive_stream=1&protocol=9&sdk=flutter&version=1.4.2&network=wifi&os=iOS&os_version=16.6.1&device_model=iPhone13%2C2
+2023-09-12 21:07:25.752116+0300 QR Doorbell App[22053:1632210] flutter: 21:07:25: SignalClient ConnectionState disconnected -> connecting
+2023-09-12 21:07:25.752382+0300 QR Doorbell App[22053:1632210] flutter: 21:07:25: [SignalClient#817042387] cleanUp()
+2023-09-12 21:07:25.752512+0300 QR Doorbell App[22053:1632210] flutter: 21:07:25: [SignalEvent] SignalConnectionStateUpdatedEvent(newState: connecting, didReconnect: false, disconnectReason: null)
+2023-09-12 21:07:25.753769+0300 QR Doorbell App[22053:1632210] flutter: 21:07:25: [WebSocketIO] Connecting(uri: wss://qrdoorbell.livekit.cloud/rtc?access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWxleCBZZXZ0dXNoZW5rbyIsInZpZGVvIjp7InJvb21Kb2luIjp0cnVlLCJyb29tIjoiRG9vcmJlbGxfMTogTllQbTVzUmNJNSIsInJvb21BZG1pbiI6dHJ1ZSwiaGlkZGVuIjpmYWxzZSwiY2FuVXBkYXRlT3duTWV0YWRhdGEiOnRydWV9LCJpYXQiOjE2OTQ1NDIwNDAsIm5iZiI6MTY5NDU0MjA0MCwiZXhwIjoxNjk0NTQyMTYwLCJpc3MiOiJBUElEUHV6amVGeVZXRTciLCJzdWIiOiJ1c2VyLTdTN21YSm9SVVVRdzd3Q0hHMjd3RkV6ZXBpMTMiLCJqdGkiOiJ1c2VyLTdTN21YSm9SVVVRdzd3Q0hHMjd3RkV6ZXBpMTMifQ.uJj4HHldDVpLq6ntT5EOPEwQ0wB3EHcpOCGNu9vUJm4&auto_subscribe=1&adaptive_stream=1&protocol=9&sdk=flutter&version=1.4.2&network=wifi&os=iOS&os_version=16.6.1&device_model=iPhone13%2C2)...
+2023-09-12 21:07:26.137049+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: didChangeAppLifecycleState: state=resumed
+2023-09-12 21:07:26.364161+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: [WebSocketIO] Connected
+2023-09-12 21:07:26.364570+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: SignalClient ConnectionState connecting -> connected
+2023-09-12 21:07:26.364940+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: [SignalEvent] SignalConnectionStateUpdatedEvent(newState: connected, didReconnect: false, disconnectReason: null)
+2023-09-12 21:07:26.381677+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: ping config timeout: 20, interval: 10
+2023-09-12 21:07:26.382242+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: [SignalEvent] Instance of 'SignalJoinResponseEvent'
+2023-09-12 21:07:26.384791+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: onConnected subscriberPrimary: true, serverVersion: 1.4.5, iceServers: [urls: turn:164.90.219.72:3478?transport=udp
+urls: turns:dfra1a.turn.livekit.cloud:443?transport=tcp
+username: mNmNsB3dyhGapFzXwB|1k0YSNXNtBVWOBiOx8FbsVmYy92bEB
+credential: 21dzrxT+QgjMacgutunm9Udbi38=
+], forceRelay: Instance of 'SignalJoinResponseEvent'.response.clientConfiguration.forceRelay
+2023-09-12 21:07:26.385969+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: [Engine] Received JoinResponse, serverVersion: 1.4.5
+2023-09-12 21:07:26.388256+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: Creating RemoteParticipant: PA_4Kjok7dYxYYJ(guest-doorbell1_id.P0r6MijWpZ) tracks:(TR_AMeGuRT2mE4bQN, TR_VCYLknMdoFsehV)
+2023-09-12 21:07:26.389701+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: RemoteParticipant.updateFromInfo(info: sid: PA_4Kjok7dYxYYJ
+identity: guest-doorbell1_id.P0r6MijWpZ
+state: ACTIVE
+tracks: {
+  sid: TR_AMeGuRT2mE4bQN
+  source: MICROPHONE
+  mimeType: audio/red
+  mid: 0
+17: [99, 97, 109, 101, 114, 97]
+}
+tracks: {
+  sid: TR_VCYLknMdoFsehV
+  type: VIDEO
+  width: 640
+  height: 360
+  source: CAMERA
+  layers: {
+    quality: HIGH
+    width: 640
+    height: 360
+  }
+  mimeType: video/VP8
+  mid: 1
+  codecs: {
+    mimeType: video/VP8
+    mid: 1
+    cid: 6731136e-a56d-4c2f-9f25-3beabe96b39d
+    layers: {
+      quality: HIGH
+      width: 640
+      height: 360
+    }
+  }
+17: [99, 97, 109, 101, 114, 97]
+}
+joinedAt: 1694542041
+name: guest
+version: 5
+permission: {
+  canSubscribe: true
+  canPublish: true
+  canPublishData: true
+}
+region: dfra1a
+isPublisher: true
+)
+2023-09-12 21:07:26.390331+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: RemoteTrackPublication.updateFromInfo sid: TR_AMeGuRT2mE4bQN muted: false
+2023-09-12 21:07:26.390522+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: RemoteTrackPublication.init track: null, info: sid: TR_AMeGuRT2mE4bQN
+source: MICROPHONE
+mimeType: audio/red
+mid: 0
+17: [99, 97, 109, 101, 114, 97]
+2023-09-12 21:07:26.390805+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: RemoteTrackPublication.updateTrack track: null
+2023-09-12 21:07:26.391098+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: RemoteTrackPublication.updateFromInfo sid: TR_VCYLknMdoFsehV muted: false
+2023-09-12 21:07:26.391238+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: RemoteTrackPublication.init track: null, info: sid: TR_VCYLknMdoFsehV
+type: VIDEO
+width: 640
+height: 360
+source: CAMERA
+layers: {
+  quality: HIGH
+  width: 640
+  height: 360
+}
+mimeType: video/VP8
+mid: 1
+codecs: {
+  mimeType: video/VP8
+  mid: 1
+  cid: 6731136e-a56d-4c2f-9f25-3beabe96b39d
+  layers: {
+    quality: HIGH
+    width: 640
+    height: 360
+  }
+}
+17: [99, 97, 109, 101, 114, 97]
+2023-09-12 21:07:26.391271+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: RemoteTrackPublication.updateTrack track: null
+2023-09-12 21:07:26.391561+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: Room Connect completed
+2023-09-12 21:07:26.392536+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: [PCTransport] creating {sdpSemantics: unified-plan, iceServers: [{urls: [turn:164.90.219.72:3478?transport=udp, turns:dfra1a.turn.livekit.cloud:443?transport=tcp], username: mNmNsB3dyhGapFzXwB|1k0YSNXNtBVWOBiOx8FbsVmYy92bEB, credential: 21dzrxT+QgjMacgutunm9Udbi38=}]}
+2023-09-12 21:07:26.393408+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: [ParticipantEvent] ParticipantPermissionsUpdatedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), permissions: Instance of 'ParticipantPermissions'), will notifyListeners()
+2023-09-12 21:07:26.393490+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: [RoomEvent] ParticipantPermissionsUpdatedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), permissions: Instance of 'ParticipantPermissions'), will notifyListeners()
+2023-09-12 21:07:26.397838+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: [SignalEvent] Instance of 'SignalTokenUpdatedEvent'
+2023-09-12 21:07:26.404369+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: [SignalEvent] Instance of 'SignalOfferEvent'
+2023-09-12 21:07:26.404539+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: [SignalEvent] Instance of 'SignalTrickleEvent'
+2023-09-12 21:07:26.404611+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: [SignalEvent] Instance of 'SignalTrickleEvent'
+2023-09-12 21:07:26.404673+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: [SignalEvent] Instance of 'SignalSpeakersChangedEvent'
+2023-09-12 21:07:26.405447+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: [SignalEvent] Instance of 'SignalTrickleEvent'
+2023-09-12 21:07:26.405588+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: [ParticipantEvent] SpeakingChangedEvent(participant: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ), speaking: true), will notifyListeners()
+2023-09-12 21:07:26.405655+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: [SignalEvent] Instance of 'SignalConnectionQualityUpdateEvent'
+2023-09-12 21:07:26.406166+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: [SignalEvent] Instance of 'SignalTrickleEvent'
+2023-09-12 21:07:26.406317+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: [ParticipantEvent] ParticipantConnectionQualityUpdatedEvent(participant: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ), connectionQuality: ConnectionQuality.excellent), will notifyListeners()
+2023-09-12 21:07:26.406354+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: [RoomEvent] ParticipantConnectionQualityUpdatedEvent(participant: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ), connectionQuality: ConnectionQuality.excellent), will notifyListeners()
+2023-09-12 21:07:26.413830+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: [PCTransport] creating {sdpSemantics: unified-plan, iceServers: [{urls: [turn:164.90.219.72:3478?transport=udp, turns:dfra1a.turn.livekit.cloud:443?transport=tcp], username: mNmNsB3dyhGapFzXwB|1k0YSNXNtBVWOBiOx8FbsVmYy92bEB, credential: 21dzrxT+QgjMacgutunm9Udbi38=}]}
+2023-09-12 21:07:26.422235+0300 QR Doorbell App[22053:1632538] [VERBOSE-2:shell.cc(1004)] The 'FlutterWebRTC/peerConnectionEventFAF46A85-B32F-44E1-AF19-9667917389C4' channel sent a message from native to Flutter on a non-platform thread. Platform channel messages must be sent on the platform thread. Failure to do so may result in data loss or crashes, and must be fixed in the plugin or application code creating that channel.
+See https://docs.flutter.dev/platform-integration/platform-channels#channels-and-platform-threading for more information.
+2023-09-12 21:07:26.426112+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: EventsListener<SignalEvent>#225920169 event was cancelled by func
+2023-09-12 21:07:26.426179+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: Waiting for engine to connect...
+2023-09-12 21:07:26.426301+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: Server refreshed the token
+2023-09-12 21:07:26.426888+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: [Engine#176336443] Received server offer(type: offer, RTCSignalingState.RTCSignalingStateStable)
+2023-09-12 21:07:26.426977+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: sdp: v=0
+
+o=- 7259749534552479927 1694542046 IN IP4 0.0.0.0
+
+s=-
+
+t=0 0
+
+a=fingerprint:sha-256 04:E5:10:D4:74:D1:4E:89:7C:10:BE:F7:5E:97:17:76:11:CE:F7:AB:71:8A:E4:B7:72:7D:D3:B3:6C:1F:DD:B3
+
+a=ice-lite
+
+a=extmap-allow-mixed
+
+a=group:BUNDLE 0
+
+m=application 9 UDP/DTLS/SCTP webrtc-datachannel
+
+c=IN IP4 0.0.0.0
+
+a=setup:actpass
+
+a=mid:0
+
+a=sendrecv
+
+a=sctp-port:5000
+
+a=ice-ufrag:aNbHkJFldkaobjwP
+
+a=ice-pwd:QOJkPfTWvTIKjGzLOQqVBuepNLLzAgbj
+2023-09-12 21:07:26.427396+0300 QR Doorbell App[22053:1632538] [VERBOSE-2:shell.cc(1004)] The 'FlutterWebRTC/peerConnectionEvent09ED98C9-5C23-451D-AF3D-9E8DBC94DB84' channel sent a message from native to Flutter on a non-platform thread. Platform channel messages must be sent on the platform thread. Failure to do so may result in data loss or crashes, and must be fixed in the plugin or application code creating that channel.
+See https://docs.flutter.dev/platform-integration/platform-channels#channels-and-platform-threading for more information.
+2023-09-12 21:07:26.427976+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: Created answer
+2023-09-12 21:07:26.428020+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: sdp: v=0
+
+o=- 3021503063071535589 2 IN IP4 127.0.0.1
+
+s=-
+
+t=0 0
+
+a=group:BUNDLE 0
+
+a=extmap-allow-mixed
+
+a=msid-semantic: WMS
+
+m=application 9 UDP/DTLS/SCTP webrtc-datachannel
+
+c=IN IP4 0.0.0.0
+
+a=ice-ufrag:rUTT
+
+a=ice-pwd:nTqNyUs2XcLX4CQWGk8dW3kD
+
+a=ice-options:trickle renomination
+
+a=fingerprint:sha-256 8E:A6:F6:CE:6C:1D:2A:9C:0A:16:BD:B8:67:C6:1F:71:EB:F7:E9:61:82:D3:5D:23:AA:B8:F6:45:E6:8C:B1:85
+
+a=setup:active
+
+a=mid:0
+
+a=sctp-port:5000
+2023-09-12 21:07:26.435451+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: got ICE candidate from peer
+2023-09-12 21:07:26.436202+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: subscriber onIceCandidate
+2023-09-12 21:07:26.436821+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: subscriber onIceCandidate
+2023-09-12 21:07:26.437003+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: subscriber onIceCandidate
+2023-09-12 21:07:26.437168+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: subscriber onIceCandidate
+2023-09-12 21:07:26.437355+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: subscriber onIceCandidate
+2023-09-12 21:07:26.437513+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: subscriber onIceCandidate
+2023-09-12 21:07:26.437660+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: subscriber onIceCandidate
+2023-09-12 21:07:26.437805+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: subscriber onIceCandidate
+2023-09-12 21:07:26.437957+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: subscriber onIceCandidate
+2023-09-12 21:07:26.439559+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: pc.getRemoteDescription Instance of 'RTCSessionDescription'
+2023-09-12 21:07:26.440102+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: got ICE candidate from peer
+2023-09-12 21:07:26.440275+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: pc.getRemoteDescription Instance of 'RTCSessionDescription'
+2023-09-12 21:07:26.440736+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: got ICE candidate from peer
+2023-09-12 21:07:26.441293+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: [EngineEvent] Engine#176336443 EngineSubscriberPeerStateUpdatedEvent(state: RTCPeerConnectionState.RTCPeerConnectionStateConnecting, isPrimary: true)
+2023-09-12 21:07:26.441697+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: subscriber iceConnectionState: RTCIceConnectionState.RTCIceConnectionStateChecking
+2023-09-12 21:07:26.441777+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: pc.getRemoteDescription Instance of 'RTCSessionDescription'
+2023-09-12 21:07:26.442055+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: got ICE candidate from peer
+2023-09-12 21:07:26.442346+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: pc.getRemoteDescription Instance of 'RTCSessionDescription'
+2023-09-12 21:07:26.473423+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: subscriber onIceCandidate
+2023-09-12 21:07:26.506303+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: [SignalEvent] Instance of 'SignalOfferEvent'
+2023-09-12 21:07:26.506643+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: [Engine#176336443] Received server offer(type: offer, RTCSignalingState.RTCSignalingStateStable)
+2023-09-12 21:07:26.506700+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: sdp: v=0
+
+o=- 7259749534552479927 1694542047 IN IP4 0.0.0.0
+
+s=-
+
+t=0 0
+
+a=fingerprint:sha-256 04:E5:10:D4:74:D1:4E:89:7C:10:BE:F7:5E:97:17:76:11:CE:F7:AB:71:8A:E4:B7:72:7D:D3:B3:6C:1F:DD:B3
+
+a=ice-lite
+
+a=extmap-allow-mixed
+
+a=group:BUNDLE 0 1 2
+
+m=application 9 UDP/DTLS/SCTP webrtc-datachannel
+
+c=IN IP4 0.0.0.0
+
+a=setup:actpass
+
+a=mid:0
+
+a=sendrecv
+
+a=sctp-port:5000
+
+a=ice-ufrag:aNbHkJFldkaobjwP
+
+a=ice-pwd:QOJkPfTWvTIKjGzLOQqVBuepNLLzAgbj
+
+a=candidate:2013985297 1 udp 2130706431 2a03:b0c0:3:d0::1ce2:7001 53200 typ host
+
+a=candidate:2013985297 2 udp 2130706431 2a03:b0c0:3:d0::1ce2:7001 53200 typ host
+
+a=candidate:3321465841 1 tcp 1671430143 2a03:b0c0:3:d0::1ce2:7001 7881 typ host tcptype passive
+
+a=candidate:3321465841 2 tcp 1671430143 2a03:b0c0:3:d0::1ce2:7001 7881 typ host tcptype passive
+
+a=candidate:3735846627 1 udp 2130706431 164.90.219.72 51552 typ host
+
+a=candidate:3735846627 2 udp 2130706431 164.90.219.72 51552 typ host
+
+a=candidate:1667174147 1 tcp 1671430143 164.90.219.72 7881 typ host tcptype passive
+
+a=candidate:1667174147 2 tcp 1671430143 164.90.219.72 7881 typ host tcptype passive
+
+a=end-of-candidates
+
+m=audio 9 UDP/TLS/RTP/SAVPF 111 63
+
+c=IN IP4 0.0.0.0
+
+a=setup:actpass
+
+a=mid:1
+
+a=ice-ufrag:aNbHkJFldkaobjwP
+
+a=ice-pwd:QOJkPfTWvTIKjGzLOQqVBuepNLLzAgbj
+
+a=rtcp-mux
+
+a=rtcp-rsize
+
+a=rtpmap:111 opus/48000/2
+
+a=fmtp:111 minptime=10;useinbandfec=1
+
+a=rtpmap:63 red/48000/2
+
+a=fmtp:63 111/111
+
+a=ssrc:1987299006 cname:PA_4Kjok7dYxYYJ|TR_AMeGuRT2mE4bQN
+
+a=ssrc:1987299006 msid:PA_4Kjok7dYxYYJ|TR_AMeGuRT2mE4bQN TR_AMeGuRT2mE4bQN
+
+a=ssrc:1987299006 mslabel:PA_4Kjok7dYxYYJ|TR_AMeGuRT2mE4bQN
+
+a=ssrc:1987299006 label:TR_AMeGuRT2mE4bQN
+
+a=msid:PA_4Kjok7dYxYYJ|TR_AMeGuRT2mE4bQN TR_AMeGuRT2mE4bQN
+
+a=sendrecv
+
+m=video 9 UDP/TLS/RTP/SAVPF 96 98 100 125 108 35
+
+c=IN IP4 0.0.0.0
+
+a=setup:actpass
+
+a=mid:2
+
+a=ice-ufrag:aNbHkJFldkaobjwP
+
+a=ice-pwd:QOJkPfTWvTIKjGzLOQqVBuepNLLzAgbj
+
+a=rtcp-mux
+
+
+a=rtcp-rsize
+
+a=rtpmap:96 VP8/90000
+
+a=rtcp-fb:96 ccm fir
+
+a=rtcp-fb:96 nack 
+
+a=rtcp-fb:96 nack pli
+
+a=rtcp-fb:96 goog-remb 
+
+a=rtpmap:98 VP9/90000
+
+a=fmtp:98 profile-id=0
+
+a=rtcp-fb:98 ccm fir
+
+a=rtcp-fb:98 nack 
+
+a=rtcp-fb:98 nack pli
+
+a=rtcp-fb:98 goog-remb 
+
+a=rtpmap:100 VP9/90000
+
+a=fmtp:100 profile-id=1
+
+a=rtcp-fb:100 ccm fir
+
+a=rtcp-fb:100 nack 
+
+a=rtcp-fb:100 nack pli
+
+a=rtcp-fb:100 goog-remb 
+
+a=rtpmap:125 H264/90000
+
+a=fmtp:125 level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=42e01f
+
+a=rtcp-fb:125 ccm fir
+
+a=rtcp-fb:125 nack 
+
+a=rtcp-fb:125 nack pli
+
+a=rtcp-fb:125 goog-remb 
+
+a=rtpmap:108 H264/90000
+
+a=fmtp:108 level-asymmetry-allowed=1;packetization-mode=0;profile-level-id=42e01f
+
+a=rtcp-fb:108 ccm fir
+
+a=rtcp-fb:108 nack 
+
+a=rtcp-fb:108 nack pli
+
+a=rtcp-fb:108 goog-remb 
+
+a=rtpmap:35 AV1/90000
+
+a=rtcp-fb:35 ccm fir
+
+a=rtcp-fb:35 nack 
+
+a=rtcp-fb:35 nack pli
+
+a=rtcp-fb:35 goog-remb 
+
+a=extmap:1 https://aomediacodec.github.io/av1-rtp-spec/#dependency-descriptor-rtp-header-extension
+
+a=extmap:2 http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time
+
+a=ssrc:1823152267 cname:PA_4Kjok7dYxYYJ|TR_VCYLknMdoFsehV
+
+a=ssrc:1823152267 msid:PA_4Kjok7dYxYYJ|TR_VCYLknMdoFsehV TR_VCYLknMdoFsehV
+
+a=ssrc:1823152267 mslabel:PA_4Kjok7dYxYYJ|TR_VCYLknMdoFsehV
+
+a=ssrc:1823152267 label:TR_VCYLknMdoFsehV
+
+a=msid:PA_4Kjok7dYxYYJ|TR_VCYLknMdoFsehV TR_VCYLknMdoFsehV
+
+a=sendrecv
+2023-09-12 21:07:26.523039+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: [WebRTC] pc.onTrack
+2023-09-12 21:07:26.523416+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: [WebRTC] pc.onTrack
+2023-09-12 21:07:26.529133+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: Created answer
+2023-09-12 21:07:26.529198+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: sdp: v=0
+
+o=- 3021503063071535589 3 IN IP4 127.0.0.1
+
+s=-
+
+t=0 0
+
+a=group:BUNDLE 0 1 2
+
+a=extmap-allow-mixed
+
+a=msid-semantic: WMS
+
+m=application 59324 UDP/DTLS/SCTP webrtc-datachannel
+
+c=IN IP4 31.43.134.124
+
+a=candidate:3947455430 1 udp 2121932543 10.9.9.135 59324 typ host generation 0 network-id 1 network-cost 50
+
+a=candidate:2375537424 1 udp 2122129151 10.147.180.115 60453 typ host generation 0 network-id 13 network-cost 900
+
+a=candidate:2707556439 1 udp 2121998079 127.0.0.1 58036 typ host generation 0 network-id 11
+
+a=candidate:388255850 1 udp 2122071295 ::1 61339 typ host generation 0 network-id 12
+
+a=candidate:2493501235 1 udp 2122265343 fd4f:5bf1:3647:4644:14b9:45d1:6316:b57e 63966 typ host generation 0 network-id 2 network-cost 10
+
+a=candidate:2375537424 1 udp 2122129151 10.147.180.115 55192 typ host generation 0 network-id 13 network-cost 900
+
+a=candidate:2707556439 1 udp 2121998079 127.0.0.1 63584 typ host generation 0 network-id 11
+
+a=candidate:2493501235 1 udp 2122265343 fd4f:5bf1:3647:4644:14b9:45d1:6316:b57e 56440 typ host generation 0 network-id 2 network-cost 10
+
+a=candidate:388255850 1 udp 2122071295 ::1 58604 typ host generation 0 network-id 12
+
+a=candidate:3212527345 1 udp 1685987071 31.43.134.124 59324 typ srflx raddr 10.9.9.135 rport 59324 generation 0 network-id 1 network-cost 10
+
+a=ice-ufrag:rUTT
+
+a=ice-pwd:nTqNyUs2XcLX4CQWGk8dW3kD
+
+a=ice-options:trickle renomination
+
+a=fingerprint:sha-256 8E:A6:F6:CE:6C:1D:2A:9C:0A:16:BD:B8:67:C6:1F:71:EB:F7:E9:61:82:D3:5D:23:AA:B8:F6:45:E6:8C:B1:85
+
+a=setup:active
+
+a=mid:0
+
+a=sctp-port:5000
+
+m=audio 9 UDP/TLS/RTP/SAVPF 111 63
+
+c=IN IP4 0.0.0.0
+
+a=rtcp:9 IN IP4 0.0.0.0
+
+a=ice-ufrag:rUTT
+
+a=ice-pwd:nTqNyUs2XcLX4CQWGk8dW3kD
+
+a=ice-options:trickle renomination
+
+a=fingerprint:sha-256 8E:A6:F6:CE:6C:1D:2A:9C:0A:16:BD:B8:67:C6:1F:71:EB:F7:E9:61:82:D3:5D:23:AA:B8:F6:45:E6:8C:B1:85
+
+a=setup:active
+
+a=mid:1
+
+a=recvonly
+
+a=rtcp-mux
+
+a=rtpmap:111 opus/48000/2
+
+a=fmtp:111 minptime=10;useinbandfec=1
+
+a=rtpmap:63 red/48000/2
+
+a=fmtp:63 111/111
+
+m=video 9 UDP/TLS/RTP/SAVPF 96 98 125 35
+
+c=IN IP4 0.0.0.0
+
+a=rtcp:9 IN IP4 0.0.0.0
+
+a=ice-ufrag:rUTT
+
+a=ice-pwd:nTqNyUs2XcLX4CQWGk8dW3kD
+
+a=ice-options:trickle renomination
+
+a=fingerprint:sha-256 8E:A6:F6:CE:6C:1D:2A:9C:0A:16:BD:B8:67:C6:1F:71:EB:F7:E9:61:82:D3:5D:23:AA:B8:F6:45:E6:8C:B1:85
+
+a=setup:active
+
+a=mid:2
+
+a=extmap:2 http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time
+
+a=extmap:1 https://aomediacodec.github.io/av1-rtp-spec/#dependency-descriptor-rtp-header-extension
+
+a=recvonly
+
+a=rtcp-mux
+
+a=rtcp-rsize
+
+a=rtpmap:96 VP8/90000
+
+a=rtcp-fb:96 goog-remb
+
+a=rtcp-fb:96 ccm fir
+
+a=rtcp-fb:96 nack
+
+a=rtcp-fb:96 nack pli
+
+a=rtpmap:98 VP9/90000
+
+a=rtcp-fb:98 goog-remb
+
+a=rtcp-fb:98 ccm fir
+
+a=rtcp-fb:98 nack
+
+a=rtcp-fb:98 nack pli
+
+a=rtpmap:125 H264/90000
+
+a=rtcp-fb:125 goog-remb
+
+a=rtcp-fb:125 ccm fir
+
+a=rtcp-fb:125 nack
+
+a=rtcp-fb:125 nack pli
+
+a=fmtp:125 level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=42e034
+
+a=rtpmap:35 AV1/90000
+
+a=rtcp-fb:35 goog-remb
+
+a=rtcp-fb:35 ccm fir
+
+a=rtcp-fb:35 nack
+
+a=rtcp-fb:35 nack pli
+2023-09-12 21:07:26.905964+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: [SignalEvent] Instance of 'SignalParticipantUpdateEvent'
+2023-09-12 21:07:26.906351+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: [ParticipantEvent] ParticipantPermissionsUpdatedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), permissions: Instance of 'ParticipantPermissions'), will notifyListeners()
+2023-09-12 21:07:26.906402+0300 QR Doorbell App[22053:1632210] flutter: 21:07:26: [RoomEvent] ParticipantPermissionsUpdatedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), permissions: Instance of 'ParticipantPermissions'), will notifyListeners()
+2023-09-12 21:07:27.140560+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: subscriber onIceCandidate
+2023-09-12 21:07:27.140863+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: subscriber onIceCandidate
+2023-09-12 21:07:27.141074+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: subscriber onIceCandidate
+2023-09-12 21:07:27.141271+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: subscriber onIceCandidate
+2023-09-12 21:07:27.141461+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: subscriber onIceCandidate
+2023-09-12 21:07:27.141660+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: subscriber onIceCandidate
+2023-09-12 21:07:27.141909+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: subscriber onIceCandidate
+2023-09-12 21:07:27.142104+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: subscriber onIceCandidate
+2023-09-12 21:07:27.142286+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: subscriber onIceCandidate
+2023-09-12 21:07:27.142472+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: subscriber onIceCandidate
+2023-09-12 21:07:27.142658+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: subscriber onIceCandidate
+2023-09-12 21:07:27.142842+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: subscriber onIceCandidate
+2023-09-12 21:07:27.143204+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: subscriber onIceCandidate
+2023-09-12 21:07:27.143610+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: subscriber onIceCandidate
+2023-09-12 21:07:27.146014+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: [EngineEvent] Engine#176336443 EngineSubscriberPeerStateUpdatedEvent(state: RTCPeerConnectionState.RTCPeerConnectionStateConnected, isPrimary: true)
+2023-09-12 21:07:27.146322+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: EventsEmitter<EngineEvent>#902473701 event was cancelled by func
+2023-09-12 21:07:27.146366+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: Engine ConnectionState connecting -> connected
+2023-09-12 21:07:27.146651+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: [EngineEvent] Engine#176336443 EngineConnectionStateUpdatedEvent(newState: connected, didReconnect: false, disconnectReason: null)
+2023-09-12 21:07:27.146944+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: subscriber iceConnectionState: RTCIceConnectionState.RTCIceConnectionStateConnected
+2023-09-12 21:07:27.204209+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: [EngineEvent] Engine#176336443 Instance of 'EngineTrackAddedEvent'
+2023-09-12 21:07:27.204983+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: EngineTrackAddedEvent trackSid:TR_AMeGuRT2mE4bQN
+2023-09-12 21:07:27.205691+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: addSubscribedMediaTrack()
+2023-09-12 21:07:27.206488+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: RemoteAudioTrack#781913982.start()
+2023-09-12 21:07:27.206731+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: [EngineEvent] Engine#176336443 Instance of 'EngineTrackAddedEvent'
+2023-09-12 21:07:27.206894+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: RemoteAudioTrack#781913982.enable() enabling MediaStreamTrackNative#725131821...
+2023-09-12 21:07:27.207157+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: EngineTrackAddedEvent trackSid:TR_VCYLknMdoFsehV
+2023-09-12 21:07:27.207197+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: addSubscribedMediaTrack()
+2023-09-12 21:07:27.207338+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: RemoteVideoTrack#654160251.start()
+2023-09-12 21:07:27.207719+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: onAudioTrackCountDidChange: local: 0, remote: 1
+2023-09-12 21:07:27.207863+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: didUpdateSate: AudioTrackState.remoteOnly
+2023-09-12 21:07:27.208239+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: RemoteVideoTrack#654160251.enable() enabling MediaStreamTrackNative#963730999...
+2023-09-12 21:07:27.208280+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: configuring for AudioTrackState.remoteOnly using Instance of 'NativeAudioConfiguration'...
+2023-09-12 21:07:27.208917+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: RemoteTrackPublication.updateTrack track: Instance of 'RemoteVideoTrack'
+2023-09-12 21:07:27.209625+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: [ParticipantEvent] TrackSubscribedEvent(participant: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ), publication: RemoteTrackPublication<RemoteVideoTrack>(sid: TR_VCYLknMdoFsehV, source: TrackSource.camera), track: Instance of 'RemoteVideoTrack'), will notifyListeners()
+2023-09-12 21:07:27.209711+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: [RoomEvent] TrackSubscribedEvent(participant: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ), publication: RemoteTrackPublication<RemoteVideoTrack>(sid: TR_VCYLknMdoFsehV, source: TrackSource.camera), track: Instance of 'RemoteVideoTrack'), will notifyListeners()
+2023-09-12 21:07:27.209853+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: Track subscribed event: TR_VCYLknMdoFsehV
+2023-09-12 21:07:27.210054+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: Setting up PiP view
+2023-09-12 21:07:27.210113+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: Creating PiP: remoteStreamId=PA_4Kjok7dYxYYJ, peerConnectionId=PA_4Kjok7dYxYYJ|TR_VCYLknMdoFsehV
+[LiveKit] Configuring category:  AVAudioSessionCategoryPlayback
+[LiveKit] Configuring categoryOptions:  ["mixWithOthers"]
+[LiveKit] Configuring mode:  AVAudioSessionModeSpokenAudio
+2023-09-12 21:07:27.315716+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: Server opened DC label: _reliable
+2023-09-12 21:07:27.315918+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: Server opened DC label: _lossy
+2023-09-12 21:07:27.316486+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: Connected address: null
+2023-09-12 21:07:27.366855+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: [SignalEvent] Instance of 'SignalStreamStateUpdatedEvent'
+2023-09-12 21:07:27.367714+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: [ParticipantEvent] TrackStreamStateUpdatedEvent(participant: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ), publication: RemoteTrackPublication<RemoteVideoTrack>(sid: TR_VCYLknMdoFsehV, source: TrackSource.camera), streamState: StreamState.active), will notifyListeners()
+2023-09-12 21:07:27.367863+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: [RoomEvent] TrackStreamStateUpdatedEvent(participant: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ), publication: RemoteTrackPublication<RemoteVideoTrack>(sid: TR_VCYLknMdoFsehV, source: TrackSource.camera), streamState: StreamState.active), will notifyListeners()
+[LiveKit] RTCAudioSession Configure success
+"PipPlugin.handle: method=createPiP arguments=Optional({\n    isRemoteCameraEnable = 1;\n    peerConnectionId = \"PA_4Kjok7dYxYYJ|TR_VCYLknMdoFsehV\";\n    remoteStreamId = \"PA_4Kjok7dYxYYJ\";\n})"
+2023-09-12 21:07:27.395997+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: RemoteTrackPublication.updateTrack track: Instance of 'RemoteAudioTrack'
+2023-09-12 21:07:27.396130+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: [ParticipantEvent] TrackSubscribedEvent(participant: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ), publication: RemoteTrackPublication<RemoteAudioTrack>(sid: TR_AMeGuRT2mE4bQN, source: TrackSource.microphone), track: Instance of 'RemoteAudioTrack'), will notifyListeners()
+2023-09-12 21:07:27.396306+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: [RoomEvent] TrackSubscribedEvent(participant: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ), publication: RemoteTrackPublication<RemoteAudioTrack>(sid: TR_AMeGuRT2mE4bQN, source: TrackSource.microphone), track: Instance of 'RemoteAudioTrack'), will notifyListeners()
+2023-09-12 21:07:27.396374+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: Track subscribed event: TR_AMeGuRT2mE4bQN
+2023-09-12 21:07:27.397801+0300 QR Doorbell App[22053:1631971] [VERBOSE-2:FlutterDarwinContextMetalImpeller.mm(37)] Using the Impeller rendering backend.
+"PipViewController.configurationPictureInPicture: peerConnectionId=PA_4Kjok7dYxYYJ|TR_VCYLknMdoFsehV remoteStreamId=PA_4Kjok7dYxYYJ isRemoteCameraEnable=true"
+"PipViewController.configurationPictureInPicture: pipContentSource=<AVPictureInPictureControllerContentSource: 0x28371d860>"
+"PipView.setupView: frame=(0.0, 0.0, 390.0, 844.0) bounds=(0.0, 0.0, 390.0, 844.0) peerConnectionId=nil remoteStreamId=nil isRemoteCameraEnable=false)"
+2023-09-12 21:07:27.447422+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: [Visibility] VideoView did build
+2023-09-12 21:07:27.511565+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:27.511988+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: [Visibility] Change detected, quick: false
+2023-09-12 21:07:27.584229+0300 QR Doorbell App[22053:1632537] [as] ATAudioSessionPropertyManager.mm:363   FAILED to set property 1684431725 on AVAudioSession with error Error Domain=NSOSStatusErrorDomain Code=-50 "(null)"
+2023-09-12 21:07:27.811604+0300 QR Doorbell App[22053:1632210] flutter: 21:07:27: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:28.109963+0300 QR Doorbell App[22053:1632210] flutter: 21:07:28: [SignalEvent] Instance of 'SignalSpeakersChangedEvent'
+2023-09-12 21:07:28.111100+0300 QR Doorbell App[22053:1632210] flutter: 21:07:28: [ParticipantEvent] SpeakingChangedEvent(participant: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ), speaking: false), will notifyListeners()
+2023-09-12 21:07:28.112061+0300 QR Doorbell App[22053:1632210] flutter: 21:07:28: [RoomEvent] ActiveSpeakersChangedEvent(speakers: ), will notifyListeners()
+2023-09-12 21:07:28.113184+0300 QR Doorbell App[22053:1632210] flutter: 21:07:28: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:28.133234+0300 QR Doorbell App[22053:1632210] flutter: 21:07:28: [Visibility] VideoView did build
+2023-09-12 21:07:28.177057+0300 QR Doorbell App[22053:1632210] flutter: 21:07:28: [Visibility] VideoView did build
+2023-09-12 21:07:28.411338+0300 QR Doorbell App[22053:1632210] flutter: 21:07:28: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:28.507643+0300 QR Doorbell App[22053:1632210] flutter: 21:07:28: [SignalEvent] Instance of 'SignalSpeakersChangedEvent'
+2023-09-12 21:07:28.508467+0300 QR Doorbell App[22053:1632210] flutter: 21:07:28: [ParticipantEvent] SpeakingChangedEvent(participant: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ), speaking: true), will notifyListeners()
+2023-09-12 21:07:28.509175+0300 QR Doorbell App[22053:1632210] flutter: 21:07:28: [RoomEvent] ActiveSpeakersChangedEvent(speakers: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ)), will notifyListeners()
+2023-09-12 21:07:28.532696+0300 QR Doorbell App[22053:1632210] flutter: 21:07:28: [Visibility] VideoView did build
+2023-09-12 21:07:28.711510+0300 QR Doorbell App[22053:1632210] flutter: 21:07:28: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:29.011926+0300 QR Doorbell App[22053:1632210] flutter: 21:07:29: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:29.015316+0300 QR Doorbell App[22053:1632210] flutter: 21:07:29: [Visibility] Sending... {trackSids: [TR_VCYLknMdoFsehV], disabled: false, width: 390, height: 844}
+2023-09-12 21:07:29.171001+0300 QR Doorbell App[22053:1632210] flutter: 21:07:29: [Visibility] VideoView did build
+2023-09-12 21:07:29.307418+0300 QR Doorbell App[22053:1632210] flutter: 21:07:29: [SignalEvent] Instance of 'SignalSpeakersChangedEvent'
+2023-09-12 21:07:29.308123+0300 QR Doorbell App[22053:1632210] flutter: 21:07:29: [ParticipantEvent] SpeakingChangedEvent(participant: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ), speaking: false), will notifyListeners()
+2023-09-12 21:07:29.308449+0300 QR Doorbell App[22053:1632210] flutter: 21:07:29: [RoomEvent] ActiveSpeakersChangedEvent(speakers: ), will notifyListeners()
+2023-09-12 21:07:29.310771+0300 QR Doorbell App[22053:1632210] flutter: 21:07:29: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:29.334917+0300 QR Doorbell App[22053:1632210] flutter: 21:07:29: [Visibility] VideoView did build
+2023-09-12 21:07:29.611454+0300 QR Doorbell App[22053:1632210] flutter: 21:07:29: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:29.709288+0300 QR Doorbell App[22053:1632210] flutter: 21:07:29: [SignalEvent] Instance of 'SignalSpeakersChangedEvent'
+2023-09-12 21:07:29.710011+0300 QR Doorbell App[22053:1632210] flutter: 21:07:29: [ParticipantEvent] SpeakingChangedEvent(participant: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ), speaking: true), will notifyListeners()
+2023-09-12 21:07:29.710335+0300 QR Doorbell App[22053:1632210] flutter: 21:07:29: [RoomEvent] ActiveSpeakersChangedEvent(speakers: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ)), will notifyListeners()
+2023-09-12 21:07:29.737365+0300 QR Doorbell App[22053:1632210] flutter: 21:07:29: [Visibility] VideoView did build
+2023-09-12 21:07:29.911109+0300 QR Doorbell App[22053:1632210] flutter: 21:07:29: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:29.914311+0300 QR Doorbell App[22053:1632210] flutter: 21:07:29: setSourceEnabled(source: TrackSource.microphone, enabled: true)
+2023-09-12 21:07:29.915395+0300 QR Doorbell App[22053:1632210] flutter: 21:07:29: setSourceEnabled(source: TrackSource.camera, enabled: true)
+2023-09-12 21:07:29.917147+0300 QR Doorbell App[22053:1632210] flutter: 21:07:29: [SignalEvent] Instance of 'SignalParticipantUpdateEvent'
+2023-09-12 21:07:29.917320+0300 QR Doorbell App[22053:1632210] flutter: 21:07:29: [ParticipantEvent] ParticipantPermissionsUpdatedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), permissions: Instance of 'ParticipantPermissions'), will notifyListeners()
+2023-09-12 21:07:29.917380+0300 QR Doorbell App[22053:1632210] flutter: 21:07:29: [RoomEvent] ParticipantPermissionsUpdatedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), permissions: Instance of 'ParticipantPermissions'), will notifyListeners()
+2023-09-12 21:07:29.941534+0300 QR Doorbell App[22053:1632210] flutter: 21:07:29: [Visibility] VideoView did build
+2023-09-12 21:07:30.167110+0300 QR Doorbell App[22053:1632210] flutter: 21:07:30: [Visibility] VideoView did build
+2023-09-12 21:07:30.176351+0300 QR Doorbell App[22053:1631971] target format 1280x720, targetFps: 30, seledted fps 30
+2023-09-12 21:07:30.182401+0300 QR Doorbell App[22053:1632210] flutter: 21:07:30: Compute encodings with resolution: VideoDimensions(1280x720), options: VideoPublishOptions(videoEncoding: VideoEncoding(maxFramerate: 30, maxBitrate: 2000000), simulcast: true)
+2023-09-12 21:07:30.184363+0300 QR Doorbell App[22053:1632210] flutter: 21:07:30: Using encodings: ({active: true, rid: q, maxBitrate: 120000, maxFramerate: 15, scaleResolutionDownBy: 4.0}, {active: true, rid: h, maxBitrate: 300000, maxFramerate: 20, scaleResolutionDownBy: 2.0}, {active: true, rid: f, maxBitrate: 2000000, maxFramerate: 30, scaleResolutionDownBy: 1.0})
+2023-09-12 21:07:30.184810+0300 QR Doorbell App[22053:1632210] flutter: 21:07:30: Video layers: (quality: LOW
+width: 320
+height: 180
+bitrate: 120000
+, quality: MEDIUM
+width: 640
+height: 360
+bitrate: 300000
+, quality: HIGH
+width: 1280
+height: 720
+bitrate: 2000000
+)
+2023-09-12 21:07:30.211414+0300 QR Doorbell App[22053:1632210] flutter: 21:07:30: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:30.258389+0300 QR Doorbell App[22053:1632210] flutter: 21:07:30: [SignalEvent] Instance of 'SignalLocalTrackPublishedEvent'
+2023-09-12 21:07:30.259275+0300 QR Doorbell App[22053:1632210] flutter: 21:07:30: EventsListener<SignalEvent>#225920169 event was cancelled by func
+2023-09-12 21:07:30.259462+0300 QR Doorbell App[22053:1632210] flutter: 21:07:30: LocalAudioTrack#910568092.start()
+2023-09-12 21:07:30.277083+0300 QR Doorbell App[22053:1632210] flutter: 21:07:30: LocalAudioTrack#910568092.publish()
+2023-09-12 21:07:30.277265+0300 QR Doorbell App[22053:1632210] flutter: 21:07:30: onAudioTrackCountDidChange: local: 1, remote: 1
+2023-09-12 21:07:30.277304+0300 QR Doorbell App[22053:1632210] flutter: 21:07:30: didUpdateSate: AudioTrackState.localAndRemote
+2023-09-12 21:07:30.277406+0300 QR Doorbell App[22053:1632210] flutter: 21:07:30: configuring for AudioTrackState.localAndRemote using Instance of 'NativeAudioConfiguration'...
+[LiveKit] Configuring category:  AVAudioSessionCategoryPlayAndRecord
+[LiveKit] Configuring categoryOptions:  ["allowBluetooth", "mixWithOthers"]
+[LiveKit] Configuring mode:  AVAudioSessionModeVoiceChat
+[LiveKit] RTCAudioSession Configure success
+2023-09-12 21:07:30.511994+0300 QR Doorbell App[22053:1632210] flutter: 21:07:30: starting to negotiate
+2023-09-12 21:07:30.520032+0300 QR Doorbell App[22053:1632210] flutter: 21:07:30: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:30.811376+0300 QR Doorbell App[22053:1632210] flutter: 21:07:30: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:30.818107+0300 QR Doorbell App[22053:1632210] flutter: 21:07:30: [SignalEvent] Instance of 'SignalLocalTrackPublishedEvent'
+2023-09-12 21:07:30.818946+0300 QR Doorbell App[22053:1632210] flutter: 21:07:30: EventsListener<SignalEvent>#225920169 event was cancelled by func
+2023-09-12 21:07:30.819615+0300 QR Doorbell App[22053:1632210] flutter: 21:07:30: publishVideoTrack addTrack response: sid: TR_VC4GmquWP3j44P
+type: VIDEO
+name: camera
+width: 1280
+height: 720
+source: CAMERA
+layers: {
+  width: 320
+  height: 180
+  bitrate: 120000
+}
+layers: {
+  quality: MEDIUM
+  width: 640
+  height: 360
+  bitrate: 300000
+}
+layers: {
+  quality: HIGH
+  width: 1280
+  height: 720
+  bitrate: 2000000
+}
+17: [99, 97, 109, 101, 114, 97]
+2023-09-12 21:07:30.819873+0300 QR Doorbell App[22053:1632210] flutter: 21:07:30: LocalVideoTrack#18985909.start()
+2023-09-12 21:07:30.820152+0300 QR Doorbell App[22053:1632210] flutter: 21:07:30: publishVideoTrack publisher: Instance of 'Transport'
+2023-09-12 21:07:30.905991+0300 QR Doorbell App[22053:1632210] flutter: 21:07:30: [SignalEvent] Instance of 'SignalConnectionQualityUpdateEvent'
+2023-09-12 21:07:30.907147+0300 QR Doorbell App[22053:1632210] flutter: 21:07:30: [ParticipantEvent] ParticipantConnectionQualityUpdatedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), connectionQuality: ConnectionQuality.excellent), will notifyListeners()
+2023-09-12 21:07:30.907729+0300 QR Doorbell App[22053:1632210] flutter: 21:07:30: [RoomEvent] ParticipantConnectionQualityUpdatedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), connectionQuality: ConnectionQuality.excellent), will notifyListeners()
+2023-09-12 21:07:31.110870+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:31.175216+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: [Visibility] VideoView did build
+2023-09-12 21:07:31.387019+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: [ParticipantEvent] LocalTrackPublishedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), publication: LocalTrackPublication<LocalAudioTrack>(sid: TR_AMVt3BP4JWTWAm, source: TrackSource.microphone)), will notifyListeners()
+2023-09-12 21:07:31.387158+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: [RoomEvent] LocalTrackPublishedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), publication: LocalTrackPublication<LocalAudioTrack>(sid: TR_AMVt3BP4JWTWAm, source: TrackSource.microphone)), will notifyListeners()
+2023-09-12 21:07:31.402242+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: [Visibility] VideoView did build
+2023-09-12 21:07:31.411561+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:31.457088+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: [TrackEvent] AudioReceiverStatsEventstats: Instance of 'AudioReceiverStats'), will notifyListeners()
+2023-09-12 21:07:31.461289+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: [TrackEvent] VideoReceiverStatsEventstats: Instance of 'VideoReceiverStats'), will notifyListeners()
+2023-09-12 21:07:31.478404+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: publisher onOffer
+2023-09-12 21:07:31.480446+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: publisher onIceCandidate
+2023-09-12 21:07:31.480920+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: publisher onIceCandidate
+2023-09-12 21:07:31.481704+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: publisher onIceCandidate
+2023-09-12 21:07:31.482168+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: publisher onIceCandidate
+2023-09-12 21:07:31.482391+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: publisher onIceCandidate
+2023-09-12 21:07:31.482596+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: publisher onIceCandidate
+2023-09-12 21:07:31.482739+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: publisher onIceCandidate
+2023-09-12 21:07:31.483105+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: publisher onIceCandidate
+2023-09-12 21:07:31.483409+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: publisher onIceCandidate
+2023-09-12 21:07:31.483561+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: publisher onIceCandidate
+2023-09-12 21:07:31.484096+0300 QR Doorbell App[22053:1631971] codec {
+    clockRate = 90000;
+    mimeType = "video/H264";
+    sdpFmtpLine = "profile-level-id=640c34;packetization-mode=1;level-asymmetry-allowed=1";
+}
+2023-09-12 21:07:31.484266+0300 QR Doorbell App[22053:1631971] codec {
+    clockRate = 90000;
+    mimeType = "video/H264";
+    sdpFmtpLine = "profile-level-id=42e034;packetization-mode=1;level-asymmetry-allowed=1";
+}
+2023-09-12 21:07:31.484398+0300 QR Doorbell App[22053:1631971] codec {
+    clockRate = 90000;
+    mimeType = "video/H264";
+    sdpFmtpLine = "profile-level-id=640c34;packetization-mode=1;level-asymmetry-allowed=1";
+}
+2023-09-12 21:07:31.484456+0300 QR Doorbell App[22053:1631971] codec {
+    clockRate = 90000;
+    mimeType = "video/H264";
+    sdpFmtpLine = "profile-level-id=42e034;packetization-mode=1;level-asymmetry-allowed=1";
+}
+2023-09-12 21:07:31.484495+0300 QR Doorbell App[22053:1631971] codec {
+    clockRate = 90000;
+    mimeType = "video/rtx";
+    sdpFmtpLine = "";
+}
+2023-09-12 21:07:31.484536+0300 QR Doorbell App[22053:1631971] codec {
+    clockRate = 90000;
+    mimeType = "video/VP8";
+    sdpFmtpLine = "";
+}
+2023-09-12 21:07:31.484561+0300 QR Doorbell App[22053:1631971] codec {
+    clockRate = 90000;
+    mimeType = "video/VP9";
+    sdpFmtpLine = "";
+}
+2023-09-12 21:07:31.484585+0300 QR Doorbell App[22053:1631971] codec {
+    clockRate = 90000;
+    mimeType = "video/AV1";
+    sdpFmtpLine = "";
+}
+2023-09-12 21:07:31.484625+0300 QR Doorbell App[22053:1631971] codec {
+    clockRate = 90000;
+    mimeType = "video/VP8";
+    sdpFmtpLine = "";
+}
+2023-09-12 21:07:31.484652+0300 QR Doorbell App[22053:1631971] codec {
+    clockRate = 90000;
+    mimeType = "video/VP9";
+    sdpFmtpLine = "";
+}
+2023-09-12 21:07:31.484676+0300 QR Doorbell App[22053:1631971] codec {
+    clockRate = 90000;
+    mimeType = "video/AV1";
+    sdpFmtpLine = "";
+}
+2023-09-12 21:07:31.484779+0300 QR Doorbell App[22053:1631971] codec {
+    clockRate = 90000;
+    mimeType = "video/red";
+    sdpFmtpLine = "";
+}
+2023-09-12 21:07:31.484925+0300 QR Doorbell App[22053:1631971] codec {
+    clockRate = 90000;
+    mimeType = "video/ulpfec";
+    sdpFmtpLine = "";
+}
+2023-09-12 21:07:31.486005+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: LocalVideoTrack#18985909.publish()
+2023-09-12 21:07:31.486500+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: [ParticipantEvent] LocalTrackPublishedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), publication: LocalTrackPublication<LocalVideoTrack>(sid: TR_VC4GmquWP3j44P, source: TrackSource.camera)), will notifyListeners()
+2023-09-12 21:07:31.486618+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: [RoomEvent] LocalTrackPublishedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), publication: LocalTrackPublication<LocalVideoTrack>(sid: TR_VC4GmquWP3j44P, source: TrackSource.camera)), will notifyListeners()
+2023-09-12 21:07:31.502358+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: [Visibility] VideoView did build
+2023-09-12 21:07:31.522976+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: publisher onIceCandidate
+2023-09-12 21:07:31.523713+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: publisher onIceCandidate
+2023-09-12 21:07:31.541635+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: [SignalEvent] Instance of 'SignalAnswerEvent'
+2023-09-12 21:07:31.541862+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: received answer (type: answer)
+2023-09-12 21:07:31.541899+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: sdp: v=0
+
+o=- 2691130203855455008 1694542051 IN IP4 0.0.0.0
+
+s=-
+
+t=0 0
+
+a=fingerprint:sha-256 E1:2F:A0:8D:6B:27:DE:28:58:03:AB:BD:DC:30:B9:AB:DD:86:6E:6A:C7:3D:D4:C2:8B:4B:3D:2F:30:8F:96:91
+
+a=ice-lite
+
+a=extmap-allow-mixed
+
+a=group:BUNDLE 0 1
+
+m=audio 9 UDP/TLS/RTP/SAVPF 63 111
+
+c=IN IP4 0.0.0.0
+
+a=setup:active
+
+a=mid:0
+
+a=ice-ufrag:WNWQTMmEYYWhQebF
+
+a=ice-pwd:xesfPtBFoSXgVRmRgJBHSYgvxIzqgEeL
+
+a=rtcp-mux
+
+a=rtcp-rsize
+
+a=rtpmap:63 red/48000/2
+
+a=fmtp:63 111/111
+
+a=rtpmap:111 opus/48000/2
+
+a=fmtp:111 minptime=10;useinbandfec=1;usedtx=1
+
+a=rtcp-fb:111 transport-cc 
+
+a=rtcp-fb:111 nack 
+
+a=extmap:4 urn:ietf:params:rtp-hdrext:sdes:mid
+
+a=extmap:1 urn:ietf:params:rtp-hdrext:ssrc-audio-level
+
+a=recvonly
+
+m=application 9 UDP/DTLS/SCTP webrtc-datachannel
+
+c=IN IP4 0.0.0.0
+
+a=setup:active
+
+a=mid:1
+
+a=sendrecv
+
+a=sctp-port:5000
+
+a=ice-ufrag:WNWQTMmEYYWhQebF
+
+a=ice-pwd:xesfPtBFoSXgVRmRgJBHSYgvxIzqgEeL
+2023-09-12 21:07:31.542546+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: [SignalEvent] Instance of 'SignalTrickleEvent'
+2023-09-12 21:07:31.542620+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: [SignalEvent] Instance of 'SignalTrickleEvent'
+2023-09-12 21:07:31.542677+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: [SignalEvent] Instance of 'SignalTrickleEvent'
+2023-09-12 21:07:31.542894+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: publisher iceConnectionState: RTCIceConnectionState.RTCIceConnectionStateChecking
+2023-09-12 21:07:31.542985+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: got ICE candidate from peer
+2023-09-12 21:07:31.543131+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: [SignalEvent] Instance of 'SignalTrickleEvent'
+2023-09-12 21:07:31.543268+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: pc.getRemoteDescription Instance of 'RTCSessionDescription'
+2023-09-12 21:07:31.543511+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: got ICE candidate from peer
+2023-09-12 21:07:31.543758+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: [EngineEvent] Engine#176336443 EnginePublisherPeerStateUpdatedEvent(state: RTCPeerConnectionState.RTCPeerConnectionStateConnecting, isPrimary: false)
+2023-09-12 21:07:31.543844+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: pc.getRemoteDescription Instance of 'RTCSessionDescription'
+2023-09-12 21:07:31.544024+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: got ICE candidate from peer
+2023-09-12 21:07:31.544192+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: pc.getRemoteDescription Instance of 'RTCSessionDescription'
+2023-09-12 21:07:31.544399+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: got ICE candidate from peer
+2023-09-12 21:07:31.544624+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: pc.getRemoteDescription Instance of 'RTCSessionDescription'
+2023-09-12 21:07:31.565797+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: publisher onIceCandidate
+2023-09-12 21:07:31.580794+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: publisher onIceCandidate
+2023-09-12 21:07:31.581077+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: publisher onIceCandidate
+2023-09-12 21:07:31.581249+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: publisher onIceCandidate
+2023-09-12 21:07:31.581407+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: publisher onIceCandidate
+2023-09-12 21:07:31.581558+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: publisher onIceCandidate
+2023-09-12 21:07:31.587576+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: starting to negotiate
+2023-09-12 21:07:31.589223+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: publisher onOffer
+2023-09-12 21:07:31.617926+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: publisher onIceCandidate
+2023-09-12 21:07:31.638937+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: [SignalEvent] Instance of 'SignalAnswerEvent'
+2023-09-12 21:07:31.639091+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: received answer (type: answer)
+2023-09-12 21:07:31.639147+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: sdp: v=0
+
+o=- 2691130203855455008 1694542052 IN IP4 0.0.0.0
+
+s=-
+
+t=0 0
+
+a=fingerprint:sha-256 E1:2F:A0:8D:6B:27:DE:28:58:03:AB:BD:DC:30:B9:AB:DD:86:6E:6A:C7:3D:D4:C2:8B:4B:3D:2F:30:8F:96:91
+
+a=ice-lite
+
+a=extmap-allow-mixed
+
+a=group:BUNDLE 0 1 2
+
+m=audio 9 UDP/TLS/RTP/SAVPF 63 111
+
+c=IN IP4 0.0.0.0
+
+a=setup:active
+
+a=mid:0
+
+a=ice-ufrag:WNWQTMmEYYWhQebF
+
+a=ice-pwd:xesfPtBFoSXgVRmRgJBHSYgvxIzqgEeL
+
+a=rtcp-mux
+
+a=rtcp-rsize
+
+a=rtpmap:63 red/48000/2
+
+a=fmtp:63 111/111
+
+a=rtpmap:111 opus/48000/2
+
+a=fmtp:111 minptime=10;useinbandfec=1;usedtx=1
+
+a=rtcp-fb:111 transport-cc 
+
+a=rtcp-fb:111 nack 
+
+a=extmap:4 urn:ietf:params:rtp-hdrext:sdes:mid
+
+a=extmap:1 urn:ietf:params:rtp-hdrext:ssrc-audio-level
+
+a=recvonly
+
+a=candidate:3321465841 1 tcp 1671430143 2a03:b0c0:3:d0::1ce2:7001 7881 typ host tcptype passive
+
+a=candidate:3321465841 2 tcp 1671430143 2a03:b0c0:3:d0::1ce2:7001 7881 typ host tcptype passive
+
+a=candidate:3735846627 1 udp 2130706431 164.90.219.72 52674 typ host
+
+a=candidate:3735846627 2 udp 2130706431 164.90.219.72 52674 typ host
+
+a=candidate:1667174147 1 tcp 1671430143 164.90.219.72 7881 typ host tcptype passive
+
+a=candidate:1667174147 2 tcp 1671430143 164.90.219.72 7881 typ host tcptype passive
+
+a=candidate:2013985297 1 udp 2130706431 2a03:b0c0:3:d0::1ce2:7001 59036 typ host
+
+a=candidate:2013985297 2 udp 2130706431 2a03:b0c0:3:d0::1ce2:7001 59036 typ host
+
+a=end-of-candidates
+
+m=application 9 UDP/DTLS/SCTP webrtc-datachannel
+
+c=IN IP4 0.0.0.0
+
+a=setup:active
+
+a=mid:1
+
+a=sendrecv
+
+a=sctp-port:5000
+
+a=ice-ufrag:WNWQTMmEYYWhQebF
+
+a=ice-pwd:xesfPtBFoSXgVRmRgJBHSYgvxIzqgEeL
+
+m=video 9 UDP/TLS/RTP/SAVPF 98 100 127 35
+
+c=IN IP4 0.0.0.0
+
+a=setup:active
+
+a=mid:2
+
+a=ice-ufrag:WNWQTMmEYYWhQebF
+
+a=ice-pwd:xesfPtBFoSXgVRmRgJBHSYgvxIzqgEeL
+
+a=rtcp-mux
+
+a=rtcp-rsize
+
+a=rtpmap:98 H264/90000
+
+a=fmtp:98 level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=42e034
+
+a=rtcp-fb:98 goog-remb 
+
+a=rtcp-fb:98 transport-cc 
+
+a=rtcp-fb:98 ccm fir
+
+a=rtcp-fb:98 nack 
+
+a=rtcp-fb:98 nack pli
+
+a=rtpmap:100 VP8/90000
+
+a=rtcp-fb:100 goog-remb 
+
+a=rtcp-fb:100 transport-cc 
+
+a=rtcp-fb:100 ccm fir
+
+a=rtcp-fb:100 nack 
+
+a=rtcp-fb:100 nack pli
+
+a=rtpmap:127 VP9/90000
+
+a=rtcp-fb:127 goog-remb 
+
+a=rtcp-fb:127 transport-cc 
+
+a=rtcp-fb:127 ccm fir
+
+a=rtcp-fb:127 nack 
+
+a=rtcp-fb:127 nack pli
+
+a=rtpmap:35 AV1/90000
+
+a=rtcp-fb:35 goog-remb 
+
+a=rtcp-fb:35 transport-cc 
+
+a=rtcp-fb:35 ccm fir
+
+a=rtcp-fb:35 nack 
+
+a=rtcp-fb:35 nack pli
+
+a=extmap:3 http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01
+
+a=extmap:4 urn:ietf:params:rtp-hdrext:sdes:mid
+
+a=extmap:10 urn:ietf:params:rtp-hdrext:sdes:rtp-stream-id
+
+a=rid:q recv
+
+a=rid:f recv
+
+a=rid:h recv
+
+a=simulcast:recv q;f;h
+
+a=recvonly
+2023-09-12 21:07:31.659144+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: publisher onIceCandidate
+2023-09-12 21:07:31.711036+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:31.826300+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: [EngineEvent] Engine#176336443 EnginePublisherPeerStateUpdatedEvent(state: RTCPeerConnectionState.RTCPeerConnectionStateConnected, isPrimary: false)
+2023-09-12 21:07:31.826517+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: publisher iceConnectionState: RTCIceConnectionState.RTCIceConnectionStateConnected
+2023-09-12 21:07:31.974222+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: publisher iceConnectionState: RTCIceConnectionState.RTCIceConnectionStateCompleted
+2023-09-12 21:07:31.974268+0300 QR Doorbell App[22053:1632538] [VERBOSE-2:shell.cc(1004)] The 'FlutterWebRTC/dataChannelEventFAF46A85-B32F-44E1-AF19-9667917389C47BA3B320-FF91-441E-8EC9-11573534C002' channel sent a message from native to Flutter on a non-platform thread. Platform channel messages must be sent on the platform thread. Failure to do so may result in data loss or crashes, and must be fixed in the plugin or application code creating that channel.
+See https://docs.flutter.dev/platform-integration/platform-channels#channels-and-platform-threading for more information.
+2023-09-12 21:07:31.976356+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: [EngineEvent] Engine#176336443 Instance of 'PublisherDataChannelStateUpdatedEvent'
+2023-09-12 21:07:31.979659+0300 QR Doorbell App[22053:1632538] [VERBOSE-2:shell.cc(1004)] The 'FlutterWebRTC/dataChannelEventFAF46A85-B32F-44E1-AF19-9667917389C4E9CF2B4E-26FB-48DE-8E77-CC324E19FD0B' channel sent a message from native to Flutter on a non-platform thread. Platform channel messages must be sent on the platform thread. Failure to do so may result in data loss or crashes, and must be fixed in the plugin or application code creating that channel.
+See https://docs.flutter.dev/platform-integration/platform-channels#channels-and-platform-threading for more information.
+2023-09-12 21:07:31.981914+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: [EngineEvent] Engine#176336443 Instance of 'PublisherDataChannelStateUpdatedEvent'
+2023-09-12 21:07:31.982132+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: [EngineEvent] Engine#176336443 Instance of 'SubscriberDataChannelStateUpdatedEvent'
+2023-09-12 21:07:31.982269+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: [EngineEvent] Engine#176336443 Instance of 'SubscriberDataChannelStateUpdatedEvent'
+2023-09-12 21:07:31.985560+0300 QR Doorbell App[22053:1632210] flutter: 21:07:31: Connected address: 164.90.219.72:52674
+2023-09-12 21:07:32.011800+0300 QR Doorbell App[22053:1632210] flutter: 21:07:32: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:32.047432+0300 QR Doorbell App[22053:1632210] flutter: 21:07:32: [SignalEvent] Instance of 'SignalParticipantUpdateEvent'
+2023-09-12 21:07:32.047726+0300 QR Doorbell App[22053:1632210] flutter: 21:07:32: [ParticipantEvent] ParticipantPermissionsUpdatedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), permissions: Instance of 'ParticipantPermissions'), will notifyListeners()
+2023-09-12 21:07:32.047819+0300 QR Doorbell App[22053:1632210] flutter: 21:07:32: [RoomEvent] ParticipantPermissionsUpdatedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), permissions: Instance of 'ParticipantPermissions'), will notifyListeners()
+2023-09-12 21:07:32.049559+0300 QR Doorbell App[22053:1632210] flutter: 21:07:32: [SignalEvent] Instance of 'SignalParticipantUpdateEvent'
+2023-09-12 21:07:32.049878+0300 QR Doorbell App[22053:1632210] flutter: 21:07:32: [SignalEvent] Instance of 'SignalRoomUpdateEvent'
+2023-09-12 21:07:32.050005+0300 QR Doorbell App[22053:1632210] flutter: 21:07:32: [ParticipantEvent] ParticipantPermissionsUpdatedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), permissions: Instance of 'ParticipantPermissions'), will notifyListeners()
+2023-09-12 21:07:32.050079+0300 QR Doorbell App[22053:1632210] flutter: 21:07:32: [RoomEvent] ParticipantPermissionsUpdatedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), permissions: Instance of 'ParticipantPermissions'), will notifyListeners()
+2023-09-12 21:07:32.050649+0300 QR Doorbell App[22053:1632210] flutter: 21:07:32: [RoomEvent] RoomMetadataChangedEvent(), will notifyListeners()
+2023-09-12 21:07:32.060182+0300 QR Doorbell App[22053:1632210] flutter: 21:07:32: [SignalEvent] Instance of 'SignalParticipantUpdateEvent'
+2023-09-12 21:07:32.060425+0300 QR Doorbell App[22053:1632210] flutter: 21:07:32: [ParticipantEvent] ParticipantPermissionsUpdatedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), permissions: Instance of 'ParticipantPermissions'), will notifyListeners()
+2023-09-12 21:07:32.060515+0300 QR Doorbell App[22053:1632210] flutter: 21:07:32: [RoomEvent] ParticipantPermissionsUpdatedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), permissions: Instance of 'ParticipantPermissions'), will notifyListeners()
+2023-09-12 21:07:32.079956+0300 QR Doorbell App[22053:1632210] flutter: 21:07:32: [SignalEvent] Instance of 'SignalParticipantUpdateEvent'
+2023-09-12 21:07:32.080200+0300 QR Doorbell App[22053:1632210] flutter: 21:07:32: [ParticipantEvent] ParticipantPermissionsUpdatedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), permissions: Instance of 'ParticipantPermissions'), will notifyListeners()
+2023-09-12 21:07:32.080281+0300 QR Doorbell App[22053:1632210] flutter: 21:07:32: [RoomEvent] ParticipantPermissionsUpdatedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), permissions: Instance of 'ParticipantPermissions'), will notifyListeners()
+2023-09-12 21:07:32.175200+0300 QR Doorbell App[22053:1632210] flutter: 21:07:32: [Visibility] VideoView did build
+2023-09-12 21:07:32.290417+0300 QR Doorbell App[22053:1632210] flutter: 21:07:32: [SignalEvent] Instance of 'SignalSubscribedQualityUpdatedEvent'
+2023-09-12 21:07:32.290953+0300 QR Doorbell App[22053:1632210] flutter: 21:07:32: Update publishing layers: [enabled: true
+, quality: MEDIUM
+enabled: true
+, quality: HIGH
+enabled: true
+]
+2023-09-12 21:07:32.291061+0300 QR Doorbell App[22053:1632210] flutter: 21:07:32: Processing encoding: f...
+2023-09-12 21:07:32.291220+0300 QR Doorbell App[22053:1632210] flutter: 21:07:32: Processing encoding: h...
+2023-09-12 21:07:32.291253+0300 QR Doorbell App[22053:1632210] flutter: 21:07:32: Processing encoding: q...
+2023-09-12 21:07:32.291282+0300 QR Doorbell App[22053:1632210] flutter: 21:07:32: Update publishing layers: nothing to change
+2023-09-12 21:07:32.310863+0300 QR Doorbell App[22053:1632210] flutter: 21:07:32: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:32.507607+0300 QR Doorbell App[22053:1632210] flutter: 21:07:32: [SignalEvent] Instance of 'SignalSpeakersChangedEvent'
+2023-09-12 21:07:32.508272+0300 QR Doorbell App[22053:1632210] flutter: 21:07:32: [RoomEvent] ActiveSpeakersChangedEvent(speakers: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ)), will notifyListeners()
+2023-09-12 21:07:32.593735+0300 QR Doorbell App[22053:1632210] flutter: 21:07:32: [SignalEvent] Instance of 'SignalParticipantUpdateEvent'
+2023-09-12 21:07:32.594255+0300 QR Doorbell App[22053:1632210] flutter: 21:07:32: [ParticipantEvent] ParticipantPermissionsUpdatedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), permissions: Instance of 'ParticipantPermissions'), will notifyListeners()
+2023-09-12 21:07:32.594482+0300 QR Doorbell App[22053:1632210] flutter: 21:07:32: [RoomEvent] ParticipantPermissionsUpdatedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), permissions: Instance of 'ParticipantPermissions'), will notifyListeners()
+2023-09-12 21:07:32.611731+0300 QR Doorbell App[22053:1632210] flutter: 21:07:32: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:32.907013+0300 QR Doorbell App[22053:1632210] flutter: 21:07:32: [SignalEvent] Instance of 'SignalSpeakersChangedEvent'
+2023-09-12 21:07:32.907431+0300 QR Doorbell App[22053:1632210] flutter: 21:07:32: [RoomEvent] ActiveSpeakersChangedEvent(speakers: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ)), will notifyListeners()
+2023-09-12 21:07:32.910320+0300 QR Doorbell App[22053:1632210] flutter: 21:07:32: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:33.179834+0300 QR Doorbell App[22053:1632210] flutter: 21:07:33: [Visibility] VideoView did build
+2023-09-12 21:07:33.209990+0300 QR Doorbell App[22053:1632210] flutter: 21:07:33: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:33.210381+0300 QR Doorbell App[22053:1632210] flutter: 21:07:33: [TrackEvent] AudioReceiverStatsEventstats: Instance of 'AudioReceiverStats'), will notifyListeners()
+2023-09-12 21:07:33.210706+0300 QR Doorbell App[22053:1632210] flutter: 21:07:33: [TrackEvent] VideoReceiverStatsEventstats: Instance of 'VideoReceiverStats'), will notifyListeners()
+2023-09-12 21:07:33.305932+0300 QR Doorbell App[22053:1632210] flutter: 21:07:33: [SignalEvent] Instance of 'SignalSpeakersChangedEvent'
+2023-09-12 21:07:33.306735+0300 QR Doorbell App[22053:1632210] flutter: 21:07:33: [RoomEvent] ActiveSpeakersChangedEvent(speakers: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ)), will notifyListeners()
+2023-09-12 21:07:33.511004+0300 QR Doorbell App[22053:1632210] flutter: 21:07:33: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:33.707394+0300 QR Doorbell App[22053:1632210] flutter: 21:07:33: [SignalEvent] Instance of 'SignalSpeakersChangedEvent'
+2023-09-12 21:07:33.707953+0300 QR Doorbell App[22053:1632210] flutter: 21:07:33: [RoomEvent] ActiveSpeakersChangedEvent(speakers: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ)), will notifyListeners()
+2023-09-12 21:07:33.810941+0300 QR Doorbell App[22053:1632210] flutter: 21:07:33: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:34.106927+0300 QR Doorbell App[22053:1632210] flutter: 21:07:34: [SignalEvent] Instance of 'SignalSpeakersChangedEvent'
+2023-09-12 21:07:34.107405+0300 QR Doorbell App[22053:1632210] flutter: 21:07:34: [RoomEvent] ActiveSpeakersChangedEvent(speakers: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ)), will notifyListeners()
+2023-09-12 21:07:34.110382+0300 QR Doorbell App[22053:1632210] flutter: 21:07:34: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:34.166414+0300 QR Doorbell App[22053:1632210] flutter: 21:07:34: [Visibility] VideoView did build
+2023-09-12 21:07:34.264649+0300 QR Doorbell App[22053:1632210] flutter: 21:07:34: [TrackEvent] AudioSenderStatsEventstats: Instance of 'AudioSenderStats'), will notifyListeners()
+2023-09-12 21:07:34.411421+0300 QR Doorbell App[22053:1632210] flutter: 21:07:34: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:34.711673+0300 QR Doorbell App[22053:1632210] flutter: 21:07:34: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:34.826313+0300 QR Doorbell App[22053:1632210] flutter: 21:07:34: [TrackEvent] VideoSenderStatsEventstats: {q: Instance of 'VideoSenderStats', h: Instance of 'VideoSenderStats', f: Instance of 'VideoSenderStats'}), will notifyListeners()
+2023-09-12 21:07:35.010929+0300 QR Doorbell App[22053:1632210] flutter: 21:07:35: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:35.171842+0300 QR Doorbell App[22053:1632210] flutter: 21:07:35: [Visibility] VideoView did build
+2023-09-12 21:07:35.211754+0300 QR Doorbell App[22053:1632210] flutter: 21:07:35: [TrackEvent] AudioReceiverStatsEventstats: Instance of 'AudioReceiverStats'), will notifyListeners()
+2023-09-12 21:07:35.212265+0300 QR Doorbell App[22053:1632210] flutter: 21:07:35: [TrackEvent] VideoReceiverStatsEventstats: Instance of 'VideoReceiverStats'), will notifyListeners()
+2023-09-12 21:07:35.311855+0300 QR Doorbell App[22053:1632210] flutter: 21:07:35: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:35.611040+0300 QR Doorbell App[22053:1632210] flutter: 21:07:35: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:35.911104+0300 QR Doorbell App[22053:1632210] flutter: 21:07:35: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:36.171593+0300 QR Doorbell App[22053:1632210] flutter: 21:07:36: [Visibility] VideoView did build
+2023-09-12 21:07:36.211259+0300 QR Doorbell App[22053:1632210] flutter: 21:07:36: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:36.264273+0300 QR Doorbell App[22053:1632210] flutter: 21:07:36: [TrackEvent] AudioSenderStatsEventstats: Instance of 'AudioSenderStats'), will notifyListeners()
+2023-09-12 21:07:36.359661+0300 QR Doorbell App[22053:1632210] flutter: 21:07:36: didChangeAppLifecycleState: state=inactive
+2023-09-12 21:07:36.511360+0300 QR Doorbell App[22053:1632210] flutter: 21:07:36: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+>> pictureInPictureControllerWillStartPictureInPicture
+2023-09-12 21:07:36.811612+0300 QR Doorbell App[22053:1632210] flutter: 21:07:36: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:36.827203+0300 QR Doorbell App[22053:1632210] flutter: 21:07:36: [TrackEvent] VideoSenderStatsEventstats: {q: Instance of 'VideoSenderStats', h: Instance of 'VideoSenderStats', f: Instance of 'VideoSenderStats'}), will notifyListeners()
+2023-09-12 21:07:37.110986+0300 QR Doorbell App[22053:1632210] flutter: 21:07:37: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:37.182075+0300 QR Doorbell App[22053:1632210] flutter: 21:07:37: [Visibility] VideoView did build
+2023-09-12 21:07:37.210108+0300 QR Doorbell App[22053:1632210] flutter: 21:07:37: [TrackEvent] AudioReceiverStatsEventstats: Instance of 'AudioReceiverStats'), will notifyListeners()
+2023-09-12 21:07:37.210458+0300 QR Doorbell App[22053:1632210] flutter: 21:07:37: [TrackEvent] VideoReceiverStatsEventstats: Instance of 'VideoReceiverStats'), will notifyListeners()
+2023-09-12 21:07:37.310992+0300 QR Doorbell App[22053:1632210] flutter: 21:07:37: [SignalEvent] Instance of 'SignalSpeakersChangedEvent'
+2023-09-12 21:07:37.311498+0300 QR Doorbell App[22053:1632210] flutter: 21:07:37: [RoomEvent] ActiveSpeakersChangedEvent(speakers: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ)), will notifyListeners()
+2023-09-12 21:07:37.411379+0300 QR Doorbell App[22053:1632210] flutter: 21:07:37: didChangeAppLifecycleState: state=hidden
+2023-09-12 21:07:37.411480+0300 QR Doorbell App[22053:1632210] flutter: 21:07:37: didChangeAppLifecycleState: state=paused
+2023-09-12 21:07:37.411759+0300 QR Doorbell App[22053:1632210] flutter: 21:07:37: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:37.706164+0300 QR Doorbell App[22053:1632210] flutter: 21:07:37: [SignalEvent] Instance of 'SignalSpeakersChangedEvent'
+2023-09-12 21:07:37.706480+0300 QR Doorbell App[22053:1632210] flutter: 21:07:37: [RoomEvent] ActiveSpeakersChangedEvent(speakers: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ)), will notifyListeners()
+2023-09-12 21:07:37.710877+0300 QR Doorbell App[22053:1632210] flutter: 21:07:37: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:38.012071+0300 QR Doorbell App[22053:1632210] flutter: 21:07:38: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:38.267617+0300 QR Doorbell App[22053:1632210] flutter: 21:07:38: [TrackEvent] AudioSenderStatsEventstats: Instance of 'AudioSenderStats'), will notifyListeners()
+2023-09-12 21:07:38.311426+0300 QR Doorbell App[22053:1632210] flutter: 21:07:38: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:38.611647+0300 QR Doorbell App[22053:1632210] flutter: 21:07:38: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:38.828571+0300 QR Doorbell App[22053:1632210] flutter: 21:07:38: [TrackEvent] VideoSenderStatsEventstats: {q: Instance of 'VideoSenderStats', h: Instance of 'VideoSenderStats', f: Instance of 'VideoSenderStats'}), will notifyListeners()
+2023-09-12 21:07:38.911274+0300 QR Doorbell App[22053:1632210] flutter: 21:07:38: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:39.210276+0300 QR Doorbell App[22053:1632210] flutter: 21:07:39: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:39.214676+0300 QR Doorbell App[22053:1632210] flutter: 21:07:39: [TrackEvent] AudioReceiverStatsEventstats: Instance of 'AudioReceiverStats'), will notifyListeners()
+2023-09-12 21:07:39.215673+0300 QR Doorbell App[22053:1632210] flutter: 21:07:39: [TrackEvent] VideoReceiverStatsEventstats: Instance of 'VideoReceiverStats'), will notifyListeners()
+2023-09-12 21:07:39.511125+0300 QR Doorbell App[22053:1632210] flutter: 21:07:39: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:39.706888+0300 QR Doorbell App[22053:1632210] flutter: 21:07:39: [SignalEvent] Instance of 'SignalSpeakersChangedEvent'
+2023-09-12 21:07:39.707880+0300 QR Doorbell App[22053:1632210] flutter: 21:07:39: [RoomEvent] ActiveSpeakersChangedEvent(speakers: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ)), will notifyListeners()
+2023-09-12 21:07:39.811939+0300 QR Doorbell App[22053:1632210] flutter: 21:07:39: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:40.111603+0300 QR Doorbell App[22053:1632210] flutter: 21:07:40: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:40.269930+0300 QR Doorbell App[22053:1632210] flutter: 21:07:40: [TrackEvent] AudioSenderStatsEventstats: Instance of 'AudioSenderStats'), will notifyListeners()
+2023-09-12 21:07:40.411945+0300 QR Doorbell App[22053:1632210] flutter: 21:07:40: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:40.507701+0300 QR Doorbell App[22053:1632210] flutter: 21:07:40: [SignalEvent] Instance of 'SignalSpeakersChangedEvent'
+2023-09-12 21:07:40.508616+0300 QR Doorbell App[22053:1632210] flutter: 21:07:40: [RoomEvent] ActiveSpeakersChangedEvent(speakers: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ)), will notifyListeners()
+2023-09-12 21:07:40.711673+0300 QR Doorbell App[22053:1632210] flutter: 21:07:40: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:40.827779+0300 QR Doorbell App[22053:1632210] flutter: 21:07:40: [TrackEvent] VideoSenderStatsEventstats: {q: Instance of 'VideoSenderStats', h: Instance of 'VideoSenderStats', f: Instance of 'VideoSenderStats'}), will notifyListeners()
+2023-09-12 21:07:40.908054+0300 QR Doorbell App[22053:1632210] flutter: 21:07:40: [SignalEvent] Instance of 'SignalSpeakersChangedEvent'
+2023-09-12 21:07:40.909056+0300 QR Doorbell App[22053:1632210] flutter: 21:07:40: [RoomEvent] ActiveSpeakersChangedEvent(speakers: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ)), will notifyListeners()
+2023-09-12 21:07:41.011047+0300 QR Doorbell App[22053:1632210] flutter: 21:07:41: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:41.213049+0300 QR Doorbell App[22053:1632210] flutter: 21:07:41: [TrackEvent] AudioReceiverStatsEventstats: Instance of 'AudioReceiverStats'), will notifyListeners()
+2023-09-12 21:07:41.214474+0300 QR Doorbell App[22053:1632210] flutter: 21:07:41: [TrackEvent] VideoReceiverStatsEventstats: Instance of 'VideoReceiverStats'), will notifyListeners()
+2023-09-12 21:07:41.311489+0300 QR Doorbell App[22053:1632210] flutter: 21:07:41: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:41.611896+0300 QR Doorbell App[22053:1632210] flutter: 21:07:41: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:41.706823+0300 QR Doorbell App[22053:1632210] flutter: 21:07:41: [SignalEvent] Instance of 'SignalSpeakersChangedEvent'
+2023-09-12 21:07:41.707472+0300 QR Doorbell App[22053:1632210] flutter: 21:07:41: [RoomEvent] ActiveSpeakersChangedEvent(speakers: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ)), will notifyListeners()
+2023-09-12 21:07:41.813171+0300 QR Doorbell App[22053:1632210] flutter: 21:07:41: subscriber iceConnectionState: RTCIceConnectionState.RTCIceConnectionStateCompleted
+2023-09-12 21:07:41.911580+0300 QR Doorbell App[22053:1632210] flutter: 21:07:41: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:42.211829+0300 QR Doorbell App[22053:1632210] flutter: 21:07:42: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:42.266144+0300 QR Doorbell App[22053:1632210] flutter: 21:07:42: [TrackEvent] AudioSenderStatsEventstats: Instance of 'AudioSenderStats'), will notifyListeners()
+2023-09-12 21:07:42.512195+0300 QR Doorbell App[22053:1632210] flutter: 21:07:42: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:42.811866+0300 QR Doorbell App[22053:1632210] flutter: 21:07:42: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:42.829341+0300 QR Doorbell App[22053:1632210] flutter: 21:07:42: [TrackEvent] VideoSenderStatsEventstats: {q: Instance of 'VideoSenderStats', h: Instance of 'VideoSenderStats', f: Instance of 'VideoSenderStats'}), will notifyListeners()
+2023-09-12 21:07:43.112462+0300 QR Doorbell App[22053:1632210] flutter: 21:07:43: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:43.213738+0300 QR Doorbell App[22053:1632210] flutter: 21:07:43: [TrackEvent] AudioReceiverStatsEventstats: Instance of 'AudioReceiverStats'), will notifyListeners()
+2023-09-12 21:07:43.214864+0300 QR Doorbell App[22053:1632210] flutter: 21:07:43: [TrackEvent] VideoReceiverStatsEventstats: Instance of 'VideoReceiverStats'), will notifyListeners()
+2023-09-12 21:07:43.412328+0300 QR Doorbell App[22053:1632210] flutter: 21:07:43: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:43.711858+0300 QR Doorbell App[22053:1632210] flutter: 21:07:43: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:43.951949+0300 QR Doorbell App[22053:1632210] flutter: 21:07:43: didChangeAppLifecycleState: state=hidden
+2023-09-12 21:07:43.952319+0300 QR Doorbell App[22053:1632210] flutter: 21:07:43: didChangeAppLifecycleState: state=inactive
+2023-09-12 21:07:43.967859+0300 QR Doorbell App[22053:1632210] flutter: 21:07:43: [Visibility] VideoView did build
+2023-09-12 21:07:44.010669+0300 QR Doorbell App[22053:1632210] flutter: 21:07:44: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:44.168928+0300 QR Doorbell App[22053:1632210] flutter: 21:07:44: [Visibility] VideoView did build
+2023-09-12 21:07:44.265714+0300 QR Doorbell App[22053:1632210] flutter: 21:07:44: [TrackEvent] AudioSenderStatsEventstats: Instance of 'AudioSenderStats'), will notifyListeners()
+2023-09-12 21:07:44.271084+0300 QR Doorbell App[22053:1632210] flutter: 21:07:44: didChangeAppLifecycleState: state=resumed
+2023-09-12 21:07:44.310650+0300 QR Doorbell App[22053:1632210] flutter: 21:07:44: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+>> pictureInPictureControllerWillStopPictureInPicture
+2023-09-12 21:07:44.611815+0300 QR Doorbell App[22053:1632210] flutter: 21:07:44: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:44.828449+0300 QR Doorbell App[22053:1632210] flutter: 21:07:44: [TrackEvent] VideoSenderStatsEventstats: {q: Instance of 'VideoSenderStats', h: Instance of 'VideoSenderStats', f: Instance of 'VideoSenderStats'}), will notifyListeners()
+2023-09-12 21:07:44.911096+0300 QR Doorbell App[22053:1632210] flutter: 21:07:44: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:45.171443+0300 QR Doorbell App[22053:1632210] flutter: 21:07:45: [Visibility] VideoView did build
+2023-09-12 21:07:45.210296+0300 QR Doorbell App[22053:1632210] flutter: 21:07:45: [TrackEvent] AudioReceiverStatsEventstats: Instance of 'AudioReceiverStats'), will notifyListeners()
+2023-09-12 21:07:45.210537+0300 QR Doorbell App[22053:1632210] flutter: 21:07:45: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:45.210951+0300 QR Doorbell App[22053:1632210] flutter: 21:07:45: [TrackEvent] VideoReceiverStatsEventstats: Instance of 'VideoReceiverStats'), will notifyListeners()
+2023-09-12 21:07:45.512996+0300 QR Doorbell App[22053:1632210] flutter: 21:07:45: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:45.810913+0300 QR Doorbell App[22053:1632210] flutter: 21:07:45: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:45.909041+0300 QR Doorbell App[22053:1632210] flutter: 21:07:45: [SignalEvent] Instance of 'SignalConnectionQualityUpdateEvent'
+2023-09-12 21:07:45.909699+0300 QR Doorbell App[22053:1632210] flutter: 21:07:45: [ParticipantEvent] ParticipantConnectionQualityUpdatedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), connectionQuality: ConnectionQuality.good), will notifyListeners()
+2023-09-12 21:07:45.909855+0300 QR Doorbell App[22053:1632210] flutter: 21:07:45: [RoomEvent] ParticipantConnectionQualityUpdatedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), connectionQuality: ConnectionQuality.good), will notifyListeners()
+2023-09-12 21:07:46.112009+0300 QR Doorbell App[22053:1632210] flutter: 21:07:46: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:46.171620+0300 QR Doorbell App[22053:1632210] flutter: 21:07:46: [Visibility] VideoView did build
+2023-09-12 21:07:46.265623+0300 QR Doorbell App[22053:1632210] flutter: 21:07:46: [TrackEvent] AudioSenderStatsEventstats: Instance of 'AudioSenderStats'), will notifyListeners()
+2023-09-12 21:07:46.411159+0300 QR Doorbell App[22053:1632210] flutter: 21:07:46: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:46.712015+0300 QR Doorbell App[22053:1632210] flutter: 21:07:46: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:46.824714+0300 QR Doorbell App[22053:1632210] flutter: 21:07:46: [TrackEvent] VideoSenderStatsEventstats: {q: Instance of 'VideoSenderStats', h: Instance of 'VideoSenderStats', f: Instance of 'VideoSenderStats'}), will notifyListeners()
+2023-09-12 21:07:47.011362+0300 QR Doorbell App[22053:1632210] flutter: 21:07:47: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:47.175482+0300 QR Doorbell App[22053:1632210] flutter: 21:07:47: [Visibility] VideoView did build
+2023-09-12 21:07:47.210853+0300 QR Doorbell App[22053:1632210] flutter: 21:07:47: [TrackEvent] AudioReceiverStatsEventstats: Instance of 'AudioReceiverStats'), will notifyListeners()
+2023-09-12 21:07:47.211258+0300 QR Doorbell App[22053:1632210] flutter: 21:07:47: [TrackEvent] VideoReceiverStatsEventstats: Instance of 'VideoReceiverStats'), will notifyListeners()
+2023-09-12 21:07:47.312107+0300 QR Doorbell App[22053:1632210] flutter: 21:07:47: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:47.611324+0300 QR Doorbell App[22053:1632210] flutter: 21:07:47: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:47.911427+0300 QR Doorbell App[22053:1632210] flutter: 21:07:47: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:48.106293+0300 QR Doorbell App[22053:1632210] flutter: 21:07:48: [SignalEvent] Instance of 'SignalSpeakersChangedEvent'
+2023-09-12 21:07:48.106846+0300 QR Doorbell App[22053:1632210] flutter: 21:07:48: [RoomEvent] ActiveSpeakersChangedEvent(speakers: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ)), will notifyListeners()
+2023-09-12 21:07:48.179997+0300 QR Doorbell App[22053:1632210] flutter: 21:07:48: [Visibility] VideoView did build
+2023-09-12 21:07:48.210937+0300 QR Doorbell App[22053:1632210] flutter: 21:07:48: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:48.265264+0300 QR Doorbell App[22053:1632210] flutter: 21:07:48: [TrackEvent] AudioSenderStatsEventstats: Instance of 'AudioSenderStats'), will notifyListeners()
+2023-09-12 21:07:48.511327+0300 QR Doorbell App[22053:1632210] flutter: 21:07:48: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:48.659570+0300 QR Doorbell App[22053:1632210] flutter: 21:07:48: didChangeAppLifecycleState: state=inactive
+2023-09-12 21:07:48.812224+0300 QR Doorbell App[22053:1632210] flutter: 21:07:48: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:48.823942+0300 QR Doorbell App[22053:1632210] flutter: 21:07:48: [TrackEvent] VideoSenderStatsEventstats: {q: Instance of 'VideoSenderStats', h: Instance of 'VideoSenderStats', f: Instance of 'VideoSenderStats'}), will notifyListeners()
+>> pictureInPictureControllerWillStartPictureInPicture
+2023-09-12 21:07:49.111811+0300 QR Doorbell App[22053:1632210] flutter: 21:07:49: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:49.165478+0300 QR Doorbell App[22053:1632210] flutter: 21:07:49: [Visibility] VideoView did build
+2023-09-12 21:07:49.212107+0300 QR Doorbell App[22053:1632210] flutter: 21:07:49: [TrackEvent] AudioReceiverStatsEventstats: Instance of 'AudioReceiverStats'), will notifyListeners()
+2023-09-12 21:07:49.212902+0300 QR Doorbell App[22053:1632210] flutter: 21:07:49: [TrackEvent] VideoReceiverStatsEventstats: Instance of 'VideoReceiverStats'), will notifyListeners()
+2023-09-12 21:07:49.411201+0300 QR Doorbell App[22053:1632210] flutter: 21:07:49: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:49.619203+0300 QR Doorbell App[22053:1632210] flutter: 21:07:49: didChangeAppLifecycleState: state=hidden
+2023-09-12 21:07:49.619302+0300 QR Doorbell App[22053:1632210] flutter: 21:07:49: didChangeAppLifecycleState: state=paused
+2023-09-12 21:07:49.710760+0300 QR Doorbell App[22053:1632210] flutter: 21:07:49: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:50.011519+0300 QR Doorbell App[22053:1632210] flutter: 21:07:50: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:50.266327+0300 QR Doorbell App[22053:1632210] flutter: 21:07:50: [TrackEvent] AudioSenderStatsEventstats: Instance of 'AudioSenderStats'), will notifyListeners()
+2023-09-12 21:07:50.311851+0300 QR Doorbell App[22053:1632210] flutter: 21:07:50: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:50.611247+0300 QR Doorbell App[22053:1632210] flutter: 21:07:50: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:50.829042+0300 QR Doorbell App[22053:1632210] flutter: 21:07:50: [TrackEvent] VideoSenderStatsEventstats: {q: Instance of 'VideoSenderStats', h: Instance of 'VideoSenderStats', f: Instance of 'VideoSenderStats'}), will notifyListeners()
+2023-09-12 21:07:50.908107+0300 QR Doorbell App[22053:1632210] flutter: 21:07:50: [SignalEvent] Instance of 'SignalConnectionQualityUpdateEvent'
+2023-09-12 21:07:50.908825+0300 QR Doorbell App[22053:1632210] flutter: 21:07:50: [ParticipantEvent] ParticipantConnectionQualityUpdatedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), connectionQuality: ConnectionQuality.poor), will notifyListeners()
+2023-09-12 21:07:50.909039+0300 QR Doorbell App[22053:1632210] flutter: 21:07:50: [RoomEvent] ParticipantConnectionQualityUpdatedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), connectionQuality: ConnectionQuality.poor), will notifyListeners()
+2023-09-12 21:07:50.910323+0300 QR Doorbell App[22053:1632210] flutter: 21:07:50: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:51.209949+0300 QR Doorbell App[22053:1632210] flutter: 21:07:51: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:51.213146+0300 QR Doorbell App[22053:1632210] flutter: 21:07:51: [TrackEvent] AudioReceiverStatsEventstats: Instance of 'AudioReceiverStats'), will notifyListeners()
+2023-09-12 21:07:51.219404+0300 QR Doorbell App[22053:1632210] flutter: 21:07:51: [TrackEvent] VideoReceiverStatsEventstats: Instance of 'VideoReceiverStats'), will notifyListeners()
+2023-09-12 21:07:51.512176+0300 QR Doorbell App[22053:1632210] flutter: 21:07:51: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:51.812210+0300 QR Doorbell App[22053:1632210] flutter: 21:07:51: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:52.111387+0300 QR Doorbell App[22053:1632210] flutter: 21:07:52: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:52.266090+0300 QR Doorbell App[22053:1632210] flutter: 21:07:52: [TrackEvent] AudioSenderStatsEventstats: Instance of 'AudioSenderStats'), will notifyListeners()
+2023-09-12 21:07:52.412157+0300 QR Doorbell App[22053:1632210] flutter: 21:07:52: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:52.711428+0300 QR Doorbell App[22053:1632210] flutter: 21:07:52: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:52.830567+0300 QR Doorbell App[22053:1632210] flutter: 21:07:52: [TrackEvent] VideoSenderStatsEventstats: {q: Instance of 'VideoSenderStats', h: Instance of 'VideoSenderStats', f: Instance of 'VideoSenderStats'}), will notifyListeners()
+2023-09-12 21:07:53.010410+0300 QR Doorbell App[22053:1632210] flutter: 21:07:53: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:53.212538+0300 QR Doorbell App[22053:1632210] flutter: 21:07:53: [TrackEvent] AudioReceiverStatsEventstats: Instance of 'AudioReceiverStats'), will notifyListeners()
+2023-09-12 21:07:53.213403+0300 QR Doorbell App[22053:1632210] flutter: 21:07:53: [TrackEvent] VideoReceiverStatsEventstats: Instance of 'VideoReceiverStats'), will notifyListeners()
+2023-09-12 21:07:53.310940+0300 QR Doorbell App[22053:1632210] flutter: 21:07:53: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:53.611204+0300 QR Doorbell App[22053:1632210] flutter: 21:07:53: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:53.911829+0300 QR Doorbell App[22053:1632210] flutter: 21:07:53: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:54.211832+0300 QR Doorbell App[22053:1632210] flutter: 21:07:54: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:54.267525+0300 QR Doorbell App[22053:1632210] flutter: 21:07:54: [TrackEvent] AudioSenderStatsEventstats: Instance of 'AudioSenderStats'), will notifyListeners()
+2023-09-12 21:07:54.511954+0300 QR Doorbell App[22053:1632210] flutter: 21:07:54: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:54.811617+0300 QR Doorbell App[22053:1632210] flutter: 21:07:54: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:54.826508+0300 QR Doorbell App[22053:1632210] flutter: 21:07:54: [TrackEvent] VideoSenderStatsEventstats: {q: Instance of 'VideoSenderStats', h: Instance of 'VideoSenderStats', f: Instance of 'VideoSenderStats'}), will notifyListeners()
+2023-09-12 21:07:55.112202+0300 QR Doorbell App[22053:1632210] flutter: 21:07:55: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:55.212821+0300 QR Doorbell App[22053:1632210] flutter: 21:07:55: [TrackEvent] AudioReceiverStatsEventstats: Instance of 'AudioReceiverStats'), will notifyListeners()
+2023-09-12 21:07:55.213548+0300 QR Doorbell App[22053:1632210] flutter: 21:07:55: [TrackEvent] VideoReceiverStatsEventstats: Instance of 'VideoReceiverStats'), will notifyListeners()
+2023-09-12 21:07:55.411679+0300 QR Doorbell App[22053:1632210] flutter: 21:07:55: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:55.710873+0300 QR Doorbell App[22053:1632210] flutter: 21:07:55: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:56.012419+0300 QR Doorbell App[22053:1632210] flutter: 21:07:56: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:56.267715+0300 QR Doorbell App[22053:1632210] flutter: 21:07:56: [TrackEvent] AudioSenderStatsEventstats: Instance of 'AudioSenderStats'), will notifyListeners()
+2023-09-12 21:07:56.311373+0300 QR Doorbell App[22053:1632210] flutter: 21:07:56: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:56.528899+0300 QR Doorbell App[22053:1632210] flutter: 21:07:56: [SignalEvent] Instance of 'SignalSpeakersChangedEvent'
+2023-09-12 21:07:56.529712+0300 QR Doorbell App[22053:1632210] flutter: 21:07:56: [ParticipantEvent] SpeakingChangedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), speaking: true), will notifyListeners()
+2023-09-12 21:07:56.529875+0300 QR Doorbell App[22053:1632210] flutter: 21:07:56: [ParticipantEvent] SpeakingChangedEvent(participant: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ), speaking: false), will notifyListeners()
+2023-09-12 21:07:56.530072+0300 QR Doorbell App[22053:1632210] flutter: 21:07:56: [RoomEvent] ActiveSpeakersChangedEvent(speakers: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13)), will notifyListeners()
+2023-09-12 21:07:56.612238+0300 QR Doorbell App[22053:1632210] flutter: 21:07:56: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:56.827724+0300 QR Doorbell App[22053:1632210] flutter: 21:07:56: [TrackEvent] VideoSenderStatsEventstats: {q: Instance of 'VideoSenderStats', h: Instance of 'VideoSenderStats', f: Instance of 'VideoSenderStats'}), will notifyListeners()
+2023-09-12 21:07:56.910284+0300 QR Doorbell App[22053:1632210] flutter: 21:07:56: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:56.911419+0300 QR Doorbell App[22053:1632210] flutter: 21:07:56: [SignalEvent] Instance of 'SignalSpeakersChangedEvent'
+2023-09-12 21:07:56.912254+0300 QR Doorbell App[22053:1632210] flutter: 21:07:56: [ParticipantEvent] SpeakingChangedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), speaking: false), will notifyListeners()
+2023-09-12 21:07:56.912495+0300 QR Doorbell App[22053:1632210] flutter: 21:07:56: [RoomEvent] ActiveSpeakersChangedEvent(speakers: ), will notifyListeners()
+2023-09-12 21:07:57.211124+0300 QR Doorbell App[22053:1632210] flutter: 21:07:57: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:57.214950+0300 QR Doorbell App[22053:1632210] flutter: 21:07:57: [TrackEvent] AudioReceiverStatsEventstats: Instance of 'AudioReceiverStats'), will notifyListeners()
+2023-09-12 21:07:57.215499+0300 QR Doorbell App[22053:1632210] flutter: 21:07:57: [TrackEvent] VideoReceiverStatsEventstats: Instance of 'VideoReceiverStats'), will notifyListeners()
+2023-09-12 21:07:57.408692+0300 QR Doorbell App[22053:1632210] flutter: 21:07:57: [SignalEvent] Instance of 'SignalSpeakersChangedEvent'
+2023-09-12 21:07:57.409509+0300 QR Doorbell App[22053:1632210] flutter: 21:07:57: [ParticipantEvent] SpeakingChangedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), speaking: true), will notifyListeners()
+2023-09-12 21:07:57.409775+0300 QR Doorbell App[22053:1632210] flutter: 21:07:57: [RoomEvent] ActiveSpeakersChangedEvent(speakers: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13)), will notifyListeners()
+2023-09-12 21:07:57.512070+0300 QR Doorbell App[22053:1632210] flutter: 21:07:57: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:57.811664+0300 QR Doorbell App[22053:1632210] flutter: 21:07:57: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:58.108775+0300 QR Doorbell App[22053:1632210] flutter: 21:07:58: [SignalEvent] Instance of 'SignalSpeakersChangedEvent'
+2023-09-12 21:07:58.109606+0300 QR Doorbell App[22053:1632210] flutter: 21:07:58: [ParticipantEvent] SpeakingChangedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), speaking: false), will notifyListeners()
+2023-09-12 21:07:58.109866+0300 QR Doorbell App[22053:1632210] flutter: 21:07:58: [RoomEvent] ActiveSpeakersChangedEvent(speakers: ), will notifyListeners()
+2023-09-12 21:07:58.111154+0300 QR Doorbell App[22053:1632210] flutter: 21:07:58: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:58.273080+0300 QR Doorbell App[22053:1632210] flutter: 21:07:58: [TrackEvent] AudioSenderStatsEventstats: Instance of 'AudioSenderStats'), will notifyListeners()
+2023-09-12 21:07:58.411878+0300 QR Doorbell App[22053:1632210] flutter: 21:07:58: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:58.457117+0300 QR Doorbell App[22053:1632210] flutter: 21:07:58: didChangeAppLifecycleState: state=hidden
+2023-09-12 21:07:58.457363+0300 QR Doorbell App[22053:1632210] flutter: 21:07:58: didChangeAppLifecycleState: state=inactive
+2023-09-12 21:07:58.478735+0300 QR Doorbell App[22053:1632210] flutter: 21:07:58: [Visibility] VideoView did build
+2023-09-12 21:07:58.711145+0300 QR Doorbell App[22053:1632210] flutter: 21:07:58: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:58.783904+0300 QR Doorbell App[22053:1632210] flutter: 21:07:58: didChangeAppLifecycleState: state=resumed
+2023-09-12 21:07:58.823340+0300 QR Doorbell App[22053:1632210] flutter: 21:07:58: [TrackEvent] VideoSenderStatsEventstats: {q: Instance of 'VideoSenderStats', h: Instance of 'VideoSenderStats', f: Instance of 'VideoSenderStats'}), will notifyListeners()
+2023-09-12 21:07:58.906474+0300 QR Doorbell App[22053:1632210] flutter: 21:07:58: [SignalEvent] Instance of 'SignalSpeakersChangedEvent'
+2023-09-12 21:07:58.907591+0300 QR Doorbell App[22053:1632210] flutter: 21:07:58: [ParticipantEvent] SpeakingChangedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), speaking: true), will notifyListeners()
+2023-09-12 21:07:58.907931+0300 QR Doorbell App[22053:1632210] flutter: 21:07:58: [ParticipantEvent] SpeakingChangedEvent(participant: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ), speaking: true), will notifyListeners()
+2023-09-12 21:07:58.908230+0300 QR Doorbell App[22053:1632210] flutter: 21:07:58: [RoomEvent] ActiveSpeakersChangedEvent(speakers: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ)), will notifyListeners()
+2023-09-12 21:07:58.929886+0300 QR Doorbell App[22053:1632210] flutter: 21:07:58: [Visibility] VideoView did build
+2023-09-12 21:07:59.011330+0300 QR Doorbell App[22053:1632210] flutter: 21:07:59: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+>> pictureInPictureControllerWillStopPictureInPicture
+2023-09-12 21:07:59.178686+0300 QR Doorbell App[22053:1632210] flutter: 21:07:59: [Visibility] VideoView did build
+2023-09-12 21:07:59.209821+0300 QR Doorbell App[22053:1632210] flutter: 21:07:59: [TrackEvent] AudioReceiverStatsEventstats: Instance of 'AudioReceiverStats'), will notifyListeners()
+2023-09-12 21:07:59.210520+0300 QR Doorbell App[22053:1632210] flutter: 21:07:59: [TrackEvent] VideoReceiverStatsEventstats: Instance of 'VideoReceiverStats'), will notifyListeners()
+2023-09-12 21:07:59.311819+0300 QR Doorbell App[22053:1632210] flutter: 21:07:59: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:59.612090+0300 QR Doorbell App[22053:1632210] flutter: 21:07:59: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:07:59.706206+0300 QR Doorbell App[22053:1632210] flutter: 21:07:59: [SignalEvent] Instance of 'SignalSpeakersChangedEvent'
+2023-09-12 21:07:59.706637+0300 QR Doorbell App[22053:1632210] flutter: 21:07:59: [ParticipantEvent] SpeakingChangedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), speaking: false), will notifyListeners()
+2023-09-12 21:07:59.706765+0300 QR Doorbell App[22053:1632210] flutter: 21:07:59: [RoomEvent] ActiveSpeakersChangedEvent(speakers: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ)), will notifyListeners()
+2023-09-12 21:07:59.911623+0300 QR Doorbell App[22053:1632210] flutter: 21:07:59: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:08:00.167481+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: [Visibility] VideoView did build
+2023-09-12 21:08:00.211399+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:08:00.263742+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: [TrackEvent] AudioSenderStatsEventstats: Instance of 'AudioSenderStats'), will notifyListeners()
+2023-09-12 21:08:00.385014+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: End Call: doorbellId=doorbell1_id; callId=a625fe5f-b7ca-5be9-9c9a-40e2d2841f23
+2023-09-12 21:08:00.385723+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: FirebaseDataStore.startTransaction: Starting transaction #0 for '#1      DoorbellEventsRepository.reload (package:qrdoorbell_mobile/services/db/firebase_repositories.dart:100:21)'
+2023-09-12 21:08:00.385825+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: FirebaseDataStore.startTransaction: connecting to DB
+2023-09-12 21:08:00.386397+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: Received CallKit event: type=CallKeepEventType.callEnded, event=CallKeepCallData(uuid: a625fe5f-b7ca-5be9-9c9a-40e2d2841f23, callerName: , handle: , hasVideo: false, duration: 30000.0, extra: {}, isAccepted: false)
+2023-09-12 21:08:00.386499+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: End Call: doorbellId=null; callId=null
+Requested transaction successfully: endCall
+2023-09-12 21:08:00.519194+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: [Visibility] VideoView did build
+2023-09-12 21:08:00.526161+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: Received CallKit event: type=CallKeepEventType.callEnded, event=CallKeepCallData(uuid: a625fe5f-b7ca-5be9-9c9a-40e2d2841f23, callerName: Doorbell_1, handle: Doorbell_1, hasVideo: true, duration: 30000.0, extra: {userId: doorbell1_id, doorbellId: doorbell1_id, doorbellName: Doorbell_1, platform: ios, callToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWxleCBZZXZ0dXNoZW5rbyIsInZpZGVvIjp7InJvb21Kb2luIjp0cnVlLCJyb29tIjoiRG9vcmJlbGxfMTogTllQbTVzUmNJNSIsInJvb21BZG1pbiI6dHJ1ZSwiaGlkZGVuIjpmYWxzZSwiY2FuVXBkYXRlT3duTWV0YWRhdGEiOnRydWV9LCJpYXQiOjE2OTQ1NDIwNDAsIm5iZiI6MTY5NDU0MjA0MCwiZXhwIjoxNjk0NTQyMTYwLCJpc3MiOiJBUElEUHV6amVGeVZXRTciLCJzdWIiOiJ1c2VyLTdTN21YSm9SVVVRdzd3Q0hHMjd3RkV6ZXBpMTMiLCJqdGkiOiJ1c2VyLTdTN21YSm9SVVVRdzd3Q0hHMjd3RkV6ZXBpMTMifQ.uJj4HHldDVpLq6ntT5EOPEwQ0wB3EHcpOCGNu9vUJm4, livekitServer: qrdoorbell.livekit.cloud, stickerId: P0r6MijWpZ, doorbellEnabled: true, serverTimestampMs: 1694542040782}, isAccepted: true)
+2023-09-12 21:08:00.526249+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: End Call: doorbellId=doorbell1_id; callId=null
+2023-09-12 21:08:00.526428+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:08:00.810819+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: [Visibility] TR_VCYLknMdoFsehV watching 1 views...
+2023-09-12 21:08:00.823187+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: [TrackEvent] VideoSenderStatsEventstats: {q: Instance of 'VideoSenderStats', h: Instance of 'VideoSenderStats', f: Instance of 'VideoSenderStats'}), will notifyListeners()
+2023-09-12 21:08:00.903784+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: [EventsListener<TrackEvent>#418676748] dispose()
+2023-09-12 21:08:00.903901+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: [EventsListener<TrackEvent>#418676748] running 1 dispose funcs...
+2023-09-12 21:08:00.904238+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: EventsListener<TrackEvent>#418676748 cancelling 2 listeners(s)
+2023-09-12 21:08:00.907358+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: [EventsListener<RoomEvent>#1033619899] dispose()
+2023-09-12 21:08:00.907419+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: [EventsListener<RoomEvent>#1033619899] running 1 dispose funcs...
+2023-09-12 21:08:00.907453+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: EventsListener<RoomEvent>#1033619899 cancelling 9 listeners(s)
+2023-09-12 21:08:00.907650+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: [Room#857068128] dispose()
+2023-09-12 21:08:00.907704+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: [Room#857068128] running 1 dispose funcs...
+2023-09-12 21:08:00.908088+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: [Room#857068128] cleanUp()
+2023-09-12 21:08:00.908707+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: [RemoteParticipant#675885542] dispose()
+2023-09-12 21:08:00.908749+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: [RemoteParticipant#675885542] running 1 dispose funcs...
+2023-09-12 21:08:00.908872+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: [EventsEmitter<ParticipantEvent>#463873086] dispose()
+2023-09-12 21:08:00.908913+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: [EventsEmitter<ParticipantEvent>#463873086] running 2 dispose funcs...
+2023-09-12 21:08:00.910519+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: [EventsListener<TrackEvent>#418676748] dispose complete.
+2023-09-12 21:08:00.910588+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: EventsEmitter<ParticipantEvent>#463873086 cancelling 1 listeners(s)
+2023-09-12 21:08:00.910623+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: [EventsEmitter<ParticipantEvent>#463873086] dispose complete.
+2023-09-12 21:08:00.911463+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: removePublishedTrack track sid: TR_AMeGuRT2mE4bQN, notify: true
+2023-09-12 21:08:00.911531+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: [RemoteTrackPublication<RemoteAudioTrack>#716146961] dispose()
+2023-09-12 21:08:00.911567+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: [RemoteTrackPublication<RemoteAudioTrack>#716146961] running 1 dispose funcs...
+2023-09-12 21:08:00.911685+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: [RemoteAudioTrack#781913982] dispose()
+2023-09-12 21:08:00.911715+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: [RemoteAudioTrack#781913982] running 2 dispose funcs...
+2023-09-12 21:08:00.911768+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: [EventsListener<TrackEvent>#61357965] dispose()
+2023-09-12 21:08:00.911793+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: [EventsListener<TrackEvent>#61357965] running 1 dispose funcs...
+2023-09-12 21:08:00.911817+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: EventsListener<TrackEvent>#61357965 cancelling 1 listeners(s)
+2023-09-12 21:08:00.911858+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: [EventsListener<TrackEvent>#61357965] dispose complete.
+2023-09-12 21:08:00.912149+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: RemoteAudioTrack#781913982 onDispose()
+2023-09-12 21:08:00.913094+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: RemoteAudioTrack#781913982.stop()
+2023-09-12 21:08:00.913208+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: RemoteAudioTrack#781913982.disable() disabling MediaStreamTrackNative#725131821...
+2023-09-12 21:08:00.913276+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: onAudioTrackCountDidChange: local: 1, remote: 0
+2023-09-12 21:08:00.913306+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: didUpdateSate: AudioTrackState.localOnly
+2023-09-12 21:08:00.913361+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: configuring for AudioTrackState.localOnly using Instance of 'NativeAudioConfiguration'...
+2023-09-12 21:08:00.913483+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: [EventsListener<RoomEvent>#1033619899] dispose complete.
+[LiveKit] Configuring category:  AVAudioSessionCategoryPlayAndRecord
+[LiveKit] Configuring categoryOptions:  ["allowBluetooth", "mixWithOthers"]
+[LiveKit] Configuring mode:  AVAudioSessionModeVoiceChat
+2023-09-12 21:08:00.914540+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: [SignalEvent] Instance of 'SignalSpeakersChangedEvent'
+2023-09-12 21:08:00.915176+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: failed to emit event SpeakingChangedEvent(participant: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ), speaking: false) on a disposed emitter
+2023-09-12 21:08:00.915288+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: [RoomEvent] ActiveSpeakersChangedEvent(speakers: ), will notifyListeners()
+2023-09-12 21:08:00.915317+0300 QR Doorbell App[22053:1632210] flutter: 21:08:00: called notifyListeners() on a disposed ChangeNotifier
+2023-09-12 21:08:01.111654+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [Visibility] TR_VCYLknMdoFsehV watching 0 views...
+2023-09-12 21:08:01.111770+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [Visibility] Change detected, quick: false
+[LiveKit] Configure audio error:  Error Domain=NSOSStatusErrorDomain Code=-50 "(null)"
+2023-09-12 21:08:01.270073+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: configureNativeAudio did throw PlatformException(configure, The operation couldn’t be completed. (OSStatus error -50.), null, null)
+2023-09-12 21:08:01.271545+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: Received CallKit event: type=CallKeepEventType.audioSessionToggled, event=Instance of 'AudioSessionToggleData'
+2023-09-12 21:08:01.279023+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [TrackEvent] VideoReceiverStatsEventstats: Instance of 'VideoReceiverStats'), will notifyListeners()
+2023-09-12 21:08:01.279516+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsEmitter<TrackEvent>#548853043] dispose()
+2023-09-12 21:08:01.279567+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsEmitter<TrackEvent>#548853043] running 2 dispose funcs...
+2023-09-12 21:08:01.279644+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: EventsEmitter<TrackEvent>#548853043 cancelling 1 listeners(s)
+2023-09-12 21:08:01.279677+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsEmitter<TrackEvent>#548853043] dispose complete.
+2023-09-12 21:08:01.279714+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [RemoteAudioTrack#781913982] dispose complete.
+2023-09-12 21:08:01.279747+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [RemoteTrackPublication<RemoteAudioTrack>#716146961] dispose complete.
+2023-09-12 21:08:01.280037+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: failed to emit event TrackUnsubscribedEvent(participant: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ), publication: RemoteTrackPublication<RemoteAudioTrack>(sid: TR_AMeGuRT2mE4bQN, source: TrackSource.microphone), track: Instance of 'RemoteAudioTrack') on a disposed emitter
+2023-09-12 21:08:01.280249+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: failed to emit event TrackUnpublishedEvent(participant: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ), publication: RemoteTrackPublication<RemoteAudioTrack>(sid: TR_AMeGuRT2mE4bQN, source: TrackSource.microphone)) on a disposed emitter
+2023-09-12 21:08:01.280329+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [RemoteTrackPublication<RemoteAudioTrack>#716146961] unnecessary dispose() called.
+2023-09-12 21:08:01.280610+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [RoomEvent] TrackUnsubscribedEvent(participant: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ), publication: RemoteTrackPublication<RemoteAudioTrack>(sid: TR_AMeGuRT2mE4bQN, source: TrackSource.microphone), track: Instance of 'RemoteAudioTrack'), will notifyListeners()
+2023-09-12 21:08:01.280707+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: called notifyListeners() on a disposed ChangeNotifier
+2023-09-12 21:08:01.280835+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: removePublishedTrack track sid: TR_VCYLknMdoFsehV, notify: true
+2023-09-12 21:08:01.280933+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [RemoteTrackPublication<RemoteVideoTrack>#1027648533] dispose()
+2023-09-12 21:08:01.281025+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [RemoteTrackPublication<RemoteVideoTrack>#1027648533] running 1 dispose funcs...
+2023-09-12 21:08:01.281500+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [RemoteVideoTrack#654160251] dispose()
+2023-09-12 21:08:01.281577+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [RemoteVideoTrack#654160251] running 2 dispose funcs...
+2023-09-12 21:08:01.281688+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsListener<TrackEvent>#885346366] dispose()
+2023-09-12 21:08:01.281774+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsListener<TrackEvent>#885346366] running 1 dispose funcs...
+2023-09-12 21:08:01.281848+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: EventsListener<TrackEvent>#885346366 cancelling 1 listeners(s)
+2023-09-12 21:08:01.281924+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [RoomEvent] TrackUnpublishedEvent(participant: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ), publication: RemoteTrackPublication<RemoteAudioTrack>(sid: TR_AMeGuRT2mE4bQN, source: TrackSource.microphone)), will notifyListeners()
+2023-09-12 21:08:01.282063+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: called notifyListeners() on a disposed ChangeNotifier
+2023-09-12 21:08:01.282096+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsListener<TrackEvent>#885346366] dispose complete.
+2023-09-12 21:08:01.282205+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: RemoteVideoTrack#654160251 onDispose()
+2023-09-12 21:08:01.282247+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: RemoteVideoTrack#654160251.stop()
+2023-09-12 21:08:01.282354+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: RemoteVideoTrack#654160251.disable() disabling MediaStreamTrackNative#963730999...
+2023-09-12 21:08:01.282390+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsEmitter<TrackEvent>#361825251] dispose()
+2023-09-12 21:08:01.282461+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsEmitter<TrackEvent>#361825251] running 2 dispose funcs...
+2023-09-12 21:08:01.282595+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: EventsEmitter<TrackEvent>#361825251 cancelling 1 listeners(s)
+2023-09-12 21:08:01.282629+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsEmitter<TrackEvent>#361825251] dispose complete.
+2023-09-12 21:08:01.282657+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [RemoteVideoTrack#654160251] dispose complete.
+2023-09-12 21:08:01.282741+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [RemoteTrackPublication<RemoteVideoTrack>#1027648533] dispose complete.
+2023-09-12 21:08:01.282829+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: failed to emit event TrackUnsubscribedEvent(participant: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ), publication: RemoteTrackPublication<RemoteVideoTrack>(sid: TR_VCYLknMdoFsehV, source: TrackSource.camera), track: Instance of 'RemoteVideoTrack') on a disposed emitter
+2023-09-12 21:08:01.282919+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: failed to emit event TrackUnpublishedEvent(participant: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ), publication: RemoteTrackPublication<RemoteVideoTrack>(sid: TR_VCYLknMdoFsehV, source: TrackSource.camera)) on a disposed emitter
+2023-09-12 21:08:01.283168+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [RemoteTrackPublication<RemoteVideoTrack>#1027648533] unnecessary dispose() called.
+2023-09-12 21:08:01.283237+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [RoomEvent] TrackUnsubscribedEvent(participant: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ), publication: RemoteTrackPublication<RemoteVideoTrack>(sid: TR_VCYLknMdoFsehV, source: TrackSource.camera), track: Instance of 'RemoteVideoTrack'), will notifyListeners()
+2023-09-12 21:08:01.283355+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: called notifyListeners() on a disposed ChangeNotifier
+2023-09-12 21:08:01.283441+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [RemoteParticipant#675885542] dispose complete.
+2023-09-12 21:08:01.284145+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: Unpublish track sid: TR_AMVt3BP4JWTWAm, notify: true
+2023-09-12 21:08:01.284201+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [LocalTrackPublication<LocalAudioTrack>#342743762] dispose()
+2023-09-12 21:08:01.284231+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [LocalTrackPublication<LocalAudioTrack>#342743762] running 1 dispose funcs...
+2023-09-12 21:08:01.284385+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [LocalAudioTrack#910568092] dispose()
+2023-09-12 21:08:01.284417+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [LocalAudioTrack#910568092] running 2 dispose funcs...
+2023-09-12 21:08:01.284445+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsListener<TrackEvent>#438570879] dispose()
+2023-09-12 21:08:01.284468+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsListener<TrackEvent>#438570879] running 1 dispose funcs...
+2023-09-12 21:08:01.284495+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: EventsListener<TrackEvent>#438570879 cancelling 1 listeners(s)
+2023-09-12 21:08:01.284750+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [RoomEvent] TrackUnpublishedEvent(participant: RemoteParticipant(sid: PA_4Kjok7dYxYYJ, identity: guest-doorbell1_id.P0r6MijWpZ), publication: RemoteTrackPublication<RemoteVideoTrack>(sid: TR_VCYLknMdoFsehV, source: TrackSource.camera)), will notifyListeners()
+2023-09-12 21:08:01.284773+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: called notifyListeners() on a disposed ChangeNotifier
+2023-09-12 21:08:01.284799+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsListener<TrackEvent>#438570879] dispose complete.
+2023-09-12 21:08:01.284822+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: LocalAudioTrack#910568092 onDispose()
+2023-09-12 21:08:01.285018+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: LocalAudioTrack#910568092.stop()
+2023-09-12 21:08:01.285066+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: Stopping mediaStreamTrack...
+2023-09-12 21:08:01.288165+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsEmitter<TrackEvent>#586017183] dispose()
+2023-09-12 21:08:01.288243+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsEmitter<TrackEvent>#586017183] running 2 dispose funcs...
+2023-09-12 21:08:01.288309+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: EventsEmitter<TrackEvent>#586017183 cancelling 1 listeners(s)
+2023-09-12 21:08:01.288347+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsEmitter<TrackEvent>#586017183] dispose complete.
+2023-09-12 21:08:01.288381+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [LocalAudioTrack#910568092] dispose complete.
+2023-09-12 21:08:01.288419+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [LocalTrackPublication<LocalAudioTrack>#342743762] dispose complete.
+2023-09-12 21:08:01.591963+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: LocalAudioTrack#910568092.unpublish()
+2023-09-12 21:08:01.592096+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: onAudioTrackCountDidChange: local: 0, remote: 0
+2023-09-12 21:08:01.592146+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: didUpdateSate: AudioTrackState.none
+2023-09-12 21:08:01.592199+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: configuring for AudioTrackState.none using Instance of 'NativeAudioConfiguration'...
+[LiveKit] Configuring category:  AVAudioSessionCategorySoloAmbient
+[LiveKit] Configuring categoryOptions:  []
+[LiveKit] Configuring mode:  AVAudioSessionModeDefault
+[LiveKit] RTCAudioSession Configure success
+2023-09-12 21:08:01.760146+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [LocalTrackPublication<LocalAudioTrack>#342743762] unnecessary dispose() called.
+2023-09-12 21:08:01.760377+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [ParticipantEvent] LocalTrackUnpublishedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), publication: LocalTrackPublication<LocalAudioTrack>(sid: TR_AMVt3BP4JWTWAm, source: TrackSource.microphone)), will notifyListeners()
+2023-09-12 21:08:01.760436+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [RoomEvent] LocalTrackUnpublishedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), publication: LocalTrackPublication<LocalAudioTrack>(sid: TR_AMVt3BP4JWTWAm, source: TrackSource.microphone)), will notifyListeners()
+2023-09-12 21:08:01.760471+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: called notifyListeners() on a disposed ChangeNotifier
+2023-09-12 21:08:01.760512+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: Unpublish track sid: TR_VC4GmquWP3j44P, notify: true
+2023-09-12 21:08:01.760558+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [LocalTrackPublication<LocalVideoTrack>#321642022] dispose()
+2023-09-12 21:08:01.760596+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [LocalTrackPublication<LocalVideoTrack>#321642022] running 1 dispose funcs...
+2023-09-12 21:08:01.760671+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [LocalVideoTrack#18985909] dispose()
+2023-09-12 21:08:01.760707+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [LocalVideoTrack#18985909] running 2 dispose funcs...
+2023-09-12 21:08:01.760741+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsListener<TrackEvent>#94102551] dispose()
+2023-09-12 21:08:01.760772+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsListener<TrackEvent>#94102551] running 1 dispose funcs...
+2023-09-12 21:08:01.760806+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: EventsListener<TrackEvent>#94102551 cancelling 1 listeners(s)
+2023-09-12 21:08:01.760863+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsListener<TrackEvent>#94102551] dispose complete.
+2023-09-12 21:08:01.760899+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: LocalVideoTrack#18985909 onDispose()
+2023-09-12 21:08:01.760961+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: LocalVideoTrack#18985909.stop()
+2023-09-12 21:08:01.761025+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: Stopping mediaStreamTrack...
+2023-09-12 21:08:01.766946+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: starting to negotiate
+2023-09-12 21:08:01.771096+0300 QR Doorbell App[22053:1631971] Stop video capturer, trackID 5148DE52-550F-4390-96D9-106E22F8677A
+2023-09-12 21:08:01.795480+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsEmitter<TrackEvent>#522439421] dispose()
+2023-09-12 21:08:01.795548+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsEmitter<TrackEvent>#522439421] running 2 dispose funcs...
+2023-09-12 21:08:01.795612+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: EventsEmitter<TrackEvent>#522439421 cancelling 1 listeners(s)
+2023-09-12 21:08:01.795645+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsEmitter<TrackEvent>#522439421] dispose complete.
+2023-09-12 21:08:01.795681+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [LocalVideoTrack#18985909] dispose complete.
+2023-09-12 21:08:01.795710+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [LocalTrackPublication<LocalVideoTrack>#321642022] dispose complete.
+2023-09-12 21:08:01.809874+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: publisher onOffer
+2023-09-12 21:08:01.811013+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: LocalVideoTrack#18985909.unpublish()
+2023-09-12 21:08:01.811084+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [LocalTrackPublication<LocalVideoTrack>#321642022] unnecessary dispose() called.
+2023-09-12 21:08:01.811128+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [ParticipantEvent] LocalTrackUnpublishedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), publication: LocalTrackPublication<LocalVideoTrack>(sid: TR_VC4GmquWP3j44P, source: TrackSource.camera)), will notifyListeners()
+2023-09-12 21:08:01.811162+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [RoomEvent] LocalTrackUnpublishedEvent(participant: LocalParticipant(sid: PA_hPaGH3b4PPhd, identity: user-7S7mXJoRUUQw7wCHG27wFEzepi13), publication: LocalTrackPublication<LocalVideoTrack>(sid: TR_VC4GmquWP3j44P, source: TrackSource.camera)), will notifyListeners()
+2023-09-12 21:08:01.811187+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: called notifyListeners() on a disposed ChangeNotifier
+2023-09-12 21:08:01.811733+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [Engine#176336443] cleanUp()
+2023-09-12 21:08:01.811779+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [Transport#34223546] dispose()
+2023-09-12 21:08:01.811810+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [Transport#34223546] running 1 dispose funcs...
+2023-09-12 21:08:01.847598+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [Transport#34223546] dispose complete.
+2023-09-12 21:08:01.847696+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [Transport#554206691] dispose()
+2023-09-12 21:08:01.847741+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [Transport#554206691] running 1 dispose funcs...
+2023-09-12 21:08:01.867945+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [SignalEvent] Instance of 'SignalAnswerEvent'
+2023-09-12 21:08:01.875420+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [Transport#554206691] dispose complete.
+2023-09-12 21:08:01.875502+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [SignalClient#817042387] cleanUp()
+2023-09-12 21:08:01.875544+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [LiveKitWebSocketIO#40182329] dispose()
+2023-09-12 21:08:01.875577+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [LiveKitWebSocketIO#40182329] running 1 dispose funcs...
+2023-09-12 21:08:01.876348+0300 QR Doorbell App[22053:1632871] video capturer stopped, trackID = 5148DE52-550F-4390-96D9-106E22F8677A
+2023-09-12 21:08:01.879153+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [LiveKitWebSocketIO#40182329] dispose complete.
+2023-09-12 21:08:01.879223+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: Engine ConnectionState connected -> disconnected
+2023-09-12 21:08:01.879280+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsEmitter<RoomEvent>#105251490] dispose()
+2023-09-12 21:08:01.879309+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsEmitter<RoomEvent>#105251490] running 2 dispose funcs...
+2023-09-12 21:08:01.879350+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EngineEvent] Engine#176336443 EngineConnectionStateUpdatedEvent(newState: disconnected, didReconnect: false, disconnectReason: null)
+2023-09-12 21:08:01.879384+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [Room#857068128] cleanUp()
+2023-09-12 21:08:01.879459+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [Engine#176336443] cleanUp()
+2023-09-12 21:08:01.879487+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: EventsEmitter<RoomEvent>#105251490 cancelling 1 listeners(s)
+2023-09-12 21:08:01.879515+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsEmitter<RoomEvent>#105251490] dispose complete.
+2023-09-12 21:08:01.879562+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [LocalParticipant#1027573593] dispose()
+2023-09-12 21:08:01.879586+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [LocalParticipant#1027573593] running 1 dispose funcs...
+2023-09-12 21:08:01.879619+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsEmitter<ParticipantEvent>#1049105729] dispose()
+2023-09-12 21:08:01.879735+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsEmitter<ParticipantEvent>#1049105729] running 2 dispose funcs...
+2023-09-12 21:08:01.879833+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [SignalClient#817042387] cleanUp()
+2023-09-12 21:08:01.879969+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: failed to emit event RoomDisconnectedEvent(null) on a disposed emitter
+2023-09-12 21:08:01.879991+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: called notifyListeners() on a disposed ChangeNotifier
+2023-09-12 21:08:01.880018+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: EventsEmitter<ParticipantEvent>#1049105729 cancelling 1 listeners(s)
+2023-09-12 21:08:01.880043+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsEmitter<ParticipantEvent>#1049105729] dispose complete.
+2023-09-12 21:08:01.880071+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [LocalParticipant#1027573593] dispose complete.
+2023-09-12 21:08:01.880146+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsListener<SignalEvent>#78539094] dispose()
+2023-09-12 21:08:01.880247+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsListener<SignalEvent>#78539094] running 1 dispose funcs...
+2023-09-12 21:08:01.880281+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: EventsListener<SignalEvent>#78539094 cancelling 11 listeners(s)
+2023-09-12 21:08:01.880383+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsListener<SignalEvent>#78539094] dispose complete.
+2023-09-12 21:08:01.880462+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsListener<EngineEvent>#553325935] dispose()
+2023-09-12 21:08:01.880574+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsListener<EngineEvent>#553325935] running 1 dispose funcs...
+2023-09-12 21:08:01.880643+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: EventsListener<EngineEvent>#553325935 cancelling 8 listeners(s)
+2023-09-12 21:08:01.880776+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsListener<EngineEvent>#553325935] dispose complete.
+2023-09-12 21:08:01.880850+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [Engine#176336443] dispose()
+2023-09-12 21:08:01.880976+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [Engine#176336443] running 1 dispose funcs...
+2023-09-12 21:08:01.881101+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [Engine#176336443] cleanUp()
+2023-09-12 21:08:01.881212+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [SignalClient#817042387] cleanUp()
+2023-09-12 21:08:01.881280+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsEmitter<EngineEvent>#902473701] dispose()
+2023-09-12 21:08:01.881378+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsEmitter<EngineEvent>#902473701] running 2 dispose funcs...
+2023-09-12 21:08:01.881485+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: EventsEmitter<EngineEvent>#902473701 cancelling 5 listeners(s)
+2023-09-12 21:08:01.881567+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsEmitter<EngineEvent>#902473701] dispose complete.
+2023-09-12 21:08:01.881648+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsListener<SignalEvent>#225920169] dispose()
+2023-09-12 21:08:01.881747+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsListener<SignalEvent>#225920169] running 1 dispose funcs...
+2023-09-12 21:08:01.881849+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: EventsListener<SignalEvent>#225920169 cancelling 8 listeners(s)
+2023-09-12 21:08:01.881944+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [EventsListener<SignalEvent>#225920169] dispose complete.
+2023-09-12 21:08:01.881995+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [Engine#176336443] dispose complete.
+2023-09-12 21:08:01.882137+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [Room#857068128] dispose complete.
+2023-09-12 21:08:01.891725+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: failed to emit event Instance of 'EngineTrackAddedEvent' on a disposed emitter
+2023-09-12 21:08:01.891772+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: failed to emit event Instance of 'EngineTrackAddedEvent' on a disposed emitter
+2023-09-12 21:08:01.940931+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: SignalClient onSocketDispose ConnectionState.connected
+2023-09-12 21:08:01.941007+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: SignalClient did disconnect ConnectionState.connected
+2023-09-12 21:08:01.941035+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: SignalClient ConnectionState connected -> disconnected
+2023-09-12 21:08:01.941082+0300 QR Doorbell App[22053:1632210] flutter: 21:08:01: [SignalEvent] SignalConnectionStateUpdatedEvent(newState: disconnected, didReconnect: false, disconnectReason: null)
+2023-09-12 21:08:02.260236+0300 QR Doorbell App[22053:1632210] flutter: 21:08:02: FirebaseDataStore.endTransaction: Ending transaction #0
+2023-09-12 21:08:02.260337+0300 QR Doorbell App[22053:1632210] flutter: 21:08:02: FirebaseDataStore.endTransaction: disconnecting from DB
