@@ -31,6 +31,9 @@ class _VideoCallState extends State<VideoCall> {
   bool _isLocalAnswered = false;
   bool _isPipSetupDone = false;
 
+  bool get isGuestConnected => widget.room.participants.values
+      .any((party) => party.identity.startsWith('guest-') && (party.hasAudio || party.hasVideo) && !party.isDisposed);
+
   @override
   void initState() {
     _isLocalAnswered = widget.isAnswered;
@@ -52,8 +55,9 @@ class _VideoCallState extends State<VideoCall> {
         if (event.reason != null) {
           logger.info('Room disconnected: reason => ${event.reason}');
         }
-        await _endCall(context);
-        setState(() {});
+        setState(() async {
+          await _endCall(context);
+        });
       })
       ..on<TrackPublishedEvent>((remoteParty) async {
         if (!_isLocalAnswered &&
@@ -65,10 +69,11 @@ class _VideoCallState extends State<VideoCall> {
         setState(() {});
       })
       ..on<TrackUnpublishedEvent>((remoteParty) async {
-        // if (!_isLocalAnswered && remoteParty.participant.identity.startsWith('guest-')) {
-        //   await _endCall(context);
-        // }
-        setState(() {});
+        if (_isLocalAnswered && !isGuestConnected) {
+          setState(() async {
+            await _endCall(context);
+          });
+        }
       })
       ..on<LocalTrackPublishedEvent>((remoteParty) async {
         setState(() {
@@ -76,11 +81,6 @@ class _VideoCallState extends State<VideoCall> {
         });
       })
       ..on<LocalTrackUnpublishedEvent>((localParty) async {
-        // if (_isLocalAnswered) {
-        //   await _endCall(context);
-        // } else {
-        // await _endCallIfAlone(context);
-        // }
         setState(() {});
       })
       ..on<TrackMutedEvent>((mutedEvent) async {
@@ -111,6 +111,7 @@ class _VideoCallState extends State<VideoCall> {
         } catch (_) {
           print('Failed to decode: $_');
         }
+
         setState(() {});
       });
   }
@@ -122,12 +123,6 @@ class _VideoCallState extends State<VideoCall> {
       return RemoteParticipantWidget(widget.room, participant, widget.doorbellId, _endCall, isAnswered: _isLocalAnswered);
 
     return EmptyScreen.black().withWaitingIndicator();
-  }
-
-  Future<void> _endCallIfAlone(BuildContext context) async {
-    if (!widget.room.participants.values.any((party) => party is RemoteAudioTrack && party.identity.startsWith('guest-'))) {
-      await _endCall(context);
-    }
   }
 
   Future<void> _setupPipView(RemoteParticipant participant, VideoTrack track) async {
@@ -142,19 +137,21 @@ class _VideoCallState extends State<VideoCall> {
     //       '++++++++++++++++ onTrack: trackId=${event.track.id} trackKind=${event.track.kind} stream[0].id=${event.streams.firstOrNull?.id}');
     // };
 
-    var remoteStreamId = participant.sid;
-    var peerConnectionId = track.mediaStream.id;
+    var remoteStreamId = track.mediaStream.id;
+    var peerConnectionId = participant.sid;
 
     logger.info('Creating PiP: remoteStreamId=$remoteStreamId, peerConnectionId=$peerConnectionId');
     await Pip.createPipVideoCall(remoteStreamId: remoteStreamId, peerConnectionId: peerConnectionId);
   }
 
   Future<void> _endCall(BuildContext context) async {
-    RouteStateScope.of(context).goUri(Uri(path: '/doorbells/${widget.doorbellId}'));
+    var router = RouteStateScope.of(context);
 
     await Future.wait([
       CallKitServiceScope.of(context)?.endCall(widget.doorbellId) ?? Future.value(),
       DataStore.of(context).doorbellEvents.reload(),
     ]);
+
+    router.goUri(Uri(path: '/doorbells/${widget.doorbellId}'));
   }
 }

@@ -23,21 +23,21 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.2
-  provider: ^6.0.2
+  cupertino_icons: ^1.0.6
+  provider: ^6.0.5
   livekit_client: ^1.4.3
   flutter_webrtc: ^0.9.40
   firebase_core: ^2.15.1
-  firebase_messaging: ^14.2.1
-  firebase_database: ^10.0.9
-  firebase_crashlytics: ^3.0.17
-  firebase_auth: ^4.2.5
-  firebase_ui_auth: ^1.1.14
-  firebase_ui_oauth_apple: ^1.0.21
-  firebase_ui_oauth_google: ^1.0.21
-  firebase_remote_config: ^4.2.4
+  firebase_messaging: ^14.6.7
+  firebase_database: ^10.2.5
+  firebase_crashlytics: ^3.3.5
+  firebase_auth: ^4.9.0
+  firebase_ui_auth: ^1.8.0
+  firebase_ui_oauth_apple: ^1.2.11
+  firebase_ui_oauth_google: ^1.2.11
+  firebase_remote_config: ^4.2.5
   path_to_regexp: ^0.4.0
-  adaptive_navigation: ^0.0.3
+  adaptive_navigation: ^0.0.9
   collection: ^1.17.1
   quiver: ^3.2.1
   nanoid: ^1.0.0

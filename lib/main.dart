@@ -19,7 +19,6 @@ import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:uni_links/uni_links.dart';
 
-// import 'services/newrelic_logger.dart';
 import 'presentation/controls/stickers/v1/sticker_v11_controller.dart';
 import 'routing/navigation_service.dart';
 import 'services/db/firebase_data_store.dart';
@@ -245,10 +244,10 @@ class _QRDoorbellAppState extends State<QRDoorbellApp> with WidgetsBindingObserv
                   routeInformationParser: _routeParser,
                   // theme: const CupertinoThemeData(
                   //   brightness: Brightness.light,
-                  //   scaffoldBackgroundColor: Colors.white,
-                  //   barBackgroundColor: Colors.white,
+                  //   scaffoldBackgroundColor: CupertinoColors.systemBackground,
+                  //   barBackgroundColor: CupertinoColors.systemBackground,
                   //   textTheme: CupertinoTextThemeData(
-                  //       navLargeTitleTextStyle: TextStyle(fontWeight: FontWeight.w500, color: Colors.black, fontSize: 34)),
+                  //       navLargeTitleTextStyle: TextStyle(fontWeight: FontWeight.w500, color: CupertinoColors.darkBackgroundGray, fontSize: 34)),
                   // ),
                 ))));
   }
